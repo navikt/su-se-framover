@@ -12,6 +12,7 @@ import { ManuellTilbakekrevingsbehandling, TilbakekrevingSteg } from '~src/types
 import messages from '../../Tilbakekreving-nb';
 
 import styles from './OppsummeringTilbakekrevingsbehandling.module.less';
+
 const OppsummeringTilbakekrevingsbehandling = (props: {
     sakId: string;
     saksversjon: number;

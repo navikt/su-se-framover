@@ -35,9 +35,6 @@ import EksisterendeVedtaksinformasjon from '../EksisterendeVedtaksinformasjon';
 import sharedMessages from '../sharedI18n-nb';
 import sharedStyles from '../sharedStyles.module.less';
 import { VilkårsvurderingBaseProps } from '../types';
-
-import messages from './virkningstidspunkt-nb';
-import styles from './virkningstidspunkt.module.less';
 import {
     eqBehandlingsperiode,
     er67PlusOgStønadsperiodeTilOgMedErLengerEnnFødselsmåned,
@@ -48,6 +45,8 @@ import {
     VirkningstidspunktFormData,
     virkningstidspunktSchema,
 } from './VirkningstidspunktUtils';
+import styles from './virkningstidspunkt.module.less';
+import messages from './virkningstidspunkt-nb';
 
 //TODO: warning hvis fødselsår i fødselsnummeret er ulik fødseslåret
 

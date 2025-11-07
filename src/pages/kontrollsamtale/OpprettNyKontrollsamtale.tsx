@@ -1,7 +1,7 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { BodyShort, Button } from '@navikt/ds-react';
-import { useForm, Controller } from 'react-hook-form';
+import { Controller, useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 
 import * as kontrollsamtaleApi from '~src/api/kontrollsamtaleApi';
@@ -9,8 +9,8 @@ import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
 import { MonthPicker } from '~src/components/inputs/datePicker/DatePicker';
 import LinkAsButton from '~src/components/linkAsButton/LinkAsButton';
 import Oppsummeringspanel, {
-    Oppsummeringsikon,
     Oppsummeringsfarge,
+    Oppsummeringsikon,
 } from '~src/components/oppsummering/oppsummeringspanel/Oppsummeringspanel';
 import { useApiCall } from '~src/lib/hooks';
 import * as Routes from '~src/lib/routes';

@@ -7,9 +7,8 @@ import { InformasjonsRevurderingStatus, Revurdering } from '~src/types/Revurderi
 import { harBeregninger, harSimulering } from '~src/utils/revurdering/revurderingUtils';
 
 import OppsummeringAvBeregningOgSimulering from '../../oppsummeringAvBeregningOgsimulering/OppsummeringAvBeregningOgSimulering';
-
-import messages from './beregningblokk-nb';
 import styles from './beregningblokk.module.less';
+import messages from './beregningblokk-nb';
 
 const Beregningblokk = ({ revurdering }: { revurdering: Revurdering }) => {
     const { formatMessage } = useI18n({ messages: { ...messages, ...simulertUtbetaling } });

@@ -1,5 +1,5 @@
 import { yupResolver } from '@hookform/resolvers/yup';
-import { useForm, UseFormReturn } from 'react-hook-form';
+import { UseFormReturn, useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 
 import StansGjenopptaForm from '~src/components/forms/stansGjentopptaForm/StansGjenopptaForm';

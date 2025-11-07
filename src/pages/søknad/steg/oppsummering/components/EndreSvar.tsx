@@ -5,9 +5,8 @@ import { useI18n } from '~src/lib/i18n';
 import * as routes from '~src/lib/routes';
 import { SøknadContext } from '~src/pages/søknad';
 import { Søknadssteg } from '~src/pages/søknad/types';
-
-import messages from '../Søknadoppsummering/søknadsoppsummering-nb';
 import styles from '../Søknadoppsummering/søknadsoppsummering.module.less';
+import messages from '../Søknadoppsummering/søknadsoppsummering-nb';
 
 export const EndreSvar = (props: { path: Søknadssteg }) => {
     const { sakstype } = useOutletContext<SøknadContext>();

@@ -10,7 +10,7 @@ import { getDokument } from '~src/api/dokumentApi';
 import * as kontrollsamtaleApi from '~src/api/kontrollsamtaleApi';
 import ApiErrorAlert, { useApiErrorMessages } from '~src/components/apiErrorAlert/ApiErrorAlert';
 import { MonthPicker } from '~src/components/inputs/datePicker/DatePicker';
-import { ToastType, createToast, useToast } from '~src/components/toast/Toast';
+import { createToast, ToastType, useToast } from '~src/components/toast/Toast';
 import { useApiCall, useBrevForhåndsvisning } from '~src/lib/hooks';
 import { navigateToSakIntroWithMessage } from '~src/lib/routes';
 import { Kontrollsamtale, KontrollsamtaleStatus } from '~src/types/Kontrollsamtale';
@@ -23,9 +23,9 @@ import {
 
 import styles from './OppsummeringAvKontrollsamtale.module.less';
 import {
+    KontrollsamtaleFormStatus,
     kontrollsamtaleStatusTextMapper,
     kontrollsamtalestatusToFormStatus,
-    KontrollsamtaleFormStatus,
     OppdaterKontrollsamtaleInnkallingsdato,
     OppdaterKontrollsamtaleStatusOgJournalpostIdFormData,
     oppdaterKontrollsamtaleInnkallingsdatoSchema,

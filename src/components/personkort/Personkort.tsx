@@ -3,7 +3,7 @@ import classNames from 'classnames';
 
 import { KjønnUkjent } from '~src/assets/Icons';
 import { Person } from '~src/types/Person';
-import { showName, formatFnr } from '~src/utils/person/personUtils';
+import { formatFnr, showName } from '~src/utils/person/personUtils';
 
 import { PersonAdvarsel } from '../personadvarsel/PersonAdvarsel';
 

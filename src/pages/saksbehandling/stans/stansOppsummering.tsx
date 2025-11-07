@@ -15,9 +15,8 @@ import sharedMessages from '~src/pages/saksbehandling/revurdering/revurdering-nb
 import { useAppDispatch } from '~src/redux/Store';
 import { Revurdering, UtbetalingsRevurderingStatus } from '~src/types/Revurdering';
 import { erUtbetalingsrevurdering } from '~src/utils/revurdering/revurderingUtils';
-
-import messages from './stans-nb';
 import styles from './StansStyles.module.less';
+import messages from './stans-nb';
 
 const StansOppsummering = (props: { revurdering?: Revurdering }) => {
     const contextProps = useOutletContext<SaksoversiktContext>();

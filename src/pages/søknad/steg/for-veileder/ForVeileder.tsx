@@ -19,9 +19,8 @@ import { Søknadstype } from '~src/types/Søknadinnhold';
 import Bunnknapper from '../../bunnknapper/Bunnknapper';
 import sharedStyles from '../../steg-shared.module.less';
 import sharedI18n from '../steg-shared-i18n';
-
-import messages from './forVeileder-nb';
 import styles from './forVeileder.module.less';
+import messages from './forVeileder-nb';
 
 const ForVeileder = (props: { forrigeUrl: string; nesteUrl: string; avbrytUrl: string; søker: Person }) => {
     const navigate = useNavigate();

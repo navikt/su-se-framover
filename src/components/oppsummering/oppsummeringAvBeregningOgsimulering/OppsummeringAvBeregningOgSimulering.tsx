@@ -12,10 +12,9 @@ import { EksternGrunnlagSkatt } from '~src/types/EksterneGrunnlag';
 import { Simulering } from '~src/types/Simulering';
 
 import { OppsummeringPar } from '../oppsummeringpar/OppsummeringPar';
-
-import OppsummeringAvBeregning from './oppsummeringAvBeregning/OppsummeringAvBeregning';
-import messages from './OppsummeringAvBeregningOgSimulering-nb';
 import styles from './OppsummeringAvBeregningOgSimulering.module.less';
+import messages from './OppsummeringAvBeregningOgSimulering-nb';
+import OppsummeringAvBeregning from './oppsummeringAvBeregning/OppsummeringAvBeregning';
 import { Utbetalingssimulering } from './oppsummeringAvSimulering/OppsummeringAvSimulering';
 
 const OppsummeringAvBeregningOgSimulering = (props: {

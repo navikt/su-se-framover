@@ -4,12 +4,12 @@ import { useEffect, useState } from 'react';
 
 import { ApiError } from '~src/api/apiClient';
 import {
+    ferdigstillVedtak,
     fetchBakoverStatus,
+    grensesnittsavstemming,
+    konsistensavstemming,
     patchSøknader,
     SøknadResponse,
-    konsistensavstemming,
-    grensesnittsavstemming,
-    ferdigstillVedtak,
 } from '~src/api/driftApi';
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
 import { DatePicker } from '~src/components/inputs/datePicker/DatePicker';
@@ -22,8 +22,8 @@ import DokumentDistribusjon from './components/dokument/DokumentDistribusjon';
 import Personhendelser from './components/personhendelser/Personhendelser';
 import Gregulering from './components/regulering/G-regulering';
 import ResendStatistikk from './components/Statistikk';
-import Stønadsmottakere from './components/stønadsmottakere/Stønadsmottakere';
 import { SøknadTabellDrift } from './components/SøknadTabell';
+import Stønadsmottakere from './components/stønadsmottakere/Stønadsmottakere';
 import SendUtbetalingsIder from './components/utbetalingslinjer/SendUtbetalingslinjer';
 import styles from './index.module.less';
 
@@ -121,7 +121,7 @@ const Drift = () => {
                         onClose={() => {
                             setGrensesnittsavstemmingModalOpen(false);
                         }}
-                        aria-label=""
+                        aria-label="grensesnittavstemming"
                     >
                         <Modal.Body>
                             <div className={styles.modalContainer}>
@@ -180,7 +180,7 @@ const Drift = () => {
                         onClose={() => {
                             setKonsistensavtemmingModalOpen(false);
                         }}
-                        aria-label=""
+                        aria-label="konsistensavstemming"
                     >
                         <Modal.Body>
                             <div className={styles.modalContainer}>

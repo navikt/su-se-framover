@@ -1,18 +1,18 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { yupResolver } from '@hookform/resolvers/yup';
 import {
+    Alert,
     Button,
     Checkbox,
     CheckboxGroup,
-    Radio,
+    Link as DsReactLink,
+    HelpText,
+    Label,
     Loader,
+    Radio,
     RadioGroup,
     Select,
     Textarea,
-    Alert,
-    Label,
-    HelpText,
-    Link as DsReactLink,
 } from '@navikt/ds-react';
 import { struct } from 'fp-ts/Eq';
 import * as A from 'fp-ts/lib/Array';
@@ -30,7 +30,7 @@ import { useI18n } from '~src/lib/i18n';
 import * as Routes from '~src/lib/routes';
 import { eqNullable, Nullable } from '~src/lib/types';
 import yup from '~src/lib/validering';
-import { KlageSteg, Klage, KabalVedtakHjemmel, KlageVurderingType, KlageStatus } from '~src/types/Klage';
+import { KabalVedtakHjemmel, Klage, KlageStatus, KlageSteg, KlageVurderingType } from '~src/types/Klage';
 import { OmgjøringsGrunn } from '~src/types/Revurdering';
 import { erKlageVurdert, erKlageVurdertBekreftet } from '~src/utils/klage/klageUtils';
 
@@ -313,7 +313,6 @@ const VurderingAvKlage = (props: { sakId: string; klage: Klage }) => {
                                                         <Label>{formatMessage('form.fritekst.label')}</Label>
                                                         <HelpText>
                                                             {/*Er mulig Folka fra designsystemet tillatter rikt innhold da noen har hatt et issue med det  */}
-                                                            {/*eslint-disable-next-line @typescript-eslint/ban-ts-comment */}
                                                             {/*@ts-ignore */}
                                                             <Label className={styles.hjelpetekst}>
                                                                 <DsReactLink href={hjelpetekstLink} target="_blank">

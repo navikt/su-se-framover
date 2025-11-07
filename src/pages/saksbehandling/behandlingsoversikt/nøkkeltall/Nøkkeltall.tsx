@@ -9,9 +9,8 @@ import { useApiCall } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
 import { Sakstype } from '~src/types/Sak.ts';
 import { ferdigBehandlet, ikkeFerdigbehandlet, søknader } from '~src/utils/nøkkeltall/nøkkeltallUtils';
-
-import messages from './nøkkeltall-nb';
 import styles from './nøkkeltall.module.less';
+import messages from './nøkkeltall-nb';
 
 const Rad = ({ label, verdi, bold = false }: { label: string; verdi: string; bold?: boolean }) => (
     <li className={styles.item}>

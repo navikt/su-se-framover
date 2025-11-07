@@ -2,7 +2,7 @@ import { Tag, TagProps } from '@navikt/ds-react';
 import classNames from 'classnames';
 import * as DateFns from 'date-fns';
 
-import { Person, Adressebeskyttelse } from '~src/types/Person';
+import { Adressebeskyttelse, Person } from '~src/types/Person';
 
 import styles from './personAdvarsel.module.less';
 

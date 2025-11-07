@@ -1,11 +1,11 @@
 import {
-    CalculatorIcon,
     BulletListIcon,
+    CalculatorIcon,
+    EnvelopeClosedIcon,
+    FileXMarkIcon,
     PencilWritingIcon,
     TasklistIcon,
-    FileXMarkIcon,
     WalletIcon,
-    EnvelopeClosedIcon,
 } from '@navikt/aksel-icons';
 import { Heading } from '@navikt/ds-react';
 import classNames from 'classnames';

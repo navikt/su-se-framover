@@ -13,9 +13,8 @@ import OppsummeringAvBeregningOgSimulering from '../oppsummeringAvBeregningOgsim
 import { OppsummeringPar } from '../oppsummeringpar/OppsummeringPar';
 import Oppsummeringspanel, { Oppsummeringsfarge, Oppsummeringsikon } from '../oppsummeringspanel/Oppsummeringspanel';
 import SidestiltOppsummeringAvVilkårOgGrunnlag from '../sidestiltOppsummeringAvVilkårOgGrunnlag/SidestiltOppsummeringAvVilkårOgGrunnlag';
-
-import messages from './OppsummeringAvSøknadsbehandling-nb.ts';
 import styles from './OppsummeringAvSøknadsbehandling.module.less';
+import messages from './OppsummeringAvSøknadsbehandling-nb.ts';
 
 const OppsummeringAvSøknadsbehandling = (props: { behandling: Søknadsbehandling }) => {
     const { formatMessage } = useI18n({ messages });

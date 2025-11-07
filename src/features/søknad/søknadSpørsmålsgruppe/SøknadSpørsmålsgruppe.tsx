@@ -1,6 +1,6 @@
 import { Heading } from '@navikt/ds-react';
 import classNames from 'classnames';
-import { ReactNode, FC } from 'react';
+import { FC, ReactNode } from 'react';
 
 import styles from './søknadSpørsmålsgruppe.module.less';
 

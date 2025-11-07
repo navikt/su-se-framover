@@ -2,7 +2,7 @@ import * as B from 'fp-ts/lib/boolean';
 import { struct } from 'fp-ts/lib/Eq';
 import * as S from 'fp-ts/lib/string';
 
-import { Nullable, eqNullable } from '~src/lib/types';
+import { eqNullable, Nullable } from '~src/lib/types';
 import yup from '~src/lib/validering';
 
 export interface BrevForTilbakekrevingFormData {

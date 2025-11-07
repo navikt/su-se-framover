@@ -3,8 +3,8 @@ import { Link, useNavigate } from 'react-router-dom';
 
 import { AttesteringsForm } from '~src/components/forms/attesteringForm/AttesteringsForm';
 import OppsummeringAvSøknadsbehandling from '~src/components/oppsummering/søknadsbehandlingoppsummering/OppsummeringAvSøknadsbehandling';
-import * as sakSlice from '~src/features/saksoversikt/sak.slice';
 import * as SøknadsbehandlingActions from '~src/features/SøknadsbehandlingActions';
+import * as sakSlice from '~src/features/saksoversikt/sak.slice';
 import { useAsyncActionCreator } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
 import * as Routes from '~src/lib/routes';
@@ -13,9 +13,8 @@ import { UnderkjennelseGrunn, UnderkjennelseGrunnBehandling } from '~src/types/B
 import { Sak } from '~src/types/Sak';
 import { Søknadsbehandling } from '~src/types/Søknadsbehandling';
 import { erIverksatt, erTilAttestering } from '~src/utils/SøknadsbehandlingUtils';
-
-import messages from './attesterSøknadsbehandling-nb';
 import styles from './attesterSøknadsbehandling.module.less';
+import messages from './attesterSøknadsbehandling-nb';
 
 const AttesterSøknadsbehandling = (props: { sak: Sak; søknadsbehandling: Søknadsbehandling }) => {
     const navigate = useNavigate();

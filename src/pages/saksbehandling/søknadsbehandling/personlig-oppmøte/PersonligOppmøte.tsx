@@ -7,9 +7,9 @@ import { useNavigate } from 'react-router-dom';
 import { Behandlingstype } from '~src/api/GrunnlagOgVilkårApi';
 import PersonligOppmøteForm from '~src/components/forms/vilkårOgGrunnlagForms/personligOppmøte/PersonligOppmøteForm';
 import {
+    eqPersonligOppmøteVilkårFormData,
     PersonligOppmøteVilkårFormData,
     personligOppmøteFormDataTilRequest,
-    eqPersonligOppmøteVilkårFormData,
     personligOppmøteFormSchema,
     personligOppmøteVilkårTilFormDataEllerNy,
 } from '~src/components/forms/vilkårOgGrunnlagForms/personligOppmøte/PersonligOppmøteFormUtils';
@@ -36,9 +36,8 @@ import EksisterendeVedtaksinformasjon from '../EksisterendeVedtaksinformasjon';
 import sharedI18n from '../sharedI18n-nb';
 import sharedStyles from '../sharedStyles.module.less';
 import { VilkårsvurderingBaseProps } from '../types';
-
-import messages from './personligOppmøte-nb';
 import styles from './personligOppmøte.module.less';
+import messages from './personligOppmøte-nb';
 
 const PersonligOppmøte = (
     props: VilkårsvurderingBaseProps & {

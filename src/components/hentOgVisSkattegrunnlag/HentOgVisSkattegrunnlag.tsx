@@ -1,6 +1,6 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Alert, BodyShort, Button, HelpText, Radio, RadioGroup, Select, TextField, Textarea } from '@navikt/ds-react';
+import { Alert, BodyShort, Button, HelpText, Radio, RadioGroup, Select, Textarea, TextField } from '@navikt/ds-react';
 import { useEffect, useState } from 'react';
 import { Controller, UseFormClearErrors, UseFormTrigger, useForm } from 'react-hook-form';
 
@@ -15,9 +15,8 @@ import { Sakstype } from '~src/types/Sak';
 
 import ApiErrorAlert from '../apiErrorAlert/ApiErrorAlert';
 import { ApiErrorCode } from '../apiErrorAlert/apiErrorCode';
-
-import messages from './HentOgVisSkattegrunnlag-nb';
 import styles from './HentOgVisSkattegrunnlag.module.less';
+import messages from './HentOgVisSkattegrunnlag-nb';
 import { FrioppslagFormData, frioppslagSchema, HentSkatteDataFor } from './HentOgVisSkattegrunnlagUtils';
 
 const HentOfVisSkattegrunnlagForFrioppslag = () => {

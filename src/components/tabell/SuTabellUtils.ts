@@ -15,8 +15,8 @@ import {
     erRevurderingStans,
     splitStatusOgResultatFraRevurdering,
 } from '~src/utils/revurdering/revurderingUtils';
-import { erPapirSøknad, erSøknadLukket } from '~src/utils/søknad/søknadUtils';
 import { splitStatusOgResultatFraSøkandsbehandling } from '~src/utils/SøknadsbehandlingUtils';
+import { erPapirSøknad, erSøknadLukket } from '~src/utils/søknad/søknadUtils';
 
 export const isRegulering = (b: TabellBehandling): b is Regulering => 'reguleringsstatus' in b;
 export const isSøknadMedEllerUtenBehandling = (b: TabellBehandling): b is SøknadMedEllerUtenBehandlinger =>

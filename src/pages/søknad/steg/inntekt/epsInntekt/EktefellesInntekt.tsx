@@ -7,7 +7,7 @@ import { InntektForm } from '~src/pages/søknad/steg/inntekt/søkersInntekt/Innt
 import { useAppDispatch, useAppSelector } from '~src/redux/Store';
 
 import sharedI18n from '../../steg-shared-i18n';
-import { inntektsValideringSchema, FormData } from '../validering';
+import { FormData, inntektsValideringSchema } from '../validering';
 
 import messages from './inntekt-nb';
 

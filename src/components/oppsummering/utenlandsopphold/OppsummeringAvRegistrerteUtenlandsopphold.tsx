@@ -22,9 +22,8 @@ import { Nullable } from '~src/lib/types';
 import { RegistrertUtenlandsopphold, UtenlandsoppholdDokumentasjon } from '~src/types/RegistrertUtenlandsopphold';
 import { formatDate, formatDateTime } from '~src/utils/date/dateUtils';
 import { formatPeriodeMedDager } from '~src/utils/periode/periodeUtils';
-
-import messages from './OppsummeringAvRegistrerteUtenlandsopphold-nb';
 import styles from './OppsummeringAvRegistrerteUtenlandsopphold.module.less';
+import messages from './OppsummeringAvRegistrerteUtenlandsopphold-nb';
 
 const OppsummeringAvRegistrerteUtenlandsopphold = (props: {
     sakId: string;

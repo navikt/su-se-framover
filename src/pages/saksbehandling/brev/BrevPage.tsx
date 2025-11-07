@@ -4,12 +4,12 @@ import {
     Box,
     Button,
     Checkbox,
+    FileUpload,
     Heading,
     Radio,
     RadioGroup,
     Select,
     TextField,
-    FileUpload,
     VStack,
 } from '@navikt/ds-react';
 import { Controller, useForm } from 'react-hook-form';

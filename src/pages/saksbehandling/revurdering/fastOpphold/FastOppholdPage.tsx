@@ -7,9 +7,9 @@ import { Behandlingstype, RevurderingOgFeilmeldinger } from '~src/api/GrunnlagOg
 import FastOppholdForm from '~src/components/forms/vilkårOgGrunnlagForms/fastOpphold/FastOppholdForm';
 import {
     FastOppholdVilkårFormData,
+    fastOppholdFormDataTilRequest,
     fastOppholdFormSchema,
     fastOppholdVilkårTilFormDataEllerNy,
-    fastOppholdFormDataTilRequest,
 } from '~src/components/forms/vilkårOgGrunnlagForms/fastOpphold/FastOppholdFormUtils';
 import OppsummeringAvFastOppholdvilkår from '~src/components/oppsummering/oppsummeringAvVilkårOgGrunnlag/OppsummeringAvFastOpphold';
 import ToKolonner from '~src/components/toKolonner/ToKolonner';

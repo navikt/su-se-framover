@@ -30,7 +30,6 @@ export interface GrunnlagsdataOgVilkårsvurderinger {
     institusjonsopphold: Nullable<InstitusjonsoppholdVilkår>;
 }
 
-export const trimIdFromList = <T>(obj: T[]) => (harId(obj[0] ?? {}) ? obj.map(trimIdFromObject) : obj);
 export const trimIdAndOpprettetFromList = <T>(obj: T[]) =>
     (harId(obj[0] ?? {}) ? obj.map(trimIdFromObject) : obj).map((obj) =>
         harOpprettetTidspunkt(obj) ? trimOpprettetFromObject(obj) : obj,
@@ -38,7 +37,7 @@ export const trimIdAndOpprettetFromList = <T>(obj: T[]) =>
 
 export const trimIdFromObject = <T>(obj: T) => {
     if (harId(obj)) {
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        // biome-ignore lint/correctness/noUnusedVariables: opprettet is intentionally ignored
         const { id, ...rest } = obj;
         return rest;
     }
@@ -47,14 +46,14 @@ export const trimIdFromObject = <T>(obj: T) => {
 
 export const trimOpprettetFromObject = <T>(obj: T) => {
     if (harOpprettetTidspunkt(obj)) {
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        // biome-ignore lint/correctness/noUnusedVariables: opprettet is intentionally ignored
         const { opprettet, ...rest } = obj;
         return rest;
     }
     return obj;
 };
 
-/* eslint-disable @typescript-eslint/no-explicit-any */
+// biome-ignore lint/suspicious/noExplicitAny: using any here for flexibility
 const harId = (obj: any): obj is { id: string } => (obj ? 'id' in obj : false);
+// biome-ignore lint/suspicious/noExplicitAny: using any here for flexibility
 const harOpprettetTidspunkt = (obj: any): obj is { opprettet: string } => (obj ? 'opprettet' in obj : false);
-/* eslint-enable @typescript-eslint/no-explicit-any */

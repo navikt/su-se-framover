@@ -7,9 +7,9 @@ import { Behandlingstype, RevurderingOgFeilmeldinger } from '~src/api/GrunnlagOg
 import FormueForm from '~src/components/forms/vilkårOgGrunnlagForms/formue/FormueForm';
 import {
     FormueVilkårFormData,
-    formueVilkårTilFormData,
     formueFormSchema,
     formueVilkårFormTilRequest,
+    formueVilkårTilFormData,
 } from '~src/components/forms/vilkårOgGrunnlagForms/formue/FormueFormUtils';
 import OppsummeringAvFormueVilkår from '~src/components/oppsummering/oppsummeringAvVilkårOgGrunnlag/OppsummeringAvFormue';
 import ToKolonner from '~src/components/toKolonner/ToKolonner';
@@ -20,9 +20,8 @@ import { InformasjonsRevurdering, RevurderingStegProps } from '~src/types/Revurd
 import { lagDatePeriodeAvStringPeriode } from '~src/utils/periode/periodeUtils';
 
 import RevurderingsperiodeHeader from '../revurderingsperiodeheader/RevurderingsperiodeHeader';
-
-import messages from './formue-nb';
 import styles from './formue.module.less';
+import messages from './formue-nb';
 
 const Formue = (props: RevurderingStegProps) => {
     const navigate = useNavigate();

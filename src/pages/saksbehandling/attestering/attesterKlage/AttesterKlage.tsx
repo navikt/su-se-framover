@@ -18,9 +18,8 @@ import {
     erKlageTilAttestering,
     erKlageTilAttesteringAvvist,
 } from '~src/utils/klage/klageUtils';
-
-import messages from './attesterKlage-nb';
 import styles from './attesterKlage.module.less';
+import messages from './attesterKlage-nb';
 
 const AttesterKlage = (props: { sakId: string; klage: Klage; klagensVedtak: Vedtak }) => {
     const { formatMessage } = useI18n({ messages });

@@ -4,7 +4,7 @@ import * as B from 'fp-ts/lib/boolean';
 import { struct } from 'fp-ts/lib/Eq';
 import * as S from 'fp-ts/lib/string';
 
-import { Nullable, eqNullable } from '~src/lib/types';
+import { eqNullable, Nullable } from '~src/lib/types';
 import yup, { validateStringAsNonNegativeNumber, validerPeriodeTomEtterFom } from '~src/lib/validering';
 import {
     Bosituasjon,
@@ -21,7 +21,7 @@ import {
     FormueVilkårRequest,
 } from '~src/types/grunnlagsdataOgVilkårsvurderinger/formue/Formuevilkår';
 import { GrunnlagsdataOgVilkårsvurderinger } from '~src/types/grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
-import { NullablePeriode, Periode, eqNullableDatePeriode } from '~src/types/Periode';
+import { eqNullableDatePeriode, NullablePeriode, Periode } from '~src/types/Periode';
 import { SøknadInnhold } from '~src/types/Søknadinnhold';
 import { lagTomPeriode, periodeTilIsoDateString } from '~src/utils/periode/periodeUtils';
 import {

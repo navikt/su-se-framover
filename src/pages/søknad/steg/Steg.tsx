@@ -1,5 +1,5 @@
 import { Heading, Ingress } from '@navikt/ds-react';
-import { useRef, useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 
 import { SøknadState } from '~src/features/søknad/søknad.slice';
 import { DelerBoligMed } from '~src/features/søknad/types';

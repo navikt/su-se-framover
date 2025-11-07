@@ -15,8 +15,8 @@ import OppsummeringAvInstitusjonsoppholdvilkår from '~src/components/oppsummeri
 import OppsummeringAvLovligOppholdvilkår from '~src/components/oppsummering/oppsummeringAvVilkårOgGrunnlag/OppsummeringAvLovligOpphold.tsx';
 import OppsummeringAvPersonligoppmøtevilkår from '~src/components/oppsummering/oppsummeringAvVilkårOgGrunnlag/OppsummeringAvPersonligOppmøte.tsx';
 import OppsummeringAvUtenlandsopphold from '~src/components/oppsummering/oppsummeringAvVilkårOgGrunnlag/OppsummeringAvUtenlandsopphold.tsx';
-import messages from '~src/components/oppsummering/sidestiltOppsummeringAvVilkårOgGrunnlag/SidestiltOppsummeringAvVilkårOgGrunnlag-nb.ts';
 import styles from '~src/components/oppsummering/sidestiltOppsummeringAvVilkårOgGrunnlag/SidestiltOppsummeringAvVilkårOgGrunnlag.module.less';
+import messages from '~src/components/oppsummering/sidestiltOppsummeringAvVilkårOgGrunnlag/SidestiltOppsummeringAvVilkårOgGrunnlag-nb.ts';
 import { VilkårResultatStatusIkon } from '~src/components/VilkårvurderingStatusIcon.tsx';
 import { useI18n } from '~src/lib/i18n.ts';
 import { Nullable } from '~src/lib/types.ts';
@@ -27,25 +27,25 @@ import {
     bosituasjonErlik,
 } from '~src/types/grunnlagsdataOgVilkårsvurderinger/bosituasjon/Bosituasjongrunnlag.ts';
 import {
-    fastOppholdErLik,
     FastOppholdVilkår,
+    fastOppholdErLik,
 } from '~src/types/grunnlagsdataOgVilkårsvurderinger/fastOpphold/FastOppholdVilkår.ts';
-import { formueErlik, FormueVilkår } from '~src/types/grunnlagsdataOgVilkårsvurderinger/formue/Formuevilkår.ts';
+import { FormueVilkår, formueErlik } from '~src/types/grunnlagsdataOgVilkårsvurderinger/formue/Formuevilkår.ts';
 import {
-    institusjonsoppholdErLik,
     InstitusjonsoppholdVilkår,
+    institusjonsoppholdErLik,
 } from '~src/types/grunnlagsdataOgVilkårsvurderinger/institusjonsopphold/Institusjonsopphold.ts';
 import {
-    lovligOppholdErLik,
     LovligOppholdVilkår,
+    lovligOppholdErLik,
 } from '~src/types/grunnlagsdataOgVilkårsvurderinger/lovligOpphold/LovligOppholdVilkår.ts';
 import {
-    personligOppmøteErLik,
     PersonligOppmøteVilkår,
+    personligOppmøteErLik,
 } from '~src/types/grunnlagsdataOgVilkårsvurderinger/personligOppmøte/PersonligOppmøteVilkår.ts';
 import {
-    utenlandsoppholdErlik,
     UtenlandsoppholdVilkår,
+    utenlandsoppholdErlik,
 } from '~src/types/grunnlagsdataOgVilkårsvurderinger/utenlandsopphold/Utenlandsopphold.ts';
 import {
     Boforhold,

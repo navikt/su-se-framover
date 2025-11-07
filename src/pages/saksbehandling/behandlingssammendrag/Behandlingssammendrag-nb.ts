@@ -1,4 +1,4 @@
-import { BehandlingssammendragType, BehandlingssammendragStatus } from '~src/types/Behandlingssammendrag';
+import { BehandlingssammendragStatus, BehandlingssammendragType } from '~src/types/Behandlingssammendrag';
 import { Sakstype } from '~src/types/Sak.ts';
 
 export const behandlingssammendragTypeMessages: { [key in BehandlingssammendragType]: string } = {

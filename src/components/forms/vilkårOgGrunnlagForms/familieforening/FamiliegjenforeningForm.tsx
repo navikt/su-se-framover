@@ -9,12 +9,11 @@ import { useI18n } from '~src/lib/i18n';
 import UtfallSomIkkeStøttes from '~src/pages/saksbehandling/revurdering/utfallSomIkkeStøttes/UtfallSomIkkeStøttes.tsx';
 import { FormWrapper } from '~src/pages/saksbehandling/søknadsbehandling/FormWrapper';
 import { Vilkårstatus } from '~src/types/Vilkår';
-
-import messages from './familieforening-nb';
 import {
     FamilieforeningFormData,
     nyVurderingsperiodeFamiliegjenforeningMedEllerUtenPeriode,
 } from './FamilieforeningFormUtils';
+import messages from './familieforening-nb';
 
 interface Props extends VilkårFormProps<FamilieforeningFormData> {
     begrensTilEnPeriode?: boolean;

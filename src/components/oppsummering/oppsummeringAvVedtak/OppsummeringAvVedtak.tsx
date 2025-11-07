@@ -41,9 +41,8 @@ import OppsummeringAvBeregningOgSimulering from '../oppsummeringAvBeregningOgsim
 import OppsummeringAvTilbakekrevingsbehandling, {
     OppsummeringAvTilbakekrevingsbehandlingbrev,
 } from '../oppsummeringAvTilbakekrevingsbehandling/OppsummeringAvTilbakekrevingsbehandling';
-
-import messages from './OppsummeringAvVedtak-nb';
 import styles from './OppsummeringAvVedtak.module.less';
+import messages from './OppsummeringAvVedtak-nb';
 
 const typeBehandling = (b: Behandling | Klage | Regulering | ManuellTilbakekrevingsbehandling) => {
     if ('klagevedtakshistorikk' in b) {

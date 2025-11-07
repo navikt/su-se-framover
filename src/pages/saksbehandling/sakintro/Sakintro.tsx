@@ -1,6 +1,6 @@
-import { ChevronUpIcon, ChevronDownIcon } from '@navikt/aksel-icons';
+import { ChevronDownIcon, ChevronUpIcon } from '@navikt/aksel-icons';
 import { Alert, Button, LinkPanel, Popover } from '@navikt/ds-react';
-import { partition, isEmpty } from 'fp-ts/Array';
+import { isEmpty, partition } from 'fp-ts/Array';
 import { useState } from 'react';
 import { useOutletContext } from 'react-router-dom';
 
@@ -21,12 +21,12 @@ import {
 } from '~src/utils/ManuellTilbakekrevingsbehandlingUtils';
 import { erReguleringAvsluttet, erReguleringÅpen } from '~src/utils/ReguleringUtils';
 import { erRevurderingAvsluttet, erRevurderingÅpen } from '~src/utils/revurdering/revurderingUtils';
-import { getIverksatteInnvilgedeSøknader, erSøknadLukket, erSøknadÅpen } from '~src/utils/søknad/søknadUtils';
 import { erSøknadsbehandlingÅpen } from '~src/utils/SøknadsbehandlingUtils';
+import { erSøknadLukket, erSøknadÅpen, getIverksatteInnvilgedeSøknader } from '~src/utils/søknad/søknadUtils';
 
 import AvsluttedeBehandlingerTabell from './avsluttedeBehandlingerTabell/AvsluttedeBehandlingerTabell';
-import messages from './sakintro-nb';
 import styles from './sakintro.module.less';
+import messages from './sakintro-nb';
 import Vedtakstabell from './Vedtakstabell/Vedtakstabell';
 import ÅpneBehandlingerTabell from './åpneBehandlingerTabell/ÅpneBehandlingerTabell';
 

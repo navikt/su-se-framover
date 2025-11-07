@@ -1,5 +1,5 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import { BodyShort, Button, HGrid, Heading, Label, Modal, Textarea } from '@navikt/ds-react';
+import { BodyShort, Button, Heading, HGrid, Label, Modal, Textarea } from '@navikt/ds-react';
 import { useState } from 'react';
 
 import { sendUtbetalingsIder } from '~src/api/driftApi';

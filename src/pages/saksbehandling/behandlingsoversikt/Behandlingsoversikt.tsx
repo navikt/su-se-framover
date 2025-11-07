@@ -1,5 +1,5 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import { NumberListIcon, CurrencyExchangeIcon, FileCheckmarkIcon, FileIcon, TableIcon } from '@navikt/aksel-icons';
+import { CurrencyExchangeIcon, FileCheckmarkIcon, FileIcon, NumberListIcon, TableIcon } from '@navikt/aksel-icons';
 import { Heading, Tabs } from '@navikt/ds-react';
 import { useNavigate } from 'react-router-dom';
 
@@ -13,9 +13,8 @@ import { useAsyncActionCreator } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
 import * as Routes from '~src/lib/routes';
 import { useAppDispatch, useAppSelector } from '~src/redux/Store';
-
-import messages from './behandlingsoversikt-nb';
 import styles from './behandlingsoversikt.module.less';
+import messages from './behandlingsoversikt-nb';
 import { FerdigeBehandlinger } from './ferdigeBehandlinger/FerdigeBehandlinger';
 import Nøkkeltall from './nøkkeltall/Nøkkeltall';
 import Reguleringsoversikt from './regulering/reguleringsoversikt';

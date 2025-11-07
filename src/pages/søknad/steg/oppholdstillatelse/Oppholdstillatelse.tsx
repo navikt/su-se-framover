@@ -181,7 +181,7 @@ const Oppholdstillatelse = (props: { nesteUrl: string; forrigeUrl: string; avbry
                                 value={field.value || ''}
                                 autoComplete="off"
                                 // Dette elementet vises ikke ved sidelast
-                                // eslint-disable-next-line jsx-a11y/no-autofocus
+
                                 autoFocus
                             />
                         )}

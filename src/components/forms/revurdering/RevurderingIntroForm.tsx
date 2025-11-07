@@ -17,9 +17,8 @@ import {
     OpprettetRevurderingÅrsak,
 } from '~src/types/Revurdering';
 import { Sakstype } from '~src/types/Sak.ts';
-
-import messages from './RevurderingIntroForm-nb';
 import styles from './RevurderingIntroForm.module.less';
+import messages from './RevurderingIntroForm-nb';
 import { RevurderingIntroFormData, RevurderingIntroFormProps } from './RevurderingIntroFormUtils';
 
 export const kreverKlageId = (årsak: OpprettetRevurderingÅrsak | null) => {

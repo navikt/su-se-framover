@@ -1,6 +1,6 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { AsyncThunk } from '@reduxjs/toolkit';
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 import { ApiClientResult, ApiError } from '~src/api/apiClient';
@@ -123,20 +123,6 @@ export function useBrevForhåndsvisning<T>(
         resetToInitial,
     ];
 }
-
-/**
- * Returnerer det første ikke-initial remoteDataen.
- * Dersom det finnes flere ikke-initial remotedataer, blir fortsatt bare den første returnert. Her har rekkefølge noe å si
- * Da vil du kanskje heller bruke RemoteData.combine() hvis du skal ha begge aktive
- */
-export const useExclusiveCombine = <Error, Success>(...args: Array<RemoteData.RemoteData<Error, Success>>) => {
-    if (args.length <= 0) {
-        throw new Error('UseExclusiveCombine må ta inn en liste med elementer');
-    }
-    return useMemo(() => {
-        return args.find((a) => !RemoteData.isInitial(a)) ?? args[0];
-    }, [args]);
-};
 
 /**
  * useAutosave er for bruk dersom du vil kalle på en funksjon etter X sekunder, der endringer i dependencies resetter timeren.

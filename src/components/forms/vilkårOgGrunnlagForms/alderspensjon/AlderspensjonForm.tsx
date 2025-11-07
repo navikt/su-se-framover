@@ -2,12 +2,11 @@ import * as RemoteData from '@devexperts/remote-data-ts';
 import { Radio, RadioGroup } from '@navikt/ds-react';
 import { ReactNode } from 'react';
 import { Controller } from 'react-hook-form';
-
-import messages from '~src/components/forms/vilkårOgGrunnlagForms/alderspensjon/alderspensjon-nb';
 import {
     AlderspensjonPeriodisertFormData,
     nyVurderingsperiodeAlderspensjonMedEllerUtenPeriode,
 } from '~src/components/forms/vilkårOgGrunnlagForms/alderspensjon/AlderspensjonFormUtils';
+import messages from '~src/components/forms/vilkårOgGrunnlagForms/alderspensjon/alderspensjon-nb';
 import { VilkårFormProps } from '~src/components/forms/vilkårOgGrunnlagForms/VilkårOgGrunnlagFormUtils.ts';
 import MultiPeriodeVelger from '~src/components/inputs/multiPeriodeVelger/MultiPeriodeVelger';
 import { useI18n } from '~src/lib/i18n';

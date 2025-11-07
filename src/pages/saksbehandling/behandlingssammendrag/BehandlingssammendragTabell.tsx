@@ -18,9 +18,8 @@ import { BehandlingssammendragMedId } from '~src/types/Behandlingssammendrag';
 import { Sak } from '~src/types/Sak';
 import { formatDateTime } from '~src/utils/date/dateUtils';
 import { formatPeriode } from '~src/utils/periode/periodeUtils';
-
-import messages from './Behandlingssammendrag-nb';
 import styles from './Behandlingssammendrag.module.less';
+import messages from './Behandlingssammendrag-nb';
 import { BehandlingssammendragKolonne, sortTabell } from './BehandlingssammendragUtils';
 
 export const DEFAULT_PAGINERING_SIZE = 10;

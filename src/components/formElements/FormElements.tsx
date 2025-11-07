@@ -1,6 +1,6 @@
 import { Radio, RadioGroup, RadioGroupProps } from '@navikt/ds-react';
 import { endOfMonth } from 'date-fns';
-import { ForwardRefExoticComponent, RefAttributes, forwardRef } from 'react';
+import { ForwardRefExoticComponent, forwardRef, RefAttributes } from 'react';
 import { FieldErrorsImpl } from 'react-hook-form';
 
 import { useI18n } from '~src/lib/i18n';
@@ -8,9 +8,8 @@ import { Nullable } from '~src/lib/types';
 import { NullablePeriode } from '~src/types/Periode';
 
 import { MonthPicker } from '../inputs/datePicker/DatePicker';
-
-import nb from './formElements-nb';
 import styles from './formElements.module.less';
+import nb from './formElements-nb';
 
 interface BooleanRadioGroupProps extends Omit<RadioGroupProps, 'value' | 'onChange' | 'children' | 'disabled'> {
     value: Nullable<boolean> | undefined;

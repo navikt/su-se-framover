@@ -1,7 +1,7 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Radio, RadioGroup } from '@navikt/ds-react';
-import { useRef, useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { Controller, UseFormTrigger, useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 
