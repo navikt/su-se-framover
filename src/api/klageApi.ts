@@ -50,6 +50,7 @@ export async function lagreVurderingAvKlage(arg: VurderingRequest): Promise<ApiC
         method: 'POST',
         body: {
             omgjør: arg.omgjør,
+            delvisomgjøring_egen_instans: arg.delvisomgjøring_egen_instans,
             oppretthold: arg.oppretthold,
             delvisomgjøringKa: arg.delvisomgjøringKa,
             fritekstTilBrev: arg.fritekstTilBrev,

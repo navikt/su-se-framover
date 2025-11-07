@@ -32,7 +32,11 @@ const OppsummeringAvKlage = (props: { klage: Klage; klagensVedtak: Vedtak }) => 
 
     const hentVurderingstekstId = (klage: Klage): keyof typeof oppsummeringMessages => {
         if (klage.vedtaksvurdering?.type === KlageVurderingType.OPPRETTHOLD) return 'label.vurdering.opprettholdt';
-        else if (klage.vedtaksvurdering?.type === KlageVurderingType.OMGJØR) return 'label.vurdering.omgjort';
+        else if (
+            klage.vedtaksvurdering?.type === KlageVurderingType.OMGJØR ||
+            klage.vedtaksvurdering?.type === KlageVurderingType.DELVIS_OMGJØRING_EGEN_VEDTAKSINSTANS
+        )
+            return 'label.vurdering.omgjort';
         else if (
             [KlageStatus.AVVIST, KlageStatus.TIL_ATTESTERING_AVVIST, KlageStatus.IVERKSATT_AVVIST].includes(
                 klage.status,

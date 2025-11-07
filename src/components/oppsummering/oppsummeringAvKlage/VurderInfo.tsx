@@ -26,12 +26,18 @@ export const VurderInfo = (props: { klage: Klage }) => {
                     <>
                         <OppsummeringPar
                             label={formatMessage('form.omgjørVedtak.årsak.label')}
-                            verdi={formatMessage(props.klage.vedtaksvurdering.omgjør.årsak)}
+                            verdi={formatMessage(
+                                props.klage.vedtaksvurdering.omgjør?.årsak ??
+                                    props.klage.vedtaksvurdering.delvisomgjøringEgenInstans?.årsak,
+                            )}
                             retning={'vertikal'}
                         />
                         <OppsummeringPar
                             label={formatMessage('label.begrunnelse')}
-                            verdi={props.klage.vedtaksvurdering.omgjør.begrunnelse}
+                            verdi={
+                                props.klage.vedtaksvurdering.omgjør?.begrunnelse ??
+                                props.klage.vedtaksvurdering.delvisomgjøringEgenInstans?.begrunnelse
+                            }
                             retning={'vertikal'}
                         />
                     </>

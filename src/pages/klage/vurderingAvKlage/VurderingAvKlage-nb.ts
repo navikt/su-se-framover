@@ -26,6 +26,7 @@ const KabalVedtakHjemmelMessages: { [key in KabalVedtakHjemmel]: string } = {
 
 const klageVurderingTypeMessages: { [key in KlageVurderingType]: string } = {
     [KlageVurderingType.OMGJØR]: 'Omgjør vedtak',
+    [KlageVurderingType.DELVIS_OMGJØRING_EGEN_VEDTAKSINSTANS]: 'Delvis omgjøring i vedtaksinstansen',
     [KlageVurderingType.OPPRETTHOLD]: 'Oppretthold vedtak(overføres til klageinstans)',
     [KlageVurderingType.DELVIS_OMGJØRING_KA]: 'Delvis omgjøring (overføres til klageinstans)',
 };
