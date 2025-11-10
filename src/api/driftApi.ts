@@ -113,6 +113,21 @@ export async function resendSpesifikkVedtakstatistikk(args: {
     });
 }
 
+export async function resendSakStatistikkInenforPeriode(args: {
+    fraOgMed: string;
+    tilOgMed: string;
+}): Promise<ApiClientResult<{ status: string }>> {
+    return apiClient({
+        url: `/drift/resend-statistikk/sak`,
+        method: 'POST',
+        request: { headers: new Headers({ Accept: 'application/json' }) },
+        body: {
+            fraOgMed: args.fraOgMed,
+            tilOgMed: args.tilOgMed,
+        },
+    });
+}
+
 export async function ferdigstillVedtak(args: { vedtakId: string }): Promise<ApiClientResult<{ status: string }>> {
     return apiClient({
         url: `/drift/vedtak/${args.vedtakId}/ferdigstill`,
