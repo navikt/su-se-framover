@@ -11,7 +11,6 @@ import klageNb from '~src/pages/klage/klage-nb';
 import { BooleanMedBegrunnelse } from '~src/pages/klage/vurderFormkrav/VurderFormkrav';
 import {
     AvsluttKlageStatus,
-    FerdigstiltOmgjortKlage,
     FremsattRettsligKlageinteresse,
     KabalVedtakHjemmel,
     Klage,
@@ -41,6 +40,7 @@ export interface VurderingRequest {
     sakId: string;
     klageId: string;
     omgjør: Nullable<Omgjør>;
+    delvisomgjøring_egen_instans: Nullable<Omgjør>;
     oppretthold: Nullable<OversendelseKabal>;
     delvisomgjøringKa: Nullable<OversendelseKabal>;
     fritekstTilBrev: Nullable<string>;
@@ -128,8 +128,19 @@ export const erKlageFerdigbehandlet = (klage: Klage): boolean => {
     return erKlageIverksattAvvist(klage) || erOversendtKlageFerdigbehandlet(klage) || erKlageOmgjortFerdigstilt(klage);
 };
 
-export const erKlageOmgjortFerdigstilt = (k: Klage): k is FerdigstiltOmgjortKlage =>
-    k.status === KlageStatus.FERDIGSTILT_OMGJORT;
+export const erKlageOmgjortFerdigstilt = (
+    k: Klage,
+): k is Klage & {
+    vedtakId: string;
+    vedtaksvurdering: {
+        type: KlageVurderingType;
+        omgjør: Omgjør | null;
+        delvisomgjøringEgenInstans: Omgjør | null;
+    };
+} =>
+    k.status === KlageStatus.FERDIGSTILT_OMGJORT &&
+    k.vedtaksvurdering != null &&
+    (k.vedtaksvurdering.omgjør != null || k.vedtaksvurdering.delvisomgjøringEgenInstans != null);
 
 export const erKlageÅpen = (k: Klage) => !erKlageFerdigbehandlet(k) && !erKlageAvsluttet(k);
 
@@ -142,12 +153,37 @@ export const erKlageOmgjort = (
             årsak: OmgjøringsGrunn;
             begrunnelse: string;
         };
+        delvisomgjøringEgenInstans: null;
         oppretthold: null;
         delvisOmgjøringKa: null;
     };
 } => {
-    return k.vedtaksvurdering?.type === KlageVurderingType.OMGJØR;
+    const v = k.vedtaksvurdering;
+    if (!v) return false;
+
+    return v.type === KlageVurderingType.OMGJØR;
 };
+
+export const erKlageDelvisomgjortEgenVedtaksinstans = (
+    k: Klage,
+): k is Klage & {
+    vedtaksvurdering: {
+        type: KlageVurderingType.DELVIS_OMGJØRING_EGEN_VEDTAKSINSTANS;
+        omgjør: null;
+        delvisomgjøringEgenInstans: {
+            årsak: OmgjøringsGrunn;
+            begrunnelse: string;
+        };
+        oppretthold: null;
+        delvisOmgjøringKa: null;
+    };
+} => {
+    const v = k.vedtaksvurdering;
+    if (!v) return false;
+
+    return v.type === KlageVurderingType.DELVIS_OMGJØRING_EGEN_VEDTAKSINSTANS && v.delvisomgjøringEgenInstans != null;
+};
+
 export const erKlageOpprettholdt = (
     k: Klage,
 ): k is Klage & {

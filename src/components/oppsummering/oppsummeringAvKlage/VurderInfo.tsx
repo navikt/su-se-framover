@@ -6,7 +6,12 @@ import { useI18n } from '~src/lib/i18n';
 import formkravMessages from '~src/pages/klage/vurderFormkrav/vurderFormkrav-nb';
 import vurderingMessages from '~src/pages/klage/vurderingAvKlage/VurderingAvKlage-nb';
 import { Klage } from '~src/types/Klage';
-import { erKlageDelvisOmgjortKA, erKlageOmgjort, erKlageOpprettholdt } from '~src/utils/klage/klageUtils';
+import {
+    erKlageDelvisOmgjortKA,
+    erKlageDelvisomgjortEgenVedtaksinstans,
+    erKlageOmgjort,
+    erKlageOpprettholdt,
+} from '~src/utils/klage/klageUtils';
 
 export const VurderInfo = (props: { klage: Klage }) => {
     const { formatMessage } = useI18n({
@@ -32,6 +37,20 @@ export const VurderInfo = (props: { klage: Klage }) => {
                         <OppsummeringPar
                             label={formatMessage('label.begrunnelse')}
                             verdi={props.klage.vedtaksvurdering.omgjør.begrunnelse}
+                            retning={'vertikal'}
+                        />
+                    </>
+                )}
+                {erKlageDelvisomgjortEgenVedtaksinstans(props.klage) && (
+                    <>
+                        <OppsummeringPar
+                            label={formatMessage('form.omgjørVedtak.årsak.label')}
+                            verdi={formatMessage(props.klage.vedtaksvurdering.delvisomgjøringEgenInstans.årsak)}
+                            retning={'vertikal'}
+                        />
+                        <OppsummeringPar
+                            label={formatMessage('label.begrunnelse')}
+                            verdi={props.klage.vedtaksvurdering.delvisomgjøringEgenInstans.begrunnelse}
                             retning={'vertikal'}
                         />
                     </>

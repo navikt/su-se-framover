@@ -27,16 +27,6 @@ export interface Klage {
     avsluttetBegrunnelse: Nullable<string>;
 }
 
-export interface FerdigstiltOmgjortKlage extends Klage {
-    vedtakId: string;
-    vedtaksvurdering: {
-        type: KlageVurderingType;
-        omgjør: Omgjør;
-        oppretthold: Nullable<OversendelseKabal>;
-        delvisOmgjøringKa: Nullable<OversendelseKabal>;
-    };
-}
-
 export enum AvsluttKlageStatus {
     KAN_AVSLUTTES = 'KAN_AVSLUTTES',
     ER_AVSLUTTET = 'ER_AVSLUTTET',
@@ -73,6 +63,7 @@ export enum KlageStatus {
 interface Vedtaksvurdering {
     type: KlageVurderingType;
     omgjør: Nullable<Omgjør>;
+    delvisomgjøringEgenInstans: Nullable<Omgjør>;
     oppretthold: Nullable<OversendelseKabal>;
     delvisOmgjøringKa: Nullable<OversendelseKabal>;
 }
@@ -101,6 +92,7 @@ export type KlageErUnderskrevet = SvarMedBegrunnelse;
 export type FremsattRettsligKlageinteresse = SvarMedBegrunnelse;
 
 export enum KlageVurderingType {
+    DELVIS_OMGJØRING_EGEN_VEDTAKSINSTANS = 'DELVIS_OMGJØRING_EGEN_VEDTAKSINSTANS',
     OMGJØR = 'OMGJØR',
     OPPRETTHOLD = 'OPPRETTHOLD',
     DELVIS_OMGJØRING_KA = 'DELVIS_OMGJØRING_KA',

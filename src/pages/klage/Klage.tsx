@@ -8,6 +8,7 @@ import * as Routes from '~src/lib/routes';
 import { FerdigstillOmgjøringKlage } from '~src/pages/klage/sendKlageTilAttestering/FerdigstillOmgjøringKlage';
 import { KlageSteg } from '~src/types/Klage';
 import {
+    erKlageDelvisomgjortEgenVedtaksinstans,
     erKlageOmgjort,
     erKlageVilkårsvurdertUtfyltEllerSenere,
     getDefaultFramdriftsindikatorLinjer,
@@ -65,7 +66,7 @@ const Klage = () => {
                 {urlParams.steg == KlageSteg.Vurdering && <VurderingAvKlage sakId={props.sak.id} klage={klage} />}
                 {urlParams.steg == KlageSteg.Avvisning && <AvvistKlage sakId={props.sak.id} klage={klage} />}
                 {urlParams.steg === KlageSteg.Oppsummering &&
-                    (erKlageOmgjort(klage) ? (
+                    (erKlageOmgjort(klage) || erKlageDelvisomgjortEgenVedtaksinstans(klage) ? (
                         <FerdigstillOmgjøringKlage sakId={props.sak.id} klage={klage} vedtaker={props.sak.vedtak} />
                     ) : (
                         <SendKlageTilAttestering sakId={props.sak.id} klage={klage} vedtaker={props.sak.vedtak} />
