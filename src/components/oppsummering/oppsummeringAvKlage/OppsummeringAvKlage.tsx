@@ -20,7 +20,11 @@ import { Klage, KlageStatus, KlageVurderingType } from '~src/types/Klage';
 import { Vedtak } from '~src/types/Vedtak';
 import * as DateUtils from '~src/utils/date/dateUtils';
 import { getBlob } from '~src/utils/dokumentUtils';
-import { erKlageOmgjort, erKlageOversendtUtfylt } from '~src/utils/klage/klageUtils';
+import {
+    erKlageDelvisomgjortEgenVedtaksinstans,
+    erKlageOmgjort,
+    erKlageOversendtUtfylt,
+} from '~src/utils/klage/klageUtils';
 import styles from './oppsummeringAvKlage.module.less';
 import oppsummeringMessages from './oppsummeringAvKlage-nb';
 
@@ -46,7 +50,8 @@ const OppsummeringAvKlage = (props: { klage: Klage; klagensVedtak: Vedtak }) => 
 
         return 'label.vurdering.ukjent';
     };
-    const erOmgjort = erKlageOmgjort(props.klage);
+    const skalBehandlesIEgenVedtaksinstans =
+        erKlageOmgjort(props.klage) || erKlageDelvisomgjortEgenVedtaksinstans(props.klage);
 
     return (
         <div>
@@ -90,7 +95,7 @@ const OppsummeringAvKlage = (props: { klage: Klage; klagensVedtak: Vedtak }) => 
                         </VStack>
                     </div>
                 )}
-                {!erOmgjort && (
+                {!skalBehandlesIEgenVedtaksinstans && (
                     <>
                         {erKlageOversendtUtfylt(props.klage) ? (
                             <div className={styles.seBrevContainer}>

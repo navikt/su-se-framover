@@ -78,7 +78,7 @@ const schema = yup.object<VurderingAvKlageFormData>({
                 KlageVurderingType.DELVIS_OMGJØRING_KA,
                 KlageVurderingType.DELVIS_OMGJØRING_EGEN_VEDTAKSINSTANS,
             ],
-            'Feltet må være "Omgjør" "Delvis omgjøring i vedtaksenhet, "Oppretthold" eller delvis omgjøring',
+            'Feltet må være "Omgjør", "Delvis omgjøring i vedtaksenhet, "Oppretthold" eller Delvis omgjøring',
         ),
     omgjør: yup
         .object<OmgjørFormData>()

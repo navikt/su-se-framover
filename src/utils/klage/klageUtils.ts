@@ -148,12 +148,29 @@ export const erKlageOmgjort = (
     k: Klage,
 ): k is Klage & {
     vedtaksvurdering: {
-        type: KlageVurderingType.OMGJØR | KlageVurderingType.DELVIS_OMGJØRING_EGEN_VEDTAKSINSTANS;
-        omgjør?: {
+        type: KlageVurderingType.OMGJØR;
+        omgjør: {
             årsak: OmgjøringsGrunn;
             begrunnelse: string;
         };
-        delvisomgjøringEgenInstans?: {
+        delvisomgjøringEgenInstans: null;
+        oppretthold: null;
+        delvisOmgjøringKa: null;
+    };
+} => {
+    const v = k.vedtaksvurdering;
+    if (!v) return false;
+
+    return v.type === KlageVurderingType.OMGJØR;
+};
+
+export const erKlageDelvisomgjortEgenVedtaksinstans = (
+    k: Klage,
+): k is Klage & {
+    vedtaksvurdering: {
+        type: KlageVurderingType.DELVIS_OMGJØRING_EGEN_VEDTAKSINSTANS;
+        omgjør: null;
+        delvisomgjøringEgenInstans: {
             årsak: OmgjøringsGrunn;
             begrunnelse: string;
         };
@@ -164,10 +181,7 @@ export const erKlageOmgjort = (
     const v = k.vedtaksvurdering;
     if (!v) return false;
 
-    return (
-        v.type === KlageVurderingType.OMGJØR ||
-        (v.type === KlageVurderingType.DELVIS_OMGJØRING_EGEN_VEDTAKSINSTANS && v.delvisomgjøringEgenInstans != null)
-    );
+    return v.type === KlageVurderingType.DELVIS_OMGJØRING_EGEN_VEDTAKSINSTANS && v.delvisomgjøringEgenInstans != null;
 };
 
 export const erKlageOpprettholdt = (
