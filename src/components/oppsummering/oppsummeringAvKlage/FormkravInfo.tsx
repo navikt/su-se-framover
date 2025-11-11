@@ -14,6 +14,7 @@ export const FormkravInfo = (props: { klage: Klage; klagensVedtak: Vedtak }) => 
         messages: { ...oppsummeringMessages, ...formkravMessages, ...vurderingMessages },
     });
 
+    const status = props.klage.status;
     return (
         <div className={styles.informasjonsContainer}>
             <div className={styles.informasjonsContentContainer}>
@@ -27,6 +28,7 @@ export const FormkravInfo = (props: { klage: Klage; klagensVedtak: Vedtak }) => 
                     verdi={DateUtils.formatDateTime(props.klagensVedtak.opprettet)}
                     retning={'vertikal'}
                 />
+                <OppsummeringPar label="Klagestatus" verdi={status} retning={'vertikal'} />
             </div>
             <div className={styles.informasjonsContentContainer}>
                 <OppsummeringParMedBegrunnelse
@@ -80,4 +82,3 @@ export const FormkravInfo = (props: { klage: Klage; klagensVedtak: Vedtak }) => 
         </div>
     );
 };
-//slette             {props.klage.begrunnelse && (?
