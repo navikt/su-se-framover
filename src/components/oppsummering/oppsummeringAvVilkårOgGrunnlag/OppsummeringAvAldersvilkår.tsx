@@ -4,9 +4,8 @@ import { Aldersvilkår, Aldersvurdering } from '~src/types/grunnlagsdataOgVilkå
 import { formatPeriode } from '~src/utils/periode/periodeUtils';
 
 import { OppsummeringPar } from '../oppsummeringpar/OppsummeringPar';
-
-import messages from './oppsummeringAvVilkårOgGrunnlag-nb';
 import styles from './oppsummeringAvVilkårOgGrunnlag.module.less';
+import messages from './oppsummeringAvVilkårOgGrunnlag-nb';
 
 const OppsummeringAvAldersvilkår = (props: { aldersvilkår: Nullable<Aldersvilkår> }) => {
     const { formatMessage } = useI18n({ messages });
@@ -16,7 +15,6 @@ const OppsummeringAvAldersvilkår = (props: { aldersvilkår: Nullable<Aldersvilk
             <OppsummeringPar
                 className={styles.oppsummeringAvResultat}
                 label={formatMessage('vilkår.resultat')}
-                //eslint-disable-next-line @typescript-eslint/ban-ts-comment
                 // @ts-ignore - liten clash mellom resultatstyper som deleer 'vilkårOppfylt' etc som gjør at typingen ikke forstår det helt. Dette er i realiteten ikke et problem
                 verdi={formatMessage(props.aldersvilkår?.resultat ?? 'vilkår.ikkeVurdert')}
             />

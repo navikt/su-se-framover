@@ -12,11 +12,11 @@ import { Behandlingstype } from '~src/api/GrunnlagOgVilkårApi';
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
 import FradragForm from '~src/components/forms/vilkårOgGrunnlagForms/fradrag/FradragForm';
 import {
-    FradragFormData,
-    fradragTilFradragFormData,
-    fradragFormdataTilFradrag,
     eqFradragFormData,
+    FradragFormData,
+    fradragFormdataTilFradrag,
     fradragSchema,
+    fradragTilFradragFormData,
 } from '~src/components/forms/vilkårOgGrunnlagForms/fradrag/FradragFormUtils';
 import Navigasjonsknapper from '~src/components/navigasjonsknapper/Navigasjonsknapper';
 import Feiloppsummering from '~src/components/oppsummering/feiloppsummering/Feiloppsummering';
@@ -38,22 +38,21 @@ import { Fradrag } from '~src/types/Fradrag';
 import { NullablePeriode } from '~src/types/Periode';
 import { Person } from '~src/types/Person';
 import {
-    SøknadsbehandlingStatus,
-    Søknadsbehandling,
     EksisterendeVedtaksinformasjonTidligerePeriodeResponse,
+    Søknadsbehandling,
+    SøknadsbehandlingStatus,
 } from '~src/types/Søknadsbehandling';
 import { Vilkårtype } from '~src/types/Vilkårsvurdering';
 import { erIGyldigStatusForÅKunneBeregne } from '~src/utils/BeregningUtils';
 import * as DateUtils from '~src/utils/date/dateUtils';
 import { fjernFradragSomIkkeErVelgbareEkskludertNavYtelserTilLivsopphold } from '~src/utils/fradrag/fradragUtil';
-import { hentBosituasjongrunnlag } from '~src/utils/søknadsbehandlingOgRevurdering/bosituasjon/bosituasjonUtils';
 import { kanSimuleres } from '~src/utils/SøknadsbehandlingUtils';
+import { hentBosituasjongrunnlag } from '~src/utils/søknadsbehandlingOgRevurdering/bosituasjon/bosituasjonUtils';
 
 import EksisterendeVedtaksinformasjon from '../EksisterendeVedtaksinformasjon';
 import sharedI18n from '../sharedI18n-nb';
-
-import messages from './beregning-nb';
 import styles from './beregning.module.less';
+import messages from './beregning-nb';
 
 interface FormData {
     fradrag: FradragFormData[];

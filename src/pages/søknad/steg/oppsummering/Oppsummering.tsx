@@ -32,9 +32,8 @@ import { Søknadstype } from '~src/types/Søknadinnhold';
 
 import Bunnknapper from '../../bunnknapper/Bunnknapper';
 import sharedStyles from '../../steg-shared.module.less';
-
-import messages from './oppsummering-nb';
 import styles from './oppsummering.module.less';
+import messages from './oppsummering-nb';
 import Søknadoppsummering from './Søknadoppsummering/Søknadoppsummering';
 
 const Oppsummering = (props: { forrigeUrl: string; nesteUrl: string; avbrytUrl: string; søker: Person }) => {

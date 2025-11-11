@@ -1,20 +1,20 @@
 import {
+    AnnullerKravgrunnlagTilbakekrevingResponse,
+    AnnullerKravgunnlagTilbakekrevingRequest,
     AvsluttTilbakekrevingRequest,
+    BehandlingsnotatTilbakekrevingRequest,
     BrevtekstTilbakekrevingsbehandlingRequest,
     ForhåndsvarsleTilbakekrevingRequest,
     ForhåndsvisBrevtekstTilbakekrevingsbehandlingRequest,
     ForhåndsvisVedtaksbrevTilbakekrevingsbehandlingRequest,
-    OppdaterKravgrunnlagTilbakekrevingRequest,
     IverksettTilbakekrevingRequest,
     ManuellTilbakekrevingsbehandling,
+    OppdaterKravgrunnlagTilbakekrevingRequest,
     OpprettNyTilbakekrevingsbehandlingRequest,
     SendTilbakekrevingTilAttesteringRequest,
     UnderkjennTilbakekrevingRequest,
     VisUtsendtForhåndsvarselTilbakekrevingsbehandlingRequest,
     VurderTilbakekrevingsbehandlingRequest,
-    BehandlingsnotatTilbakekrevingRequest,
-    AnnullerKravgunnlagTilbakekrevingRequest,
-    AnnullerKravgrunnlagTilbakekrevingResponse,
 } from '~src/types/ManuellTilbakekrevingsbehandling';
 
 import apiClient, { ApiClientResult } from './apiClient';

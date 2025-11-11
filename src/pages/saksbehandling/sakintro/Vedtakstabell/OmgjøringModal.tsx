@@ -1,6 +1,6 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import { Modal, Heading, Select, Button, BodyShort, Alert } from '@navikt/ds-react';
-import { FormProvider, useForm, Controller } from 'react-hook-form';
+import { Alert, BodyShort, Button, Heading, Modal, Select } from '@navikt/ds-react';
+import { Controller, FormProvider, useForm } from 'react-hook-form';
 
 import { ApiResult } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';

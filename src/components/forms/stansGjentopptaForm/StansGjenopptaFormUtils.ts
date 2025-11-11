@@ -18,7 +18,6 @@ export type StansGjenopptaFormData = StansFormData | GjenopptaFormData;
 export const isStans = (o: StansGjenopptaFormData): o is StansFormData => 'stansDato' in o;
 
 export const stansGjenopptaSchema = yup.object<StansGjenopptaFormData>({
-    //eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore - den forstår ikke at valdiering per nå er helt OK
     årsak: yup.mixed().when('$formType', (formType, schema) => {
         if (formType === 'stans') {
@@ -30,7 +29,6 @@ export const stansGjenopptaSchema = yup.object<StansGjenopptaFormData>({
 
         return schema;
     }),
-    //eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore - den forstår ikke at valdiering per nå er helt OK
     stansDato: yup.date().when('$formType', (formType, schema) => {
         if (formType === 'stans') {

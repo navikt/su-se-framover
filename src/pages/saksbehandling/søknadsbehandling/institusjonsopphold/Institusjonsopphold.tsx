@@ -8,9 +8,9 @@ import InstitusjonsoppholdForm from '~src/components/forms/vilkårOgGrunnlagForm
 import {
     eqInstitusjonsoppholdFormData,
     InstitusjonsoppholdVilkårFormData,
-    institusjonsoppholdVilkårTilFormDataEllerNy,
     institusjonsoppholdFormDataTilRequest,
     institusjonsoppholdFormSchema,
+    institusjonsoppholdVilkårTilFormDataEllerNy,
 } from '~src/components/forms/vilkårOgGrunnlagForms/institusjonsopphold/InstitusjonsoppholdFormUtils';
 import OppsummeringAvInnlagtPåInstitusjon from '~src/components/oppsummering/oppsummeringAvSøknadinnhold/OppsummeringAvInnlagtPåInstitusjon';
 import OppsummeringAvInstitusjonsoppholdvilkår from '~src/components/oppsummering/oppsummeringAvVilkårOgGrunnlag/OppsummeringAvInstitusjonsopphold';

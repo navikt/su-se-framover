@@ -12,8 +12,8 @@ import messages from '../VilkårOgGrunnlagForms-nb';
 import { VilkårFormProps } from '../VilkårOgGrunnlagFormUtils';
 
 import {
-    OpplysningspliktVilkårFormData,
     nyVurderingsperiodeOpplysningspliktMedEllerUtenPeriode,
+    OpplysningspliktVilkårFormData,
 } from './OpplysningspliktFormUtils';
 
 type Props = VilkårFormProps<OpplysningspliktVilkårFormData>;

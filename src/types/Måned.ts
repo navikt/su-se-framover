@@ -1,5 +1,5 @@
 import * as DateFns from 'date-fns';
-import { Eq, contramap } from 'fp-ts/lib/Eq';
+import { contramap, Eq } from 'fp-ts/lib/Eq';
 import * as S from 'fp-ts/lib/string';
 
 import * as DateUtils from '~src/utils/date/dateUtils';

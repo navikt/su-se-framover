@@ -8,9 +8,8 @@ import {
 import { formatPeriode } from '~src/utils/periode/periodeUtils';
 
 import { OppsummeringPar } from '../oppsummeringpar/OppsummeringPar';
-
-import messages from './oppsummeringAvVilkårOgGrunnlag-nb';
 import styles from './oppsummeringAvVilkårOgGrunnlag.module.less';
+import messages from './oppsummeringAvVilkårOgGrunnlag-nb';
 
 const OppsummeringAvPersonligoppmøtevilkår = (props: { personligoppmøte: Nullable<PersonligOppmøteVilkår> }) => {
     const { formatMessage } = useI18n({ messages });
@@ -20,7 +19,6 @@ const OppsummeringAvPersonligoppmøtevilkår = (props: { personligoppmøte: Null
             <OppsummeringPar
                 className={styles.oppsummeringAvResultat}
                 label={formatMessage('vilkår.resultat')}
-                //eslint-disable-next-line @typescript-eslint/ban-ts-comment
                 // @ts-ignore - liten clash mellom resultatstyper som deleer 'vilkårOppfylt' etc som gjør at typingen ikke forstår det helt. Dette er i realiteten ikke et problem
                 verdi={formatMessage(props.personligoppmøte?.resultat ?? 'vilkår.ikkeVurdert')}
             />
@@ -55,7 +53,6 @@ const VurderingsperiodePersonligOppmøteOppsummering = (props: {
             {props.vurderingsperiodePersonligOppmøte.vurdering !== PersonligOppmøteÅrsak.MøttPersonlig && (
                 <OppsummeringPar
                     label={formatMessage('personligOppmøte.vilkår.text.ikkeMøttPersonlig')}
-                    //eslint-disable-next-line @typescript-eslint/ban-ts-comment
                     // @ts-ignore - liten clash mellom alle tekst-mappingstypene som gjør at kompileringen ikke helt forstår hva som skjer. Dette er i realiteten ikke er problem
                     verdi={formatMessage(props.vurderingsperiodePersonligOppmøte.vurdering)}
                 />

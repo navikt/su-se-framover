@@ -1,6 +1,6 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Button, Select, Loader, RadioGroup, Radio, Alert, ReadMore, Textarea, Heading } from '@navikt/ds-react';
+import { Alert, Button, Heading, Loader, Radio, RadioGroup, ReadMore, Select, Textarea } from '@navikt/ds-react';
 import { struct } from 'fp-ts/Eq';
 import * as S from 'fp-ts/string';
 import { Controller, useForm } from 'react-hook-form';
@@ -16,7 +16,7 @@ import { useI18n } from '~src/lib/i18n';
 import * as Routes from '~src/lib/routes';
 import { eqBooleanMedBegrunnelse, eqNullable, eqSvarMedBegrunnelse, Nullable } from '~src/lib/types';
 import yup from '~src/lib/validering';
-import { KlageSteg, Svarord, Klage } from '~src/types/Klage';
+import { Klage, KlageSteg, Svarord } from '~src/types/Klage';
 import { Vedtak } from '~src/types/Vedtak';
 import { formatDateTime } from '~src/utils/date/dateUtils';
 import {
@@ -29,9 +29,8 @@ import {
 } from '~src/utils/klage/klageUtils';
 
 import sharedStyles from '../klage.module.less';
-
-import messages from './vurderFormkrav-nb';
 import styles from './vurderFormkrav.module.less';
+import messages from './vurderFormkrav-nb';
 
 const eqFormData = struct<FormData>({
     vedtakId: eqNullable(S.Eq),

@@ -2,7 +2,11 @@ import * as RemoteData from '@devexperts/remote-data-ts';
 import { Button, Heading, Modal, Textarea } from '@navikt/ds-react';
 import { useState } from 'react';
 
-import { resendstatistikkSøknadsbehandlingVedtak, resendSpesifikkVedtakstatistikk } from '~src/api/driftApi';
+import {
+    resendSakStatistikkInenforPeriode,
+    resendSpesifikkVedtakstatistikk,
+    resendstatistikkSøknadsbehandlingVedtak,
+} from '~src/api/driftApi';
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
 import { DatePicker } from '~src/components/inputs/datePicker/DatePicker';
 import { useApiCall } from '~src/lib/hooks';
@@ -36,9 +40,12 @@ const ResendStatistikkModal = (props: { open: boolean; onClose: () => void }) =>
         resendstatistikkSøknadsbehandlingVedtak,
     );
     const [spesifikkStatus, resendSpesifikkVedtak] = useApiCall(resendSpesifikkVedtakstatistikk);
+    const [resendSakStatistikkStatus, resendSakStatistikk] = useApiCall(resendSakStatistikkInenforPeriode);
 
     const [fraOgMed, setFraOgMed] = useState<Nullable<Date>>(null);
     const [vedtakId, setVedtakId] = useState<string>('');
+    const [fraOgMedTid, setFraOgMedTid] = useState<Nullable<Date>>(null);
+    const [tilOgMedTid, setTilOgMedTid] = useState<Nullable<Date>>(null);
 
     return (
         <Modal open={props.open} onClose={props.onClose} aria-label={'Statistikk'}>
@@ -81,6 +88,41 @@ const ResendStatistikkModal = (props: { open: boolean; onClose: () => void }) =>
 
                     {RemoteData.isFailure(søknadsbehandlingVedtakStatistikkStatus) && (
                         <ApiErrorAlert error={søknadsbehandlingVedtakStatistikkStatus.error} />
+                    )}
+
+                    <Heading size="medium" spacing>
+                        Saker
+                    </Heading>
+                    <DatePicker
+                        label="Fra og med"
+                        value={fraOgMed}
+                        onChange={(date) => {
+                            setFraOgMedTid(date);
+                        }}
+                    />
+                    <DatePicker
+                        label="Til og med"
+                        value={tilOgMedTid}
+                        onChange={(date) => {
+                            setTilOgMedTid(date);
+                        }}
+                    />
+
+                    <Button
+                        onClick={() =>
+                            resendSakStatistikk({
+                                fraOgMed: toIsoDateOnlyString(fraOgMedTid!),
+                                tilOgMed: toIsoDateOnlyString(tilOgMedTid!),
+                            })
+                        }
+                    >
+                        Sak
+                    </Button>
+
+                    {RemoteData.isSuccess(resendSakStatistikkStatus) && <p>Nice 👍🤌</p>}
+
+                    {RemoteData.isFailure(resendSakStatistikkStatus) && (
+                        <ApiErrorAlert error={resendSakStatistikkStatus.error} />
                     )}
                 </div>
             </Modal.Body>

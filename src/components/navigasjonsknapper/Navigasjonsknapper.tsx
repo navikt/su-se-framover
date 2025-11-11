@@ -3,9 +3,8 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { useI18n } from '~src/lib/i18n';
-
-import messages from './navigasjonsknapper-nb';
 import styles from './navigasjonsknapper.module.less';
+import messages from './navigasjonsknapper-nb';
 
 /**
  * Navigering til url tar alltid presedens over onClick hvis begge er supplert.
@@ -16,6 +15,7 @@ const Navigasjonsknapper = (props: {
         loading?: boolean;
         tekst?: string;
         onClick?: () => void;
+        disabled?: boolean;
     };
     tilbake?: {
         url?: string;
@@ -68,6 +68,7 @@ const Navigasjonsknapper = (props: {
                     }}
                     type={props.neste?.onClick ? 'button' : 'submit'}
                     loading={knappTrykket === 'neste' && props.neste?.loading}
+                    disabled={props.neste?.disabled}
                 >
                     {props.neste?.tekst ? props.neste?.tekst : formatMessage('knapp.neste')}
                 </Button>

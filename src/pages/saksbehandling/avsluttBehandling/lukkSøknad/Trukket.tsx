@@ -8,9 +8,8 @@ import { useBrevForhåndsvisning } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
 import { LukkSøknadBegrunnelse } from '~src/types/Søknad';
 import { toDateOrNull, toIsoDateOnlyString } from '~src/utils/date/dateUtils';
-
-import nb from './lukkSøknad-nb';
 import styles from './lukkSøknad.module.less';
+import nb from './lukkSøknad-nb';
 
 interface TrukketProps {
     søknadOpprettet: string;

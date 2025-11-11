@@ -6,10 +6,10 @@ import { useNavigate } from 'react-router-dom';
 import { Behandlingstype } from '~src/api/GrunnlagOgVilkårApi';
 import FlyktningForm from '~src/components/forms/vilkårOgGrunnlagForms/flyktning/FlyktningForm';
 import {
-    FlyktningVilkårFormData,
-    flyktningFormSchema,
     eqFlyktningVilkårFormData,
+    FlyktningVilkårFormData,
     flyktningFormDataTilRequest,
+    flyktningFormSchema,
     flyktningVilkårTilFormDataEllerNy,
 } from '~src/components/forms/vilkårOgGrunnlagForms/flyktning/FlyktningFormUtils';
 import OppsummeringAvFlyktningstatus from '~src/components/oppsummering/oppsummeringAvSøknadinnhold/OppsummeringAvFlyktningstatus';
@@ -34,9 +34,8 @@ import EksisterendeVedtaksinformasjon from '../EksisterendeVedtaksinformasjon';
 import sharedI18n from '../sharedI18n-nb';
 import sharedStyles from '../sharedStyles.module.less';
 import { VilkårsvurderingBaseProps } from '../types';
-
-import messages from './flyktning-nb';
 import styles from './flyktning.module.less';
+import messages from './flyktning-nb';
 
 const Flyktning = (
     props: VilkårsvurderingBaseProps & {

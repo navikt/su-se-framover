@@ -15,9 +15,8 @@ import sharedMessages from '~src/pages/saksbehandling/revurdering/revurdering-nb
 import { useAppDispatch } from '~src/redux/Store';
 import { UtbetalingsRevurdering, UtbetalingsRevurderingStatus } from '~src/types/Revurdering';
 import { erUtbetalingsrevurdering } from '~src/utils/revurdering/revurderingUtils';
-
-import messages from './gjenoppta-nb';
 import styles from './Gjenoppta.module.less';
+import messages from './gjenoppta-nb';
 
 const GjenopptaOppsummering = (props: { revurdering?: UtbetalingsRevurdering }) => {
     const contextProps = useOutletContext<SaksoversiktContext>();

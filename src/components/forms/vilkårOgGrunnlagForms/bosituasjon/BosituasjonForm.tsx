@@ -1,5 +1,5 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import { Loader, Modal, Heading, BodyLong, Button } from '@navikt/ds-react';
+import { BodyLong, Button, Heading, Loader, Modal } from '@navikt/ds-react';
 import { pipe } from 'fp-ts/lib/function';
 import { ReactNode, useState } from 'react';
 import { Controller } from 'react-hook-form';

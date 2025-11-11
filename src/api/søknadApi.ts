@@ -13,6 +13,7 @@ interface Trukket {
 interface Bortfalt {
     type: LukkSøknadBegrunnelse.Bortfalt;
 }
+
 interface Avvist {
     type: LukkSøknadBegrunnelse.Avvist;
     brevConfig: Nullable<AvvistBrevConfig>;

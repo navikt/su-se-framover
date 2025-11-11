@@ -6,13 +6,13 @@ import { Nullable } from '~src/lib/types';
 import yup, { validerPeriodeTomEtterFom } from '~src/lib/validering';
 import { NullablePeriode, Periode } from '~src/types/Periode';
 import {
-    OpprettetRevurderingÅrsak,
+    erOmgjøring,
     InformasjonSomRevurderes,
     InformasjonsRevurdering,
-    OpprettRevurderingRequest,
-    OppdaterRevurderingRequest,
     OmgjøringsGrunn,
-    erOmgjøring,
+    OppdaterRevurderingRequest,
+    OpprettetRevurderingÅrsak,
+    OpprettRevurderingRequest,
 } from '~src/types/Revurdering';
 
 export interface RevurderingIntroFormData {

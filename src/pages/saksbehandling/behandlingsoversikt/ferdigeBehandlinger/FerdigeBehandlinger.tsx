@@ -8,10 +8,10 @@ import { pipe } from '~src/lib/fp';
 import { useAsyncActionCreator } from '~src/lib/hooks';
 import { Nullable } from '~src/lib/types';
 import {
-    Filter,
-    hentFiltrerteVerdier,
     BehandlingssammendragResultatFilter,
     BehandlingssammendragTypeFilter,
+    Filter,
+    hentFiltrerteVerdier,
     Sakstypefilter,
 } from '~src/pages/saksbehandling/behandlingsoversikt/behandlingsfilter/Filter';
 import { genererIdForElementer } from '~src/pages/saksbehandling/behandlingsoversikt/åpneBehandlinger/ÅpneBehandlinger.tsx';

@@ -11,21 +11,22 @@ import { pickRemoteData } from '~src/lib/fp';
 import { useAsyncActionCreator } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
 import * as Routes from '~src/lib/routes';
+import Avvist from '~src/pages/saksbehandling/avsluttBehandling/lukkSøknad/Avvist.tsx';
 import { LukkSøknadBegrunnelse, Søknad } from '~src/types/Søknad';
 import { Søknadstype } from '~src/types/Søknadinnhold';
 
 import AvsluttBehandlingBunnknapper from '../avsluttBehandlingBunnknapper/AvsluttBehandlingBunnknapper';
 
 import AvslåttSøknad from './avslag/AvslåttSøknad';
-import Avvist from './Avvist';
-import nb from './lukkSøknad-nb';
 import styles from './lukkSøknad.module.less';
+import nb from './lukkSøknad-nb';
 import {
-    lukkSøknadInitialValues,
-    LukkSøknadOgAvsluttSøknadsbehandlingFormData,
     AvsluttSøknadsbehandlingBegrunnelse,
-    LukkSøknadOgAvsluttSøknadsbehandlingType,
+    AvvistBrevtyper,
     getLukkSøknadValidationSchema,
+    LukkSøknadOgAvsluttSøknadsbehandlingFormData,
+    LukkSøknadOgAvsluttSøknadsbehandlingType,
+    lukkSøknadInitialValues,
 } from './lukkSøknadUtils';
 import Trukket from './Trukket';
 
@@ -139,14 +140,13 @@ const LukkSøknadOgAvsluttBehandling = (props: { sakId: string; søknad: Søknad
             {watchBegrunnelse === LukkSøknadBegrunnelse.Avvist && (
                 <Controller
                     control={form.control}
-                    name="avvist"
-                    render={({ field, formState }) => (
+                    name="avvist.fritekst"
+                    render={({ field, fieldState }) => (
                         <Avvist
                             søknadId={props.søknad.id}
-                            avvistFormData={field.value}
-                            feilmeldinger={formState.errors.avvist}
-                            onValueChange={field.onChange}
-                            onRequestValidate={handleRequestValidate}
+                            fritekstValue={field.value}
+                            fritekstError={fieldState.error}
+                            onFritekstChange={field.onChange}
                         />
                     )}
                 />
@@ -197,12 +197,10 @@ function lagBody(values: LukkSøknadOgAvsluttSøknadsbehandlingFormData): LukkS�
         case LukkSøknadBegrunnelse.Avvist:
             return {
                 type: values.begrunnelse,
-                brevConfig: values.avvist.typeBrev
-                    ? {
-                          brevtype: values.avvist.typeBrev,
-                          fritekst: values.avvist.fritekst,
-                      }
-                    : null,
+                brevConfig: {
+                    brevtype: AvvistBrevtyper.Vedtaksbrev,
+                    fritekst: values.avvist.fritekst,
+                },
             };
         default:
             throw new Error('LukkSøknadBegrunnelse har ugyldig verdi');
@@ -219,7 +217,7 @@ function hentOpprettetDatoFraSøknad(søknad: Søknad) {
 const lukkSøknadBegrunnelseI18nId: { [key in LukkSøknadOgAvsluttSøknadsbehandlingType]: keyof typeof nb } = {
     TRUKKET: 'lukking.begrunnelse.trukket',
     BORTFALT: 'lukking.begrunnelse.bortfalt',
-    AVVIST: 'lukking.begrunnelse.avvist',
+    AVVIST: 'lukking.begrunnelse.avslag',
     MANGLENDE_DOK: 'avslutt.manglendeDokumentasjon',
 };
 

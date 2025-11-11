@@ -5,9 +5,8 @@ import { Route, Routes, useOutletContext } from 'react-router-dom';
 import { SaksoversiktContext } from '~src/context/SaksoversiktContext';
 import { useI18n } from '~src/lib/i18n';
 import * as routes from '~src/lib/routes';
-
-import messages from './stans-nb';
 import styles from './StansStyles.module.less';
+import messages from './stans-nb';
 
 const OpprettStansPage = lazy(() => import('~src/pages/saksbehandling/stans/OpprettStansPage'));
 const OppdaterStans = lazy(() => import('~src/pages/saksbehandling/stans/OppdaterStans'));

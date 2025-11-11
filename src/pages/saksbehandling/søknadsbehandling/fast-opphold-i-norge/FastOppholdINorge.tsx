@@ -7,10 +7,10 @@ import { Behandlingstype } from '~src/api/GrunnlagOgVilkårApi';
 import FastOppholdForm from '~src/components/forms/vilkårOgGrunnlagForms/fastOpphold/FastOppholdForm';
 import {
     eqFastOppholdVilkårFormData,
-    fastOppholdFormSchema,
     FastOppholdVilkårFormData,
-    fastOppholdVilkårTilFormDataEllerNy,
     fastOppholdFormDataTilRequest,
+    fastOppholdFormSchema,
+    fastOppholdVilkårTilFormDataEllerNy,
 } from '~src/components/forms/vilkårOgGrunnlagForms/fastOpphold/FastOppholdFormUtils';
 import OppsummeringAvOpphold from '~src/components/oppsummering/oppsummeringAvSøknadinnhold/OppsummeringAvOpphold';
 import OppsummeringAvFastOppholdvilkår from '~src/components/oppsummering/oppsummeringAvVilkårOgGrunnlag/OppsummeringAvFastOpphold';

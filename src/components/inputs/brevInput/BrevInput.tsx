@@ -7,9 +7,8 @@ import { ApiClientResult, ApiError } from '~src/api/apiClient';
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
 import { useI18n } from '~src/lib/i18n';
 import { Nullable } from '~src/lib/types';
-
-import messages from './brevInput-nb';
 import styles from './brevInput.module.less';
+import messages from './brevInput-nb';
 
 export interface BrevInputProps {
     tekst: Nullable<string>;

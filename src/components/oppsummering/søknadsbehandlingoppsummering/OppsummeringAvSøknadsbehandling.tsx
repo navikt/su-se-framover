@@ -13,14 +13,13 @@ import OppsummeringAvBeregningOgSimulering from '../oppsummeringAvBeregningOgsim
 import { OppsummeringPar } from '../oppsummeringpar/OppsummeringPar';
 import Oppsummeringspanel, { Oppsummeringsfarge, Oppsummeringsikon } from '../oppsummeringspanel/Oppsummeringspanel';
 import SidestiltOppsummeringAvVilkårOgGrunnlag from '../sidestiltOppsummeringAvVilkårOgGrunnlag/SidestiltOppsummeringAvVilkårOgGrunnlag';
-
-import messages from './OppsummeringAvSøknadsbehandling-nb.ts';
 import styles from './OppsummeringAvSøknadsbehandling.module.less';
+import messages from './OppsummeringAvSøknadsbehandling-nb.ts';
 
 const OppsummeringAvSøknadsbehandling = (props: { behandling: Søknadsbehandling }) => {
     const { formatMessage } = useI18n({ messages });
     const underkjenteAttesteringer = props.behandling.attesteringer.filter((att) => att.underkjennelse != null);
-
+    const innsendtAv = props.behandling.søknad.innsendtAv;
     return (
         <div className={styles.oppsummeringsContainer}>
             <Oppsummeringspanel
@@ -38,6 +37,11 @@ const OppsummeringAvSøknadsbehandling = (props: { behandling: Søknadsbehandlin
                         <OppsummeringPar
                             label={formatMessage('behandlet.av')}
                             verdi={props.behandling.saksbehandler ?? formatMessage('feil.fantIkkeSaksbehandlerNavn')}
+                            retning={'vertikal'}
+                        />
+                        <OppsummeringPar
+                            label={formatMessage('innsendt.av.overskrift')}
+                            verdi={innsendtAv}
                             retning={'vertikal'}
                         />
                         <OppsummeringPar

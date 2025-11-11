@@ -21,9 +21,8 @@ import * as Routes from '~src/lib/routes';
 import { KlageSteg } from '~src/types/Klage';
 
 import messages from '../klage-nb';
-
-import styles from './opprettKlage.module.less';
 import { OpprettKlageFormData, opprettKlageSchema } from './OpprettKlageUtils';
+import styles from './opprettKlage.module.less';
 
 const OpprettKlage = () => {
     const props = useOutletContext<SaksoversiktContext>();

@@ -4,9 +4,8 @@ import { useOutletContext } from 'react-router-dom';
 import { SaksoversiktContext } from '~src/context/SaksoversiktContext';
 import { useI18n } from '~src/lib/i18n';
 import * as Routes from '~src/lib/routes';
-
-import messages from './avsluttBehandling-nb';
 import styles from './avsluttBehandling.module.less';
+import messages from './avsluttBehandling-nb';
 import AvsluttKlage from './avsluttKlage/AvsluttKlage';
 import AvsluttRevurdering from './avsluttRevurdering/AvsluttRevurdering';
 import AvsluttTilbakekreving from './avsluttTilbakekreving/AvsluttTilbakekreving';

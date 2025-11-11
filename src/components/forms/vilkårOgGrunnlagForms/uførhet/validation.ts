@@ -1,5 +1,5 @@
 import * as DateFns from 'date-fns';
-import { minTime, maxTime } from 'date-fns/constants';
+import { maxTime, minTime } from 'date-fns/constants';
 
 import { Nullable } from '~src/lib/types';
 import yup, { validateStringAsNonNegativeNumber } from '~src/lib/validering';

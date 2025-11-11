@@ -35,9 +35,6 @@ import EksisterendeVedtaksinformasjon from '../EksisterendeVedtaksinformasjon';
 import sharedMessages from '../sharedI18n-nb';
 import sharedStyles from '../sharedStyles.module.less';
 import { VilkårsvurderingBaseProps } from '../types';
-
-import messages from './virkningstidspunkt-nb';
-import styles from './virkningstidspunkt.module.less';
 import {
     eqBehandlingsperiode,
     er67PlusOgStønadsperiodeTilOgMedErLengerEnnFødselsmåned,
@@ -48,6 +45,8 @@ import {
     VirkningstidspunktFormData,
     virkningstidspunktSchema,
 } from './VirkningstidspunktUtils';
+import styles from './virkningstidspunkt.module.less';
+import messages from './virkningstidspunkt-nb';
 
 //TODO: warning hvis fødselsår i fødselsnummeret er ulik fødseslåret
 
@@ -58,7 +57,7 @@ const Virkningstidspunkt = (
 ) => {
     const { formatMessage } = useI18n({ messages: { ...sharedMessages, ...messages } });
     const navigate = useNavigate();
-
+    const innsendtAv = props.behandling.søknad.innsendtAv;
     const [status, lagreVirkningstidspunkt, resetVirkApi] = useAsyncActionCreator(
         SøknadsbehandlingActions.lagreVirkningstidspunkt,
     );
@@ -259,6 +258,11 @@ const Virkningstidspunkt = (
                                 right: (
                                     <div className={sharedStyles.toKollonerRightContainer}>
                                         <div>
+                                            <Heading size="small">{formatMessage('innsendt.av.overskrift')}</Heading>
+                                            <OppsummeringPar
+                                                label={formatMessage('innsendt.ident')}
+                                                verdi={innsendtAv}
+                                            />
                                             <Heading size="small">{formatMessage('søker.personalia')}</Heading>
                                             <OppsummeringPar
                                                 label={formatMessage('søker.fødselsdato')}

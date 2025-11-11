@@ -6,10 +6,10 @@ import { useNavigate } from 'react-router-dom';
 import { Behandlingstype } from '~src/api/GrunnlagOgVilkårApi';
 import { UførhetForm } from '~src/components/forms/vilkårOgGrunnlagForms/uførhet/UførhetForm';
 import {
+    eqUføreVilkårFormData,
+    lagTomUføreperiode,
     UførhetFormData,
     vurderingsperiodeTilFormData,
-    lagTomUføreperiode,
-    eqUføreVilkårFormData,
 } from '~src/components/forms/vilkårOgGrunnlagForms/uførhet/UførhetFormUtils';
 import { uførhetSchema } from '~src/components/forms/vilkårOgGrunnlagForms/uførhet/validation';
 import OppsummeringAvUføre from '~src/components/oppsummering/oppsummeringAvSøknadinnhold/OppsummeringAvUføre';

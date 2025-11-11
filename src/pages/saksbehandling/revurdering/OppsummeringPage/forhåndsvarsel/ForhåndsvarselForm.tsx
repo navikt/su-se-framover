@@ -1,5 +1,6 @@
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Radio, RadioGroup } from '@navikt/ds-react';
+import { useEffect } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 
@@ -19,9 +20,8 @@ import { DokumentIdType } from '~src/types/dokument/Dokument';
 import { GrunnlagsdataOgVilkårsvurderinger } from '~src/types/grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
 import { InformasjonsRevurdering, RevurderingOppsummeringSteg, RevurderingSeksjoner } from '~src/types/Revurdering';
 import { Sakstype } from '~src/types/Sak.ts';
-
-import messages from './ForhåndsvarselForm-nb';
 import styles from './ForhåndsvarselForm.module.less';
+import messages from './ForhåndsvarselForm-nb';
 
 interface ForhåndsvarselFormData {
     oppretterNyttForhåndsvarsel: boolean;
@@ -55,6 +55,11 @@ const ForhåndsvarselForm = (props: {
         resolver: yupResolver(schema),
     });
     const watch = form.watch();
+    const oppretterNyttForhåndsvarsel = form.watch('oppretterNyttForhåndsvarsel');
+
+    useEffect(() => {
+        form.clearErrors('fritekst');
+    }, [oppretterNyttForhåndsvarsel]);
 
     const [lagreForhåndsvarselStatus, lagreForhåndsvarsel] = useAsyncActionCreator(
         RevurderingActions.lagreForhåndsvarsel,

@@ -3,9 +3,8 @@ import { useState } from 'react';
 
 import LinkAsButton from '~src/components/linkAsButton/LinkAsButton';
 import { useI18n } from '~src/lib/i18n';
-
-import messages from './bunnknapper-nb';
 import styles from './bunnknapper.module.less';
+import messages from './bunnknapper-nb';
 
 const Bunnknapper = (props: {
     previous?: {

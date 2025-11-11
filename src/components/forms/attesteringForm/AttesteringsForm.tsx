@@ -1,6 +1,6 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Button, Radio, RadioGroup, Alert, Loader, Textarea } from '@navikt/ds-react';
+import { Alert, Button, Loader, Radio, RadioGroup, Textarea } from '@navikt/ds-react';
 import { useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 
@@ -18,9 +18,8 @@ import { Nullable } from '~src/lib/types';
 import yup from '~src/lib/validering';
 import { UnderkjennelseGrunn, UnderkjennelseGrunnBehandling } from '~src/types/Behandling';
 import { UnderkjennelseGrunnTilbakekreving } from '~src/types/ManuellTilbakekrevingsbehandling';
-
-import messages from './attesteringsForm-nb';
 import styles from './attesteringsForm.module.less';
+import messages from './attesteringsForm-nb';
 import UnderkjennelsesForm from './UnderkjennelsesForm';
 
 export interface AttesteringFormData {

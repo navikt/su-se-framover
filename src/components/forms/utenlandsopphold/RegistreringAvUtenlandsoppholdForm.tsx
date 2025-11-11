@@ -3,7 +3,7 @@ import { TrashIcon } from '@navikt/aksel-icons';
 import { Button, Heading, Select, Textarea, TextField } from '@navikt/ds-react';
 import * as DateFns from 'date-fns';
 import { ReactNode, useEffect, useState } from 'react';
-import { Control, Controller, useFieldArray, useForm, UseFormReset, UseFormSetValue } from 'react-hook-form';
+import { Control, Controller, UseFormReset, UseFormSetValue, useFieldArray, useForm } from 'react-hook-form';
 
 import { RangePickerDate } from '~src/components/inputs/datePicker/DatePicker';
 import { ApiResult } from '~src/lib/hooks';
@@ -13,9 +13,8 @@ import {
     RegistrertUtenlandsopphold,
     UtenlandsoppholdDokumentasjon,
 } from '~src/types/RegistrertUtenlandsopphold';
-
-import messages from './RegistreringAvUtenlandsoppholdForm-nb';
 import styles from './RegistreringAvUtenlandsoppholdForm.module.less';
+import messages from './RegistreringAvUtenlandsoppholdForm-nb';
 import {
     RegisteringAvUtenlandsoppholdFormData,
     registeringAvUtenlandsoppholdFormSchema,

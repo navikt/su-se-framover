@@ -3,14 +3,14 @@ import * as B from 'fp-ts/lib/boolean';
 import { struct } from 'fp-ts/lib/Eq';
 import * as S from 'fp-ts/lib/string';
 
-import { Nullable, eqNullable } from '~src/lib/types';
+import { eqNullable, Nullable } from '~src/lib/types';
 import yup, { validateStringAsPositiveNumber, validerDesimalErPositivtTall } from '~src/lib/validering';
 import {
-    Fradragskategori,
-    VelgbareFradragskategorier,
-    IkkeVelgbareFradragskategorier,
     Fradrag,
+    Fradragskategori,
     FradragTilhører,
+    IkkeVelgbareFradragskategorier,
+    VelgbareFradragskategorier,
 } from '~src/types/Fradrag';
 import { eqNullableDatePeriode, NullablePeriode, Periode } from '~src/types/Periode';
 import { toDateOrNull, toStringDateOrNull } from '~src/utils/date/dateUtils';

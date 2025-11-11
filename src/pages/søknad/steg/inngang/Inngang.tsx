@@ -2,7 +2,7 @@ import * as RemoteData from '@devexperts/remote-data-ts';
 import { PaperclipIcon } from '@navikt/aksel-icons';
 import { Alert, BodyLong, Button, ConfirmationPanel, Heading, Link, Tag } from '@navikt/ds-react';
 import * as DateFns from 'date-fns';
-import { useState, useEffect, ReactNode } from 'react';
+import { ReactNode, useEffect, useState } from 'react';
 import { useNavigate, useOutletContext } from 'react-router-dom';
 
 import * as sakApi from '~src/api/sakApi';
@@ -27,9 +27,8 @@ import { AlleredeGjeldendeSakForBruker, Sakstype } from '~src/types/Sak';
 import { Søknadstype } from '~src/types/Søknadinnhold';
 import { formatDate } from '~src/utils/date/dateUtils';
 import { er67EllerEldre } from '~src/utils/person/personUtils';
-
-import nb from './inngang-nb';
 import styles from './inngang.module.less';
+import nb from './inngang-nb';
 
 const Aldersvarsel = ({ søkerAlder }: { søkerAlder: Nullable<number> }) => {
     const { formatMessage } = useI18n({ messages: nb });

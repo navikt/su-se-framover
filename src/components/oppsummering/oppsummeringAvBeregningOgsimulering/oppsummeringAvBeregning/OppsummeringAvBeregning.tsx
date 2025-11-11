@@ -19,9 +19,8 @@ import { formatMonthYear } from '~src/utils/date/dateUtils';
 import { formatCurrency } from '~src/utils/format/formatUtils';
 
 import SeSkattegrunnlag from '../../oppsummeringAvSkattegrunnlag/Skattegrunnlagsmodal';
-
-import messages from './OppsummeringAvBeregning-nb';
 import styles from './OppsummeringAvBeregning.module.less';
+import messages from './OppsummeringAvBeregning-nb';
 
 const getFradragsnøkkel = (f: Fradrag) =>
     [f.type, f.utenlandskInntekt?.kurs ?? '', f.utenlandskInntekt?.valuta ?? '', f.tilhører].join('-');

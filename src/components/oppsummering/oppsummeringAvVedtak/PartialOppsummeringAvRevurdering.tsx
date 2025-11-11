@@ -1,12 +1,11 @@
-
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { Loader } from '@navikt/ds-react';
 import { useEffect } from 'react';
 
 import { hentTidligereGrunnlagsdataForVedtak } from '~src/api/revurderingApi';
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
-import messages from '~src/components/oppsummering/oppsummeringAvVedtak/OppsummeringAvVedtak-nb';
 import styles from '~src/components/oppsummering/oppsummeringAvVedtak/OppsummeringAvVedtak.module.less';
+import messages from '~src/components/oppsummering/oppsummeringAvVedtak/OppsummeringAvVedtak-nb';
 import { OppsummeringPar } from '~src/components/oppsummering/oppsummeringpar/OppsummeringPar';
 import SidestiltOppsummeringAvVilkårOgGrunnlag from '~src/components/oppsummering/sidestiltOppsummeringAvVilkårOgGrunnlag/SidestiltOppsummeringAvVilkårOgGrunnlag';
 import { pipe } from '~src/lib/fp';

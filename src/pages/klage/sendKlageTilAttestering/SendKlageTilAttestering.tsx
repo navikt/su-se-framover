@@ -8,14 +8,13 @@ import * as klageActions from '~src/features/klage/klageActions';
 import { useAsyncActionCreator } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
 import * as Routes from '~src/lib/routes';
-import { KlageSteg, Klage } from '~src/types/Klage';
+import { Klage, KlageSteg } from '~src/types/Klage';
 import { Vedtak } from '~src/types/Vedtak';
 import { erKlageVurdertBekreftet } from '~src/utils/klage/klageUtils';
 
 import sharedStyles from '../klage.module.less';
-
-import messages from './sendKlageTilAttestering-nb';
 import styles from './sendKlageTilAttestering.module.less';
+import messages from './sendKlageTilAttestering-nb';
 
 const SendKlageTilAttestering = (props: { sakId: string; klage: Klage; vedtaker: Vedtak[] }) => {
     const navigate = useNavigate();

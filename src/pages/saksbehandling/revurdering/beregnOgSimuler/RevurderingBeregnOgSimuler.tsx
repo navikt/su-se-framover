@@ -27,9 +27,8 @@ import {
 
 import Navigasjonsknapper from '../../../../components/navigasjonsknapper/Navigasjonsknapper';
 import UtfallSomIkkeStøttes from '../utfallSomIkkeStøttes/UtfallSomIkkeStøttes';
-
-import messages from './RevurderingBeregnOgsimuler-nb';
 import styles from './RevurderingBeregnOgSimuler.module.less';
+import messages from './RevurderingBeregnOgsimuler-nb';
 
 const RevurderingBeregnOgSimuler = (props: {
     informasjonsRevurdering: InformasjonsRevurdering;

@@ -8,9 +8,7 @@ export interface LukkSøknadOgAvsluttSøknadsbehandlingFormData {
         datoSøkerTrakkSøknad: Nullable<string>;
     };
     avvist: {
-        skalSendesBrev: Nullable<boolean>;
-        typeBrev: Nullable<AvvistBrevtyper>;
-        fritekst: Nullable<string>;
+        fritekst: string;
     };
     manglendeDok: {
         fritekst: Nullable<string>;
@@ -23,9 +21,7 @@ export const lukkSøknadInitialValues = {
         datoSøkerTrakkSøknad: null,
     },
     avvist: {
-        skalSendesBrev: null,
-        typeBrev: null,
-        fritekst: null,
+        fritekst: '',
     },
     manglendeDok: {
         fritekst: null,
@@ -44,8 +40,8 @@ export enum AvvistBrevtyper {
 }
 
 export interface AvvistBrevConfig {
+    fritekst: string;
     brevtype: AvvistBrevtyper;
-    fritekst: Nullable<string>;
 }
 
 export function getLukkSøknadValidationSchema(begrunnelse: Nullable<LukkSøknadOgAvsluttSøknadsbehandlingType>) {
@@ -59,36 +55,15 @@ export function getLukkSøknadValidationSchema(begrunnelse: Nullable<LukkSøknad
         case LukkSøknadBegrunnelse.Avvist:
             return yup.object({
                 avvist: yup.object({
-                    skalSendesBrev: yup.boolean().nullable(false).typeError('Du må velge om det skal sendes brev'),
-                    typeBrev: yup
-                        .mixed<AvvistBrevtyper>()
-                        .nullable()
-                        .defined()
-                        .when('skalSendesBrev', {
-                            is: true,
-                            then: yup
-                                .mixed()
-                                .oneOf(
-                                    [AvvistBrevtyper.Fritekstsbrev, AvvistBrevtyper.Vedtaksbrev],
-                                    'Du må velge type brev',
-                                )
-                                .nullable(false),
-                        }),
                     fritekst: yup
                         .string()
-                        .nullable()
-                        .defined()
-                        .when('typeBrev', {
-                            is: AvvistBrevtyper.Fritekstsbrev,
-                            then: yup
-                                .string()
-                                .required()
-                                .min(1)
-                                .nullable(false)
-                                .typeError('Du må legge inn fritekst til brevet'),
-                        }),
+                        .required()
+                        .min(1)
+                        .nullable(false)
+                        .typeError('Du må legge inn fritekst til brevet'),
                 }),
             });
+
         case AvsluttSøknadsbehandlingBegrunnelse.ManglendeDok:
             return yup.object({
                 manglendeDok: yup.object({

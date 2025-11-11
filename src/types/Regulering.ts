@@ -1,7 +1,7 @@
 import { Nullable } from '~src/lib/types';
 
 import { Beregning } from './Beregning';
-import { FradragTilhører, Fradragskategori } from './Fradrag';
+import { Fradragskategori, FradragTilhører } from './Fradrag';
 import { GrunnlagsdataOgVilkårsvurderinger } from './grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
 import { Periode, PeriodeMedOptionalTilOgMed } from './Periode';
 import { Sakstype } from './Sak';
@@ -62,6 +62,17 @@ export enum ÅrsakTilManuellReguleringKategori {
     DelvisOpphør = 'DelvisOpphør',
     FantIkkeVedtakForApril = 'FantIkkeVedtakForApril',
     MerEnn1Eps = 'MerEnn1Eps',
+}
+
+export interface YtelseErMidlertidigStanset extends ÅrsakForManuell {}
+
+//TODO: SOS kan disse slettes?
+export interface ForventetInntektErStørreEnn0 extends ÅrsakForManuell {}
+export interface AutomatiskSendingTilUtbetalingFeilet extends ÅrsakForManuell {
+    begrunnelse: string;
+}
+export interface VedtakstidslinjeErIkkeSammenhengende extends ÅrsakForManuell {
+    begrunnelse: string;
 }
 
 export interface ÅrsakForManuell {
@@ -136,17 +147,6 @@ export interface DifferanseEtterRegulering extends ÅrsakForManuell {
     eksternBruttoBeløpEtterRegulering: string;
     vårtBeløpFørRegulering: string;
     forventetBeløpEtterRegulering: string;
-}
-
-// eslint-disable-next-line @typescript-eslint/no-empty-object-type
-export interface YtelseErMidlertidigStanset extends ÅrsakForManuell {}
-// eslint-disable-next-line @typescript-eslint/no-empty-object-type
-export interface ForventetInntektErStørreEnn0 extends ÅrsakForManuell {}
-export interface AutomatiskSendingTilUtbetalingFeilet extends ÅrsakForManuell {
-    begrunnelse: string;
-}
-export interface VedtakstidslinjeErIkkeSammenhengende extends ÅrsakForManuell {
-    begrunnelse: string;
 }
 
 export interface DelvisOpphør extends ÅrsakForManuell {

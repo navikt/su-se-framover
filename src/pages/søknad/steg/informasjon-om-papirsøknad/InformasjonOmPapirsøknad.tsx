@@ -1,7 +1,7 @@
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Radio, RadioGroup, Textarea } from '@navikt/ds-react';
 import * as DateFns from 'date-fns';
-import { useForm, Controller } from 'react-hook-form';
+import { Controller, useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 
 import { DatePicker } from '~src/components/inputs/datePicker/DatePicker';
@@ -18,9 +18,8 @@ import { toDateOrNull, toStringDateOrNull } from '~src/utils/date/dateUtils';
 import Bunnknapper from '../../bunnknapper/Bunnknapper';
 import sharedStyles from '../../steg-shared.module.less';
 import sharedI18n from '../steg-shared-i18n';
-
-import messages from './informasjonOmPapirsøknad-nb';
 import styles from './informasjonOmPapirsøknad.module.less';
+import messages from './informasjonOmPapirsøknad-nb';
 
 const InformasjonOmPapirsøknad = (props: { forrigeUrl: string; nesteUrl: string; avbrytUrl: string }) => {
     const navigate = useNavigate();

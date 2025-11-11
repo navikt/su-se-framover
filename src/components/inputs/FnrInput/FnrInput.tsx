@@ -10,9 +10,8 @@ import { ApiResult, useApiCall } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
 import { Nullable } from '~src/lib/types';
 import { Person } from '~src/types/Person';
-
-import messages from './FnrInput-nb';
 import styles from './FnrInput.module.less';
+import messages from './FnrInput-nb';
 
 interface FnrInputProps {
     label?: string;

@@ -7,8 +7,8 @@ import { Behandlingstype, RevurderingOgFeilmeldinger } from '~src/api/GrunnlagOg
 import FlyktningForm from '~src/components/forms/vilkårOgGrunnlagForms/flyktning/FlyktningForm';
 import {
     FlyktningVilkårFormData,
-    flyktningFormSchema,
     flyktningFormDataTilRequest,
+    flyktningFormSchema,
     flyktningVilkårTilFormDataEllerNy,
 } from '~src/components/forms/vilkårOgGrunnlagForms/flyktning/FlyktningFormUtils';
 import OppsummeringAvFlyktningvilkår from '~src/components/oppsummering/oppsummeringAvVilkårOgGrunnlag/OppsummeringAvFlyktning';

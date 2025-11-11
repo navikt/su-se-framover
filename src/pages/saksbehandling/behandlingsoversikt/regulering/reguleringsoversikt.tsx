@@ -25,9 +25,8 @@ import {
     VelgbareFradragskategorier,
 } from '~src/types/Fradrag.ts';
 import { ReguleringOversiktsstatus } from '~src/types/Regulering';
-
-import messages from './regulering-nb';
 import styles from './regulering.module.less';
+import messages from './regulering-nb';
 
 const hentFradragskategorierSortertAlfabetisk = () => {
     return [...Object.keys(VelgbareFradragskategorier), ...Object.keys(IkkeVelgbareFradragskategorier)].sort((a, b) =>

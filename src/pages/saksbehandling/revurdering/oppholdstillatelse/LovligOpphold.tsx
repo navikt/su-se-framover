@@ -6,9 +6,9 @@ import { useNavigate } from 'react-router-dom';
 import { Behandlingstype, RevurderingOgFeilmeldinger } from '~src/api/GrunnlagOgVilkårApi';
 import LovligOppholdForm from '~src/components/forms/vilkårOgGrunnlagForms/lovligOpphold/LovligOppholdForm';
 import {
+    LovligOppholdVilkårFormData,
     lovligOppholdFormDataTilRequest,
     lovligOppholdFormSchema,
-    LovligOppholdVilkårFormData,
     lovligOppholdVilkårTilFormDataEllerNy,
 } from '~src/components/forms/vilkårOgGrunnlagForms/lovligOpphold/LovligOppholdFormUtils';
 import OppsummeringAvLovligOppholdvilkår from '~src/components/oppsummering/oppsummeringAvVilkårOgGrunnlag/OppsummeringAvLovligOpphold';

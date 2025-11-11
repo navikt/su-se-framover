@@ -19,7 +19,6 @@ declare module 'express-session' {
 
 export type TokenSets = { [key: string]: OpenIdClient.TokenSet };
 declare global {
-    // eslint-disable-next-line @typescript-eslint/no-namespace
     namespace Express {
         interface User {
             tokenSets: TokenSets;
