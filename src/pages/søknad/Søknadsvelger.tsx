@@ -1,4 +1,4 @@
-import { BodyLong, BodyShort, Button, GuidePanel, Heading, Ingress, Link, Modal, Panel } from '@navikt/ds-react';
+import { BodyLong, GuidePanel, Heading, Ingress, Panel, Link, Modal, BodyShort, Button } from '@navikt/ds-react';
 import { useRef, useState } from 'react';
 
 import LinkAsButton from '~src/components/linkAsButton/LinkAsButton';
