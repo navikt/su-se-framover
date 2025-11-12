@@ -1,10 +1,10 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { PaperclipIcon } from '@navikt/aksel-icons';
-import { Alert, BodyLong, Button, ConfirmationPanel, Heading, Link, Tag } from '@navikt/ds-react';
+import { Alert, BodyLong, BodyShort, Button, ConfirmationPanel, Heading, Link, Modal, Tag } from '@navikt/ds-react';
 import * as DateFns from 'date-fns';
+import { addDays, isBefore, startOfMonth, subMonths } from 'date-fns';
 import { ReactNode, useEffect, useState } from 'react';
 import { useNavigate, useOutletContext } from 'react-router-dom';
-
 import * as sakApi from '~src/api/sakApi';
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
 import CircleWithIcon from '~src/components/circleWithIcon/CircleWithIcon';
@@ -29,6 +29,16 @@ import { formatDate } from '~src/utils/date/dateUtils';
 import { er67EllerEldre } from '~src/utils/person/personUtils';
 import styles from './inngang.module.less';
 import nb from './inngang-nb';
+
+const kanStarteNySøknad = (periode: Nullable<Periode<string>>): boolean => {
+    if (!periode) {
+        return true;
+    }
+    const tilOgMed = new Date(periode.tilOgMed);
+    const nyPeriodeStart = startOfMonth(addDays(tilOgMed, 1));
+    const tidligsteSøknadsDato = subMonths(nyPeriodeStart, 2);
+    return !isBefore(new Date(), tidligsteSøknadsDato);
+};
 
 const Aldersvarsel = ({ søkerAlder }: { søkerAlder: Nullable<number> }) => {
     const { formatMessage } = useI18n({ messages: nb });
@@ -227,13 +237,23 @@ const Inngang = () => {
 
     const isFormValid = RemoteData.isSuccess(søker) && (isPapirsøknad || erBekreftet);
 
+    let relevantPeriode: Nullable<Periode<string>> = null;
+
+    if (RemoteData.isSuccess(sakinfo)) {
+        const { alder, uføre } = sakinfo.value;
+
+        relevantPeriode = alder?.iverksattInnvilgetStønadsperiode ?? uføre?.iverksattInnvilgetStønadsperiode ?? null;
+    }
+
+    const kanSøke = kanStarteNySøknad(relevantPeriode);
+    const [visModal, setVisModal] = useState<boolean>(false);
+
     const handleStartSøknadKlikk = () => {
-        if (isFormValid) {
-            dispatch(
-                søknadSlice.actions.startSøknad(isPapirsøknad ? Søknadstype.Papirsøknad : Søknadstype.DigitalSøknad),
-            );
-            navigate(startstegUrl);
+        if (!isFormValid) {
+            return;
         }
+        dispatch(søknadSlice.actions.startSøknad(isPapirsøknad ? Søknadstype.Papirsøknad : Søknadstype.DigitalSøknad));
+        navigate(startstegUrl);
     };
 
     const Informasjon = () => (
@@ -331,19 +351,81 @@ const Inngang = () => {
                 </div>
             </div>
             <div className={styles.knapperContainer}>
-                <LinkAsButton variant="secondary" href={'/soknad'}>
+                <LinkAsButton variant={kanSøke ? 'secondary' : 'primary'} href={'/soknad'}>
                     {formatMessage('knapp.forrige')}
                 </LinkAsButton>
                 <Button
                     type="button"
+                    variant={kanSøke ? 'primary' : 'secondary'}
                     onClick={() => {
-                        setHasSubmitted(() => true);
+                        if (!kanSøke) {
+                            setVisModal(true);
+                            return;
+                        }
+                        setHasSubmitted(true);
+
+                        if (!isFormValid) {
+                            return;
+                        }
+
                         handleStartSøknadKlikk();
                     }}
                 >
                     {formatMessage('knapp.startSøknad')}
                 </Button>
             </div>
+            <Modal
+                open={visModal}
+                onClose={() => setVisModal(false)}
+                header={{
+                    heading: formatMessage('varsel.søknad.tittel'),
+                }}
+            >
+                <Modal.Body>
+                    <div className={styles.modalContent}>
+                        <BodyLong>{formatMessage('varsel.søknad.pt1')}</BodyLong>
+                        <BodyShort>
+                            {formatMessage('varsel.søknad.pt2', {
+                                Strong: (tekst) => <strong>{tekst}</strong>,
+                            })}
+                            <Link
+                                target="_blank"
+                                href="https://navno.sharepoint.com/sites/fag-og-ytelser-regelverk-og-rutiner/SitePages/Supplerende%20st%C3%B8nad.aspx?web=1"
+                            >
+                                servicerutine
+                            </Link>
+                            {formatMessage('varsel.søknad.lenke')}
+                            {hasSubmitted && !erBekreftet && (
+                                <SkjemaelementFeilmelding>
+                                    {formatMessage('husk.feil.påkrevdfelt')}
+                                </SkjemaelementFeilmelding>
+                            )}
+                        </BodyShort>
+                        <div className={styles.sikkerKnapp}>
+                            <Button
+                                variant="primary"
+                                onClick={() => {
+                                    setHasSubmitted(true);
+
+                                    if (!isFormValid) {
+                                        return;
+                                    }
+                                    setVisModal(false);
+
+                                    handleStartSøknadKlikk();
+                                }}
+                            >
+                                ja , jeg er sikker
+                            </Button>
+                        </div>
+                        <div className={styles.avbrytKnapp}>
+                            <Button variant="secondary" onClick={() => setVisModal(false)}>
+                                avbryt
+                            </Button>
+                        </div>
+                    </div>
+                </Modal.Body>
+            </Modal>
         </div>
     );
 };
