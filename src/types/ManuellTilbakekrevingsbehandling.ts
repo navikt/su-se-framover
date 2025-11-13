@@ -14,7 +14,6 @@ export interface ManuellTilbakekrevingsbehandling {
     vurderinger: Nullable<VurderingMedKrav>;
     forhåndsvarselsInfo: ForhåndsvarselsInfo[];
     fritekst: Nullable<string>;
-    forhåndsvarselFritekst: Nullable<string>;
     versjon: number;
     sendtTilAttesteringAv: Nullable<string>;
     attesteringer: Attestering[];

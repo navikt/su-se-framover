@@ -1,10 +1,11 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Button, Heading, Radio, RadioGroup } from '@navikt/ds-react';
-import { useRef } from 'react';
+import { useEffect } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 
+import { hentFritekst, redigerFritekst } from '~src/api/fritekstApi.ts';
 import { forhåndsvisForhåndsvarsel, visUtsendtForhåndsvarsel } from '~src/api/tilbakekrevingApi';
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
 import TextareaWithAutosave from '~src/components/inputs/textareaWithAutosave/TextareaWithAutosave.tsx';
@@ -13,7 +14,6 @@ import Feiloppsummering from '~src/components/oppsummering/feiloppsummering/Feil
 import OppsummeringAvKravgrunnlag from '~src/components/oppsummering/kravgrunnlag/OppsummeringAvKravgrunnlag';
 import ToKolonner from '~src/components/toKolonner/ToKolonner';
 import * as TilbakekrevingActions from '~src/features/TilbakekrevingActions';
-import { redigerForhåndsvarsel } from '~src/features/TilbakekrevingActions';
 import { useApiCall, useAsyncActionCreator, useBrevForhåndsvisning } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
 import * as Routes from '~src/lib/routes';
@@ -49,13 +49,25 @@ const ForhåndsvarsleTilbakekreving = (props: {
 
     const form = useForm<ForhåndsvarsleTilbakekrevingFormData>({
         defaultValues: {
-            skalForhåndsvarsle:
-                props.tilbakekreving.forhåndsvarselFritekst !== null &&
-                props.tilbakekreving.forhåndsvarselFritekst.length > 0,
-            fritekst: props.tilbakekreving.forhåndsvarselFritekst ?? '',
+            skalForhåndsvarsle: false,
+            fritekst: '',
         },
         resolver: yupResolver(forhåndsvarsleTilbakekrevingFormSchema),
     });
+
+    useEffect(() => {
+        hentFritekst({
+            referanseId: props.tilbakekreving.id,
+            type: 'FORHÅNDSVARSEL_TILBAKEKREVING',
+        }).then((res) => {
+            if (res.status === 'ok') {
+                form.reset({
+                    skalForhåndsvarsle: true,
+                    fritekst: res.data.fritekst,
+                });
+            }
+        });
+    }, []);
 
     const handleSubmit = (data: ForhåndsvarsleTilbakekrevingFormData) => {
         if (!data.skalForhåndsvarsle) {
@@ -83,16 +95,13 @@ const ForhåndsvarsleTilbakekreving = (props: {
     };
 
     const [forhåndsvisStatus, forhåndsvis] = useBrevForhåndsvisning(forhåndsvisForhåndsvarsel);
-    const [redigertForhåndsvarselStatus, saveRedigerForhåndsvarsel] = useAsyncActionCreator(redigerForhåndsvarsel);
-
-    const saksversjonRef = useRef(props.saksversjon);
+    const [redigertForhåndsvarselStatus, saveRedigerForhåndsvarsel] = useApiCall(redigerFritekst);
 
     const handleRedigertForhåndsvarsel = (data: HandleRedigertForhåndsvarsel, onSuccess: () => void) => {
         return saveRedigerForhåndsvarsel(
             {
-                sakId: props.sakId,
-                saksversjon: saksversjonRef.current,
-                behandlingId: props.tilbakekreving.id,
+                referanseId: props.tilbakekreving.id,
+                type: 'FORHÅNDSVARSEL_TILBAKEKREVING',
                 fritekst: data.fritekst ?? '',
             },
             onSuccess,
