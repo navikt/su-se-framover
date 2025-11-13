@@ -1,6 +1,6 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { PaperclipIcon } from '@navikt/aksel-icons';
-import { Alert, BodyLong, BodyShort, Button, ConfirmationPanel, Heading, Link, Modal, Tag } from '@navikt/ds-react';
+import { Alert, BodyLong, Button, ConfirmationPanel, Heading, Link, Tag } from '@navikt/ds-react';
 import * as DateFns from 'date-fns';
 import { addDays, isBefore, startOfMonth, subMonths } from 'date-fns';
 import { ReactNode, useEffect, useState } from 'react';
@@ -10,6 +10,7 @@ import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
 import CircleWithIcon from '~src/components/circleWithIcon/CircleWithIcon';
 import SkjemaelementFeilmelding from '~src/components/formElements/SkjemaelementFeilmelding';
 import { LinkAsButton } from '~src/components/linkAsButton/LinkAsButton';
+import { BekreftSøknadModal } from '~src/components/modal/BekreftSøknadModal.tsx';
 import Personsøk from '~src/components/Personsøk/Personsøk';
 import * as personSlice from '~src/features/person/person.slice';
 import søknadSlice from '~src/features/søknad/søknad.slice';
@@ -242,7 +243,11 @@ const Inngang = () => {
     if (RemoteData.isSuccess(sakinfo)) {
         const { alder, uføre } = sakinfo.value;
 
-        relevantPeriode = alder?.iverksattInnvilgetStønadsperiode ?? uføre?.iverksattInnvilgetStønadsperiode ?? null;
+        if (sakstype === Sakstype.Alder && alder?.iverksattInnvilgetStønadsperiode) {
+            relevantPeriode = alder.iverksattInnvilgetStønadsperiode;
+        } else if (sakstype === Sakstype.Uføre && uføre?.iverksattInnvilgetStønadsperiode) {
+            relevantPeriode = uføre.iverksattInnvilgetStønadsperiode;
+        }
     }
 
     const kanSøke = kanStarteNySøknad(relevantPeriode);
@@ -374,58 +379,15 @@ const Inngang = () => {
                     {formatMessage('knapp.startSøknad')}
                 </Button>
             </div>
-            <Modal
-                open={visModal}
-                onClose={() => setVisModal(false)}
-                header={{
-                    heading: formatMessage('varsel.søknad.tittel'),
-                }}
-            >
-                <Modal.Body>
-                    <div className={styles.modalContent}>
-                        <BodyLong>{formatMessage('varsel.søknad.pt1')}</BodyLong>
-                        <BodyShort>
-                            {formatMessage('varsel.søknad.pt2', {
-                                Strong: (tekst) => <strong>{tekst}</strong>,
-                            })}
-                            <Link
-                                target="_blank"
-                                href="https://navno.sharepoint.com/sites/fag-og-ytelser-regelverk-og-rutiner/SitePages/Supplerende%20st%C3%B8nad.aspx?web=1"
-                            >
-                                servicerutine
-                            </Link>
-                            {formatMessage('varsel.søknad.lenke')}
-                            {hasSubmitted && !erBekreftet && (
-                                <SkjemaelementFeilmelding>
-                                    {formatMessage('husk.feil.påkrevdfelt')}
-                                </SkjemaelementFeilmelding>
-                            )}
-                        </BodyShort>
-                        <div className={styles.sikkerKnapp}>
-                            <Button
-                                variant="primary"
-                                onClick={() => {
-                                    setHasSubmitted(true);
-
-                                    if (!isFormValid) {
-                                        return;
-                                    }
-                                    setVisModal(false);
-
-                                    handleStartSøknadKlikk();
-                                }}
-                            >
-                                ja , jeg er sikker
-                            </Button>
-                        </div>
-                        <div className={styles.avbrytKnapp}>
-                            <Button variant="secondary" onClick={() => setVisModal(false)}>
-                                avbryt
-                            </Button>
-                        </div>
-                    </div>
-                </Modal.Body>
-            </Modal>
+            <BekreftSøknadModal
+                visModal={visModal}
+                setVisModal={setVisModal}
+                isFormValid={isFormValid}
+                hasSubmitted={hasSubmitted}
+                setHasSubmitted={setHasSubmitted}
+                erBekreftet={erBekreftet}
+                handleStartSøknadKlikk={handleStartSøknadKlikk}
+            />
         </div>
     );
 };
