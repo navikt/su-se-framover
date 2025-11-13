@@ -5,7 +5,7 @@ import { useEffect } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 
-import { hentFritekst, redigerFritekst } from '~src/api/fritekstApi.ts';
+import { FritekstTyper, hentFritekst, redigerFritekst } from '~src/api/fritekstApi.ts';
 import { forhåndsvisForhåndsvarsel, visUtsendtForhåndsvarsel } from '~src/api/tilbakekrevingApi';
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
 import TextareaWithAutosave from '~src/components/inputs/textareaWithAutosave/TextareaWithAutosave.tsx';
@@ -58,7 +58,8 @@ const ForhåndsvarsleTilbakekreving = (props: {
     useEffect(() => {
         hentFritekst({
             referanseId: props.tilbakekreving.id,
-            type: 'FORHÅNDSVARSEL_TILBAKEKREVING',
+            sakId: props.sakId,
+            type: FritekstTyper.FORHÅNDSVARSEL_TILBAKEKREVING,
         }).then((res) => {
             if (res.status === 'ok') {
                 form.reset({
@@ -101,7 +102,8 @@ const ForhåndsvarsleTilbakekreving = (props: {
         return saveRedigerForhåndsvarsel(
             {
                 referanseId: props.tilbakekreving.id,
-                type: 'FORHÅNDSVARSEL_TILBAKEKREVING',
+                sakId: props.sakId,
+                type: FritekstTyper.FORHÅNDSVARSEL_TILBAKEKREVING,
                 fritekst: data.fritekst ?? '',
             },
             onSuccess,
