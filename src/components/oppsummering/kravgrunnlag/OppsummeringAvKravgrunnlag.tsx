@@ -1,22 +1,22 @@
-import { Heading, Accordion } from '@navikt/ds-react';
+import { Accordion, Heading } from '@navikt/ds-react';
 import { AccordionItem } from '@navikt/ds-react/Accordion';
 import classNames from 'classnames';
 
 import Oppsummeringspanel, {
-    Oppsummeringsikon,
     Oppsummeringsfarge,
+    Oppsummeringsikon,
 } from '~src/components/oppsummering/oppsummeringspanel/Oppsummeringspanel';
 import { useI18n } from '~src/lib/i18n';
-import { Kravgrunnlag, Grunnlagsperiode } from '~src/types/Kravgrunnlag';
+import { Nullable } from '~src/lib/types.ts';
+import { Grunnlagsperiode, Kravgrunnlag } from '~src/types/Kravgrunnlag';
 import { formatDate, formatMonthYear } from '~src/utils/date/dateUtils';
 
 import { OppsummeringPar } from '../oppsummeringpar/OppsummeringPar';
-
-import messages from './OppsummeringAvKravgrunnlag-nb';
 import styles from './OppsummeringAvKravgrunnlag.module.less';
+import messages from './OppsummeringAvKravgrunnlag-nb';
 
 const OppsummeringAvKravgrunnlag = (props: {
-    kravgrunnlag: Kravgrunnlag;
+    kravgrunnlag: Nullable<Kravgrunnlag>;
     basicBareMetaInfo?: { medTittel?: boolean };
     basicHeleKravgrunnlag?: { medTittel?: boolean };
     medPanel?: {
@@ -27,6 +27,9 @@ const OppsummeringAvKravgrunnlag = (props: {
     kompakt?: boolean;
 }) => {
     const { formatMessage } = useI18n({ messages });
+    if (props.kravgrunnlag == null) {
+        return <Heading size={'medium'}>Tilbakekrevingsbehandling mangler kravgrunnlag</Heading>;
+    }
 
     if (props.basicBareMetaInfo) {
         return (

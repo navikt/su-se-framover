@@ -13,9 +13,8 @@ import yup from '~src/lib/validering';
 import { Klage } from '~src/types/Klage';
 
 import AvsluttBehandlingBunnknapper from '../avsluttBehandlingBunnknapper/AvsluttBehandlingBunnknapper';
-
-import messages from './avsluttKlage-nb';
 import styles from './avsluttKlage.module.less';
+import messages from './avsluttKlage-nb';
 
 interface AvsluttKlageFormData {
     begrunnelse: string;

@@ -3,19 +3,19 @@ import { createAsyncThunk } from '@reduxjs/toolkit';
 import { ApiError } from '~src/api/apiClient';
 import * as tilbakekrevingsApi from '~src/api/tilbakekrevingApi';
 import {
+    AnnullerKravgrunnlagTilbakekrevingResponse,
+    AnnullerKravgunnlagTilbakekrevingRequest,
     AvsluttTilbakekrevingRequest,
+    BehandlingsnotatTilbakekrevingRequest,
     BrevtekstTilbakekrevingsbehandlingRequest,
     ForhåndsvarsleTilbakekrevingRequest,
-    OppdaterKravgrunnlagTilbakekrevingRequest as OppdaterKravgrunnlagTilbakekrevingRequest,
     IverksettTilbakekrevingRequest,
     ManuellTilbakekrevingsbehandling,
+    OppdaterKravgrunnlagTilbakekrevingRequest as OppdaterKravgrunnlagTilbakekrevingRequest,
     OpprettNyTilbakekrevingsbehandlingRequest,
     SendTilbakekrevingTilAttesteringRequest,
     UnderkjennTilbakekrevingRequest,
     VurderTilbakekrevingsbehandlingRequest,
-    BehandlingsnotatTilbakekrevingRequest,
-    AnnullerKravgunnlagTilbakekrevingRequest,
-    AnnullerKravgrunnlagTilbakekrevingResponse,
 } from '~src/types/ManuellTilbakekrevingsbehandling';
 
 export const opprettNyTilbakekrevingsbehandling = createAsyncThunk<

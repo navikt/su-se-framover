@@ -100,7 +100,7 @@ const DinFormue = (props: { forrigeUrl: string; nesteUrl: string; avbrytUrl: str
                                     value={field.value ?? ''}
                                     autoComplete="off"
                                     // Dette elementet vises ikke ved sidelast
-                                    // eslint-disable-next-line jsx-a11y/no-autofocus
+
                                     autoFocus
                                 />
                             )}
@@ -156,7 +156,7 @@ const DinFormue = (props: { forrigeUrl: string; nesteUrl: string; avbrytUrl: str
                                     value={field.value ?? ''}
                                     autoComplete="off"
                                     // Dette elementet vises ikke ved sidelast
-                                    // eslint-disable-next-line jsx-a11y/no-autofocus
+
                                     autoFocus
                                 />
                             )}
@@ -195,7 +195,7 @@ const DinFormue = (props: { forrigeUrl: string; nesteUrl: string; avbrytUrl: str
                                     {...field}
                                     value={field.value ?? ''}
                                     // Dette elementet vises ikke ved sidelast
-                                    // eslint-disable-next-line jsx-a11y/no-autofocus
+
                                     autoFocus
                                 />
                             )}
@@ -310,7 +310,7 @@ const DinFormue = (props: { forrigeUrl: string; nesteUrl: string; avbrytUrl: str
                                 {...field}
                                 value={field.value ?? ''}
                                 // Dette elementet vises ikke ved sidelast
-                                // eslint-disable-next-line jsx-a11y/no-autofocus
+
                                 autoFocus
                             />
                         )}
@@ -347,7 +347,7 @@ const DinFormue = (props: { forrigeUrl: string; nesteUrl: string; avbrytUrl: str
                                 value={field.value ?? ''}
                                 autoComplete="off"
                                 // Dette elementet vises ikke ved sidelast
-                                // eslint-disable-next-line jsx-a11y/no-autofocus
+
                                 autoFocus
                             />
                         )}
@@ -384,7 +384,7 @@ const DinFormue = (props: { forrigeUrl: string; nesteUrl: string; avbrytUrl: str
                                 error={fieldState.error?.message}
                                 autoComplete="off"
                                 // Dette elementet vises ikke ved sidelast
-                                // eslint-disable-next-line jsx-a11y/no-autofocus
+
                                 autoFocus
                             />
                         )}
@@ -420,7 +420,7 @@ const DinFormue = (props: { forrigeUrl: string; nesteUrl: string; avbrytUrl: str
                                 value={field.value ?? ''}
                                 autoComplete="off"
                                 // Dette elementet vises ikke ved sidelast
-                                // eslint-disable-next-line jsx-a11y/no-autofocus
+
                                 autoFocus
                             />
                         )}

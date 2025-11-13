@@ -1,4 +1,3 @@
-
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { Alert, Button, Loader } from '@navikt/ds-react';
 import { Link, useNavigate } from 'react-router-dom';
@@ -10,8 +9,8 @@ import { useAsyncActionCreator } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
 import * as Routes from '~src/lib/routes';
 import sharedStyles from '~src/pages/klage/klage.module.less';
-import messages from '~src/pages/klage/sendKlageTilAttestering/sendKlageTilAttestering-nb';
 import styles from '~src/pages/klage/sendKlageTilAttestering/sendKlageTilAttestering.module.less';
+import messages from '~src/pages/klage/sendKlageTilAttestering/sendKlageTilAttestering-nb';
 import { Klage, KlageSteg } from '~src/types/Klage';
 import { Vedtak } from '~src/types/Vedtak';
 import { erKlageVurdertBekreftet } from '~src/utils/klage/klageUtils';

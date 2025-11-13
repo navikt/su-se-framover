@@ -5,9 +5,8 @@ import { SaksoversiktContext } from '~src/context/SaksoversiktContext';
 import { useI18n } from '~src/lib/i18n';
 import * as Routes from '~src/lib/routes';
 import { erInformasjonsRevurdering } from '~src/utils/revurdering/revurderingUtils';
-
-import messages from './Attestering-nb';
 import styles from './Attestering.module.less';
+import messages from './Attestering-nb';
 import AttesterKlage from './attesterKlage/AttesterKlage';
 import AttesterRevurdering from './attesterRevurdering/AttesterRevurdering';
 import AttesterSøknadsbehandling from './attesterSøknadsbehandling/AttesterSøknadsbehandling';

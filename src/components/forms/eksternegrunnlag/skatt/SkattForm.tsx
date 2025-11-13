@@ -6,9 +6,8 @@ import { Controller, useForm } from 'react-hook-form';
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
 import { ApiResult } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
-
-import messages from './SkattForm-nb';
 import styles from './SkattForm.module.less';
+import messages from './SkattForm-nb';
 import { SkattFormData, skattFormSchema } from './SkattFormUtils';
 
 /**

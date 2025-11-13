@@ -1,6 +1,6 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import { useRef, ReactElement } from 'react';
-import { UseFormReturn, FieldValues } from 'react-hook-form';
+import { ReactElement } from 'react';
+import { FieldValues, UseFormReturn } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
@@ -48,7 +48,6 @@ interface Props<T extends FieldValues, U> {
 export const FormWrapper = <T extends FieldValues, U extends Behandling>({ form, ...props }: Props<T, U>) => {
     const { formatMessage } = useI18n({ messages: stegSharedI18n });
 
-    const feiloppsummeringRef = useRef<HTMLDivElement>(null);
     const navigate = useNavigate();
     const lagreOgFortsettSenereMedNeste = (values: T) =>
         props.lagreOgfortsettSenere!.onClick!(values, () =>
@@ -77,7 +76,6 @@ export const FormWrapper = <T extends FieldValues, U extends Behandling>({ form,
                 className={styles.feiloppsummering}
                 feil={hookFormErrorsTilFeiloppsummering(form.formState.errors)}
                 hidden={hookFormErrorsTilFeiloppsummering(form.formState.errors).length === 0}
-                ref={feiloppsummeringRef}
             />
             {RemoteData.isFailure(props.neste.savingState) && <ApiErrorAlert error={props.neste.savingState.error} />}
             <Navigasjonsknapper

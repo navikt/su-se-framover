@@ -1,4 +1,4 @@
-import { FC, ReactNode, createContext, useContext } from 'react';
+import { createContext, FC, ReactNode, useContext } from 'react';
 
 import { LoggedInUser, Rolle } from '../types/LoggedInUser';
 

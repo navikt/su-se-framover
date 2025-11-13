@@ -12,7 +12,7 @@ import { focusAfterTimeout } from '~src/lib/formUtils';
 import { useI18n } from '~src/lib/i18n';
 import { hookFormErrorsTilFeiloppsummering } from '~src/lib/validering';
 import { FormData, schema } from '~src/pages/søknad/steg/uførevedtak/validering';
-import { useAppSelector, useAppDispatch } from '~src/redux/Store';
+import { useAppDispatch, useAppSelector } from '~src/redux/Store';
 
 import Bunnknapper from '../../bunnknapper/Bunnknapper';
 import sharedStyles from '../../steg-shared.module.less';

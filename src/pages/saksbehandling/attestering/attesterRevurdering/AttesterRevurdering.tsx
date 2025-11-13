@@ -32,9 +32,8 @@ import {
 } from '~src/utils/revurdering/revurderingUtils';
 
 import { VisDokumenter } from '../../dokumenter/DokumenterPage';
-
-import messages from './attesterRevurdering-nb';
 import styles from './attesterRevurdering.module.less';
+import messages from './attesterRevurdering-nb';
 
 const AttesterRevurdering = (props: {
     sakInfo: {

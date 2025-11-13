@@ -1,5 +1,5 @@
-import oppsummeringMessages from '~src/components/oppsummering/oppsummeringAvKlage/oppsummeringAvKlage-nb';
 import styles from '~src/components/oppsummering/oppsummeringAvKlage/oppsummeringAvKlage.module.less';
+import oppsummeringMessages from '~src/components/oppsummering/oppsummeringAvKlage/oppsummeringAvKlage-nb';
 import { OppsummeringPar } from '~src/components/oppsummering/oppsummeringpar/OppsummeringPar';
 import { OppsummeringParMedBegrunnelse } from '~src/components/oppsummering/oppsummeringpar/OppsummeringParMedBegrunnelse';
 import { useI18n } from '~src/lib/i18n';
@@ -14,6 +14,7 @@ export const FormkravInfo = (props: { klage: Klage; klagensVedtak: Vedtak }) => 
         messages: { ...oppsummeringMessages, ...formkravMessages, ...vurderingMessages },
     });
 
+    const status = props.klage.status;
     return (
         <div className={styles.informasjonsContainer}>
             <div className={styles.informasjonsContentContainer}>
@@ -27,6 +28,7 @@ export const FormkravInfo = (props: { klage: Klage; klagensVedtak: Vedtak }) => 
                     verdi={DateUtils.formatDateTime(props.klagensVedtak.opprettet)}
                     retning={'vertikal'}
                 />
+                <OppsummeringPar label="Klagestatus" verdi={status} retning={'vertikal'} />
             </div>
             <div className={styles.informasjonsContentContainer}>
                 <OppsummeringParMedBegrunnelse
@@ -80,4 +82,3 @@ export const FormkravInfo = (props: { klage: Klage; klagensVedtak: Vedtak }) => 
         </div>
     );
 };
-//slette             {props.klage.begrunnelse && (?

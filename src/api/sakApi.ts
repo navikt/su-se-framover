@@ -2,10 +2,10 @@ import { Behandlingssammendrag } from '~src/types/Behandlingssammendrag';
 import { Dokument, OpprettDokumentRequest } from '~src/types/dokument/Dokument';
 import { Journalpost } from '~src/types/Journalpost';
 import {
+    AnnullerRegistrertUtenlandsoppholdRequest,
     OppdaterRegistrertUtenlandsoppholdRequest,
     RegistrerteUtenlandsopphold,
     RegistrerUtenlandsoppholdRequest,
-    AnnullerRegistrertUtenlandsoppholdRequest,
 } from '~src/types/RegistrertUtenlandsopphold';
 import { AlleredeGjeldendeSakForBruker, Sak } from '~src/types/Sak';
 

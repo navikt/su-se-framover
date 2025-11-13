@@ -9,9 +9,8 @@ import {
 import { formatPeriode } from '~src/utils/periode/periodeUtils';
 
 import { OppsummeringPar } from '../oppsummeringpar/OppsummeringPar';
-
-import messages from './oppsummeringAvVilkårOgGrunnlag-nb';
 import styles from './oppsummeringAvVilkårOgGrunnlag.module.less';
+import messages from './oppsummeringAvVilkårOgGrunnlag-nb';
 
 const OppsummeringAvUtenlandsopphold = (props: { utenlandsopphold: Nullable<UtenlandsoppholdVilkår> }) => {
     const { formatMessage } = useI18n({ messages });

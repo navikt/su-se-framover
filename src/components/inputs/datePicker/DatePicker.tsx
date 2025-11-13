@@ -1,9 +1,9 @@
 import {
-    HelpText,
-    useDatepicker,
     DatePicker as DatePickerDS,
-    useMonthpicker,
+    HelpText,
     MonthPicker as MonthPickerDS,
+    useDatepicker,
+    useMonthpicker,
     useRangeDatepicker,
 } from '@navikt/ds-react';
 import * as DateFns from 'date-fns';

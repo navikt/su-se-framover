@@ -4,9 +4,8 @@ import { OpplysningspliktVilkår } from '~src/types/grunnlagsdataOgVilkårsvurde
 import { formatPeriode } from '~src/utils/periode/periodeUtils';
 
 import { OppsummeringPar } from '../oppsummeringpar/OppsummeringPar';
-
-import messages from './oppsummeringAvVilkårOgGrunnlag-nb';
 import styles from './oppsummeringAvVilkårOgGrunnlag.module.less';
+import messages from './oppsummeringAvVilkårOgGrunnlag-nb';
 
 const OppsummeringAvOpplysningspliktvilkår = (props: { opplysningspliktVilkår: Nullable<OpplysningspliktVilkår> }) => {
     const { formatMessage } = useI18n({ messages });

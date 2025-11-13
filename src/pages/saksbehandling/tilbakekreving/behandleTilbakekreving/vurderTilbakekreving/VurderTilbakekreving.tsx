@@ -28,8 +28,8 @@ import messages from '../../Tilbakekreving-nb';
 
 import styles from './VurderTilbakekreving.module.less';
 import {
-    VurderTilbakekrevingFormData,
     eqVurderTilbakekrevingFormData,
+    VurderTilbakekrevingFormData,
     vurderTilbakekrevingSchema,
 } from './VurderTilbakekrevingUtils';
 
@@ -55,7 +55,12 @@ const VurderTilbakekreving = (props: {
         };
     });
 
-    const defaultValuesFraKravgunnlag = props.tilbakekreving.kravgrunnlag.grunnlagsperiode.map((periode) => ({
+    if (props.tilbakekreving.kravgrunnlag == null) {
+        throw Error('Tilbakekrevingsbehandling må ha kravgrunnlag under vurderingssteget');
+    }
+    const kravgrunnlag = props.tilbakekreving.kravgrunnlag;
+
+    const defaultValuesFraKravgunnlag = kravgrunnlag.grunnlagsperiode.map((periode) => ({
         periode: periode.periode,
         vurdering: null,
     }));
@@ -163,7 +168,7 @@ const VurderTilbakekreving = (props: {
                                             />
                                         </div>
                                         <KravgrunnlagPeriodeInfo
-                                            grunnlagsperiode={props.tilbakekreving.kravgrunnlag.grunnlagsperiode[idx]}
+                                            grunnlagsperiode={kravgrunnlag.grunnlagsperiode[idx]}
                                         />
                                     </Panel>
                                 </li>

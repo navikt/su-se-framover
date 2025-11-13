@@ -1,4 +1,3 @@
-
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Heading } from '@navikt/ds-react';
 import { useForm } from 'react-hook-form';

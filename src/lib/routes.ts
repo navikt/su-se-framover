@@ -14,10 +14,10 @@ interface Route<T> {
     createURL: [T] extends [never] ? () => string : (args: T) => string;
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+// biome-ignore lint/suspicious/noExplicitAny: using any here for flexibility
 type Params<T extends Route<any>> = Parameters<T['createURL']>[0];
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+// biome-ignore lint/suspicious/noExplicitAny: using any here for flexibility
 export const useRouteParams = <T extends Route<any>>() => useParams<Params<T>>();
 
 export const home: Route<never> = {

@@ -1,6 +1,6 @@
-import { PrimitiveType, FormatXMLElementFn } from 'intl-messageformat';
-import { ReactNode, useMemo, useCallback } from 'react';
-import { createIntlCache, createIntl, IntlShape } from 'react-intl';
+import { FormatXMLElementFn, PrimitiveType } from 'intl-messageformat';
+import { ReactNode, useCallback, useMemo } from 'react';
+import { createIntl, createIntlCache, IntlShape } from 'react-intl';
 
 export enum Languages {
     nb = 'nb',

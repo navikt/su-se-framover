@@ -65,6 +65,9 @@ const saksvarseltypeToComponent = (arg: { sak: Sak; søker: Person; varsel: Sakv
                 />
             );
         }
+        case SakvarselType.NYTT_KRAVGRUNNLAG_UTEN_ÅPEN_TILBAKEKREVING: {
+            return <BodyShort>Det er mottatt kravgrunnlag til tilbakekrevingssak</BodyShort>;
+        }
     }
 };
 

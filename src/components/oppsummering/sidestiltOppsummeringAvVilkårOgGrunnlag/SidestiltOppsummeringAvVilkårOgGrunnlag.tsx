@@ -1,4 +1,4 @@
-import { Heading } from '@navikt/ds-react';
+import { Accordion, Heading } from '@navikt/ds-react';
 
 import { VilkårAlder } from '~src/components/oppsummering/sidestiltOppsummeringAvVilkårOgGrunnlag/alder/VilkårAlder.tsx';
 import {
@@ -17,9 +17,8 @@ import { EksterneGrunnlag } from '~src/types/EksterneGrunnlag';
 import { GrunnlagsdataOgVilkårsvurderinger } from '~src/types/grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
 import { Sakstype } from '~src/types/Sak.ts';
 import { SøknadInnhold } from '~src/types/Søknadinnhold';
-
-import messages from './SidestiltOppsummeringAvVilkårOgGrunnlag-nb';
 import styles from './SidestiltOppsummeringAvVilkårOgGrunnlag.module.less';
+import messages from './SidestiltOppsummeringAvVilkårOgGrunnlag-nb';
 
 /*
 TODO:
@@ -72,100 +71,102 @@ const SidestiltOppsummeringAvVilkårOgGrunnlag = (props: {
                     sidestiltMedGrunnlagOgVilkår={sidestiltMedGrunnlagOgVilkår}
                 />
             )}
-            <AccordionItemLovligOpphold
-                lovligOppholdFraGrunnlag={props.grunnlagsdataOgVilkårsvurderinger.lovligOpphold}
-                sidestiltLovligOppholdVilkår={
-                    sidestiltMedGrunnlagOgVilkår
-                        ? (props.visesSidestiltMed as GrunnlagsdataOgVilkårsvurderinger).lovligOpphold
-                        : undefined
-                }
-                sidestiltOppholdstillatelseFraSøknad={
-                    sidestiltMedSøknad ? (props.visesSidestiltMed as SøknadInnhold).oppholdstillatelse : undefined
-                }
-            />
-            <AccordionItemFastOpphold
-                fastOppholdFraGrunnlag={props.grunnlagsdataOgVilkårsvurderinger.fastOpphold}
-                sidestiltFastOppholdVilkår={
-                    sidestiltMedGrunnlagOgVilkår
-                        ? (props.visesSidestiltMed as GrunnlagsdataOgVilkårsvurderinger).fastOpphold
-                        : undefined
-                }
-                sidestiltOppholdstillatelseFraSøknad={
-                    sidestiltMedSøknad
-                        ? {
-                              oppholdstillatelse: (props.visesSidestiltMed as SøknadInnhold).oppholdstillatelse,
-                              boforhold: (props.visesSidestiltMed as SøknadInnhold).boforhold,
-                          }
-                        : undefined
-                }
-            />
-            <AccordionItemInstitusjonsopphold
-                institusjonsoppholdFraGrunnlag={props.grunnlagsdataOgVilkårsvurderinger.institusjonsopphold}
-                sidestiltInstitusjonsopphold={
-                    sidestiltMedGrunnlagOgVilkår
-                        ? (props.visesSidestiltMed as GrunnlagsdataOgVilkårsvurderinger).institusjonsopphold
-                        : undefined
-                }
-                sidestiltInstitusjonsoppholdFraSøknad={
-                    sidestiltMedSøknad
-                        ? (props.visesSidestiltMed as SøknadInnhold).boforhold.innlagtPåInstitusjon
-                        : undefined
-                }
-            />
-            <AccordionItemUtenlandsopphold
-                utenlandsoppholdFraGrunnlag={props.grunnlagsdataOgVilkårsvurderinger.utenlandsopphold}
-                sidestiltUtenlandsopphold={
-                    sidestiltMedGrunnlagOgVilkår
-                        ? (props.visesSidestiltMed as GrunnlagsdataOgVilkårsvurderinger).utenlandsopphold
-                        : undefined
-                }
-                sidestiltUtenlandsoppholdFraSøknad={
-                    sidestiltMedSøknad ? (props.visesSidestiltMed as SøknadInnhold).utenlandsopphold : undefined
-                }
-            />
-            <AccordionItemBosituasjon
-                bosituasjonFraGrunnlag={props.grunnlagsdataOgVilkårsvurderinger.bosituasjon}
-                sidestiltBosituasjon={
-                    sidestiltMedGrunnlagOgVilkår
-                        ? (props.visesSidestiltMed as GrunnlagsdataOgVilkårsvurderinger).bosituasjon
-                        : undefined
-                }
-                boforholdFraSøknad={
-                    sidestiltMedSøknad ? (props.visesSidestiltMed as SøknadInnhold).boforhold : undefined
-                }
-            />
-            <AccordionItemFormue
-                formueFraGrunnlag={props.grunnlagsdataOgVilkårsvurderinger.formue}
-                sidestiltFormue={
-                    sidestiltMedGrunnlagOgVilkår
-                        ? (props.visesSidestiltMed as GrunnlagsdataOgVilkårsvurderinger).formue
-                        : undefined
-                }
-                sidestiltFormueFraSøknad={
-                    sidestiltMedSøknad
-                        ? {
-                              søkers: (props.visesSidestiltMed as SøknadInnhold).formue,
-                              eps: (props.visesSidestiltMed as SøknadInnhold).ektefelle?.formue,
-                          }
-                        : undefined
-                }
-                eksternGrunnlagSkatt={props.eksterneGrunnlag?.skatt ?? null}
-            />
-            <AccordionItemPersonligOppmøte
-                personligOppmøteFraGrunnlag={props.grunnlagsdataOgVilkårsvurderinger.personligOppmøte}
-                sidestiltPersonligOppmøte={
-                    sidestiltMedGrunnlagOgVilkår
-                        ? (props.visesSidestiltMed as GrunnlagsdataOgVilkårsvurderinger).personligOppmøte
-                        : undefined
-                }
-                sidestiltForNav={sidestiltMedSøknad ? (props.visesSidestiltMed as SøknadInnhold).forNav : undefined}
-            />
-            {sidestiltMedGrunnlagOgVilkår && (
-                <AccordionItemFradrag
-                    fradragFraGrunnlag={props.grunnlagsdataOgVilkårsvurderinger.fradrag}
-                    sidestiltFradrag={(props.visesSidestiltMed as GrunnlagsdataOgVilkårsvurderinger).fradrag}
+            <Accordion>
+                <AccordionItemLovligOpphold
+                    lovligOppholdFraGrunnlag={props.grunnlagsdataOgVilkårsvurderinger.lovligOpphold}
+                    sidestiltLovligOppholdVilkår={
+                        sidestiltMedGrunnlagOgVilkår
+                            ? (props.visesSidestiltMed as GrunnlagsdataOgVilkårsvurderinger).lovligOpphold
+                            : undefined
+                    }
+                    sidestiltOppholdstillatelseFraSøknad={
+                        sidestiltMedSøknad ? (props.visesSidestiltMed as SøknadInnhold).oppholdstillatelse : undefined
+                    }
                 />
-            )}
+                <AccordionItemFastOpphold
+                    fastOppholdFraGrunnlag={props.grunnlagsdataOgVilkårsvurderinger.fastOpphold}
+                    sidestiltFastOppholdVilkår={
+                        sidestiltMedGrunnlagOgVilkår
+                            ? (props.visesSidestiltMed as GrunnlagsdataOgVilkårsvurderinger).fastOpphold
+                            : undefined
+                    }
+                    sidestiltOppholdstillatelseFraSøknad={
+                        sidestiltMedSøknad
+                            ? {
+                                  oppholdstillatelse: (props.visesSidestiltMed as SøknadInnhold).oppholdstillatelse,
+                                  boforhold: (props.visesSidestiltMed as SøknadInnhold).boforhold,
+                              }
+                            : undefined
+                    }
+                />
+                <AccordionItemInstitusjonsopphold
+                    institusjonsoppholdFraGrunnlag={props.grunnlagsdataOgVilkårsvurderinger.institusjonsopphold}
+                    sidestiltInstitusjonsopphold={
+                        sidestiltMedGrunnlagOgVilkår
+                            ? (props.visesSidestiltMed as GrunnlagsdataOgVilkårsvurderinger).institusjonsopphold
+                            : undefined
+                    }
+                    sidestiltInstitusjonsoppholdFraSøknad={
+                        sidestiltMedSøknad
+                            ? (props.visesSidestiltMed as SøknadInnhold).boforhold.innlagtPåInstitusjon
+                            : undefined
+                    }
+                />
+                <AccordionItemUtenlandsopphold
+                    utenlandsoppholdFraGrunnlag={props.grunnlagsdataOgVilkårsvurderinger.utenlandsopphold}
+                    sidestiltUtenlandsopphold={
+                        sidestiltMedGrunnlagOgVilkår
+                            ? (props.visesSidestiltMed as GrunnlagsdataOgVilkårsvurderinger).utenlandsopphold
+                            : undefined
+                    }
+                    sidestiltUtenlandsoppholdFraSøknad={
+                        sidestiltMedSøknad ? (props.visesSidestiltMed as SøknadInnhold).utenlandsopphold : undefined
+                    }
+                />
+                <AccordionItemBosituasjon
+                    bosituasjonFraGrunnlag={props.grunnlagsdataOgVilkårsvurderinger.bosituasjon}
+                    sidestiltBosituasjon={
+                        sidestiltMedGrunnlagOgVilkår
+                            ? (props.visesSidestiltMed as GrunnlagsdataOgVilkårsvurderinger).bosituasjon
+                            : undefined
+                    }
+                    boforholdFraSøknad={
+                        sidestiltMedSøknad ? (props.visesSidestiltMed as SøknadInnhold).boforhold : undefined
+                    }
+                />
+                <AccordionItemFormue
+                    formueFraGrunnlag={props.grunnlagsdataOgVilkårsvurderinger.formue}
+                    sidestiltFormue={
+                        sidestiltMedGrunnlagOgVilkår
+                            ? (props.visesSidestiltMed as GrunnlagsdataOgVilkårsvurderinger).formue
+                            : undefined
+                    }
+                    sidestiltFormueFraSøknad={
+                        sidestiltMedSøknad
+                            ? {
+                                  søkers: (props.visesSidestiltMed as SøknadInnhold).formue,
+                                  eps: (props.visesSidestiltMed as SøknadInnhold).ektefelle?.formue,
+                              }
+                            : undefined
+                    }
+                    eksternGrunnlagSkatt={props.eksterneGrunnlag?.skatt ?? null}
+                />
+                <AccordionItemPersonligOppmøte
+                    personligOppmøteFraGrunnlag={props.grunnlagsdataOgVilkårsvurderinger.personligOppmøte}
+                    sidestiltPersonligOppmøte={
+                        sidestiltMedGrunnlagOgVilkår
+                            ? (props.visesSidestiltMed as GrunnlagsdataOgVilkårsvurderinger).personligOppmøte
+                            : undefined
+                    }
+                    sidestiltForNav={sidestiltMedSøknad ? (props.visesSidestiltMed as SøknadInnhold).forNav : undefined}
+                />
+                {sidestiltMedGrunnlagOgVilkår && (
+                    <AccordionItemFradrag
+                        fradragFraGrunnlag={props.grunnlagsdataOgVilkårsvurderinger.fradrag}
+                        sidestiltFradrag={(props.visesSidestiltMed as GrunnlagsdataOgVilkårsvurderinger).fradrag}
+                    />
+                )}
+            </Accordion>
         </div>
     );
 };

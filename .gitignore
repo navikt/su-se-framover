@@ -3,7 +3,6 @@ node_modules
 dist
 server/dist
 .idea/
-.eslintcache
 .DS_STORE
 .env
 settings.json

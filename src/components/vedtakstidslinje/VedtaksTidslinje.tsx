@@ -1,7 +1,7 @@
 import { Popover, Timeline } from '@navikt/ds-react';
 import { useRef, useState } from 'react';
 
-import { CheckmarkIkon, HåndMedPengerIkon, RevurderingBlyantIkon, SøknadIkon, StansIkon } from '~src/assets/Icons';
+import { CheckmarkIkon, HåndMedPengerIkon, RevurderingBlyantIkon, StansIkon, SøknadIkon } from '~src/assets/Icons';
 import { Nullable } from '~src/lib/types';
 import { VedtakType } from '~src/types/Vedtak';
 import { VedtakPåTidslinje, VedtakPåTidslinjeType } from '~src/types/VedtakPåTidslinje';

@@ -27,23 +27,6 @@ export interface Klage {
     avsluttetBegrunnelse: Nullable<string>;
 }
 
-export interface KlageMedOppretthold extends Klage {
-    vedtaksvurdering: {
-        type: KlageVurderingType;
-        omgjør: Nullable<Omgjør>;
-        oppretthold: Oppretthold;
-    };
-}
-
-export interface FerdigstiltOmgjortKlage extends Klage {
-    vedtakId: string;
-    vedtaksvurdering: {
-        type: KlageVurderingType;
-        omgjør: Omgjør;
-        oppretthold: Nullable<Oppretthold>;
-    };
-}
-
 export enum AvsluttKlageStatus {
     KAN_AVSLUTTES = 'KAN_AVSLUTTES',
     ER_AVSLUTTET = 'ER_AVSLUTTET',
@@ -80,7 +63,9 @@ export enum KlageStatus {
 interface Vedtaksvurdering {
     type: KlageVurderingType;
     omgjør: Nullable<Omgjør>;
-    oppretthold: Nullable<Oppretthold>;
+    delvisomgjøringEgenInstans: Nullable<Omgjør>;
+    oppretthold: Nullable<OversendelseKabal>;
+    delvisOmgjøringKa: Nullable<OversendelseKabal>;
 }
 
 export interface Omgjør {
@@ -88,8 +73,8 @@ export interface Omgjør {
     begrunnelse: Nullable<string>;
 }
 
-export interface Oppretthold {
-    hjemler: OpprettholdVedtakHjemmel[];
+export interface OversendelseKabal {
+    hjemler: KabalVedtakHjemmel[];
     klagenotat: Nullable<string>;
 }
 
@@ -107,31 +92,33 @@ export type KlageErUnderskrevet = SvarMedBegrunnelse;
 export type FremsattRettsligKlageinteresse = SvarMedBegrunnelse;
 
 export enum KlageVurderingType {
+    DELVIS_OMGJØRING_EGEN_VEDTAKSINSTANS = 'DELVIS_OMGJØRING_EGEN_VEDTAKSINSTANS',
     OMGJØR = 'OMGJØR',
     OPPRETTHOLD = 'OPPRETTHOLD',
+    DELVIS_OMGJØRING_KA = 'DELVIS_OMGJØRING_KA',
 }
 
-export enum OpprettholdVedtakHjemmel {
-    'SU_PARAGRAF_3' = 'SU_PARAGRAF_3',
-    'SU_PARAGRAF_4' = 'SU_PARAGRAF_4',
-    'SU_PARAGRAF_5' = 'SU_PARAGRAF_5',
-    'SU_PARAGRAF_6' = 'SU_PARAGRAF_6',
-    'SU_PARAGRAF_7' = 'SU_PARAGRAF_7',
-    'SU_PARAGRAF_8' = 'SU_PARAGRAF_8',
-    'SU_PARAGRAF_9' = 'SU_PARAGRAF_9',
-    'SU_PARAGRAF_10' = 'SU_PARAGRAF_10',
-    'SU_PARAGRAF_11' = 'SU_PARAGRAF_11',
-    'SU_PARAGRAF_12' = 'SU_PARAGRAF_12',
-    'SU_PARAGRAF_13' = 'SU_PARAGRAF_13',
-    'SU_PARAGRAF_17' = 'SU_PARAGRAF_17',
-    'SU_PARAGRAF_18' = 'SU_PARAGRAF_18',
-    'SU_PARAGRAF_21' = 'SU_PARAGRAF_21',
-    'SU_PARAGRAF_22' = 'SU_PARAGRAF_22',
-    'FVL_PARAGRAF_12' = 'FVL_PARAGRAF_12',
-    'FVL_PARAGRAF_28' = 'FVL_PARAGRAF_28',
-    'FVL_PARAGRAF_29' = 'FVL_PARAGRAF_29',
-    'FVL_PARAGRAF_31' = 'FVL_PARAGRAF_31',
-    'FVL_PARAGRAF_32' = 'FVL_PARAGRAF_32',
+export enum KabalVedtakHjemmel {
+    SU_PARAGRAF_3 = 'SU_PARAGRAF_3',
+    SU_PARAGRAF_4 = 'SU_PARAGRAF_4',
+    SU_PARAGRAF_5 = 'SU_PARAGRAF_5',
+    SU_PARAGRAF_6 = 'SU_PARAGRAF_6',
+    SU_PARAGRAF_7 = 'SU_PARAGRAF_7',
+    SU_PARAGRAF_8 = 'SU_PARAGRAF_8',
+    SU_PARAGRAF_9 = 'SU_PARAGRAF_9',
+    SU_PARAGRAF_10 = 'SU_PARAGRAF_10',
+    SU_PARAGRAF_11 = 'SU_PARAGRAF_11',
+    SU_PARAGRAF_12 = 'SU_PARAGRAF_12',
+    SU_PARAGRAF_13 = 'SU_PARAGRAF_13',
+    SU_PARAGRAF_17 = 'SU_PARAGRAF_17',
+    SU_PARAGRAF_18 = 'SU_PARAGRAF_18',
+    SU_PARAGRAF_21 = 'SU_PARAGRAF_21',
+    SU_PARAGRAF_22 = 'SU_PARAGRAF_22',
+    FVL_PARAGRAF_12 = 'FVL_PARAGRAF_12',
+    FVL_PARAGRAF_28 = 'FVL_PARAGRAF_28',
+    FVL_PARAGRAF_29 = 'FVL_PARAGRAF_29',
+    FVL_PARAGRAF_31 = 'FVL_PARAGRAF_31',
+    FVL_PARAGRAF_32 = 'FVL_PARAGRAF_32',
 }
 
 export enum Utfall {

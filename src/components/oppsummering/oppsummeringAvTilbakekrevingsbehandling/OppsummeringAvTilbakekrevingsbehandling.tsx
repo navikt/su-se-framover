@@ -4,8 +4,8 @@ import { BodyLong, Button, Heading, Label } from '@navikt/ds-react';
 import { forhåndsvisVedtaksbrevTilbakekrevingsbehandling } from '~src/api/tilbakekrevingApi';
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
 import Oppsummeringspanel, {
-    Oppsummeringsikon,
     Oppsummeringsfarge,
+    Oppsummeringsikon,
 } from '~src/components/oppsummering/oppsummeringspanel/Oppsummeringspanel';
 import UnderkjenteAttesteringer from '~src/components/underkjenteAttesteringer/UnderkjenteAttesteringer';
 import { useApiCall } from '~src/lib/hooks';
@@ -15,9 +15,8 @@ import { ManuellTilbakekrevingsbehandling } from '~src/types/ManuellTilbakekrevi
 import { formatDateTime } from '~src/utils/date/dateUtils';
 
 import { OppsummeringPar } from '../oppsummeringpar/OppsummeringPar';
-
-import messages from './OppsummeringAvTilbakekrevingsbehandling-nb';
 import styles from './OppsummeringAvTilbakekrevingsbehandling.module.less';
+import messages from './OppsummeringAvTilbakekrevingsbehandling-nb';
 import OppsummeringAvVurdering from './vurdering/OppsummeringAvVurdering';
 
 const OppsummeringAvTilbakekrevingsbehandling = (props: {

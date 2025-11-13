@@ -24,13 +24,14 @@ import { Nullable } from '~src/lib/types';
 import { måReguleresManuelt } from '~src/types/Fradrag';
 import { Uføregrunnlag } from '~src/types/grunnlagsdataOgVilkårsvurderinger/uføre/Uføregrunnlag';
 import {
-    DifferanseEtterRegulering,
     BrukerManglerSupplement,
     DelvisOpphør,
+    DifferanseEtterRegulering,
+    DifferanseFørRegulering,
     Eksterndata,
+    FantIkkeVedtakForApril,
     FinnesFlerePerioderAvFradrag,
     FradragErUtenlandsinntekt,
-    DifferanseFørRegulering,
     Reguleringssupplement,
     SupplementFor,
     SupplementHarFlereVedtaksperioderForFradrag,
@@ -38,16 +39,14 @@ import {
     YtelseErMidlertidigStanset,
     ÅrsakForManuell,
     ÅrsakTilManuellReguleringKategori,
-    FantIkkeVedtakForApril,
 } from '~src/types/Regulering';
 import { parseIsoDateOnly } from '~src/utils/date/dateUtils';
 import { fjernFradragSomIkkeErVelgbareEkskludertNavYtelserTilLivsopphold } from '~src/utils/fradrag/fradragUtil';
 import { formatPeriode, formatPeriodeMedOptionalTilOgMed } from '~src/utils/periode/periodeUtils';
 
 import reguleringstext from '../behandlingsoversikt/regulering/regulering-nb';
-
-import messages from './manuellRegulering-nb';
 import styles from './manuellRegulering.module.less';
+import messages from './manuellRegulering-nb';
 
 interface FormData {
     uføre: Uføregrunnlag[];

@@ -1,32 +1,34 @@
 import { omgjøringsgrunnerTekstMapper } from '~src/components/forms/revurdering/Omgjøringgrunner-nb';
-import { OpprettholdVedtakHjemmel, KlageVurderingType } from '~src/types/Klage';
+import { KabalVedtakHjemmel, KlageVurderingType } from '~src/types/Klage';
 
-const opprettholdVedtakHjemmelMessages: { [key in OpprettholdVedtakHjemmel]: string } = {
-    [OpprettholdVedtakHjemmel.SU_PARAGRAF_3]: 'SU-lov § 3',
-    [OpprettholdVedtakHjemmel.SU_PARAGRAF_4]: 'SU-lov § 4',
-    [OpprettholdVedtakHjemmel.SU_PARAGRAF_5]: 'SU-lov § 5',
-    [OpprettholdVedtakHjemmel.SU_PARAGRAF_6]: 'SU-lov § 6',
-    [OpprettholdVedtakHjemmel.SU_PARAGRAF_7]: 'SU-lov § 7',
-    [OpprettholdVedtakHjemmel.SU_PARAGRAF_8]: 'SU-lov § 8',
-    [OpprettholdVedtakHjemmel.SU_PARAGRAF_9]: 'SU-lov § 9',
-    [OpprettholdVedtakHjemmel.SU_PARAGRAF_10]: 'SU-lov § 10',
-    [OpprettholdVedtakHjemmel.SU_PARAGRAF_11]: 'SU-lov § 11',
-    [OpprettholdVedtakHjemmel.SU_PARAGRAF_12]: 'SU-lov § 12',
-    [OpprettholdVedtakHjemmel.SU_PARAGRAF_13]: 'SU-lov § 13',
-    [OpprettholdVedtakHjemmel.SU_PARAGRAF_17]: 'SU-lov § 17',
-    [OpprettholdVedtakHjemmel.SU_PARAGRAF_18]: 'SU-lov § 18',
-    [OpprettholdVedtakHjemmel.SU_PARAGRAF_21]: 'SU-lov § 21',
-    [OpprettholdVedtakHjemmel.SU_PARAGRAF_22]: 'SU-lov § 22(Ftrl. § 21-12)',
-    [OpprettholdVedtakHjemmel.FVL_PARAGRAF_12]: 'Fvl.§ 12',
-    [OpprettholdVedtakHjemmel.FVL_PARAGRAF_28]: 'Fvl.§ 28',
-    [OpprettholdVedtakHjemmel.FVL_PARAGRAF_29]: 'Fvl.§ 29',
-    [OpprettholdVedtakHjemmel.FVL_PARAGRAF_31]: 'Fvl.§ 31',
-    [OpprettholdVedtakHjemmel.FVL_PARAGRAF_32]: 'Fvl.§ 32',
+const KabalVedtakHjemmelMessages: { [key in KabalVedtakHjemmel]: string } = {
+    [KabalVedtakHjemmel.SU_PARAGRAF_3]: 'SU-lov § 3',
+    [KabalVedtakHjemmel.SU_PARAGRAF_4]: 'SU-lov § 4',
+    [KabalVedtakHjemmel.SU_PARAGRAF_5]: 'SU-lov § 5',
+    [KabalVedtakHjemmel.SU_PARAGRAF_6]: 'SU-lov § 6',
+    [KabalVedtakHjemmel.SU_PARAGRAF_7]: 'SU-lov § 7',
+    [KabalVedtakHjemmel.SU_PARAGRAF_8]: 'SU-lov § 8',
+    [KabalVedtakHjemmel.SU_PARAGRAF_9]: 'SU-lov § 9',
+    [KabalVedtakHjemmel.SU_PARAGRAF_10]: 'SU-lov § 10',
+    [KabalVedtakHjemmel.SU_PARAGRAF_11]: 'SU-lov § 11',
+    [KabalVedtakHjemmel.SU_PARAGRAF_12]: 'SU-lov § 12',
+    [KabalVedtakHjemmel.SU_PARAGRAF_13]: 'SU-lov § 13',
+    [KabalVedtakHjemmel.SU_PARAGRAF_17]: 'SU-lov § 17',
+    [KabalVedtakHjemmel.SU_PARAGRAF_18]: 'SU-lov § 18',
+    [KabalVedtakHjemmel.SU_PARAGRAF_21]: 'SU-lov § 21',
+    [KabalVedtakHjemmel.SU_PARAGRAF_22]: 'SU-lov § 22(Ftrl. § 21-12)',
+    [KabalVedtakHjemmel.FVL_PARAGRAF_12]: 'Fvl.§ 12',
+    [KabalVedtakHjemmel.FVL_PARAGRAF_28]: 'Fvl.§ 28',
+    [KabalVedtakHjemmel.FVL_PARAGRAF_29]: 'Fvl.§ 29',
+    [KabalVedtakHjemmel.FVL_PARAGRAF_31]: 'Fvl.§ 31',
+    [KabalVedtakHjemmel.FVL_PARAGRAF_32]: 'Fvl.§ 32',
 };
 
 const klageVurderingTypeMessages: { [key in KlageVurderingType]: string } = {
     [KlageVurderingType.OMGJØR]: 'Omgjør vedtak',
-    [KlageVurderingType.OPPRETTHOLD]: 'Oppretthold vedtak',
+    [KlageVurderingType.DELVIS_OMGJØRING_EGEN_VEDTAKSINSTANS]: 'Delvis omgjøring i vedtaksinstansen',
+    [KlageVurderingType.OPPRETTHOLD]: 'Oppretthold vedtak(overføres til klageinstans)',
+    [KlageVurderingType.DELVIS_OMGJØRING_KA]: 'Delvis omgjøring (overføres til klageinstans)',
 };
 
 export default {
@@ -36,13 +38,13 @@ export default {
     'form.omgjørVedtak.årsak.label': 'Årsak',
     'form.omgjørVedtak.årsak.velgÅrsak': 'Velg årsak',
     ...omgjøringsgrunnerTekstMapper,
-    'form.opprettholdVedtak.hjemmel.label': 'Hjemmel',
+    'form.oversendelseKa.hjemmel.label': 'Hjemmel',
     'klagenotat.info:': 'Klagenotat',
-    'form.opprettholdVedtak.klagenotat': 'Klagenotat',
-    'form.opprettholdVedtak.klagenotat.info':
+    'form.kabaldata.klagenotat': 'Klagenotat',
+    'form.kabaldata.klagenotat.info':
         'Klagenotat vil bli sendt over til klageinstans sammen med begrunnelsene fra formkrav-siden.',
-    'form.opprettholdVedtak.hjemmel.velgHjemmel': 'Velg hjemmel',
-    ...opprettholdVedtakHjemmelMessages,
+    'form.kabaldata.hjemmel.velgHjemmel': 'Velg hjemmel',
+    ...KabalVedtakHjemmelMessages,
 
     'form.vurdering.label': 'Vurdering',
     'form.fritekst.label': 'Brev til bruker og klageinstans',

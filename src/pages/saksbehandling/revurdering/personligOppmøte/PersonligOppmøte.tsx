@@ -7,9 +7,9 @@ import { Behandlingstype, RevurderingOgFeilmeldinger } from '~src/api/GrunnlagOg
 import PersonligOppmøteForm from '~src/components/forms/vilkårOgGrunnlagForms/personligOppmøte/PersonligOppmøteForm';
 import {
     PersonligOppmøteVilkårFormData,
+    personligOppmøteFormDataTilRequest,
     personligOppmøteFormSchema,
     personligOppmøteVilkårTilFormDataEllerNy,
-    personligOppmøteFormDataTilRequest,
 } from '~src/components/forms/vilkårOgGrunnlagForms/personligOppmøte/PersonligOppmøteFormUtils';
 import OppsummeringAvPersonligoppmøtevilkår from '~src/components/oppsummering/oppsummeringAvVilkårOgGrunnlag/OppsummeringAvPersonligOppmøte';
 import ToKolonner from '~src/components/toKolonner/ToKolonner';

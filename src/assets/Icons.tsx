@@ -1,8 +1,8 @@
 import {
-    ExclamationmarkTriangleFillIcon,
     CheckmarkCircleFillIcon,
-    XMarkOctagonFillIcon,
+    ExclamationmarkTriangleFillIcon,
     InformationSquareFillIcon,
+    XMarkOctagonFillIcon,
 } from '@navikt/aksel-icons';
 
 const iconWidth = '30px';

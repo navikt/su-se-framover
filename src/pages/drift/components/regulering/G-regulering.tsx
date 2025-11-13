@@ -1,23 +1,22 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import {
-    Button,
-    Modal,
     Alert,
-    GuidePanel,
-    Loader,
-    TextField,
-    Tabs,
-    RadioGroup,
-    Radio,
-    Textarea,
-    Label,
+    Button,
     Checkbox,
+    GuidePanel,
     HelpText,
+    Label,
+    Loader,
+    Modal,
+    Radio,
+    RadioGroup,
+    Tabs,
+    Textarea,
+    TextField,
 } from '@navikt/ds-react';
-import { useState, useEffect } from 'react';
-
-import { dryRunRegulering, startRegulering } from '~src/api/reguleringApi';
+import { useEffect, useState } from 'react';
 import * as reguleringApi from '~src/api/reguleringApi';
+import { dryRunRegulering, startRegulering } from '~src/api/reguleringApi';
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
 import { DatePicker, MonthPicker } from '~src/components/inputs/datePicker/DatePicker';
 import { pipe } from '~src/lib/fp';

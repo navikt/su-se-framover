@@ -1,6 +1,6 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Alert, BodyShort, Button, HelpText, Label, Textarea, Loader } from '@navikt/ds-react';
+import { Alert, BodyShort, Button, HelpText, Label, Loader, Textarea } from '@navikt/ds-react';
 import { Controller, useForm } from 'react-hook-form';
 import { Link, useNavigate } from 'react-router-dom';
 
@@ -17,9 +17,8 @@ import { Klage, KlageStatus, KlageSteg } from '~src/types/Klage';
 import { erKlageAvvist } from '~src/utils/klage/klageUtils';
 
 import sharedStyles from '../klage.module.less';
-
-import messages from './avvistKlage-nb';
 import styles from './avvistKlage.module.less';
+import messages from './avvistKlage-nb';
 
 interface AvvistKlageFormData {
     fritekstTilBrev: string;
@@ -110,7 +109,6 @@ const AvvistKlage = (props: { sakId: string; klage: Klage }) => {
                                                 <Label>{formatMessage('avvistKlage.brevTilBruker')}</Label>
                                                 <HelpText>
                                                     {/*Er mulig Folka fra designsystemet tillatter rikt innhold da noen har hatt et issue med det  */}
-                                                    {/*eslint-disable-next-line @typescript-eslint/ban-ts-comment */}
                                                     {/*@ts-ignore */}
                                                     <Label className={styles.hjelpetekst}>
                                                         {formatMessage('avvistKlage.brevTilBruker.hjelpetekst')}

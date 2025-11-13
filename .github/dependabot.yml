@@ -30,12 +30,9 @@ updates:
             - "@navikt/aksel-icons"
         eslint:
           patterns:
-            - "prettier"
-            - "eslint"
+            - "biome"
             - "husky"
-            - "eslint-*"
             - "lint-staged"
-            - "@typescript-eslint/*"
         utilities:
           patterns:
             - "lodash.*"

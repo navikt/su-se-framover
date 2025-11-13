@@ -1,3 +1,4 @@
+// biome-ignore lint: Shadowing Array intentionally
 import * as Array from 'fp-ts/lib/Array';
 import { Eq, struct } from 'fp-ts/lib/Eq';
 import * as N from 'fp-ts/lib/number';
@@ -5,7 +6,7 @@ import * as S from 'fp-ts/lib/string';
 
 import { Nullable } from '~src/lib/types';
 
-import { Fradrag, eqFradragBortsettFraPeriode } from './Fradrag';
+import { eqFradragBortsettFraPeriode, Fradrag } from './Fradrag';
 import { Sats } from './Sats';
 
 export interface Beregning {

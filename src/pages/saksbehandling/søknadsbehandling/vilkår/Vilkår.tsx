@@ -11,8 +11,8 @@ import Beregning from '~src/pages/saksbehandling/søknadsbehandling/beregning/Be
 import Familieforening from '~src/pages/saksbehandling/søknadsbehandling/familieforening/Familieforening';
 import { Sakstype } from '~src/types/Sak';
 import { Vilkårtype, VilkårtypeAlder } from '~src/types/Vilkårsvurdering';
-import { isAldersøknad, isUføresøknad } from '~src/utils/søknad/søknadUtils';
 import { erVilkårsvurderingerVurdertAvslag } from '~src/utils/SøknadsbehandlingUtils';
+import { isAldersøknad, isUføresøknad } from '~src/utils/søknad/søknadUtils';
 import { createVilkårUrl } from '~src/utils/vilkårUtils';
 
 import Bosituasjon from '../bosituasjon/Bosituasjon';

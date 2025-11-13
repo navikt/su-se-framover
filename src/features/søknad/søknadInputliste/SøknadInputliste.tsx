@@ -1,8 +1,7 @@
-/* eslint-disable react/display-name */
 import { TrashIcon } from '@navikt/aksel-icons';
 import { Button, OverridableComponent, Panel } from '@navikt/ds-react';
 import classNames from 'classnames';
-import { ReactNode, ForwardRefExoticComponent, RefAttributes, forwardRef, Children } from 'react';
+import { Children, ForwardRefExoticComponent, forwardRef, ReactNode, RefAttributes } from 'react';
 
 import styles from './søknadInputliste.module.less';
 

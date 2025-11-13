@@ -6,8 +6,8 @@ import { useNavigate } from 'react-router-dom';
 import { RevurderingOgFeilmeldinger } from '~src/api/GrunnlagOgVilkårApi';
 import OpplysningspliktForm from '~src/components/forms/vilkårOgGrunnlagForms/opplysningsplikt/OpplysningspliktForm';
 import {
-    opplysningspliktFormSchema,
     OpplysningspliktVilkårFormData,
+    opplysningspliktFormSchema,
 } from '~src/components/forms/vilkårOgGrunnlagForms/opplysningsplikt/OpplysningspliktFormUtils';
 import OppsummeringAvOpplysningspliktvilkår from '~src/components/oppsummering/oppsummeringAvVilkårOgGrunnlag/OppsummeringAvOpplysningsplikt';
 import ToKolonner from '~src/components/toKolonner/ToKolonner';
@@ -19,6 +19,7 @@ import { InformasjonsRevurdering, RevurderingStegProps } from '~src/types/Revurd
 import { parseIsoDateOnly, sluttenAvMåneden, toIsoDateOnlyString } from '~src/utils/date/dateUtils';
 
 import messages from './opplysningsplikt-nb';
+
 const Opplysningsplikt = (props: RevurderingStegProps) => {
     const navigate = useNavigate();
     const { formatMessage } = useI18n({ messages });

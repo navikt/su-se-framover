@@ -58,7 +58,6 @@ const PensjonsInntekter = (props: {
                                     })
                                 }
                                 // Dette elementet vises ikke ved sidelast
-                                // eslint-disable-next-line jsx-a11y/no-autofocus
                                 autoFocus
                                 autoComplete="on"
                                 error={feltError('ordning')}

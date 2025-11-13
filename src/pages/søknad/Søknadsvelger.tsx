@@ -1,4 +1,5 @@
-import { BodyLong, GuidePanel, Heading, Ingress, Panel, Link } from '@navikt/ds-react';
+import { BodyLong, GuidePanel, Heading, Ingress, Panel, Link, Modal, BodyShort, Button } from '@navikt/ds-react';
+import { useRef, useState } from 'react';
 
 import LinkAsButton from '~src/components/linkAsButton/LinkAsButton';
 import { useUserContext } from '~src/context/userContext';
@@ -13,6 +14,8 @@ const Søknadsvelger = () => {
     const user = useUserContext();
     const { formatMessage } = useI18n({ messages });
     const isPapirsøknad = location.search.includes('papirsoknad');
+    const ref = useRef<HTMLDialogElement>(null);
+    const [open, setOpen] = useState(false);
 
     if (user.roller.includes(Rolle.Saksbehandler) || user.roller.includes(Rolle.Veileder)) {
         return (
@@ -72,6 +75,44 @@ const Søknadsvelger = () => {
                             >
                                 {formatMessage('ufør-lenke')}
                             </LinkAsButton>
+                        </Panel>
+                        <Panel border>
+                            <Heading level="2" size="medium">
+                                {formatMessage('velg-kontrollsamtale-tittel')}
+                            </Heading>
+                            <Ingress>{formatMessage('kontrollsamtale-beskrivelse')}</Ingress>
+                            <Button variant="secondary" type="button" onClick={() => setOpen(true)}>
+                                {formatMessage('kontrollsamtale-lenke')}
+                            </Button>
+                            <Modal ref={ref} aria-label="Kontrollsamtale" open={open} onClose={() => setOpen(false)}>
+                                <Modal.Body>
+                                    <Heading size="medium" spacing>
+                                        {formatMessage('innsending-kontrollnotat')}
+                                    </Heading>
+                                    <form>
+                                        <BodyShort spacing>
+                                            {formatMessage('servicerutine-link')}
+                                            <Link
+                                                target="_blank"
+                                                href="https://navno.sharepoint.com/sites/fag-og-ytelser-regelverk-og-rutiner/SitePages/Supplerende%20st%C3%B8nad.aspx?web=1"
+                                            >
+                                                servicerutine
+                                            </Link>
+                                            {formatMessage('servicerutine-link-videre')}
+                                        </BodyShort>
+                                        <BodyShort>
+                                            {formatMessage('kontrollsamtale.advarsel', {
+                                                strong: (text) => <strong>{text}</strong>,
+                                            })}
+                                        </BodyShort>
+                                        <div style={{ marginTop: '1rem', textAlign: 'right' }}>
+                                            <Button variant="secondary" type="button" onClick={() => setOpen(false)}>
+                                                Lukk
+                                            </Button>
+                                        </div>
+                                    </form>
+                                </Modal.Body>
+                            </Modal>
                         </Panel>
                     </div>
                 </div>

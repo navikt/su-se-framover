@@ -7,9 +7,8 @@ import { SaksoversiktContext } from '~src/context/SaksoversiktContext';
 import { useI18n } from '~src/lib/i18n';
 import * as Routes from '~src/lib/routes';
 import { klageErOversendtEllerFerdigstilt } from '~src/utils/klage/klageUtils';
-
-import messages from './VedtakEllerOversendtKlageOppsummering-nb';
 import styles from './VedtakEllerOversendtKlageOppsummering.module.less';
+import messages from './VedtakEllerOversendtKlageOppsummering-nb';
 
 /*
     Klagene som kan bli vist frem her er de som er oversendt eller ferdigstilt.

@@ -9,6 +9,7 @@ export interface Søknad {
     sakId: string;
     søknadInnhold: SøknadInnhold;
     opprettet: string;
+    innsendtAv: string;
     lukket: Nullable<Lukket>;
 }
 

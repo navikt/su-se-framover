@@ -1,5 +1,5 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import { Box, Button, Heading, Panel } from '@navikt/ds-react';
+import { Box, Button, Heading } from '@navikt/ds-react';
 import { useNavigate } from 'react-router-dom';
 
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
@@ -33,15 +33,11 @@ const OpprettTilbakekreving = (props: {
             </div>
 
             <div className={styles.mainContentContainer}>
-                {props.uteståendeKravgrunnlag ? (
-                    <KanTilbakekreves
-                        sakId={props.sakId}
-                        saksversjon={props.sakVersjon}
-                        kravgrunnlag={props.uteståendeKravgrunnlag}
-                    />
-                ) : (
-                    <KanIkkeTilbakekreves sakId={props.sakId} />
-                )}
+                <KanTilbakekreves
+                    sakId={props.sakId}
+                    saksversjon={props.sakVersjon}
+                    kravgrunnlag={props.uteståendeKravgrunnlag}
+                />
             </div>
         </div>
     );
@@ -97,7 +93,7 @@ const OpprettTilbakekreving = (props: {
 //     );
 // };
 
-const KanTilbakekreves = (props: { sakId: string; saksversjon: number; kravgrunnlag: Kravgrunnlag }) => {
+const KanTilbakekreves = (props: { sakId: string; saksversjon: number; kravgrunnlag: Nullable<Kravgrunnlag> }) => {
     const navigate = useNavigate();
     const { formatMessage } = useI18n({ messages });
     //kommenterer ut annuller siden vi må prodsette noen endringer. Funksjonaliteten fungerer ikke i backend enda heller
@@ -122,10 +118,17 @@ const KanTilbakekreves = (props: { sakId: string; saksversjon: number; kravgrunn
                 borderRadius="small"
                 className={styles.panelContentContainer}
             >
-                <div>
-                    <Heading size="medium">{formatMessage('opprettelse.kanTilbakekreves.heading')}</Heading>
-                    <Heading size="small">{formatMessage('opprettelse.kanTilbakekreves.text')}</Heading>
-                </div>
+                {props.kravgrunnlag ? (
+                    <div>
+                        <Heading size="medium">{formatMessage('opprettelse.kanTilbakekreves.heading')}</Heading>
+                        <Heading size="small">{formatMessage('opprettelse.kanTilbakekreves.text')}</Heading>
+                    </div>
+                ) : (
+                    <div>
+                        <Heading size="medium">{formatMessage('opprettelse.utenKravrunnlag.heading')}</Heading>
+                        <Heading size="small">{formatMessage('opprettelse.utenKravrunnlag.text')}</Heading>
+                    </div>
+                )}
 
                 <div className={styles.knappContainer}>
                     {/* <Button variant="secondary" onClick={() => setVilAnnulere(true)}>
@@ -158,22 +161,6 @@ const KanTilbakekreves = (props: { sakId: string; saksversjon: number; kravgrunn
             </Box>
             <OppsummeringAvKravgrunnlag kravgrunnlag={props.kravgrunnlag} medPanel={{}} />
         </>
-    );
-};
-
-const KanIkkeTilbakekreves = (props: { sakId: string }) => {
-    const { formatMessage } = useI18n({ messages });
-    return (
-        <Panel border className={styles.panelContentContainer}>
-            <div>
-                <Heading size="medium">{formatMessage('opprettelse.kanIkkeTilbakekreves.heading')}</Heading>
-                <Heading size="small">{formatMessage('opprettelse.kanIkkeTilbakekreves.text')}</Heading>
-            </div>
-
-            <LinkAsButton variant="secondary" href={routes.saksoversiktValgtSak.createURL({ sakId: props.sakId })}>
-                {formatMessage('knapp.tilbake')}
-            </LinkAsButton>
-        </Panel>
     );
 };
 

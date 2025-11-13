@@ -2,17 +2,17 @@ import * as RemoteData from '@devexperts/remote-data-ts';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Heading } from '@navikt/ds-react';
 import { pipe } from 'fp-ts/lib/function';
-import { useForm, UseFormReturn } from 'react-hook-form';
+import { UseFormReturn, useForm } from 'react-hook-form';
 
 import { Behandlingstype, VilkårOgGrunnlagApiResult } from '~src/api/GrunnlagOgVilkårApi';
 import SkattForm from '~src/components/forms/eksternegrunnlag/skatt/SkattForm';
 import FormueForm from '~src/components/forms/vilkårOgGrunnlagForms/formue/FormueForm';
 import {
+    eqFormueVilkårFormData,
     FormueVilkårFormData,
     formueFormSchema,
-    getInitialFormueVilkårOgDelvisBosituasjon,
     formueVilkårFormTilRequest,
-    eqFormueVilkårFormData,
+    getInitialFormueVilkårOgDelvisBosituasjon,
 } from '~src/components/forms/vilkårOgGrunnlagForms/formue/FormueFormUtils';
 import OppsummeringAvEksternGrunnlagSkatt from '~src/components/oppsummering/oppsummeringAvEksternGrunnlag/OppsummeringAvEksternGrunnlagSkatt';
 import OppsummeringAvFormue from '~src/components/oppsummering/oppsummeringAvSøknadinnhold/OppsummeringAvFormue';
@@ -31,9 +31,8 @@ import { lagDatePeriodeAvStringPeriode } from '~src/utils/periode/periodeUtils';
 
 import EksisterendeVedtaksinformasjon from '../EksisterendeVedtaksinformasjon';
 import sharedI18n from '../sharedI18n-nb';
-
-import messages from './formue-nb';
 import styles from './Formue.module.less';
+import messages from './formue-nb';
 
 const Formue = (
     props: VilkårsvurderingBaseProps & {

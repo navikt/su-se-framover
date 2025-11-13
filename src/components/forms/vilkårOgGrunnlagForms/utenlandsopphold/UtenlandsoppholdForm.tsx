@@ -10,8 +10,8 @@ import messages from '../VilkårOgGrunnlagForms-nb';
 import { VilkårFormProps } from '../VilkårOgGrunnlagFormUtils';
 
 import {
-    UtenlandsoppholdVilkårFormData,
     nyVurderingsperiodeUtenlandsoppholdMedEllerUtenPeriode,
+    UtenlandsoppholdVilkårFormData,
 } from './UtenlandsoppholdFormUtils';
 
 interface Props extends VilkårFormProps<UtenlandsoppholdVilkårFormData> {

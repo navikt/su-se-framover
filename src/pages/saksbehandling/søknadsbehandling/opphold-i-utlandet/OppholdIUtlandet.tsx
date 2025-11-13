@@ -7,10 +7,10 @@ import { Behandlingstype } from '~src/api/GrunnlagOgVilkårApi';
 import UtenlandsoppholdForm from '~src/components/forms/vilkårOgGrunnlagForms/utenlandsopphold/UtenlandsoppholdForm';
 import {
     eqUtenlandsoppholdVilkårFormData,
-    utenlandsoppholdFormSchema,
     UtenlandsoppholdVilkårFormData,
-    utenlandsoppholdVilkårTilFormDataEllerNy,
     utenlandsoppholdFormDataTilRequest,
+    utenlandsoppholdFormSchema,
+    utenlandsoppholdVilkårTilFormDataEllerNy,
 } from '~src/components/forms/vilkårOgGrunnlagForms/utenlandsopphold/UtenlandsoppholdFormUtils';
 import OppsummeringAvUtenlandsopphold from '~src/components/oppsummering/oppsummeringAvSøknadinnhold/OppsummeringAvUtenlandsopphold';
 import OppsummeringAvUtenlandsoppholdVilkår from '~src/components/oppsummering/oppsummeringAvVilkårOgGrunnlag/OppsummeringAvUtenlandsopphold';

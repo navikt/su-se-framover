@@ -6,8 +6,8 @@ import { useNavigate } from 'react-router-dom';
 import { Behandlingstype, RevurderingOgFeilmeldinger } from '~src/api/GrunnlagOgVilkårApi';
 import { UførhetForm } from '~src/components/forms/vilkårOgGrunnlagForms/uførhet/UførhetForm';
 import {
-    UførhetFormData,
     lagTomUføreperiode,
+    UførhetFormData,
     vurderingsperiodeTilFormData,
 } from '~src/components/forms/vilkårOgGrunnlagForms/uførhet/UførhetFormUtils';
 import { uførhetSchema } from '~src/components/forms/vilkårOgGrunnlagForms/uførhet/validation';

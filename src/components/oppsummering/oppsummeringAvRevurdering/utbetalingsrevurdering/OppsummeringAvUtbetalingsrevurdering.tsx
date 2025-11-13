@@ -1,14 +1,13 @@
 import Beregningblokk from '~src/components/oppsummering/oppsummeringAvRevurdering/beregningblokk/Beregningblokk';
 import { OppsummeringPar } from '~src/components/oppsummering/oppsummeringpar/OppsummeringPar';
 import Oppsummeringspanel, {
-    Oppsummeringsikon,
     Oppsummeringsfarge,
+    Oppsummeringsikon,
 } from '~src/components/oppsummering/oppsummeringspanel/Oppsummeringspanel';
 import { useI18n } from '~src/lib/i18n';
 import { UtbetalingsRevurdering } from '~src/types/Revurdering';
-
-import messages from './OppsummeringAvUtbetalingsrevurdering-nb';
 import styles from './OppsummeringAvUtbetalingsrevurdering.module.less';
+import messages from './OppsummeringAvUtbetalingsrevurdering-nb';
 
 const OppsummeringAvUtbetalingsrevurdering = (props: { revurdering: UtbetalingsRevurdering }) => {
     const { formatMessage } = useI18n({ messages });

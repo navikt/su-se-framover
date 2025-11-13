@@ -1,5 +1,5 @@
 import { ErrorSummary, ErrorSummaryProps } from '@navikt/ds-react';
-import { ForwardedRef, forwardRef } from 'react';
+import { ForwardedRef } from 'react';
 
 export interface FeiloppsummeringFeil {
     skjemaelementId: string;
@@ -9,9 +9,10 @@ export interface FeiloppsummeringFeil {
 interface Props extends Omit<ErrorSummaryProps, 'children'> {
     tittel: string;
     feil: FeiloppsummeringFeil[];
+    ref?: ForwardedRef<HTMLDivElement>;
 }
 
-const Feiloppsummering = ({ tittel, feil, ...errorSummaryProps }: Props, ref: ForwardedRef<HTMLDivElement>) => {
+const Feiloppsummering = ({ tittel, feil, ref, ...errorSummaryProps }: Props) => {
     return (
         <ErrorSummary heading={tittel} {...errorSummaryProps} ref={ref}>
             {feil.map((f) => (
@@ -23,4 +24,4 @@ const Feiloppsummering = ({ tittel, feil, ...errorSummaryProps }: Props, ref: Fo
     );
 };
 
-export default forwardRef(Feiloppsummering);
+export default Feiloppsummering;

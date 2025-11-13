@@ -8,8 +8,8 @@ import * as sakApi from '~src/api/sakApi';
 import * as GrunnlagOgVilkårActions from '~src/features/grunnlagsdataOgVilkårsvurderinger/GrunnlagOgVilkårActions';
 import * as klageActions from '~src/features/klage/klageActions';
 import * as revurderingActions from '~src/features/revurdering/revurderingActions';
-import * as SøknadActions from '~src/features/søknad/SøknadActions';
 import * as SøknadsbehandlingActions from '~src/features/SøknadsbehandlingActions';
+import * as SøknadActions from '~src/features/søknad/SøknadActions';
 import * as tilbakekrevingActions from '~src/features/TilbakekrevingActions';
 import * as VedtakActions from '~src/features/VedtakActions';
 import { pipe } from '~src/lib/fp';
@@ -19,10 +19,10 @@ import { Dokument, DokumentIdType } from '~src/types/dokument/Dokument';
 import { Klage } from '~src/types/Klage';
 import { ManuellTilbakekrevingsbehandling } from '~src/types/ManuellTilbakekrevingsbehandling';
 import {
+    AnnullerRegistrertUtenlandsoppholdRequest,
     OppdaterRegistrertUtenlandsoppholdRequest,
     RegistrerteUtenlandsopphold,
     RegistrerUtenlandsoppholdRequest,
-    AnnullerRegistrertUtenlandsoppholdRequest,
 } from '~src/types/RegistrertUtenlandsopphold';
 import { Revurdering } from '~src/types/Revurdering';
 import { Sak } from '~src/types/Sak';

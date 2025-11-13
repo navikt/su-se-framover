@@ -6,8 +6,8 @@ import { useNavigate } from 'react-router-dom';
 import { Behandlingstype } from '~src/api/GrunnlagOgVilkårApi';
 import BosituasjonForm from '~src/components/forms/vilkårOgGrunnlagForms/bosituasjon/BosituasjonForm';
 import {
-    bosituasjonFormSchema,
     BosituasjonGrunnlagFormData,
+    bosituasjonFormSchema,
     bosituasjongrunnlagFormDataTilRequest,
     bosituasjongrunnlagTilFormDataEllerNy,
     eqBosituasjonGrunnlagFormData,

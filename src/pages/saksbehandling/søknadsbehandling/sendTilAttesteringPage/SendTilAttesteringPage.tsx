@@ -24,9 +24,8 @@ import {
     erVilkårsvurderingerVurdertAvslag,
 } from '~src/utils/SøknadsbehandlingUtils';
 import { createVilkårUrl, mapToVilkårsinformasjon } from '~src/utils/vilkårUtils';
-
-import messages from './sendTilAttesteringPage-nb';
 import styles from './sendTilAttesteringPage.module.less';
+import messages from './sendTilAttesteringPage-nb';
 
 interface FormData {
     fritekst: string;
