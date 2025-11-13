@@ -16,6 +16,7 @@ export default {
 
     'feil.måSøkePerson': 'Du må søke opp person før du kan fortsette',
     'feil.påkrevdFelt': 'Feltet er påkrevd',
+    'husk.feil.påkrevdfelt': 'Kryss av feltet over før du kan gå videre!',
     'feil.harÅpenSøknad':
         'Bruker har allerede en åpen søknad som er til behandling. Dersom bruker ønsker å komme med ytterligere dokumentasjon kan denne sendes til skanning. Skulle bruker ønske å endre på opplysningene i søknaden kan dette gjøres ved å sende en oppgave via MODIA personoversikt.',
     'feil.harÅpenSøknad.motsatt-alder':
@@ -53,4 +54,10 @@ export default {
 
     'page.tittel.digitalSøknad': 'Dokumentasjon',
     'page.tittel.papirSøknad': 'Registrering av papirsøknad',
+
+    'varsel.søknad.tittel': 'Er du sikker på at du skal sende inn ny søknad?',
+    'varsel.søknad.pt1': 'Det skal ikke være behov for en ny søknad. Er du helt sikker på at du skal sende inn søknad?',
+    'varsel.søknad.pt2':
+        '<Strong>Obs!</Strong> Om det er kontrollnotat som skal gjennomføres skal dette IKKE gjøres gjennom søknad. Se ',
+    'varsel.søknad.lenke': ' for rutine for innsending av kontrollnotat.',
 };

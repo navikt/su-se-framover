@@ -2,14 +2,15 @@ import * as RemoteData from '@devexperts/remote-data-ts';
 import { PaperclipIcon } from '@navikt/aksel-icons';
 import { Alert, BodyLong, Button, ConfirmationPanel, Heading, Link, Tag } from '@navikt/ds-react';
 import * as DateFns from 'date-fns';
+import { addDays, isBefore, startOfMonth, subMonths } from 'date-fns';
 import { ReactNode, useEffect, useState } from 'react';
 import { useNavigate, useOutletContext } from 'react-router-dom';
-
 import * as sakApi from '~src/api/sakApi';
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
 import CircleWithIcon from '~src/components/circleWithIcon/CircleWithIcon';
 import SkjemaelementFeilmelding from '~src/components/formElements/SkjemaelementFeilmelding';
 import { LinkAsButton } from '~src/components/linkAsButton/LinkAsButton';
+import { BekreftSøknadModal } from '~src/components/modal/BekreftSøknadModal.tsx';
 import Personsøk from '~src/components/Personsøk/Personsøk';
 import * as personSlice from '~src/features/person/person.slice';
 import søknadSlice from '~src/features/søknad/søknad.slice';
@@ -29,6 +30,16 @@ import { formatDate } from '~src/utils/date/dateUtils';
 import { er67EllerEldre } from '~src/utils/person/personUtils';
 import styles from './inngang.module.less';
 import nb from './inngang-nb';
+
+const kanStarteNySøknad = (periode: Nullable<Periode<string>>): boolean => {
+    if (!periode) {
+        return true;
+    }
+    const tilOgMed = new Date(periode.tilOgMed);
+    const nyPeriodeStart = startOfMonth(addDays(tilOgMed, 1));
+    const tidligsteSøknadsDato = subMonths(nyPeriodeStart, 2);
+    return !isBefore(new Date(), tidligsteSøknadsDato);
+};
 
 const Aldersvarsel = ({ søkerAlder }: { søkerAlder: Nullable<number> }) => {
     const { formatMessage } = useI18n({ messages: nb });
@@ -227,13 +238,27 @@ const Inngang = () => {
 
     const isFormValid = RemoteData.isSuccess(søker) && (isPapirsøknad || erBekreftet);
 
-    const handleStartSøknadKlikk = () => {
-        if (isFormValid) {
-            dispatch(
-                søknadSlice.actions.startSøknad(isPapirsøknad ? Søknadstype.Papirsøknad : Søknadstype.DigitalSøknad),
-            );
-            navigate(startstegUrl);
+    let relevantPeriode: Nullable<Periode<string>> = null;
+
+    if (RemoteData.isSuccess(sakinfo)) {
+        const { alder, uføre } = sakinfo.value;
+
+        if (sakstype === Sakstype.Alder && alder?.iverksattInnvilgetStønadsperiode) {
+            relevantPeriode = alder.iverksattInnvilgetStønadsperiode;
+        } else if (sakstype === Sakstype.Uføre && uføre?.iverksattInnvilgetStønadsperiode) {
+            relevantPeriode = uføre.iverksattInnvilgetStønadsperiode;
         }
+    }
+
+    const kanSøke = kanStarteNySøknad(relevantPeriode);
+    const [visModal, setVisModal] = useState<boolean>(false);
+
+    const handleStartSøknadKlikk = () => {
+        if (!isFormValid) {
+            return;
+        }
+        dispatch(søknadSlice.actions.startSøknad(isPapirsøknad ? Søknadstype.Papirsøknad : Søknadstype.DigitalSøknad));
+        navigate(startstegUrl);
     };
 
     const Informasjon = () => (
@@ -331,19 +356,38 @@ const Inngang = () => {
                 </div>
             </div>
             <div className={styles.knapperContainer}>
-                <LinkAsButton variant="secondary" href={'/soknad'}>
+                <LinkAsButton variant={kanSøke ? 'secondary' : 'primary'} href={'/soknad'}>
                     {formatMessage('knapp.forrige')}
                 </LinkAsButton>
                 <Button
                     type="button"
+                    variant={kanSøke ? 'primary' : 'secondary'}
                     onClick={() => {
-                        setHasSubmitted(() => true);
+                        if (!kanSøke) {
+                            setVisModal(true);
+                            return;
+                        }
+                        setHasSubmitted(true);
+
+                        if (!isFormValid) {
+                            return;
+                        }
+
                         handleStartSøknadKlikk();
                     }}
                 >
                     {formatMessage('knapp.startSøknad')}
                 </Button>
             </div>
+            <BekreftSøknadModal
+                visModal={visModal}
+                setVisModal={setVisModal}
+                isFormValid={isFormValid}
+                hasSubmitted={hasSubmitted}
+                setHasSubmitted={setHasSubmitted}
+                erBekreftet={erBekreftet}
+                handleStartSøknadKlikk={handleStartSøknadKlikk}
+            />
         </div>
     );
 };
