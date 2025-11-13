@@ -27,6 +27,7 @@ export async function opprettNyTilbakekrevingsbehandling(
         method: 'POST',
         body: {
             versjon: arg.versjon,
+            relatertId: arg.relatertId,
         },
     });
 }
