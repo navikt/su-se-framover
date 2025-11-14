@@ -78,6 +78,7 @@ export enum TilbakekrevingsVurdering {
 export interface OpprettNyTilbakekrevingsbehandlingRequest {
     sakId: string;
     versjon: number;
+    relatertId: string;
 }
 
 export interface VurderTilbakekrevingsbehandlingRequest {

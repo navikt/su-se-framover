@@ -1,21 +1,23 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Button, Heading, Radio, RadioGroup } from '@navikt/ds-react';
+import { useEffect } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 
-import * as TilbakekrevingApi from '~src/api/tilbakekrevingApi';
-import { visUtsendtForhåndsvarsel } from '~src/api/tilbakekrevingApi';
+import { FritekstTyper, hentFritekst, redigerFritekst } from '~src/api/fritekstApi.ts';
+import { forhåndsvisForhåndsvarsel, visUtsendtForhåndsvarsel } from '~src/api/tilbakekrevingApi';
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
-import { BrevInput } from '~src/components/inputs/brevInput/BrevInput';
+import TextareaWithAutosave from '~src/components/inputs/textareaWithAutosave/TextareaWithAutosave.tsx';
 import Navigasjonsknapper from '~src/components/navigasjonsknapper/Navigasjonsknapper';
 import Feiloppsummering from '~src/components/oppsummering/feiloppsummering/Feiloppsummering';
 import OppsummeringAvKravgrunnlag from '~src/components/oppsummering/kravgrunnlag/OppsummeringAvKravgrunnlag';
 import ToKolonner from '~src/components/toKolonner/ToKolonner';
 import * as TilbakekrevingActions from '~src/features/TilbakekrevingActions';
-import { useApiCall, useAsyncActionCreator } from '~src/lib/hooks';
+import { useApiCall, useAsyncActionCreator, useBrevForhåndsvisning } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
 import * as Routes from '~src/lib/routes';
+import { Nullable } from '~src/lib/types.ts';
 import { hookFormErrorsTilFeiloppsummering } from '~src/lib/validering';
 import {
     ForhåndsvarselsInfo,
@@ -31,6 +33,8 @@ import {
     ForhåndsvarsleTilbakekrevingFormData,
     forhåndsvarsleTilbakekrevingFormSchema,
 } from './ForhåndsvarsleTilbakekrevingUtils';
+
+type HandleRedigertForhåndsvarsel = { fritekst: Nullable<string> };
 
 const ForhåndsvarsleTilbakekreving = (props: {
     sakId: string;
@@ -50,6 +54,21 @@ const ForhåndsvarsleTilbakekreving = (props: {
         },
         resolver: yupResolver(forhåndsvarsleTilbakekrevingFormSchema),
     });
+
+    useEffect(() => {
+        hentFritekst({
+            referanseId: props.tilbakekreving.id,
+            sakId: props.sakId,
+            type: FritekstTyper.FORHÅNDSVARSEL_TILBAKEKREVING,
+        }).then((res) => {
+            if (res.status === 'ok') {
+                form.reset({
+                    skalForhåndsvarsle: true,
+                    fritekst: res.data.fritekst,
+                });
+            }
+        });
+    }, []);
 
     const handleSubmit = (data: ForhåndsvarsleTilbakekrevingFormData) => {
         if (!data.skalForhåndsvarsle) {
@@ -73,6 +92,21 @@ const ForhåndsvarsleTilbakekreving = (props: {
             () => {
                 navigate(Routes.saksoversiktValgtSak.createURL({ sakId: props.sakId }));
             },
+        );
+    };
+
+    const [forhåndsvisStatus, forhåndsvis] = useBrevForhåndsvisning(forhåndsvisForhåndsvarsel);
+    const [redigertForhåndsvarselStatus, saveRedigerForhåndsvarsel] = useApiCall(redigerFritekst);
+
+    const handleRedigertForhåndsvarsel = (data: HandleRedigertForhåndsvarsel, onSuccess: () => void) => {
+        return saveRedigerForhåndsvarsel(
+            {
+                referanseId: props.tilbakekreving.id,
+                sakId: props.sakId,
+                type: FritekstTyper.FORHÅNDSVARSEL_TILBAKEKREVING,
+                fritekst: data.fritekst ?? '',
+            },
+            onSuccess,
         );
     };
 
@@ -100,25 +134,37 @@ const ForhåndsvarsleTilbakekreving = (props: {
                         />
 
                         {form.watch('skalForhåndsvarsle') && (
-                            <Controller
-                                name={'fritekst'}
-                                control={form.control}
-                                render={({ field, fieldState }) => (
-                                    <BrevInput
-                                        tittel={formatMessage('forhåndsvarsleTilbakekreving.fritekst.label')}
-                                        onVisBrevClick={() =>
-                                            TilbakekrevingApi.forhåndsvisForhåndsvarsel({
-                                                sakId: props.sakId,
-                                                behandlingId: props.tilbakekreving.id,
-                                                saksversjon: props.saksversjon,
-                                                brevtekst: field.value ?? '',
-                                            })
+                            <TextareaWithAutosave
+                                textarea={{
+                                    name: 'fritekst',
+                                    label: formatMessage('forhåndsvarsleTilbakekreving.fritekst.label'),
+                                    control: form.control,
+                                    value: form.watch('fritekst') ?? '',
+                                    description: [formatMessage('brevForTilbakekreving.fritekst.description')],
+                                }}
+                                save={{
+                                    handleSave: () => {
+                                        if (form.getValues('skalForhåndsvarsle')) {
+                                            handleRedigertForhåndsvarsel(
+                                                {
+                                                    fritekst: form.getValues('fritekst')!,
+                                                },
+                                                () => void 0,
+                                            );
                                         }
-                                        tekst={field.value ?? ''}
-                                        {...field}
-                                        feil={fieldState.error}
-                                    />
-                                )}
+                                    },
+                                    status: redigertForhåndsvarselStatus,
+                                }}
+                                brev={{
+                                    handleSeBrev: () =>
+                                        forhåndsvis({
+                                            sakId: props.sakId,
+                                            behandlingId: props.tilbakekreving.id,
+                                            saksversjon: props.saksversjon,
+                                            brevtekst: form.getValues('fritekst'),
+                                        }),
+                                    status: forhåndsvisStatus,
+                                }}
                             />
                         )}
 
