@@ -18,6 +18,7 @@ const Tilbakekreving = () => {
                         sakId={sak.id}
                         sakVersjon={sak.versjon}
                         uteståendeKravgrunnlag={sak.uteståendeKravgrunnlag}
+                        alleVedtak={sak.vedtak}
                     />
                 }
             />

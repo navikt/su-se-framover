@@ -1,7 +1,8 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import { Box, Button, Heading } from '@navikt/ds-react';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { Box, Button, Heading, Select } from '@navikt/ds-react';
+import { Controller, useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
-
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
 import LinkAsButton from '~src/components/linkAsButton/LinkAsButton';
 import OppsummeringAvKravgrunnlag from '~src/components/oppsummering/kravgrunnlag/OppsummeringAvKravgrunnlag';
@@ -10,17 +11,19 @@ import { useAsyncActionCreator } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
 import * as routes from '~src/lib/routes';
 import { Nullable } from '~src/lib/types';
+import yup from '~src/lib/validering';
 import { Kravgrunnlag } from '~src/types/Kravgrunnlag';
 import { TilbakekrevingSteg } from '~src/types/ManuellTilbakekrevingsbehandling';
-
+import { Vedtak } from '~src/types/Vedtak.ts';
+import { formatDateTime } from '~src/utils/date/dateUtils.ts';
 import messages from '../Tilbakekreving-nb';
-
 import styles from './OpprettTilbakekreving.module.less';
 
 const OpprettTilbakekreving = (props: {
     sakId: string;
     sakVersjon: number;
     uteståendeKravgrunnlag: Nullable<Kravgrunnlag>;
+    alleVedtak: Vedtak[];
 }) => {
     const { formatMessage } = useI18n({ messages });
 
@@ -37,6 +40,7 @@ const OpprettTilbakekreving = (props: {
                     sakId={props.sakId}
                     saksversjon={props.sakVersjon}
                     kravgrunnlag={props.uteståendeKravgrunnlag}
+                    alleVedtak={props.alleVedtak}
                 />
             </div>
         </div>
@@ -93,12 +97,44 @@ const OpprettTilbakekreving = (props: {
 //     );
 // };
 
-const KanTilbakekreves = (props: { sakId: string; saksversjon: number; kravgrunnlag: Nullable<Kravgrunnlag> }) => {
+interface OpprettTilbakekrevingFormData {
+    relatertId: string;
+}
+
+const KanTilbakekreves = (props: {
+    sakId: string;
+    saksversjon: number;
+    kravgrunnlag: Nullable<Kravgrunnlag>;
+    alleVedtak: Vedtak[];
+}) => {
     const navigate = useNavigate();
     const { formatMessage } = useI18n({ messages });
     //kommenterer ut annuller siden vi må prodsette noen endringer. Funksjonaliteten fungerer ikke i backend enda heller
     // const [vilAnnulere, setVilAnnulere] = useState<boolean>(false);
     const [opprettStatus, opprett] = useAsyncActionCreator(opprettNyTilbakekrevingsbehandling);
+
+    const form = useForm<OpprettTilbakekrevingFormData>({
+        defaultValues: {
+            relatertId: '',
+        },
+        resolver: yupResolver(
+            yup.object<OpprettTilbakekrevingFormData>({
+                relatertId: yup.string().defined().required(),
+            }),
+        ),
+    });
+
+    const handleSubmit = (data: OpprettTilbakekrevingFormData) => {
+        opprett({ sakId: props.sakId, versjon: props.saksversjon, relatertId: data.relatertId }, (res) => {
+            navigate(
+                routes.tilbakekrevingValgtBehandling.createURL({
+                    sakId: props.sakId,
+                    behandlingId: res.id,
+                    steg: TilbakekrevingSteg.Forhåndsvarsling,
+                }),
+            );
+        });
+    };
 
     return (
         <>
@@ -130,24 +166,33 @@ const KanTilbakekreves = (props: { sakId: string; saksversjon: number; kravgrunn
                     </div>
                 )}
 
+                <Controller
+                    name={'relatertId'}
+                    control={form.control}
+                    render={({ field, fieldState }) => (
+                        <Select
+                            label="Relatert vedtak"
+                            {...field}
+                            value={field.value}
+                            error={fieldState.error?.message}
+                        >
+                            <option value="">Velg vedtak</option>
+                            {props.alleVedtak.map((vedtak) => {
+                                return (
+                                    <option key={vedtak.id} value={vedtak.behandlingId}>
+                                        {vedtak.type} {formatDateTime(vedtak.opprettet)}
+                                    </option>
+                                );
+                            })}
+                        </Select>
+                    )}
+                />
+
                 <div className={styles.knappContainer}>
                     {/* <Button variant="secondary" onClick={() => setVilAnnulere(true)}>
                         Annuler
                     </Button> */}
-                    <Button
-                        loading={RemoteData.isPending(opprettStatus)}
-                        onClick={() =>
-                            opprett({ sakId: props.sakId, versjon: props.saksversjon }, (res) => {
-                                navigate(
-                                    routes.tilbakekrevingValgtBehandling.createURL({
-                                        sakId: props.sakId,
-                                        behandlingId: res.id,
-                                        steg: TilbakekrevingSteg.Forhåndsvarsling,
-                                    }),
-                                );
-                            })
-                        }
-                    >
+                    <Button loading={RemoteData.isPending(opprettStatus)} onClick={form.handleSubmit(handleSubmit)}>
                         {formatMessage('opprettelse.kanTilbakekreves.ny')}
                     </Button>
                     <LinkAsButton
