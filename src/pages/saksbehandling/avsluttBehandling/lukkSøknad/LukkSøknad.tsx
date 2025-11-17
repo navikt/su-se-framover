@@ -18,19 +18,19 @@ import { Søknadstype } from '~src/types/Søknadinnhold';
 import AvsluttBehandlingBunnknapper from '../avsluttBehandlingBunnknapper/AvsluttBehandlingBunnknapper';
 
 import AvslåttSøknad from './avslag/AvslåttSøknad';
-import nb from './lukkSøknad-nb';
 import styles from './lukkSøknad.module.less';
+import nb from './lukkSøknad-nb';
 import {
     AvsluttSøknadsbehandlingBegrunnelse,
     AvvistBrevtyper,
     getLukkSøknadValidationSchema,
-    lukkSøknadInitialValues,
     LukkSøknadOgAvsluttSøknadsbehandlingFormData,
     LukkSøknadOgAvsluttSøknadsbehandlingType,
+    lukkSøknadInitialValues,
 } from './lukkSøknadUtils';
 import Trukket from './Trukket';
 
-const LukkSøknadOgAvsluttBehandling = (props: { sakId: string; søknad: Søknad }) => {
+const LukkSøknadOgAvsluttBehandling = (props: { sakId: string; søknad: Søknad; erInnvilget?: boolean }) => {
     const navigate = useNavigate();
     const { formatMessage } = useI18n({ messages: nb });
     const [søknadLukketStatus, lukkSøknad, resetLukkSøknadStatus] = useAsyncActionCreator(SøknadActions.lukkSøknad);
@@ -105,11 +105,18 @@ const LukkSøknadOgAvsluttBehandling = (props: { sakId: string; søknad: Søknad
                             error={fieldState.error?.message}
                         >
                             <option value="velgBegrunnelse">{formatMessage('selector.velgBegrunnelse')}</option>
-                            {Object.values(LukkSøknadBegrunnelse).map((begrunnelse) => (
-                                <option value={begrunnelse} key={begrunnelse}>
-                                    {formatMessage(lukkSøknadBegrunnelseI18nId[begrunnelse])}
-                                </option>
-                            ))}
+                            {Object.values(LukkSøknadBegrunnelse)
+                                .filter((begrunnelse) => {
+                                    if (!props.erInnvilget && begrunnelse === LukkSøknadBegrunnelse.Avvist) {
+                                        return false;
+                                    }
+                                    return true;
+                                })
+                                .map((begrunnelse) => (
+                                    <option value={begrunnelse} key={begrunnelse}>
+                                        {formatMessage(lukkSøknadBegrunnelseI18nId[begrunnelse])}
+                                    </option>
+                                ))}
                             {Object.values(AvsluttSøknadsbehandlingBegrunnelse).map((begrunnelse) => (
                                 <option value={begrunnelse} key={begrunnelse}>
                                     {formatMessage(lukkSøknadBegrunnelseI18nId[begrunnelse])}

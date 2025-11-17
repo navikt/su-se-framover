@@ -1,5 +1,5 @@
 import { Alert, Heading, Panel } from '@navikt/ds-react';
-import { useOutletContext } from 'react-router-dom';
+import { useLocation, useOutletContext } from 'react-router-dom';
 
 import { SaksoversiktContext } from '~src/context/SaksoversiktContext';
 import { useI18n } from '~src/lib/i18n';
@@ -21,6 +21,9 @@ const AvsluttBehandling = () => {
     const revurdering = props.sak.revurderinger.find((r) => r.id === urlParams.id);
     const klage = props.sak.klager.find((k) => k.id === urlParams.id);
     const tilbakekreving = props.sak.tilbakekrevinger.find((t) => t.id === urlParams.id);
+
+    const { state } = useLocation();
+    const erInnvilget = state?.erInnvilget ?? false;
 
     if (!søknad && !søknadsbehandling && !revurdering && !klage && !tilbakekreving) {
         return (
@@ -47,6 +50,7 @@ const AvsluttBehandling = () => {
                         <LukkSøknadOgAvsluttBehandling
                             sakId={props.sak.id}
                             søknad={(søknad || søknadsbehandling?.søknad)!}
+                            erInnvilget={erInnvilget}
                         />
                     )}
                     {revurdering && <AvsluttRevurdering sakId={props.sak.id} revurdering={revurdering} />}
