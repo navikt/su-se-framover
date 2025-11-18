@@ -16,3 +16,6 @@ export interface Utbetalingsperiode {
 
 export const compareUtbetalingsperiode = (u1: Utbetalingsperiode, u2: Utbetalingsperiode) =>
     DateFns.compareAsc(new Date(u1.fraOgMed), new Date(u2.fraOgMed));
+
+export const sorterUtbetalingsperioder = (utbetalingsperioder: Utbetalingsperiode[]) =>
+    [...utbetalingsperioder].sort(compareUtbetalingsperiode);

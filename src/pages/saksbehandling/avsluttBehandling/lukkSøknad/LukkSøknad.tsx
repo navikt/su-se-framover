@@ -30,7 +30,7 @@ import {
 } from './lukkSøknadUtils';
 import Trukket from './Trukket';
 
-const LukkSøknadOgAvsluttBehandling = (props: { sakId: string; søknad: Søknad; erInnvilget?: boolean }) => {
+const LukkSøknadOgAvsluttBehandling = (props: { sakId: string; søknad: Søknad; kanSøke: boolean }) => {
     const navigate = useNavigate();
     const { formatMessage } = useI18n({ messages: nb });
     const [søknadLukketStatus, lukkSøknad, resetLukkSøknadStatus] = useAsyncActionCreator(SøknadActions.lukkSøknad);
@@ -107,7 +107,7 @@ const LukkSøknadOgAvsluttBehandling = (props: { sakId: string; søknad: Søknad
                             <option value="velgBegrunnelse">{formatMessage('selector.velgBegrunnelse')}</option>
                             {Object.values(LukkSøknadBegrunnelse)
                                 .filter((begrunnelse) => {
-                                    if (!props.erInnvilget && begrunnelse === LukkSøknadBegrunnelse.Avvist) {
+                                    if (props.kanSøke && begrunnelse === LukkSøknadBegrunnelse.Avvist) {
                                         return false;
                                     }
                                     return true;
@@ -224,7 +224,7 @@ function hentOpprettetDatoFraSøknad(søknad: Søknad) {
 const lukkSøknadBegrunnelseI18nId: { [key in LukkSøknadOgAvsluttSøknadsbehandlingType]: keyof typeof nb } = {
     TRUKKET: 'lukking.begrunnelse.trukket',
     BORTFALT: 'lukking.begrunnelse.bortfalt',
-    AVVIST: 'lukking.begrunnelse.avslag',
+    AVSLAG: 'lukking.begrunnelse.avslag',
     MANGLENDE_DOK: 'avslutt.manglendeDokumentasjon',
 };
 

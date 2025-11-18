@@ -1,9 +1,11 @@
 import { Alert, Heading, Panel } from '@navikt/ds-react';
-import { useLocation, useOutletContext } from 'react-router-dom';
+import { useOutletContext } from 'react-router-dom';
 
 import { SaksoversiktContext } from '~src/context/SaksoversiktContext';
 import { useI18n } from '~src/lib/i18n';
 import * as Routes from '~src/lib/routes';
+import { sorterUtbetalingsperioder } from '~src/types/Utbetalingsperiode.ts';
+import { startenPåMnd } from '~src/utils/date/dateUtils.ts';
 import styles from './avsluttBehandling.module.less';
 import messages from './avsluttBehandling-nb';
 import AvsluttKlage from './avsluttKlage/AvsluttKlage';
@@ -16,14 +18,26 @@ const AvsluttBehandling = () => {
     const { formatMessage } = useI18n({ messages });
     const urlParams = Routes.useRouteParams<typeof Routes.avsluttBehandling>();
 
+    // Kan søke hvis det ikke er løpende eller dagens dato er 2 mnd før innvilget periode er over
+    function sjekkOmkanSøke(): boolean {
+        if (props.sak.utbetalinger.length === 0) {
+            return true;
+        }
+        const sortertUtbetalingsperioder = sorterUtbetalingsperioder(props.sak.utbetalinger);
+        const sisteUtbetalingsDato = new Date(
+            sortertUtbetalingsperioder[sortertUtbetalingsperioder.length - 1].tilOgMed,
+        );
+        const toMndFørTilogMed = startenPåMnd(sisteUtbetalingsDato);
+        toMndFørTilogMed.setMonth(toMndFørTilogMed.getMonth() - 1);
+        return new Date() >= toMndFørTilogMed;
+    }
+    const kanSøke = sjekkOmkanSøke();
+
     const søknad = props.sak.søknader.find((s) => s.id === urlParams.id);
     const søknadsbehandling = props.sak.behandlinger.find((s) => s.id === urlParams.id);
     const revurdering = props.sak.revurderinger.find((r) => r.id === urlParams.id);
     const klage = props.sak.klager.find((k) => k.id === urlParams.id);
     const tilbakekreving = props.sak.tilbakekrevinger.find((t) => t.id === urlParams.id);
-
-    const { state } = useLocation();
-    const erInnvilget = state?.erInnvilget ?? false;
 
     if (!søknad && !søknadsbehandling && !revurdering && !klage && !tilbakekreving) {
         return (
@@ -50,7 +64,7 @@ const AvsluttBehandling = () => {
                         <LukkSøknadOgAvsluttBehandling
                             sakId={props.sak.id}
                             søknad={(søknad || søknadsbehandling?.søknad)!}
-                            erInnvilget={erInnvilget}
+                            kanSøke={kanSøke}
                         />
                     )}
                     {revurdering && <AvsluttRevurdering sakId={props.sak.id} revurdering={revurdering} />}
