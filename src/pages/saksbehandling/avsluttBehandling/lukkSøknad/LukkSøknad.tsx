@@ -2,10 +2,11 @@ import * as RemoteData from '@devexperts/remote-data-ts';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Select } from '@navikt/ds-react';
 import { Controller, useForm } from 'react-hook-form';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useOutletContext } from 'react-router-dom';
 
 import { LukkSøknadBodyTypes } from '~src/api/søknadApi';
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
+import { SaksoversiktContext } from '~src/context/SaksoversiktContext.ts';
 import * as SøknadActions from '~src/features/søknad/SøknadActions';
 import { pickRemoteData } from '~src/lib/fp';
 import { useAsyncActionCreator } from '~src/lib/hooks';
@@ -14,9 +15,9 @@ import * as Routes from '~src/lib/routes';
 import Avvist from '~src/pages/saksbehandling/avsluttBehandling/lukkSøknad/Avvist.tsx';
 import { LukkSøknadBegrunnelse, Søknad } from '~src/types/Søknad';
 import { Søknadstype } from '~src/types/Søknadinnhold';
-
+import { sorterUtbetalingsperioder } from '~src/types/Utbetalingsperiode.ts';
+import { startenPåMnd } from '~src/utils/date/dateUtils.ts';
 import AvsluttBehandlingBunnknapper from '../avsluttBehandlingBunnknapper/AvsluttBehandlingBunnknapper';
-
 import AvslåttSøknad from './avslag/AvslåttSøknad';
 import styles from './lukkSøknad.module.less';
 import nb from './lukkSøknad-nb';
@@ -30,13 +31,31 @@ import {
 } from './lukkSøknadUtils';
 import Trukket from './Trukket';
 
-const LukkSøknadOgAvsluttBehandling = (props: { sakId: string; søknad: Søknad; kanSøke: boolean }) => {
+const LukkSøknadOgAvsluttBehandling = (props: { søknad: Søknad }) => {
     const navigate = useNavigate();
     const { formatMessage } = useI18n({ messages: nb });
     const [søknadLukketStatus, lukkSøknad, resetLukkSøknadStatus] = useAsyncActionCreator(SøknadActions.lukkSøknad);
     const [avslagManglendeDokStatus, avslåPgaManglendeDok, resetAvslagManglendeDokStatus] = useAsyncActionCreator(
         SøknadActions.avslåSøknad,
     );
+
+    const sak = useOutletContext<SaksoversiktContext>().sak;
+    function sjekkOmkanSøke(): boolean {
+        if (sak.utbetalinger.length === 0) {
+            return true;
+        }
+        const sortertUtbetalingsperioder = sorterUtbetalingsperioder(sak.utbetalinger);
+        const sisteUtbetalingsDato = new Date(
+            sortertUtbetalingsperioder[sortertUtbetalingsperioder.length - 1].tilOgMed,
+        );
+        const toMndFørTilogMed = startenPåMnd(sisteUtbetalingsDato);
+        toMndFørTilogMed.setMonth(toMndFørTilogMed.getMonth() - 1);
+        return new Date() >= toMndFørTilogMed;
+    }
+    const fjernForTidligSøknad = (begrunnelse: LukkSøknadBegrunnelse) =>
+        !(begrunnelse === LukkSøknadBegrunnelse.Avvist && kanSøke);
+
+    const kanSøke = sjekkOmkanSøke();
 
     const submitStatus = pickRemoteData(søknadLukketStatus, avslagManglendeDokStatus);
 
@@ -53,7 +72,7 @@ const LukkSøknadOgAvsluttBehandling = (props: { sakId: string; søknad: Søknad
                 },
                 () => {
                     const message = formatMessage('avslutt.behandlingHarBlittAvsluttet');
-                    return Routes.navigateToSakIntroWithMessage(navigate, message, props.sakId);
+                    return Routes.navigateToSakIntroWithMessage(navigate, message, sak.id);
                 },
             );
         } else {
@@ -64,7 +83,7 @@ const LukkSøknadOgAvsluttBehandling = (props: { sakId: string; søknad: Søknad
                 },
                 () => {
                     const message = formatMessage('avslutt.behandlingHarBlittAvsluttet');
-                    Routes.navigateToSakIntroWithMessage(navigate, message, props.sakId);
+                    Routes.navigateToSakIntroWithMessage(navigate, message, sak.id);
                 },
             );
         }
@@ -106,12 +125,7 @@ const LukkSøknadOgAvsluttBehandling = (props: { sakId: string; søknad: Søknad
                         >
                             <option value="velgBegrunnelse">{formatMessage('selector.velgBegrunnelse')}</option>
                             {Object.values(LukkSøknadBegrunnelse)
-                                .filter((begrunnelse) => {
-                                    if (props.kanSøke && begrunnelse === LukkSøknadBegrunnelse.Avvist) {
-                                        return false;
-                                    }
-                                    return true;
-                                })
+                                .filter(fjernForTidligSøknad)
                                 .map((begrunnelse) => (
                                     <option value={begrunnelse} key={begrunnelse}>
                                         {formatMessage(lukkSøknadBegrunnelseI18nId[begrunnelse])}
@@ -177,7 +191,7 @@ const LukkSøknadOgAvsluttBehandling = (props: { sakId: string; søknad: Søknad
             <div>{RemoteData.isFailure(submitStatus) && <ApiErrorAlert error={submitStatus.error} />}</div>
 
             <AvsluttBehandlingBunnknapper
-                sakId={props.sakId}
+                sakId={sak.id}
                 submitButtonText={
                     watchBegrunnelse === AvsluttSøknadsbehandlingBegrunnelse.ManglendeDok
                         ? formatMessage('knapp.avslåSøknad')
