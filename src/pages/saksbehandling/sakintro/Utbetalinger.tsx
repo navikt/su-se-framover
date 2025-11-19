@@ -10,7 +10,7 @@ import Oppsummeringspanel, {
 import { useI18n } from '~src/lib/i18n';
 import * as Routes from '~src/lib/routes';
 import { KanStansesEllerGjenopptas } from '~src/types/Sak';
-import { compareUtbetalingsperiode, Utbetalingsperiode } from '~src/types/Utbetalingsperiode';
+import { sorterUtbetalingsperioder, Utbetalingsperiode } from '~src/types/Utbetalingsperiode';
 import { formatMonthYear } from '~src/utils/date/dateUtils';
 
 import messages from './sakintro-nb';
@@ -48,7 +48,7 @@ const Utbetalinger = (props: {
         return <div></div>;
     }
 
-    const sortertUtbetalingsperioder = [...props.utbetalingsperioder].sort(compareUtbetalingsperiode);
+    const sortertUtbetalingsperioder = sorterUtbetalingsperioder(utbetalingsperioder);
     const førsteUtbetalingsperiode = new Date(sortertUtbetalingsperioder[0].fraOgMed);
     const sisteUtbetalingsDato = new Date(sortertUtbetalingsperioder[sortertUtbetalingsperioder.length - 1].tilOgMed);
 

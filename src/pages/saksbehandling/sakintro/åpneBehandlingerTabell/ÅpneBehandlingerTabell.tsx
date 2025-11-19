@@ -220,6 +220,7 @@ const SøknadOgSøknadsbehandlingKnapper = (props: {
     const ref = useRef<HTMLDialogElement>(null);
     const [returStatus, retur] = useApiCall(behandlingsApi.returnerSøknadsbehandling);
     const søknadsbehandling = props.b?.søknadsbehandling;
+    const erInnvilget = getDataCellInfo(props.b).resultat === 'Innvilget';
 
     if (props.b.søknadsbehandling && erSøknadsbehandlingTilAttestering(props.b.søknadsbehandling)) {
         if (user.isAttestant && user.navIdent !== props.b.søknadsbehandling.saksbehandler) {
@@ -278,16 +279,21 @@ const SøknadOgSøknadsbehandlingKnapper = (props: {
     return (
         <>
             <div className={styles.dataCellButtonsContainer}>
-                <LinkAsButton
+                <Button
                     variant="secondary"
                     size="small"
-                    href={Routes.avsluttBehandling.createURL({
-                        sakId: props.sakId,
-                        id: props.b?.søknadsbehandling?.id ?? props.b.søknad.id,
-                    })}
+                    onClick={() => {
+                        navigate(
+                            Routes.avsluttBehandling.createURL({
+                                sakId: props.sakId,
+                                id: props.b?.søknadsbehandling?.id ?? props.b.søknad.id,
+                            }),
+                            { state: { erInnvilget } },
+                        );
+                    }}
                 >
                     {formatMessage('datacell.info.knapp.avsluttBehandling')}
-                </LinkAsButton>
+                </Button>
                 {props.førsteÅpne && !props.b.søknadsbehandling?.saksbehandler && (
                     <Button
                         size="small"
