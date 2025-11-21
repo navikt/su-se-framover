@@ -37,3 +37,19 @@ export async function hentFritekst(arg: {
         },
     });
 }
+
+export async function slettFritekst(arg: {
+    referanseId: string;
+    sakId: string;
+    type: FritekstTyper;
+}): Promise<ApiClientResult<Fritekst>> {
+    return apiClient({
+        url: `/fritekst/slett`,
+        method: 'DELETE',
+        body: {
+            referanseId: arg.referanseId,
+            sakId: arg.sakId,
+            type: arg.type,
+        },
+    });
+}
