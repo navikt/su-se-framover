@@ -176,7 +176,7 @@ const BrevPage = () => {
                         }}
                         save={{
                             handleSave: () => {
-                                handleLagreFritekst({ fritekst: form.getValues('fritekst')! }, () => void 0);
+                                handleLagreFritekst({ fritekst: form.getValues('fritekst')! }, () => {});
                             },
                             status: lagreFritekstStatus,
                         }}
