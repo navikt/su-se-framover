@@ -186,7 +186,7 @@ const BrevPage = () => {
                                     sakId: context.sak.id,
                                     tittel: form.watch('tittel'),
                                     fritekst: form.watch('fritekst'),
-                                    //her er det valgt at dem skal skrive fritekst - da vil vi gjøre genereringen
+                                    //her er det valgt at de skal skrive fritekst - da vil vi gjøre genereringen
                                     pdf: null,
                                     //adresse har ikke noe å si for visning av brevet
                                     adresse: null,
