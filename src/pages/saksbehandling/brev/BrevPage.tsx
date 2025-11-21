@@ -65,7 +65,7 @@ const BrevPage = () => {
         }).then((res) => {
             if (res.status === 'ok' && res.data) form.setValue('fritekst', res.data.fritekst);
         });
-    }, []);
+    }, [context.sak.id, form]);
 
     const handleSubmit = (data: DokumentFormData) => {
         return sendBrev(
