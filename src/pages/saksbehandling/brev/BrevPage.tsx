@@ -15,7 +15,7 @@ import {
 import { useEffect } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useNavigate, useOutletContext } from 'react-router-dom';
-import { FritekstTyper, hentFritekst, redigerFritekst, slettFritekst } from '~src/api/fritekstApi.ts';
+import { FritekstTyper, hentFritekst, redigerFritekst } from '~src/api/fritekstApi.ts';
 import * as SakApi from '~src/api/sakApi';
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
 import DokumentDistribusjonForm from '~src/components/forms/dokument/distribusjon/DokumentDistribusjonForm';
@@ -39,7 +39,6 @@ const BrevPage = () => {
     const [sendBrevStatus, sendBrev] = useApiCall(SakApi.lagreOgSendFritekstDokument);
     const [BrevStatus, seBrev] = useBrevForhåndsvisning(SakApi.opprettFritekstDokument);
     const [lagreFritekstStatus, lagreFritekst] = useApiCall(redigerFritekst);
-    const [, sletterFritekst] = useApiCall(slettFritekst);
 
     const form = useForm<DokumentFormData>({
         defaultValues: {
@@ -91,16 +90,7 @@ const BrevPage = () => {
                 distribusjonstype: data.distribusjonstype!,
             },
             () => {
-                sletterFritekst(
-                    {
-                        referanseId: context.sak.id,
-                        sakId: context.sak.id,
-                        type: FritekstTyper.FRITEKST_BREV,
-                    },
-                    () => {
-                        navigate(Routes.alleDokumenterForSak.createURL({ sakId: context.sak.id }));
-                    },
-                );
+                navigate(Routes.alleDokumenterForSak.createURL({ sakId: context.sak.id }));
             },
         );
     };
