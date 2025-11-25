@@ -40,7 +40,11 @@ const Oppsummering = (props: { forrigeUrl: string; nesteUrl: string; avbrytUrl: 
     const navigate = useNavigate();
     const { sakstype } = useOutletContext<SøknadContext>();
     const user = useUserContext();
-    const [søknadFraStore, innsending] = useAppSelector((s) => [s.soknad, s.innsending.søknad]);
+    const [søknadFraStore, innsending, responseStatus] = useAppSelector((s) => [
+        s.soknad,
+        s.innsending.søknad,
+        s.innsending.responseStatus,
+    ]);
     const { formatMessage } = useI18n({ messages: { ...messages, ...sharedI18n } });
     const dispatch = useAppDispatch();
     const feiloppsummeringref = useRef<HTMLDivElement>(null);
@@ -85,6 +89,8 @@ const Oppsummering = (props: { forrigeUrl: string; nesteUrl: string; avbrytUrl: 
     });
 
     const handleSubmit = async (values: SøknadState) => {
+        if (responseStatus === 'ok') return;
+
         if (sakstype === Sakstype.Uføre) {
             const res = await dispatch(
                 innsendingSlice.sendUføresøknad({
@@ -143,6 +149,7 @@ const Oppsummering = (props: { forrigeUrl: string; nesteUrl: string; avbrytUrl: 
                     next={{
                         label: formatMessage('steg.sendInn'),
                         spinner: RemoteData.isPending(innsending),
+                        disabled: responseStatus === 'ok',
                     }}
                     avbryt={{
                         toRoute: props.avbrytUrl,

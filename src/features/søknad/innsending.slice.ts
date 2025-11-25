@@ -39,10 +39,11 @@ export const sendAldersøknad = createAsyncThunk<
 
 export interface InnsendingState {
     søknad: RemoteData.RemoteData<ApiError, søknadApi.OpprettetSøknad>;
+    responseStatus: 'pending' | 'ok' | 'error' | null;
 }
-
 const initialState: InnsendingState = {
     søknad: RemoteData.initial,
+    responseStatus: null,
 };
 export default createSlice({
     name: 'innsending',
@@ -52,12 +53,15 @@ export default createSlice({
         handleAsyncThunk(builder, sendUføresøknad, {
             pending: (state) => {
                 state.søknad = RemoteData.pending;
+                state.responseStatus = 'pending';
             },
             fulfilled: (state, action) => {
                 state.søknad = RemoteData.success(action.payload);
+                state.responseStatus = 'ok';
             },
             rejected: (state, action) => {
                 state.søknad = simpleRejectedActionToRemoteData(action);
+                state.responseStatus = 'error';
             },
         });
     },

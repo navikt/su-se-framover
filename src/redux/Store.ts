@@ -13,6 +13,7 @@ const store = configureStore({
         personopplysninger: person.reducer,
         soknad: søknadSlice.reducer,
         sak: sakSlice.reducer,
+        responseStatus: innsending.reducer,
         innsending: innsending.reducer,
         me: me.reducer,
         toast: toastsSlice.reducer,
