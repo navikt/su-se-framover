@@ -12,27 +12,33 @@ import {
     TextField,
     VStack,
 } from '@navikt/ds-react';
+import { useEffect } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useNavigate, useOutletContext } from 'react-router-dom';
-
+import { FritekstTyper, hentFritekst, redigerFritekst } from '~src/api/fritekstApi.ts';
 import * as SakApi from '~src/api/sakApi';
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
 import DokumentDistribusjonForm from '~src/components/forms/dokument/distribusjon/DokumentDistribusjonForm';
-import { BrevInput } from '~src/components/inputs/brevInput/BrevInput';
+import TextareaWithAutosave from '~src/components/inputs/textareaWithAutosave/TextareaWithAutosave.tsx';
 import LinkAsButton from '~src/components/linkAsButton/LinkAsButton';
 import { SaksoversiktContext } from '~src/context/SaksoversiktContext';
-import { useApiCall } from '~src/lib/hooks';
+import { useApiCall, useBrevForhåndsvisning } from '~src/lib/hooks';
 import * as Routes from '~src/lib/routes';
+import { Nullable } from '~src/lib/types.ts';
 import { Distribusjonstype } from '~src/types/dokument/Dokument';
-
 import styles from './BrevPage.module.less';
 import { DokumentFormData, distribusjonstypeTextMapper, dokumentSchema } from './BrevPageUtils';
 
+type HandleLagreFritekst = {
+    fritekst: Nullable<string>;
+};
 const BrevPage = () => {
     const navigate = useNavigate();
 
     const context = useOutletContext<SaksoversiktContext>();
     const [sendBrevStatus, sendBrev] = useApiCall(SakApi.lagreOgSendFritekstDokument);
+    const [BrevStatus, seBrev] = useBrevForhåndsvisning(SakApi.opprettFritekstDokument);
+    const [lagreFritekstStatus, lagreFritekst] = useApiCall(redigerFritekst);
 
     const form = useForm<DokumentFormData>({
         defaultValues: {
@@ -51,37 +57,58 @@ const BrevPage = () => {
         resolver: yupResolver(dokumentSchema),
     });
 
+    useEffect(() => {
+        hentFritekst({
+            referanseId: context.sak.id,
+            sakId: context.sak.id,
+            type: FritekstTyper.FRITEKST_BREV,
+        }).then((res) => {
+            if (res.status === 'ok' && res.data) form.setValue('fritekst', res.data.fritekst);
+        });
+    }, [context.sak.id, form]);
+
+    const handleSubmit = (data: DokumentFormData) => {
+        return sendBrev(
+            {
+                sakId: context.sak.id,
+                tittel: data.tittel!,
+                fritekst: data.vilHellerLasteOppPdf ? null : data.fritekst!,
+                pdf: data.vilHellerLasteOppPdf ? data.fileObject!.file : null,
+                adresse: data.skalSendeTilAnnenAdresse
+                    ? {
+                          adresselinje1: data.adresse!.adresser[0]!.adresselinje,
+                          adresselinje2: data.adresse?.adresser[1]?.adresselinje
+                              ? data.adresse.adresser[1].adresselinje
+                              : null,
+                          adresselinje3: data.adresse?.adresser[2]?.adresselinje
+                              ? data.adresse.adresser[2].adresselinje
+                              : null,
+                          postnummer: data.adresse!.postnummer,
+                          poststed: data.adresse!.poststed,
+                      }
+                    : null,
+                distribusjonstype: data.distribusjonstype!,
+            },
+            () => {
+                navigate(Routes.alleDokumenterForSak.createURL({ sakId: context.sak.id }));
+            },
+        );
+    };
+
+    const handleLagreFritekst = (data: HandleLagreFritekst, onSuccess: () => void) => {
+        return lagreFritekst(
+            {
+                referanseId: context.sak.id,
+                sakId: context.sak.id,
+                type: FritekstTyper.FRITEKST_BREV,
+                fritekst: data.fritekst ?? '',
+            },
+            onSuccess,
+        );
+    };
+
     return (
-        <form
-            className={styles.pageContainer}
-            onSubmit={form.handleSubmit((values) =>
-                sendBrev(
-                    {
-                        sakId: context.sak.id,
-                        tittel: values.tittel!,
-                        fritekst: values.vilHellerLasteOppPdf ? null : values.fritekst!,
-                        pdf: values.vilHellerLasteOppPdf ? values.fileObject!.file : null,
-                        adresse: values.skalSendeTilAnnenAdresse
-                            ? {
-                                  adresselinje1: values.adresse!.adresser[0]!.adresselinje,
-                                  adresselinje2: values.adresse?.adresser[1]?.adresselinje
-                                      ? values.adresse.adresser[1].adresselinje
-                                      : null,
-                                  adresselinje3: values.adresse?.adresser[2]?.adresselinje
-                                      ? values.adresse.adresser[2].adresselinje
-                                      : null,
-                                  postnummer: values.adresse!.postnummer,
-                                  poststed: values.adresse!.poststed,
-                              }
-                            : null,
-                        distribusjonstype: values.distribusjonstype!,
-                    },
-                    () => {
-                        navigate(Routes.alleDokumenterForSak.createURL({ sakId: context.sak.id }));
-                    },
-                ),
-            )}
-        >
+        <form className={styles.pageContainer} onSubmit={form.handleSubmit(handleSubmit)}>
             <Heading level="2" size={'large'}>
                 Opprett og send nytt fritekst brev
             </Heading>
@@ -140,29 +167,34 @@ const BrevPage = () => {
                 />
 
                 {!form.watch('vilHellerLasteOppPdf') && (
-                    <Controller
-                        control={form.control}
-                        name={'fritekst'}
-                        render={({ field, fieldState }) => (
-                            <BrevInput
-                                tekst={field.value}
-                                onVisBrevClick={() =>
-                                    SakApi.opprettFritekstDokument({
-                                        sakId: context.sak.id,
-                                        tittel: form.watch('tittel'),
-                                        fritekst: form.watch('fritekst'),
-                                        //her er det valgt at dem skal skrive fritekst - da vil vi gjøre genereringen
-                                        pdf: null,
-                                        //adresse har ikke noe å si for visning av brevet
-                                        adresse: null,
-                                        //distibusjonstype har ikke noe å si for visning av brevet
-                                        distribusjonstype: Distribusjonstype.ANNET,
-                                    })
-                                }
-                                feil={fieldState.error}
-                                onChange={field.onChange}
-                            />
-                        )}
+                    <TextareaWithAutosave
+                        textarea={{
+                            name: 'fritekst',
+                            label: 'Fritekst til brev',
+                            control: form.control,
+                            value: form.watch('fritekst') ?? '',
+                        }}
+                        save={{
+                            handleSave: () => {
+                                handleLagreFritekst({ fritekst: form.getValues('fritekst') }, () => void 0);
+                            },
+                            status: lagreFritekstStatus,
+                        }}
+                        brev={{
+                            handleSeBrev: () =>
+                                seBrev({
+                                    sakId: context.sak.id,
+                                    tittel: form.watch('tittel'),
+                                    fritekst: form.watch('fritekst'),
+                                    //her er det valgt at de skal skrive fritekst - da vil vi gjøre genereringen
+                                    pdf: null,
+                                    //adresse har ikke noe å si for visning av brevet
+                                    adresse: null,
+                                    //distibusjonstype har ikke noe å si for visning av brevet
+                                    distribusjonstype: Distribusjonstype.ANNET,
+                                }),
+                            status: BrevStatus,
+                        }}
                     />
                 )}
 
