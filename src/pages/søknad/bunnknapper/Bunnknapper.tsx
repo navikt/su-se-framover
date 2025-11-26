@@ -37,6 +37,7 @@ const Bunnknapper = (props: {
                         variant="secondary"
                         type="button"
                         className={styles.navKnapp}
+                        disabled={props.next?.disabled}
                         onClick={() => {
                             if (props.previous?.handleClickAsAvbryt) {
                                 setModalOpen(true);
