@@ -1,4 +1,4 @@
-import { BodyShort, Button, Modal } from '@navikt/ds-react';
+import { Alert, BodyShort, Button, Modal } from '@navikt/ds-react';
 import { useState } from 'react';
 
 import LinkAsButton from '~src/components/linkAsButton/LinkAsButton';
@@ -15,6 +15,7 @@ const Bunnknapper = (props: {
     next?: {
         label?: string;
         spinner?: boolean;
+        disabled?: boolean;
     };
     avbryt: {
         toRoute: string;
@@ -25,12 +26,18 @@ const Bunnknapper = (props: {
 
     return (
         <div>
+            {props.next?.disabled && (
+                <Alert variant="warning" className={styles.warningAlert}>
+                    <BodyShort>{formatMessage('steg.SøknadSendt')}</BodyShort>
+                </Alert>
+            )}
             <div className={styles.container}>
                 {props.previous && (
                     <Button
                         variant="secondary"
                         type="button"
                         className={styles.navKnapp}
+                        disabled={props.next?.disabled}
                         onClick={() => {
                             if (props.previous?.handleClickAsAvbryt) {
                                 setModalOpen(true);

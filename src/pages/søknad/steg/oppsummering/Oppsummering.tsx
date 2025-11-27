@@ -85,6 +85,8 @@ const Oppsummering = (props: { forrigeUrl: string; nesteUrl: string; avbrytUrl: 
     });
 
     const handleSubmit = async (values: SøknadState) => {
+        if (RemoteData.isSuccess(innsending)) return;
+
         if (sakstype === Sakstype.Uføre) {
             const res = await dispatch(
                 innsendingSlice.sendUføresøknad({
@@ -143,6 +145,7 @@ const Oppsummering = (props: { forrigeUrl: string; nesteUrl: string; avbrytUrl: 
                     next={{
                         label: formatMessage('steg.sendInn'),
                         spinner: RemoteData.isPending(innsending),
+                        disabled: RemoteData.isSuccess(innsending),
                     }}
                     avbryt={{
                         toRoute: props.avbrytUrl,

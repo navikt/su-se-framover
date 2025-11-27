@@ -40,7 +40,6 @@ export const sendAldersøknad = createAsyncThunk<
 export interface InnsendingState {
     søknad: RemoteData.RemoteData<ApiError, søknadApi.OpprettetSøknad>;
 }
-
 const initialState: InnsendingState = {
     søknad: RemoteData.initial,
 };
