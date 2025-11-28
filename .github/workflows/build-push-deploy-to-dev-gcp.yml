@@ -1,9 +1,6 @@
 name: build-push-deploy-to-dev.yml
 
 on:
-    push:
-        branches:
-            - '**'
     workflow_dispatch:
 
 permissions: {}
