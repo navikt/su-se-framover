@@ -28,7 +28,6 @@ spec:
           - id: "5ccd88bd-58d6-41a7-9652-5e0597b00f9b" # 0000-GA-SU-UFOR-DRIFT
       replyURLs:
         - "http://localhost/oauth2/callback"
-        - "https://supplerendestonad.dev.adeo.no/oauth2/callback"
         - "https://supplerendestonad.intern.dev.nav.no/oauth2/callback"
   replicas:
     min: 2
@@ -41,7 +40,6 @@ spec:
     port: 8080
     initialDelay: 5
   ingresses:
-    - https://supplerendestonad.dev.adeo.no
     - https://supplerendestonad.intern.dev.nav.no
   env:
       - name: NODE_ENV
