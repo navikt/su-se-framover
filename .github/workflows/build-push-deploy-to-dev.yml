@@ -1,4 +1,4 @@
-name: build-push-deploy-to-dev-gcp.yml
+name: build-push-deploy-to-dev.yml
 
 on:
     push:
