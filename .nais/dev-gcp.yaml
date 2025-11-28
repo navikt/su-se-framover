@@ -1,0 +1,104 @@
+apiVersion: nais.io/v1alpha1
+kind: Application
+metadata:
+  annotations:
+    nginx.ingress.kubernetes.io/proxy-body-size: "20m"
+  name: su-se-framover
+  namespace: supstonad
+  labels:
+    team: supstonad
+spec:
+  port: 8080
+  image: {{ image }}
+  observability:
+    autoInstrumentation:
+      enabled: true
+      runtime: nodejs
+  azure:
+    application:
+      enabled: true
+      tenant: trygdeetaten.no
+      claims:
+        extra:
+          - "NAVident"
+        groups:
+          - id: "d75164fa-39e6-4149-956e-8404bc9080b6" # 0000-GA-SU-UFOR-ATTESTANT
+          - id: "0ba009c4-d148-4a51-b501-4b1cf906889d" # 0000-GA-SU-UFOR-VEILEDER
+          - id: "062d4814-8538-4f3a-bcb9-32821af7909a" # 0000-GA-SU-UFOR-SAKSBEHANDLER
+          - id: "5ccd88bd-58d6-41a7-9652-5e0597b00f9b" # 0000-GA-SU-UFOR-DRIFT
+      replyURLs:
+        - "http://localhost/oauth2/callback"
+        - "https://supplerendestonad.dev.adeo.no/oauth2/callback"
+        - "https://supplerendestonad.intern.dev.nav.no/oauth2/callback"
+  webproxy: true
+  replicas:
+    min: 2
+  liveness:
+    path: isAlive
+    port: 8080
+    initialDelay: 5
+  readiness:
+    path: isReady
+    port: 8080
+    initialDelay: 5
+  ingresses:
+    - https://supplerendestonad.dev.adeo.no
+    - https://supplerendestonad.intern.dev.nav.no
+  vault:
+    enabled: true
+  env:
+      - name: NODE_ENV
+        value: production
+      - name: REDIS_HOST
+        value: su-se-framover-redis
+      - name: SU_SE_BAKOVER_URL
+        value: http://su-se-bakover
+      - name: NPM_CONFIG_CACHE
+        value: /tmp
+      - name: AZURE_GROUP_ATTESTANT
+        value: "d75164fa-39e6-4149-956e-8404bc9080b6"
+      - name: AZURE_GROUP_VEILEDER
+        value: "062d4814-8538-4f3a-bcb9-32821af7909a"
+      - name: AZURE_GROUP_SAKSBEHANDLER
+        value: "0ba009c4-d148-4a51-b501-4b1cf906889d"
+      - name: AZURE_GROUP_DRIFT
+        value: "5ccd88bd-58d6-41a7-9652-5e0597b00f9b"
+      - name: SU_SE_BAKOVER_AAD_APP_NAME
+        value: "dev-gcp.supstonad.su-se-bakover"
+      - name: AUTH_LOGIN_REDIRECT_URI
+        value: "https://supplerendestonad.intern.dev.nav.no/oauth2/callback"
+      - name: AUTH_LOGOUT_REDIRECT_URI
+        value: "https://supplerendestonad.intern.dev.nav.no/"
+      - name: LOG_LEVEL
+        value: "debug"
+  envFrom:
+    - secret: redis-password
+    - secret: su-se-framover-session-key
+---
+apiVersion: nais.io/v1alpha1
+kind: Application
+metadata:
+  labels:
+    team: supstonad
+  name: su-se-framover-redis
+  namespace: supstonad
+  annotations:
+    nais.io/run-as-group: "0" # Fix permissions for bitnami/redis
+    nais.io/read-only-file-system: "false" # Fix permissions for bitnami/redis
+spec:
+  image: bitnamilegacy/redis:6.0
+  port: 6379
+  replicas: # A single Redis-app doesn't scale
+    min: 1
+    max: 1 # More replicas doesn't sync
+  resources: # you need to monitor the resource usage yourself
+    limits:
+      memory: 128Mi
+    requests:
+      cpu: 100m
+      memory: 128Mi
+  service:
+    port: 6379
+    protocol: redis
+  envFrom:
+    - secret: redis-password
