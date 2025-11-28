@@ -30,7 +30,6 @@ spec:
         - "http://localhost/oauth2/callback"
         - "https://supplerendestonad.dev.adeo.no/oauth2/callback"
         - "https://supplerendestonad.intern.dev.nav.no/oauth2/callback"
-  webproxy: true
   replicas:
     min: 2
   liveness:
@@ -44,8 +43,6 @@ spec:
   ingresses:
     - https://supplerendestonad.dev.adeo.no
     - https://supplerendestonad.intern.dev.nav.no
-  vault:
-    enabled: true
   env:
       - name: NODE_ENV
         value: production
