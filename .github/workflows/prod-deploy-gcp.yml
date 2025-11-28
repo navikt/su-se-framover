@@ -1,4 +1,4 @@
-name: Deploy til prod ved release
+name: Deploy til prod-gcp ved release
 
 on:
     release:
