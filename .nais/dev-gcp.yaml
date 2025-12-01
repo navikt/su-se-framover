@@ -42,6 +42,9 @@ spec:
   ingresses:
     - https://supplerendestonad.intern.dev.nav.no
     - https://supplerendestonad.dev-gcp.nav.cloud.nais.io
+    - https://supstonad.intern.dev.nav.no
+    - https://superstonad.intern.dev.nav.no
+    - https://susp.intern.dev.nav.no
   env:
       - name: NODE_ENV
         value: production
