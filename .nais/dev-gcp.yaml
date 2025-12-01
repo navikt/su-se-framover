@@ -41,6 +41,7 @@ spec:
     initialDelay: 5
   ingresses:
     - https://supplerendestonad.intern.dev.nav.no
+    - https://supplerendestonad.dev-gcp.nav.cloud.nais.io
   env:
       - name: NODE_ENV
         value: production
