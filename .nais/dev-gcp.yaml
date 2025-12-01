@@ -69,6 +69,10 @@ spec:
   envFrom:
     - secret: redis-password
     - secret: su-se-framover-session-key
+  accessPolicy:
+    outbound:
+      rules:
+        - application: su-se-framover-redis
 ---
 apiVersion: nais.io/v1alpha1
 kind: Application
@@ -97,3 +101,7 @@ spec:
     protocol: redis
   envFrom:
     - secret: redis-password
+  accessPolicy:
+    inbound:
+      rules:
+        - application: su-se-framover
