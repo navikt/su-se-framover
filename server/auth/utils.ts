@@ -1,4 +1,3 @@
-import { HttpsProxyAgent } from 'https-proxy-agent';
 import * as OpenIdClient from 'openid-client';
 import { TokenSet } from 'openid-client';
 import { Logger } from 'pino';
@@ -25,12 +24,12 @@ function getTokenSetById(tokenSets: TokenSets, id: string): TokenSet | null {
 export async function getOrRefreshOnBehalfOfToken(
     authClient: OpenIdClient.Client,
     tokenSets: TokenSets,
-    log: Logger,
+    log: Logger
 ): Promise<TokenSet> {
     const selfToken = getTokenSetById(tokenSets, tokenSetSelfId);
     if (!selfToken) {
         throw Error(
-            'getOrRefreshOnBehalfOfToken: Missing self-token in tokenSets. This should have been set by the middleware.',
+            'getOrRefreshOnBehalfOfToken: Missing self-token in tokenSets. This should have been set by the middleware.'
         );
     }
     const onBehalfOfToken = getTokenSetById(tokenSets, Config.auth.suSeBakoverUri);
@@ -55,7 +54,7 @@ async function getOrRefreshSelfTokenIfExpired(
     authClient: OpenIdClient.Client,
     selfToken: TokenSet,
     tokenSets: TokenSets,
-    log: Logger,
+    log: Logger
 ): Promise<TokenSet> {
     if (selfToken.expired()) {
         // Denne vil ikke bli kalt initielt, men først når OBO/self-token har expired
@@ -80,7 +79,7 @@ async function requestOnBehalfOfToken(authClient: OpenIdClient.Client, tokenSet:
         // mens AAD vil sette klient-ID-en som audience.
         // Vi trikser det derfor til her heller enn at su-se-bakover må ha noe spesialhåndtering
         scope: `api://${Config.auth.suSeBakoverUri}/.default`,
-        assertion: tokenSet.access_token,
+        assertion: tokenSet.access_token
     };
     const clientAssertionPayload = { aud: authClient.issuer.metadata['token_endpoint'] };
     return await authClient.grant(grantBody, { clientAssertionPayload });
@@ -88,12 +87,6 @@ async function requestOnBehalfOfToken(authClient: OpenIdClient.Client, tokenSet:
 
 export async function getOpenIdClient(issuerUrl: string) {
     try {
-        if (Config.server.proxy) {
-            const proxyAgent = new HttpsProxyAgent(Config.server.proxy);
-            OpenIdClient.custom.setHttpOptionsDefaults({
-                agent: proxyAgent,
-            });
-        }
         const issuer = await OpenIdClient.Issuer.discover(issuerUrl);
 
         return new issuer.Client(
@@ -101,9 +94,9 @@ export async function getOpenIdClient(issuerUrl: string) {
                 client_id: Config.auth.clientId,
                 redirect_uris: [Config.auth.loginRedirectUri],
                 token_endpoint_auth_method: 'private_key_jwt',
-                token_endpoint_auth_signing_alg: 'RS256',
+                token_endpoint_auth_signing_alg: 'RS256'
             },
-            Config.auth.jwks,
+            Config.auth.jwks
         );
     } catch (e) {
         logger.error(`Could not discover issuer: ${issuerUrl}`);
