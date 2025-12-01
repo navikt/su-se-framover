@@ -28,7 +28,10 @@ spec:
           - id: "5ccd88bd-58d6-41a7-9652-5e0597b00f9b" # 0000-GA-SU-UFOR-DRIFT
       replyURLs:
         - "http://localhost/oauth2/callback"
-        - "https://supplerendestonad.intern.dev.nav.no/oauth2/callback"
+        - "https://supplerendestonad.dev-gcp.nav.cloud.nais.io/oauth2/callback"
+        - "https://supstonad.intern.dev.nav.no/oauth2/callback"
+        - "https://superstonad.intern.dev.nav.no/oauth2/callback"
+        - "https://susp.intern.dev.nav.no/oauth2/callback"
   replicas:
     min: 2
   liveness:
