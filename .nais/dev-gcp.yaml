@@ -68,9 +68,9 @@ spec:
       - name: SU_SE_BAKOVER_AAD_APP_NAME
         value: "dev-gcp.supstonad.su-se-bakover"
       - name: AUTH_LOGIN_REDIRECT_URI
-        value: "https://supplerendestonad.intern.dev.nav.no/oauth2/callback"
+        value: "https://supplerendestonad.dev-gcp.nav.cloud.nais.io/oauth2/callback"
       - name: AUTH_LOGOUT_REDIRECT_URI
-        value: "https://supplerendestonad.intern.dev.nav.no/"
+        value: "https://supplerendestonad.dev-gcp.nav.cloud.nais.io/"
       - name: LOG_LEVEL
         value: "debug"
   envFrom:
