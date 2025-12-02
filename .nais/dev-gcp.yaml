@@ -80,6 +80,7 @@ spec:
     outbound:
       rules:
         - application: su-se-framover-redis
+        - application: su-se-bakover
 ---
 apiVersion: nais.io/v1alpha1
 kind: Application
