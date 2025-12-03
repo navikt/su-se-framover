@@ -32,6 +32,19 @@ const OppsummeringAvTilbakekrevingsbehandling = (props: {
                     <OppsummeringAvMetaInformasjon behandling={props.behandling} />
                     <UnderkjenteAttesteringer attesteringer={props.behandling.attesteringer} />
                     <OppsummeringAvVurdering vurderinger={props.behandling.vurderinger} />
+
+                    {props.behandling.notat && (
+                        <div>
+                            <Heading size="small" level="6" spacing>
+                                {formatMessage('oppsummering.tilbakekrevingsbehandling.panel.notat.tittel')}
+                            </Heading>
+                            {
+                                <BodyLong className={styles.notat} spacing>
+                                    {props.behandling.notat}
+                                </BodyLong>
+                            }
+                        </div>
+                    )}
                 </>
             ) : (
                 <>
