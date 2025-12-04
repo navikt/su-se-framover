@@ -126,6 +126,9 @@ export default async function setupAuth(app: Express, authClient: OpenIdClient.C
             req.log.info('Session before login:', req.session);
             if (typeof req.query.redirectTo === 'string') {
                 req.session.redirectTo = req.query.redirectTo;
+            } else {
+                const fullUri = `${req.protocol}://${req.get('host')}${req.originalUrl}`;
+                req.session.redirectTo = fullUri.replace(/\/login$/, '/');
             }
             next();
         },

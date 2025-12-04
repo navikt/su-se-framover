@@ -33,7 +33,7 @@ spec:
         - "https://superstonad.intern.dev.nav.no/oauth2/callback"
         - "https://susp.intern.dev.nav.no/oauth2/callback"
   replicas:
-    min: 2
+    min: 1
   liveness:
     path: isAlive
     port: 8080
