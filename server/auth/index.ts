@@ -1,8 +1,7 @@
-import http from 'http';
-
 import RedisStore from 'connect-redis';
 import { Express } from 'express';
 import session from 'express-session';
+import http from 'http';
 import * as OpenIdClient from 'openid-client';
 import passport from 'passport';
 import { createClient } from 'redis';

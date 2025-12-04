@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction } from 'express';
+import { NextFunction, Request, Response } from 'express';
 
 const redirectMiddleware = (request: Request, res: Response, next: NextFunction) => {
     const forwardedHostHeader: string | undefined = request.header('x-forwarded-host');
