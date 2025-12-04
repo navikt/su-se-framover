@@ -38,11 +38,9 @@ const OppsummeringAvTilbakekrevingsbehandling = (props: {
                             <Heading size="small" level="6" spacing>
                                 {formatMessage('oppsummering.tilbakekrevingsbehandling.panel.notat.tittel')}
                             </Heading>
-                            {
-                                <BodyLong className={styles.notat} spacing>
-                                    {props.behandling.notat}
-                                </BodyLong>
-                            }
+                            <BodyLong className={styles.notat} spacing>
+                                {props.behandling.notat}
+                            </BodyLong>
                         </div>
                     )}
                 </>
@@ -63,11 +61,9 @@ const OppsummeringAvTilbakekrevingsbehandling = (props: {
                                 <Heading size="small" level="6" spacing>
                                     {formatMessage('oppsummering.tilbakekrevingsbehandling.panel.notat.tittel')}
                                 </Heading>
-                                {
-                                    <BodyLong className={styles.notat} spacing>
-                                        {props.behandling.notat}
-                                    </BodyLong>
-                                }
+                                <BodyLong className={styles.notat} spacing>
+                                    {props.behandling.notat}
+                                </BodyLong>
                             </div>
                         )}
                     </Oppsummeringspanel>
