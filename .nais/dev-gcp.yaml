@@ -66,7 +66,7 @@ spec:
         value: "5ccd88bd-58d6-41a7-9652-5e0597b00f9b"
       - name: SU_SE_BAKOVER_AAD_APP_NAME
         value: "dev-gcp.supstonad.su-se-bakover"
-      - name: AUTH_LOGIN_REDIRECT_URIS
+      - name: AUTH_LOGIN_REDIRECT_URI
         value: "https://supplerendestonad.dev-gcp.nav.cloud.nais.io/oauth2/callback,https://supstonad.intern.dev.nav.no/oauth2/callback,https://superstonad.intern.dev.nav.no/oauth2/callback,https://susp.intern.dev.nav.no/oauth2/callback"
       - name: AUTH_LOGOUT_REDIRECT_URI
         value: "https://supplerendestonad.dev-gcp.nav.cloud.nais.io/"
