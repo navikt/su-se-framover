@@ -218,7 +218,11 @@ const hentWarnings = (
     if (opphør) {
         warnings.push('info.opphør');
     }
-    if (harUteståendeKravgrunnlag) {
+    if (
+        harUteståendeKravgrunnlag &&
+        harSimulering(revurdering) &&
+        simuleringenInneholderFeilutbetaling(revurdering.simulering)
+    ) {
         warnings.push('aapent.kravgrunnlag.alert');
     }
     return warnings;
