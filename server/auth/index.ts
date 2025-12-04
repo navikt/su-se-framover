@@ -123,12 +123,13 @@ export default async function setupAuth(app: Express, authClient: OpenIdClient.C
     app.get(
         '/login',
         (req, _res, next) => {
+            req.log.info('Session before login:', req.session);
             if (typeof req.query.redirectTo === 'string') {
                 req.session.redirectTo = req.query.redirectTo;
             }
             next();
         },
-        passport.authenticate(authName, { failureRedirect: '/login-failed' }),
+        passport.authenticate(authName, { failureRedirect: '/login-failed', successRedirect: '/' }),
     );
     app.get('/logout', (req, res) => {
         req.logout(() => req.log.warn('Utlogging av bruker feilet.'));
@@ -140,6 +141,7 @@ export default async function setupAuth(app: Express, authClient: OpenIdClient.C
         });
     });
     app.get('/oauth2/callback', passport.authenticate(authName, { failureRedirect: '/login-failed' }), (req, res) => {
+        req.log.info('Session on callback:', req.session);
         res.redirect(req.session.redirectTo ?? '/');
     });
     app.get('/login-failed', (_req, res) => {
