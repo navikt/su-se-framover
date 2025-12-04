@@ -6,24 +6,6 @@ import { AvslagBody, LukkSøknadBodyTypes } from '~src/api/søknadApi';
 import { Sak } from '~src/types/Sak';
 import { LukkSøknadResponse } from '~src/types/Søknad';
 
-export const hentLukketSøknadBrevutkast = createAsyncThunk<
-    { objectUrl: string },
-    {
-        søknadId: string;
-        body: LukkSøknadBodyTypes;
-    },
-    { rejectValue: ApiError }
->('soknad/hentLukketSøknadBrevutkast', async ({ søknadId, body }, thunkApi) => {
-    const res = await søknadApi.hentLukketSøknadsBrevutkast({
-        søknadId,
-        body,
-    });
-    if (res.status === 'ok') {
-        return { objectUrl: URL.createObjectURL(res.data) };
-    }
-    return thunkApi.rejectWithValue(res.error);
-});
-
 export const lukkSøknad = createAsyncThunk<
     LukkSøknadResponse,
     {

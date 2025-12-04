@@ -276,7 +276,7 @@ export interface SuccessNotificationState {
     notification?: string;
 }
 
-export const createSakIntroLocation = (
+const createSakIntroLocation = (
     message: string,
     sakid: string,
 ): { path: string; state: SuccessNotificationState } => {

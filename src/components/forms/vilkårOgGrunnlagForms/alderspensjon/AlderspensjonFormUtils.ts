@@ -74,7 +74,7 @@ export const alderspensjonSchema = yup.object<AlderspensjonPeriodisertFormData>(
         .required(),
 });
 
-export const eqAlderspensjonFormData = struct<AlderspensjonFormData>({
+const eqAlderspensjonFormData = struct<AlderspensjonFormData>({
     periode: eqNullable(eqPeriode),
     folketrygd: eqNullable(S.Eq),
     andreNorske: eqNullable(S.Eq),

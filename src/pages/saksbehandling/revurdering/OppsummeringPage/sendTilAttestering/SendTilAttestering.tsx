@@ -37,7 +37,7 @@ export interface BrevvalgFormData {
     begrunnelse: Nullable<string>;
 }
 
-export const UNDERSCORE_REGEX = /^((?!_____)[\s\S])*$/;
+const UNDERSCORE_REGEX = /^((?!_____)[\s\S])*$/;
 const brevvalgSchema = (revurdering: InformasjonsRevurdering) =>
     yup.object<BrevvalgFormData>({
         valg: yup

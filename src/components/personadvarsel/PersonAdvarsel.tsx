@@ -13,7 +13,7 @@ interface EtikettInfo {
     variant: TagVariant;
 }
 
-export const TagWithBlack = (props: { etikett: EtikettInfo }) => {
+const TagWithBlack = (props: { etikett: EtikettInfo }) => {
     return (
         <Tag
             className={classNames(styles.etikett, {
@@ -29,7 +29,7 @@ export const TagWithBlack = (props: { etikett: EtikettInfo }) => {
     );
 };
 
-export const getEtiketter = (person: Person) => {
+const getEtiketter = (person: Person) => {
     const { adressebeskyttelse, skjermet } = person;
     const etiketter: EtikettInfo[] = [];
 
