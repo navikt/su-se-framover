@@ -79,13 +79,11 @@ const RevurderingBeregnOgSimuler = (props: {
                                         <Alert variant={'warning'}>
                                             {formatMessage('simulering.feilutbetaling.alert')}
                                         </Alert>
-                                        {props.harUteståendeKravgrunnlag &&
-                                            harSimulering(res.revurdering) &&
-                                            simuleringenInneholderFeilutbetaling(res.revurdering.simulering) && (
-                                                <Alert variant={'warning'}>
-                                                    {formatMessage('aapent.kravgrunnlag.alert')}
-                                                </Alert>
-                                            )}
+                                        {props.harUteståendeKravgrunnlag && (
+                                            <Alert variant={'warning'}>
+                                                {formatMessage('aapent.kravgrunnlag.alert')}
+                                            </Alert>
+                                        )}
                                     </>
                                 )}
                             <Beregningblokk revurdering={res.revurdering} />
