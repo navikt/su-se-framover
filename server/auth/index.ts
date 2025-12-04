@@ -123,7 +123,7 @@ export default async function setupAuth(app: Express, authClient: OpenIdClient.C
     app.get(
         '/login',
         (req, _res, next) => {
-            req.log.info('Session before login:', req.session);
+            req.log.info({ session: req.session }, 'Session before login');
             if (typeof req.query.redirectTo === 'string') {
                 req.session.redirectTo = req.query.redirectTo;
             } else {
@@ -144,7 +144,7 @@ export default async function setupAuth(app: Express, authClient: OpenIdClient.C
         });
     });
     app.get('/oauth2/callback', passport.authenticate(authName, { failureRedirect: '/login-failed' }), (req, res) => {
-        req.log.info('Session on callback:', req.session);
+        req.log.info({ session: req.session }, 'Session after login');
         res.redirect(req.session.redirectTo ?? '/');
     });
     app.get('/login-failed', (_req, res) => {
