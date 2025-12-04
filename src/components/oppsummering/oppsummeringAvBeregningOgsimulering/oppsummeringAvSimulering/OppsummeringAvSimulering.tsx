@@ -10,20 +10,11 @@ import { combineOptions, pipe } from '~src/lib/fp';
 import { useI18n } from '~src/lib/i18n';
 import sharedMessages from '~src/pages/saksbehandling/søknadsbehandling/beregning/beregning-nb';
 import { Simulering, SimuleringsperiodeOppsummering } from '~src/types/Simulering';
-import { Søknadsbehandling } from '~src/types/Søknadsbehandling';
 import { groupWhile } from '~src/utils/array/arrayUtils';
 import { formatMonthYear } from '~src/utils/date/dateUtils';
 import { formatCurrency } from '~src/utils/format/formatUtils';
 import styles from './OppsummeringAvSimulering.module.less';
 import messages from './OppsummeringAvSimulering-nb';
-
-export const OppsummeringAvSimulering = (props: { behandling: Søknadsbehandling }) => {
-    const { formatMessage } = useI18n({ messages });
-    if (!props.behandling.simulering) {
-        return <div>{formatMessage('feil.ingenSimulering')}</div>;
-    }
-    return <Utbetalingssimulering simulering={props.behandling.simulering} />;
-};
 
 export const Utbetalingssimulering = (props: { simulering: Simulering; utenTittel?: boolean }) => {
     const { formatMessage } = useI18n({ messages: { ...sharedMessages, ...messages } });

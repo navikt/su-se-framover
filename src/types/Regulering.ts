@@ -66,27 +66,11 @@ export enum ÅrsakTilManuellReguleringKategori {
 
 export interface YtelseErMidlertidigStanset extends ÅrsakForManuell {}
 
-//TODO: SOS kan disse slettes?
-export interface ForventetInntektErStørreEnn0 extends ÅrsakForManuell {}
-export interface AutomatiskSendingTilUtbetalingFeilet extends ÅrsakForManuell {
-    begrunnelse: string;
-}
-export interface VedtakstidslinjeErIkkeSammenhengende extends ÅrsakForManuell {
-    begrunnelse: string;
-}
-
 export interface ÅrsakForManuell {
     begrunnelse: Nullable<string>;
     type: ÅrsakTilManuellReguleringKategori;
 }
 
-export interface FradragMåHåndteresManuelt extends ÅrsakForManuell {
-    begrunnelse: null;
-}
-
-export interface UtbetalingFeilet extends ÅrsakForManuell {
-    begrunnelse: null;
-}
 export interface BrukerManglerSupplement extends ÅrsakForManuell {
     fradragskategori: Fradragskategori;
     fradragTilhører: FradragTilhører;
@@ -94,12 +78,6 @@ export interface BrukerManglerSupplement extends ÅrsakForManuell {
 }
 
 export interface SupplementInneholderIkkeFradraget extends ÅrsakForManuell {
-    fradragskategori: Fradragskategori;
-    fradragTilhører: FradragTilhører;
-    begrunnelse: string;
-}
-
-export interface MerEnn1Eps extends ÅrsakForManuell {
     fradragskategori: Fradragskategori;
     fradragTilhører: FradragTilhører;
     begrunnelse: string;

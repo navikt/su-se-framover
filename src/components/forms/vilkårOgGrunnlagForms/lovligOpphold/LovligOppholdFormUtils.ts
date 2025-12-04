@@ -26,7 +26,7 @@ export interface VurderingsperioderLovligOppholdFormData {
     resultat: Nullable<Vilkårstatus>;
 }
 
-export const eqVurderingsperioderLovligOppholdFormData = struct<VurderingsperioderLovligOppholdFormData>({
+const eqVurderingsperioderLovligOppholdFormData = struct<VurderingsperioderLovligOppholdFormData>({
     periode: eqNullable(eqPeriode),
     resultat: eqNullable(S.Eq),
 });

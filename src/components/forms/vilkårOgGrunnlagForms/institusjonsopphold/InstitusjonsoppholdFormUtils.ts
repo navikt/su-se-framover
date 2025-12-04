@@ -26,7 +26,7 @@ export interface VurderingsperioderInstitusjonsoppholdFormData {
     resultat: Nullable<Vilkårstatus>;
 }
 
-export const eqVurderingsperioderInstitusjonsoppholdFormData = struct<VurderingsperioderInstitusjonsoppholdFormData>({
+const eqVurderingsperioderInstitusjonsoppholdFormData = struct<VurderingsperioderInstitusjonsoppholdFormData>({
     periode: eqNullable(eqPeriode),
     resultat: eqNullable(S.Eq),
 });
@@ -35,7 +35,7 @@ export const eqInstitusjonsoppholdFormData = struct<InstitusjonsoppholdVilkårFo
     institusjonsopphold: getEq(eqVurderingsperioderInstitusjonsoppholdFormData),
 });
 
-export const institusjonsoppholdVilkårTilFormData = (
+const institusjonsoppholdVilkårTilFormData = (
     i: InstitusjonsoppholdVilkår,
 ): InstitusjonsoppholdVilkårFormData => ({
     institusjonsopphold: i.vurderingsperioder.map(institusjonsoppholdVurderingsperiodeTilFormData),
@@ -47,14 +47,14 @@ export const institusjonsoppholdVilkårTilFormDataEllerNy = (
 ): InstitusjonsoppholdVilkårFormData =>
     i ? institusjonsoppholdVilkårTilFormData(i) : nyInstitusjonsoppholdVilkårMedEllerUtenPeriode(p);
 
-export const institusjonsoppholdVurderingsperiodeTilFormData = (
+const institusjonsoppholdVurderingsperiodeTilFormData = (
     f: VurderingsperiodeInstitusjonsopphold,
 ): VurderingsperioderInstitusjonsoppholdFormData => ({
     periode: lagDatePeriodeAvStringPeriode(f.periode),
     resultat: f.vurdering,
 });
 
-export const nyInstitusjonsoppholdVilkårMedEllerUtenPeriode = (
+const nyInstitusjonsoppholdVilkårMedEllerUtenPeriode = (
     p?: Periode<string>,
 ): InstitusjonsoppholdVilkårFormData => ({
     institusjonsopphold: [nyVurderingsperiodeInstitusjonsoppholdMedEllerUtenPeriode(p)],
