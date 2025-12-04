@@ -129,7 +129,7 @@ export default async function setupAuth(app: Express, authClient: OpenIdClient.C
             }
             next();
         },
-        passport.authenticate(authName, { failureRedirect: '/login-failed', successRedirect: '/' }),
+        passport.authenticate(authName, { failureRedirect: '/login-failed' }),
     );
     app.get('/logout', (req, res) => {
         req.logout(() => req.log.warn('Utlogging av bruker feilet.'));
