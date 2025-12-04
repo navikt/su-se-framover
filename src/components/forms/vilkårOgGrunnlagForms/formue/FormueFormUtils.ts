@@ -168,9 +168,7 @@ export const formueVilkårFormTilRequest = (
     })),
 });
 
-const formuegrunnlagVerdierTilRequest = (
-    verdier: FormuegrunnlagVerdierFormData,
-): FormuegrunnlagVerdierRequest => ({
+const formuegrunnlagVerdierTilRequest = (verdier: FormuegrunnlagVerdierFormData): FormuegrunnlagVerdierRequest => ({
     verdiIkkePrimærbolig: Number.parseInt(verdier.verdiIkkePrimærbolig, 0),
     verdiEiendommer: Number.parseInt(verdier.verdiEiendommer, 0),
     verdiKjøretøy: Number.parseInt(verdier.verdiKjøretøy, 0),
