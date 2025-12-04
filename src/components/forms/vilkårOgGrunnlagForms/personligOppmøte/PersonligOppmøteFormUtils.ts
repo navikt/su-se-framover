@@ -27,7 +27,7 @@ export interface VurderingsperiodePersonligOppmøteFormData {
     årsakForManglendePersonligOppmøte: Nullable<PersonligOppmøteÅrsak>;
 }
 
-export const eqVurderingsperioderPersonligOppmøteFormData = struct<VurderingsperiodePersonligOppmøteFormData>({
+const eqVurderingsperioderPersonligOppmøteFormData = struct<VurderingsperiodePersonligOppmøteFormData>({
     periode: eqNullable(eqPeriode),
     møttPersonlig: eqNullable(S.Eq),
     årsakForManglendePersonligOppmøte: eqNullable(S.Eq),
@@ -47,7 +47,7 @@ export const personligOppmøteVilkårTilFormDataEllerNy = (
 ): PersonligOppmøteVilkårFormData =>
     f ? personligOppmøteVilkårTilFormData(f) : nyPersonligOppmøteVilkårMedEllerUtenPeriode(p);
 
-export const personligOppmøteVurderingsperiodeTilFormData = (
+const personligOppmøteVurderingsperiodeTilFormData = (
     f: VurderingsperiodePersonligOppmøte,
 ): VurderingsperiodePersonligOppmøteFormData => ({
     periode: lagDatePeriodeAvStringPeriode(f.periode),
@@ -60,7 +60,7 @@ export const personligOppmøteVurderingsperiodeTilFormData = (
     årsakForManglendePersonligOppmøte: f.vurdering,
 });
 
-export const nyPersonligOppmøteVilkårMedEllerUtenPeriode = (p?: Periode<string>): PersonligOppmøteVilkårFormData => ({
+const nyPersonligOppmøteVilkårMedEllerUtenPeriode = (p?: Periode<string>): PersonligOppmøteVilkårFormData => ({
     personligOppmøte: [nyVurderingsperiodePersonligOppmøteMedEllerUtenPeriode(p)],
 });
 
@@ -88,7 +88,7 @@ export const personligOppmøteFormDataTilRequest = (args: {
     })),
 });
 
-export const toPersonligOppmøteÅrsakInnsending = (
+const toPersonligOppmøteÅrsakInnsending = (
     møttPersonlig: Nullable<HarMøttPersonlig>,
     årsak: Nullable<PersonligOppmøteÅrsak>,
 ): PersonligOppmøteÅrsak => {

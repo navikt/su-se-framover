@@ -53,7 +53,7 @@ export interface FormuegrunnlagVerdierFormData {
     depositumskonto: string;
 }
 
-export const eqFormuegrunnlagVerdierFormData = struct<FormuegrunnlagVerdierFormData>({
+const eqFormuegrunnlagVerdierFormData = struct<FormuegrunnlagVerdierFormData>({
     verdiIkkePrimærbolig: S.Eq,
     verdiEiendommer: S.Eq,
     verdiKjøretøy: S.Eq,
@@ -64,7 +64,7 @@ export const eqFormuegrunnlagVerdierFormData = struct<FormuegrunnlagVerdierFormD
     depositumskonto: S.Eq,
 });
 
-export const eqFormuegrunnlagFormData = struct<FormuegrunnlagFormData>({
+const eqFormuegrunnlagFormData = struct<FormuegrunnlagFormData>({
     epsFnr: eqNullable(S.Eq),
     periode: eqNullableDatePeriode,
     søkersFormue: eqFormuegrunnlagVerdierFormData,
@@ -116,7 +116,7 @@ export const nyFormuegrunnlagMedEllerUtenPeriode = (periode?: NullablePeriode): 
     måInnhenteMerInformasjon: false,
 });
 
-export const formuegrunnlagVerdierTilVerdierFormDataEllerNy = (
+const formuegrunnlagVerdierTilVerdierFormDataEllerNy = (
     verdier: Nullable<FormuegrunnlagVerdier>,
 ): FormuegrunnlagVerdierFormData => {
     if (!verdier) {
@@ -168,9 +168,7 @@ export const formueVilkårFormTilRequest = (
     })),
 });
 
-export const formuegrunnlagVerdierTilRequest = (
-    verdier: FormuegrunnlagVerdierFormData,
-): FormuegrunnlagVerdierRequest => ({
+const formuegrunnlagVerdierTilRequest = (verdier: FormuegrunnlagVerdierFormData): FormuegrunnlagVerdierRequest => ({
     verdiIkkePrimærbolig: Number.parseInt(verdier.verdiIkkePrimærbolig, 0),
     verdiEiendommer: Number.parseInt(verdier.verdiEiendommer, 0),
     verdiKjøretøy: Number.parseInt(verdier.verdiKjøretøy, 0),
@@ -183,7 +181,7 @@ export const formuegrunnlagVerdierTilRequest = (
 
 //hvis fraOgMed ikke er utfyllt, eller vi ikke finner en match for fraOgMed,
 //bruker vi den høyeste g-verdien som default
-export const getSenesteHalvGVerdi = (fraOgMed: Nullable<Date>, formuegrenser: Formuegrenser[]) => {
+const getSenesteHalvGVerdi = (fraOgMed: Nullable<Date>, formuegrenser: Formuegrenser[]) => {
     const sortert = formuegrenser
         .slice()
         .sort((a: Formuegrenser, b: Formuegrenser) => Date.parse(b.gyldigFra) - Date.parse(a.gyldigFra));
@@ -200,7 +198,7 @@ export const getSenesteHalvGVerdi = (fraOgMed: Nullable<Date>, formuegrenser: Fo
     return senesteGrense?.beløp ?? sortert[0].beløp;
 };
 
-export const summerFormue = (formue: number[]) => {
+const summerFormue = (formue: number[]) => {
     return formue.reduce((prev, current) => {
         if (isNaN(current)) {
             return prev + 0;

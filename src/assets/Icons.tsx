@@ -1,9 +1,4 @@
-import {
-    CheckmarkCircleFillIcon,
-    ExclamationmarkTriangleFillIcon,
-    InformationSquareFillIcon,
-    XMarkOctagonFillIcon,
-} from '@navikt/aksel-icons';
+import { CheckmarkCircleFillIcon, ExclamationmarkTriangleFillIcon, XMarkOctagonFillIcon } from '@navikt/aksel-icons';
 
 const iconWidth = '30px';
 
@@ -33,14 +28,6 @@ export const WarningIcon = (props: Props) => (
         className={props.className}
         style={{ fontSize: props.width ?? iconWidth }}
         color="var(--a-surface-warning)"
-    />
-);
-
-export const InformationIcon = (props: Props) => (
-    <InformationSquareFillIcon
-        className={props.className}
-        style={{ fontSize: props.width ?? iconWidth }}
-        color="var(--a-surface-info)"
     />
 );
 

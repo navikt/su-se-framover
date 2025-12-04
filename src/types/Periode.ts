@@ -22,11 +22,6 @@ export const eqStringPeriode: Eq<Periode<string>> = struct({
     tilOgMed: S.Eq,
 });
 
-export const eqDatePeriode: Eq<Periode<Date>> = struct({
-    fraOgMed: D.Eq,
-    tilOgMed: D.Eq,
-});
-
 export const eqNullableDatePeriode = struct<{ fraOgMed: Nullable<Date>; tilOgMed: Nullable<Date> }>({
     fraOgMed: eqNullable(D.Eq),
     tilOgMed: eqNullable(D.Eq),

@@ -131,7 +131,7 @@ export function useBrevForhåndsvisning<T>(
  * @param delay - tiden i millisekunder autosaven skal kjøres
  * @param deps - Et set med dependencies som resetter timeren for hver endring
  */
-export const useAutosave = (callback: () => void, delay = 5000, deps: unknown[] = []) => {
+const useAutosave = (callback: () => void, delay = 5000, deps: unknown[] = []) => {
     useEffect(() => {
         if (delay) {
             const interval = setInterval(callback, delay);
