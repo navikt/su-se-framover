@@ -276,10 +276,7 @@ export interface SuccessNotificationState {
     notification?: string;
 }
 
-const createSakIntroLocation = (
-    message: string,
-    sakid: string,
-): { path: string; state: SuccessNotificationState } => {
+const createSakIntroLocation = (message: string, sakid: string): { path: string; state: SuccessNotificationState } => {
     return {
         path: saksoversiktValgtSak.createURL({ sakId: sakid }),
         state: { notification: message },

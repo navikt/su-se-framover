@@ -35,9 +35,7 @@ export const eqInstitusjonsoppholdFormData = struct<InstitusjonsoppholdVilkårFo
     institusjonsopphold: getEq(eqVurderingsperioderInstitusjonsoppholdFormData),
 });
 
-const institusjonsoppholdVilkårTilFormData = (
-    i: InstitusjonsoppholdVilkår,
-): InstitusjonsoppholdVilkårFormData => ({
+const institusjonsoppholdVilkårTilFormData = (i: InstitusjonsoppholdVilkår): InstitusjonsoppholdVilkårFormData => ({
     institusjonsopphold: i.vurderingsperioder.map(institusjonsoppholdVurderingsperiodeTilFormData),
 });
 
@@ -54,9 +52,7 @@ const institusjonsoppholdVurderingsperiodeTilFormData = (
     resultat: f.vurdering,
 });
 
-const nyInstitusjonsoppholdVilkårMedEllerUtenPeriode = (
-    p?: Periode<string>,
-): InstitusjonsoppholdVilkårFormData => ({
+const nyInstitusjonsoppholdVilkårMedEllerUtenPeriode = (p?: Periode<string>): InstitusjonsoppholdVilkårFormData => ({
     institusjonsopphold: [nyVurderingsperiodeInstitusjonsoppholdMedEllerUtenPeriode(p)],
 });
 

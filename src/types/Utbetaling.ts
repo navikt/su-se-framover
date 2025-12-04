@@ -1,4 +1,3 @@
-
 export interface NyeUtbetalingslinjerResponse {
     success: UtbetalingslinjeSuccessResponse[];
     failed: UtbetalingslinjeErrorResponse[];
