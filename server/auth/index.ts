@@ -120,20 +120,22 @@ export default async function setupAuth(app: Express, authClient: OpenIdClient.C
         done(null, user as Express.User);
     });
 
-    app.get(
-        '/login',
-        (req, _res, next) => {
-            req.log.info({ session: req.session }, 'Session before login');
-            if (typeof req.query.redirectTo === 'string') {
-                req.session.redirectTo = req.query.redirectTo;
-            } else {
-                const fullUri = `${req.protocol}://${req.get('host')}${req.originalUrl}`;
-                req.session.redirectTo = fullUri.replace(/\/login$/, '/');
-            }
-            next();
-        },
-        passport.authenticate(authName, { failureRedirect: '/login-failed' }),
-    );
+    app.get('/login', (req, res, next) => {
+        const { redirectTo } = req.query;
+
+        // Denne fungerer bare hvis man allerede har vært logget inn også får en timeout
+        if (typeof redirectTo === 'string') {
+            req.session.redirectTo = redirectTo;
+        }
+
+        //Beholder login uri i state for OAuth for førstegangsinnlogging
+        const state = redirectTo
+            ? Buffer.from(JSON.stringify({ redirectTo })).toString('base64')
+            : undefined;
+
+        passport.authenticate(authName, { failureRedirect: '/login-failed', state })(req, res, next);
+    });
+
     app.get('/logout', (req, res) => {
         req.logout(() => req.log.warn('Utlogging av bruker feilet.'));
         req.session.destroy(() => {
@@ -143,10 +145,32 @@ export default async function setupAuth(app: Express, authClient: OpenIdClient.C
             res.redirect(endSessionUrl);
         });
     });
-    app.get('/oauth2/callback', passport.authenticate(authName, { failureRedirect: '/login-failed' }), (req, res) => {
-        req.log.info({ session: req.session }, 'Session after login');
-        res.redirect(req.session.redirectTo ?? '/');
-    });
+    app.get(
+        '/oauth2/callback',
+        passport.authenticate(authName, { failureRedirect: '/login-failed' }),
+        (req, res) => {
+            let redirectUrl;
+            if (typeof req.query.state === 'string') {
+                try {
+                    const decoded = Buffer.from(req.query.state, 'base64').toString('utf-8');
+                    const { redirectTo } = JSON.parse(decoded);
+                    if (typeof redirectTo === 'string') {
+                        redirectUrl = redirectTo;
+                    }
+                } catch (err) {
+                    // malformed state, ignore
+                }
+            }
+
+            // fallback to session
+            if (!redirectUrl) redirectUrl = req.session.redirectTo;
+
+            // clear session value to avoid stale redirects
+            delete req.session.redirectTo;
+
+            res.redirect(redirectUrl ?? '/');
+        }
+    );
     app.get('/login-failed', (_req, res) => {
         res.send('login failed');
     });
