@@ -177,7 +177,9 @@ export default createSlice({
                 state.sak,
                 RemoteData.map((sak) => ({
                     ...sak,
-                    behandlinger: [...sak.behandlinger, action.payload],
+                    behandlinger: sak.behandlinger.some((b) => b.id === action.payload.id)
+                        ? sak.behandlinger.map((b) => (b.id === action.payload.id ? action.payload : b))
+                        : [...sak.behandlinger, action.payload],
                 })),
             );
         });
