@@ -27,8 +27,6 @@ spec:
           - id: "062d4814-8538-4f3a-bcb9-32821af7909a" # 0000-GA-SU-UFOR-SAKSBEHANDLER
           - id: "5ccd88bd-58d6-41a7-9652-5e0597b00f9b" # 0000-GA-SU-UFOR-DRIFT
       replyURLs:
-        - "http://localhost/oauth2/callback"
-        - "https://supplerendestonad.dev-gcp.nav.cloud.nais.io/oauth2/callback"
         - "https://supstonad.intern.dev.nav.no/oauth2/callback"
         - "https://superstonad.intern.dev.nav.no/oauth2/callback"
         - "https://susp.intern.dev.nav.no/oauth2/callback"
@@ -43,7 +41,6 @@ spec:
     port: 8080
     initialDelay: 5
   ingresses:
-    - https://supplerendestonad.dev-gcp.nav.cloud.nais.io
     - https://supstonad.intern.dev.nav.no
     - https://superstonad.intern.dev.nav.no
     - https://susp.intern.dev.nav.no

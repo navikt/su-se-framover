@@ -135,7 +135,7 @@ export default async function setupAuth(app: Express, authClient: OpenIdClient.C
         }
         const redirectUri = `${req.protocol}://${req.get('host')}/oauth2/callback`;
 
-        req.log.info(`Redirect set to ${redirectTo}`)
+        req.log.info(`Redirect set to ${redirectUri} session: ${redirectTo}`)
         passport.authenticate(authName, { failureRedirect: '/login-failed', callbackURL: redirectUri } as OidcAuthenticateOptions)(req, res, next);
     });
 
