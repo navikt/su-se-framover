@@ -28,8 +28,6 @@ spec:
           - id: "5ccd88bd-58d6-41a7-9652-5e0597b00f9b" # 0000-GA-SU-UFOR-DRIFT
       replyURLs:
         - "https://supstonad.intern.dev.nav.no/oauth2/callback"
-        - "https://superstonad.intern.dev.nav.no/oauth2/callback"
-        - "https://susp.intern.dev.nav.no/oauth2/callback"
   replicas:
     min: 1
   liveness:
@@ -42,8 +40,6 @@ spec:
     initialDelay: 5
   ingresses:
     - https://supstonad.intern.dev.nav.no
-    - https://superstonad.intern.dev.nav.no
-    - https://susp.intern.dev.nav.no
   env:
       - name: NODE_ENV
         value: production
@@ -64,9 +60,9 @@ spec:
       - name: SU_SE_BAKOVER_AAD_APP_NAME
         value: "dev-gcp.supstonad.su-se-bakover"
       - name: AUTH_LOGIN_REDIRECT_URI
-        value: "https://supplerendestonad.dev-gcp.nav.cloud.nais.io/oauth2/callback,https://supstonad.intern.dev.nav.no/oauth2/callback,https://superstonad.intern.dev.nav.no/oauth2/callback,https://susp.intern.dev.nav.no/oauth2/callback"
+        value: "https://supstonad.intern.dev.nav.no/oauth2/callback"
       - name: AUTH_LOGOUT_REDIRECT_URI
-        value: "https://supplerendestonad.dev-gcp.nav.cloud.nais.io/"
+        value: "https://supstonad.intern.dev.nav.no/"
       - name: LOG_LEVEL
         value: "debug"
   envFrom:

@@ -5,7 +5,6 @@ import http from 'http';
 import * as OpenIdClient from 'openid-client';
 import passport from 'passport';
 import { createClient } from 'redis';
-import { AuthenticateOptions } from 'passport';
 import * as Config from '../config.js';
 
 import * as AuthUtils from './utils.js';
@@ -14,11 +13,6 @@ declare module 'express-session' {
     interface SessionData {
         redirectTo?: string;
     }
-}
-
-// authorizationRequestParams in https://github.com/panva/openid-client/blob/main/src/passport.ts#L339
-interface OidcAuthenticateOptions extends AuthenticateOptions {
-    callbackURL?: string;
 }
 
 export type TokenSets = { [key: string]: OpenIdClient.TokenSet };
@@ -78,6 +72,7 @@ async function getStrategy(authClient: OpenIdClient.Client) {
         {
             client: authClient,
             params: {
+
                 response_type: Config.auth.responseType,
                 response_mode: Config.auth.responseMode,
                 scope: `openid offline_access ${Config.auth.clientId}/.default`,
@@ -91,7 +86,6 @@ async function getStrategy(authClient: OpenIdClient.Client) {
             tokenSet: OpenIdClient.TokenSet,
             done: (err: null, user?: Express.User) => void,
         ) => {
-            req.log.info(`Strategy callback url ${req.url} with session ${tokenSet.session_state ?? 'no session state'}`)
             if (!tokenSet.expired()) {
                 req.log.debug('OpenIdClient.Strategy: Mapping tokenSet to User.');
                 return done(null, {
@@ -133,10 +127,8 @@ export default async function setupAuth(app: Express, authClient: OpenIdClient.C
         if (typeof redirectTo === 'string') {
             req.session.redirectTo = redirectTo;
         }
-        const redirectUri = `${req.protocol}://${req.get('host')}/oauth2/callback`;
 
-        req.log.info(`Redirect set to ${redirectUri} session: ${redirectTo}`)
-        passport.authenticate(authName, { failureRedirect: '/login-failed', callbackURL: redirectUri } as OidcAuthenticateOptions)(req, res, next);
+        passport.authenticate(authName, { failureRedirect: '/login-failed' })(req, res, next);
     });
 
     app.get('/logout', (req, res) => {
