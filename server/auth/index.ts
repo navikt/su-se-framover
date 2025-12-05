@@ -120,16 +120,16 @@ export default async function setupAuth(app: Express, authClient: OpenIdClient.C
         done(null, user as Express.User);
     });
 
-    app.get('/login', (req, res, next) => {
-        const { redirectTo } = req.query;
-
-        // Denne fungerer bare hvis man allerede har vært logget inn også får en timeout
-        if (typeof redirectTo === 'string') {
-            req.session.redirectTo = redirectTo;
-        }
-
-        passport.authenticate(authName, { failureRedirect: '/login-failed' })(req, res, next);
-    });
+    app.get(
+        '/login',
+        (req, _res, next) => {
+            if (typeof req.query.redirectTo === 'string') {
+                req.session.redirectTo = req.query.redirectTo;
+            }
+            next();
+        },
+        passport.authenticate(authName, { failureRedirect: '/login-failed' }),
+    );
 
     app.get('/logout', (req, res) => {
         req.logout(() => req.log.warn('Utlogging av bruker feilet.'));
