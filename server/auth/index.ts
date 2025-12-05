@@ -1,12 +1,10 @@
-import http from 'http';
-
 import RedisStore from 'connect-redis';
 import { Express } from 'express';
 import session from 'express-session';
+import http from 'http';
 import * as OpenIdClient from 'openid-client';
 import passport from 'passport';
 import { createClient } from 'redis';
-
 import * as Config from '../config.js';
 
 import * as AuthUtils from './utils.js';
@@ -74,6 +72,7 @@ async function getStrategy(authClient: OpenIdClient.Client) {
         {
             client: authClient,
             params: {
+
                 response_type: Config.auth.responseType,
                 response_mode: Config.auth.responseMode,
                 scope: `openid offline_access ${Config.auth.clientId}/.default`,
@@ -131,6 +130,7 @@ export default async function setupAuth(app: Express, authClient: OpenIdClient.C
         },
         passport.authenticate(authName, { failureRedirect: '/login-failed' }),
     );
+
     app.get('/logout', (req, res) => {
         req.logout(() => req.log.warn('Utlogging av bruker feilet.'));
         req.session.destroy(() => {

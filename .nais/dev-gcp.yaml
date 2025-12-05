@@ -27,11 +27,9 @@ spec:
           - id: "062d4814-8538-4f3a-bcb9-32821af7909a" # 0000-GA-SU-UFOR-SAKSBEHANDLER
           - id: "5ccd88bd-58d6-41a7-9652-5e0597b00f9b" # 0000-GA-SU-UFOR-DRIFT
       replyURLs:
-        - "http://localhost/oauth2/callback"
-        - "https://supplerendestonad.dev.adeo.no/oauth2/callback"
-        - "https://supplerendestonad.intern.dev.nav.no/oauth2/callback"
+        - "https://supstonad.intern.dev.nav.no/oauth2/callback"
   replicas:
-    min: 2
+    min: 1
   liveness:
     path: isAlive
     port: 8080
@@ -41,8 +39,7 @@ spec:
     port: 8080
     initialDelay: 5
   ingresses:
-    - https://supplerendestonad.dev.adeo.no
-    - https://supplerendestonad.intern.dev.nav.no
+    - https://supstonad.intern.dev.nav.no
   env:
       - name: NODE_ENV
         value: production
@@ -63,14 +60,19 @@ spec:
       - name: SU_SE_BAKOVER_AAD_APP_NAME
         value: "dev-gcp.supstonad.su-se-bakover"
       - name: AUTH_LOGIN_REDIRECT_URI
-        value: "https://supplerendestonad.intern.dev.nav.no/oauth2/callback"
+        value: "https://supstonad.intern.dev.nav.no/oauth2/callback"
       - name: AUTH_LOGOUT_REDIRECT_URI
-        value: "https://supplerendestonad.intern.dev.nav.no/"
+        value: "https://supstonad.intern.dev.nav.no/"
       - name: LOG_LEVEL
         value: "debug"
   envFrom:
     - secret: redis-password
     - secret: su-se-framover-session-key
+  accessPolicy:
+    outbound:
+      rules:
+        - application: su-se-framover-redis
+        - application: su-se-bakover
 ---
 apiVersion: nais.io/v1alpha1
 kind: Application
@@ -99,3 +101,7 @@ spec:
     protocol: redis
   envFrom:
     - secret: redis-password
+  accessPolicy:
+    inbound:
+      rules:
+        - application: su-se-framover
