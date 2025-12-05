@@ -56,7 +56,6 @@ async function setupSession(app: Express) {
                 sameSite: 'lax',
                 httpOnly: true,
                 secure: Config.isProd,
-                domain: '.intern.dev.nav.no',
             },
             secret: Config.server.sessionKey,
             name: Config.server.sessionCookieName,
