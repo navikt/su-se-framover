@@ -5,7 +5,7 @@ import http from 'http';
 import * as OpenIdClient from 'openid-client';
 import passport from 'passport';
 import { createClient } from 'redis';
-
+import { AuthenticateOptions } from 'passport';
 import * as Config from '../config.js';
 
 import * as AuthUtils from './utils.js';
@@ -14,6 +14,10 @@ declare module 'express-session' {
     interface SessionData {
         redirectTo?: string;
     }
+}
+
+interface OidcAuthenticateOptions extends AuthenticateOptions {
+    callbackURL?: string;
 }
 
 export type TokenSets = { [key: string]: OpenIdClient.TokenSet };
@@ -136,7 +140,7 @@ export default async function setupAuth(app: Express, authClient: OpenIdClient.C
             : undefined;
 
         req.log.info(`Redirect set to ${redirectTo}`)
-        passport.authenticate(authName, { failureRedirect: '/login-failed', state })(req, res, next);
+        passport.authenticate(authName, { failureRedirect: '/login-failed', state, callbackURL: redirectUri } as OidcAuthenticateOptions)(req, res, next);
     });
 
     app.get('/logout', (req, res) => {
