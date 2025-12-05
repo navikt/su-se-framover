@@ -87,6 +87,7 @@ async function getStrategy(authClient: OpenIdClient.Client) {
             tokenSet: OpenIdClient.TokenSet,
             done: (err: null, user?: Express.User) => void,
         ) => {
+            req.log.info(`Strategy callback url ${req.url} with session ${tokenSet.session_state ?? 'no session state'}`)
             if (!tokenSet.expired()) {
                 req.log.debug('OpenIdClient.Strategy: Mapping tokenSet to User.');
                 return done(null, {
@@ -128,12 +129,14 @@ export default async function setupAuth(app: Express, authClient: OpenIdClient.C
         if (typeof redirectTo === 'string') {
             req.session.redirectTo = redirectTo;
         }
-
+        const redirectUri = `${req.protocol}://${req.get('host')}/oauth2/callback`;
+        const redirect_uri = `https://${req.get('host')}/oauth2/callback`
         //Beholder login uri i state for OAuth for førstegangsinnlogging
         const state = redirectTo
-            ? Buffer.from(JSON.stringify({ redirectTo })).toString('base64')
+            ? Buffer.from(JSON.stringify({ redirectTo: redirect_uri })).toString('base64')
             : undefined;
 
+        req.log.info(`Redirect set to ${redirectTo}`)
         passport.authenticate(authName, { failureRedirect: '/login-failed', state })(req, res, next);
     });
 
