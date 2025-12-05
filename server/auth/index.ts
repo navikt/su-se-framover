@@ -16,6 +16,7 @@ declare module 'express-session' {
     }
 }
 
+// authorizationRequestParams in https://github.com/panva/openid-client/blob/main/src/passport.ts#L339
 interface OidcAuthenticateOptions extends AuthenticateOptions {
     callbackURL?: string;
 }
@@ -133,14 +134,9 @@ export default async function setupAuth(app: Express, authClient: OpenIdClient.C
             req.session.redirectTo = redirectTo;
         }
         const redirectUri = `${req.protocol}://${req.get('host')}/oauth2/callback`;
-        const redirect_uri = `https://${req.get('host')}/oauth2/callback`
-        //Beholder login uri i state for OAuth for førstegangsinnlogging
-        const state = redirectTo
-            ? Buffer.from(JSON.stringify({ redirectTo: redirect_uri })).toString('base64')
-            : undefined;
 
         req.log.info(`Redirect set to ${redirectTo}`)
-        passport.authenticate(authName, { failureRedirect: '/login-failed', state, callbackURL: redirectUri } as OidcAuthenticateOptions)(req, res, next);
+        passport.authenticate(authName, { failureRedirect: '/login-failed', callbackURL: redirectUri } as OidcAuthenticateOptions)(req, res, next);
     });
 
     app.get('/logout', (req, res) => {
@@ -152,32 +148,9 @@ export default async function setupAuth(app: Express, authClient: OpenIdClient.C
             res.redirect(endSessionUrl);
         });
     });
-    app.get(
-        '/oauth2/callback',
-        passport.authenticate(authName, { failureRedirect: '/login-failed' }),
-        (req, res) => {
-            let redirectUrl;
-            if (typeof req.query.state === 'string') {
-                try {
-                    const decoded = Buffer.from(req.query.state, 'base64').toString('utf-8');
-                    const { redirectTo } = JSON.parse(decoded);
-                    if (typeof redirectTo === 'string') {
-                        redirectUrl = redirectTo;
-                    }
-                } catch (err) {
-                    // malformed state, ignore
-                }
-            }
-
-            // fallback to session
-            if (!redirectUrl) redirectUrl = req.session.redirectTo;
-
-            // clear session value to avoid stale redirects
-            delete req.session.redirectTo;
-
-            res.redirect(redirectUrl ?? '/');
-        }
-    );
+    app.get('/oauth2/callback', passport.authenticate(authName, { failureRedirect: '/login-failed' }), (req, res) => {
+        res.redirect(req.session.redirectTo ?? '/');
+    });
     app.get('/login-failed', (_req, res) => {
         res.send('login failed');
     });
