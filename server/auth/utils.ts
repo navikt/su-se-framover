@@ -1,4 +1,3 @@
-import { HttpsProxyAgent } from 'https-proxy-agent';
 import * as OpenIdClient from 'openid-client';
 import { TokenSet } from 'openid-client';
 import { Logger } from 'pino';
@@ -88,12 +87,6 @@ async function requestOnBehalfOfToken(authClient: OpenIdClient.Client, tokenSet:
 
 export async function getOpenIdClient(issuerUrl: string) {
     try {
-        if (Config.server.proxy) {
-            const proxyAgent = new HttpsProxyAgent(Config.server.proxy);
-            OpenIdClient.custom.setHttpOptionsDefaults({
-                agent: proxyAgent,
-            });
-        }
         const issuer = await OpenIdClient.Issuer.discover(issuerUrl);
 
         return new issuer.Client(
