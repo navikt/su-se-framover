@@ -1,6 +1,6 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Button, HelpText, Loader, TextField } from '@navikt/ds-react';
+import { Button, HelpText, Loader, Select, TextField } from '@navikt/ds-react';
 import * as DateFns from 'date-fns';
 import { Controller, useForm } from 'react-hook-form';
 import { useNavigate, useOutletContext } from 'react-router-dom';
@@ -19,7 +19,7 @@ import { useAsyncActionCreator } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
 import * as Routes from '~src/lib/routes';
 import { KlageSteg } from '~src/types/Klage';
-
+import { formatDateTime } from '~src/utils/date/dateUtils.ts';
 import messages from '../klage-nb';
 import { OpprettKlageFormData, opprettKlageSchema } from './OpprettKlageUtils';
 import styles from './opprettKlage.module.less';
@@ -51,6 +51,7 @@ const OpprettKlage = () => {
                                 datoKlageMottatt: DateFns.formatISO(values.datoKlageMottatt!, {
                                     representation: 'date',
                                 }),
+                                relatertBehandlingId: values.relatertBehandlingId,
                             },
                             (klage) => {
                                 navigate(
@@ -90,7 +91,27 @@ const OpprettKlage = () => {
                                 />
                             )}
                         />
-
+                        <Controller
+                            name={'relatertBehandlingId'}
+                            control={control}
+                            render={({ field, fieldState }) => (
+                                <Select
+                                    label="Relatert vedtak"
+                                    {...field}
+                                    value={field.value}
+                                    error={fieldState.error?.message}
+                                >
+                                    <option value="">Velg vedtak</option>
+                                    {props.sak.vedtak.map((vedtak) => {
+                                        return (
+                                            <option key={vedtak.id} value={vedtak.behandlingId}>
+                                                {vedtak.type} {formatDateTime(vedtak.opprettet)}
+                                            </option>
+                                        );
+                                    })}
+                                </Select>
+                            )}
+                        />
                         <div className={styles.buttons}>
                             <LinkAsButton
                                 variant="secondary"
