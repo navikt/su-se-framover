@@ -40,7 +40,6 @@ spec:
     initialDelay: 5
   ingresses:
     - https://supstonad.intern.dev.nav.no
-    - https://supstonad.ansatt.dev.nav.no
   env:
       - name: NODE_ENV
         value: production
