@@ -72,6 +72,8 @@ spec:
     outbound:
       rules:
         - application: su-se-framover-redis
+          namespace: supstonad
+          cluster: dev-gcp
         - application: su-se-bakover
           namespace: supstonad
           cluster: dev-gcp
