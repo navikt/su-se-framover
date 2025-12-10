@@ -28,7 +28,7 @@ export interface VurderingsperioderUtenlandsoppholdFormData {
     resultat: Nullable<Vilkårstatus>;
 }
 
-export const eqVurderingsperioderUtenlandsoppholdFormData = struct<VurderingsperioderUtenlandsoppholdFormData>({
+const eqVurderingsperioderUtenlandsoppholdFormData = struct<VurderingsperioderUtenlandsoppholdFormData>({
     periode: eqNullable(eqPeriode),
     resultat: eqNullable(S.Eq),
 });
@@ -37,7 +37,7 @@ export const eqUtenlandsoppholdVilkårFormData = struct<UtenlandsoppholdVilkårF
     utenlandsopphold: getEq(eqVurderingsperioderUtenlandsoppholdFormData),
 });
 
-export const utenlandsoppholdVilkårTilFormData = (f: UtenlandsoppholdVilkår): UtenlandsoppholdVilkårFormData => ({
+const utenlandsoppholdVilkårTilFormData = (f: UtenlandsoppholdVilkår): UtenlandsoppholdVilkårFormData => ({
     utenlandsopphold: f.vurderinger.map(UtenlandsoppholdVurderingsperiodeTilFormData),
 });
 
@@ -47,7 +47,7 @@ export const utenlandsoppholdVilkårTilFormDataEllerNy = (
 ): UtenlandsoppholdVilkårFormData =>
     f ? utenlandsoppholdVilkårTilFormData(f) : nyUtenlandsoppholdVilkårMedEllerUtenPeriode(p);
 
-export const UtenlandsoppholdVurderingsperiodeTilFormData = (
+const UtenlandsoppholdVurderingsperiodeTilFormData = (
     f: VurderingsperiodeUtenlandsopphold,
 ): VurderingsperioderUtenlandsoppholdFormData => ({
     periode: lagDatePeriodeAvStringPeriode(f.periode),

@@ -35,10 +35,7 @@ export const toAldersinnsending = (søknad: AlderssøknadState, fnr: string): S�
     type: Sakstype.Alder,
 });
 
-export const toFellessøknadsinnsending = (
-    søknad: AlderssøknadState | UføresøknadState,
-    fnr: string,
-): SøknadInnholdFelles => {
+const toFellessøknadsinnsending = (søknad: AlderssøknadState | UføresøknadState, fnr: string): SøknadInnholdFelles => {
     const erAlderssøknad = (s: AlderssøknadState | UføresøknadState): s is AlderssøknadState =>
         'harSøktAlderspensjon' in s && s.harSøktAlderspensjon !== null;
     const oppholdstillatelse = erAlderssøknad(søknad) ? søknad.oppholdstillatelse : søknad.flyktningstatus;
@@ -98,7 +95,7 @@ export const toFellessøknadsinnsending = (
     };
 };
 
-export const toEktefellePartnerSamboer = (eps: Nullable<EPSFormData>): Nullable<EktefellePartnerSamboer> => {
+const toEktefellePartnerSamboer = (eps: Nullable<EPSFormData>): Nullable<EktefellePartnerSamboer> => {
     if (eps?.fnr) {
         return {
             fnr: eps.fnr,
@@ -109,7 +106,7 @@ export const toEktefellePartnerSamboer = (eps: Nullable<EPSFormData>): Nullable<
     return null;
 };
 
-export const toFormue = (formue: SøknadState['formue']) => {
+const toFormue = (formue: SøknadState['formue']) => {
     return {
         eierBolig: formue.eierBolig,
         borIBolig: formue.eierBolig ? formue.borIBolig : null,
@@ -131,7 +128,7 @@ export const toFormue = (formue: SøknadState['formue']) => {
     };
 };
 
-export const toInntekt = (inntekt: SøknadState['inntekt']) => {
+const toInntekt = (inntekt: SøknadState['inntekt']) => {
     return {
         forventetInntekt: inntekt.harForventetInntekt ? Number(inntekt.forventetInntekt) : null,
         andreYtelserINav: inntekt.andreYtelserINav ? inntekt.andreYtelserINavYtelse : null,
@@ -147,7 +144,7 @@ export const toInntekt = (inntekt: SøknadState['inntekt']) => {
     };
 };
 
-export const toAdresseFraSøknad = (adresse: Nullable<Adresse>): Nullable<AdresseFraSøknad> => {
+const toAdresseFraSøknad = (adresse: Nullable<Adresse>): Nullable<AdresseFraSøknad> => {
     return adresse
         ? {
               adresselinje: adresse.adresselinje,

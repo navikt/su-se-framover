@@ -8,7 +8,7 @@ import { NullablePeriode, Periode } from '~src/types/Periode';
 import * as DateUtils from '~src/utils/date/dateUtils';
 import { eqPeriode, lagDatePeriodeAvStringPeriodeEllerTomPeriode } from '~src/utils/periode/periodeUtils';
 
-export const eqUføreperiodeFormData = struct<UføreperiodeFormData>({
+const eqUføreperiodeFormData = struct<UføreperiodeFormData>({
     periode: eqPeriode,
     uføregrad: S.Eq,
     forventetInntekt: S.Eq,

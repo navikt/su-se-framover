@@ -3,7 +3,6 @@ import { Eq, fromEquals } from 'fp-ts/lib/Eq';
 import { BooleanMedBegrunnelse, SvarMedBegrunnelse } from '~src/pages/klage/vurderFormkrav/VurderFormkrav';
 
 export type Nullable<T> = T | null;
-export type KeyDict<T> = T extends number ? never : { [key in keyof T]: key };
 
 export function isNotNullable<T>(x: Nullable<T>): x is T {
     return x !== null;

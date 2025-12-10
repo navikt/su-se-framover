@@ -26,7 +26,6 @@ export interface UseI18N<T extends Record<string, string> | void> {
 }
 
 export type MessageFormatter<T extends Record<string, string>> = UseI18N<T>['formatMessage'];
-export type DateFormatter<T extends void = void> = UseI18N<T>['formatDate'];
 
 export const useI18n = <T extends Record<string, string>>(args: { messages: T }): UseI18N<T> => {
     const intl = useMemo(() => {

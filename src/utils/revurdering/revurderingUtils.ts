@@ -108,8 +108,6 @@ export const erRevurderingÅpen = (r: Revurdering) =>
     erRevurderingTilAttestering(r) ||
     erRevurderingUnderkjent(r);
 
-export const skalAttesteres = (r: Revurdering): boolean => erGregulering(r.årsak) || erRevurderingUnderkjent(r);
-
 export function harBeregninger(r: Revurdering): r is Revurdering & { beregning: Beregning } {
     return 'beregning' in r;
 }

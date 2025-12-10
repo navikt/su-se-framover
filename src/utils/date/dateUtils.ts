@@ -73,8 +73,6 @@ export const toIsoMonth = (date: Date) => {
 
 export const toIsoDateOnlyString = (date: Date) => DateFns.format(date, DateFormats.IsoDateOnly);
 
-export const startenPåNesteMåned = (date: Date) => DateFns.startOfMonth(DateFns.addMonths(date, 1));
-
 export const startenPåMnd = (d: Date) => DateFns.startOfMonth(d);
 
 export const sluttenAvMåneden = (d: Date) => DateFns.endOfMonth(d);

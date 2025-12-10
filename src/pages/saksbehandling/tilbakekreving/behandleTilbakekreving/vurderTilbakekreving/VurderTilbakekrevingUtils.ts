@@ -16,7 +16,7 @@ interface GrunnlagsperiodeFormData {
     vurdering: Nullable<TilbakekrevingsVurdering>;
 }
 
-export const eqGrunnlagsperiodeFormData = struct<GrunnlagsperiodeFormData>({
+const eqGrunnlagsperiodeFormData = struct<GrunnlagsperiodeFormData>({
     periode: eqStringPeriode,
     vurdering: eqNullable(S.Eq),
 });
