@@ -12,13 +12,15 @@ export const opprettKlage = createAsyncThunk<
         sakId: string;
         journalpostId: string;
         datoKlageMottatt: string;
+        relatertBehandlingId: string;
     },
     { rejectValue: ApiError }
->('klage/opprett', async ({ sakId, journalpostId, datoKlageMottatt }, thunkApi) => {
+>('klage/opprett', async ({ sakId, journalpostId, datoKlageMottatt, relatertBehandlingId }, thunkApi) => {
     const res = await klageApi.opprettKlage({
         sakId,
         journalpostId,
         datoKlageMottatt,
+        relatertBehandlingId,
     });
     if (res.status === 'ok') {
         return res.data;

@@ -14,8 +14,8 @@ import { Nullable } from '~src/lib/types';
 import yup from '~src/lib/validering';
 import { Kravgrunnlag } from '~src/types/Kravgrunnlag';
 import { TilbakekrevingSteg } from '~src/types/ManuellTilbakekrevingsbehandling';
-import { Vedtak } from '~src/types/Vedtak.ts';
-import { formatDateTime } from '~src/utils/date/dateUtils.ts';
+import { Vedtak } from '~src/types/Vedtak';
+import { formatDateTime } from '~src/utils/date/dateUtils';
 import messages from '../Tilbakekreving-nb';
 import styles from './OpprettTilbakekreving.module.less';
 
