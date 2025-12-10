@@ -19,7 +19,7 @@ import { useAsyncActionCreator } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
 import * as Routes from '~src/lib/routes';
 import { KlageSteg } from '~src/types/Klage';
-import { formatDateTime } from '~src/utils/date/dateUtils.ts';
+import { formatDateTime } from '~src/utils/date/dateUtils';
 import messages from '../klage-nb';
 import { OpprettKlageFormData, opprettKlageSchema } from './OpprettKlageUtils';
 import styles from './opprettKlage.module.less';

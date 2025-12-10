@@ -23,5 +23,8 @@ export const opprettKlageSchema = yup.object<OpprettKlageFormData>({
         .required()
         .typeError('Feltet må være en dato på formatet dd/mm/yyyy')
         .max(DateFns.endOfDay(new Date())),
-    relatertBehandlingId: yup.string().uuid().required(),
+    relatertBehandlingId: yup
+        .string()
+        .uuid('Må være en gyldig behandlingsid')
+        .required('Relatert behandling må velges'),
 });
