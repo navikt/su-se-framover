@@ -16,11 +16,10 @@ declare module 'express-session' {
 }
 
 export type TokenSets = { [key: string]: OpenIdClient.TokenSet };
-declare global {
-    namespace Express {
-        interface User {
-            tokenSets: TokenSets;
-        }
+
+declare module 'express' {
+    interface User {
+        tokenSets: TokenSets;
     }
 }
 
@@ -72,7 +71,6 @@ async function getStrategy(authClient: OpenIdClient.Client) {
         {
             client: authClient,
             params: {
-
                 response_type: Config.auth.responseType,
                 response_mode: Config.auth.responseMode,
                 scope: `openid offline_access ${Config.auth.clientId}/.default`,
