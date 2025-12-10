@@ -150,7 +150,7 @@ export const useAutosave = (callback: () => void, delay = 500, deps: unknown[] =
  * @param callback - funksjonen som skal kjøres
  * @param delay - tiden i millisekunder autosaven skal kjøres
  */
-export const useAutosaveOnChange = <T>(data: T, callback: () => Promise<void> | void, delay = 1000) => {
+export const useAutosaveOnUpdate = <T>(data: T, callback: () => Promise<void> | void, delay = 1000) => {
     const [isSaving, setIsSaving] = useState(false);
     const initialRender = useRef(true);
     const prev = useRef(data);
