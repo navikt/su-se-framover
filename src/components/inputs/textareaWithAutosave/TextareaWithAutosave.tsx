@@ -4,7 +4,7 @@ import { Control, Controller, FieldValues, Path } from 'react-hook-form';
 
 import { ErrorIcon, SuccessIcon } from '~src/assets/Icons';
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
-import { ApiResult, useAutosaveOnChange } from '~src/lib/hooks';
+import { ApiResult, useAutosaveOnUpdate } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
 
 import styles from './TextareaWithAutosave.module.less';
@@ -32,7 +32,7 @@ const TextareaWithAutosave = <T extends object, U extends FieldValues>(props: {
 }) => {
     const { formatMessage } = useI18n({ messages });
 
-    const { isSaving } = useAutosaveOnChange(props.textarea.value, () => {
+    const { isSaving } = useAutosaveOnUpdate(props.textarea.value, () => {
         return props.save.handleSave();
     });
 

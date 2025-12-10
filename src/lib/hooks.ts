@@ -131,7 +131,7 @@ export function useBrevForhåndsvisning<T>(
  * @param delay - tiden i millisekunder autosaven skal kjøres
  * @param deps - Et set med dependencies som resetter timeren for hver endring
  */
-export const useAutosave = (callback: () => void, delay = 5000, deps: unknown[] = []) => {
+export const useAutosave = (callback: () => void, delay = 500, deps: unknown[] = []) => {
     useEffect(() => {
         if (delay) {
             const interval = setInterval(callback, delay);
@@ -150,24 +150,31 @@ export const useAutosave = (callback: () => void, delay = 5000, deps: unknown[] 
  * @param callback - funksjonen som skal kjøres
  * @param delay - tiden i millisekunder autosaven skal kjøres
  */
-export const useAutosaveOnChange = <T>(data: T, callback: () => void, delay = 5000) => {
+export const useAutosaveOnUpdate = <T>(data: T, callback: () => Promise<void> | void, delay = 1000) => {
     const [isSaving, setIsSaving] = useState(false);
     const initialRender = useRef(true);
     const prev = useRef(data);
     const live = useRef(data);
 
-    useAutosave(async () => {
-        if (prev.current !== live.current) {
-            prev.current = live.current;
-            callback();
-        } else {
-            setIsSaving(false);
-        }
-    }, delay);
+    useAutosave(
+        async () => {
+            if (initialRender.current) return;
+
+            if (prev.current !== live.current) {
+                prev.current = live.current;
+
+                await callback();
+                setIsSaving(false);
+            }
+        },
+        delay,
+        [live.current],
+    );
 
     useEffect(() => {
         if (initialRender.current) {
             initialRender.current = false;
+            return;
         } else {
             setIsSaving(true);
         }
