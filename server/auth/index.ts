@@ -9,20 +9,6 @@ import * as Config from '../config.js';
 
 import * as AuthUtils from './utils.js';
 
-declare module 'express-session' {
-    interface SessionData {
-        redirectTo?: string;
-    }
-}
-
-export type TokenSets = { [key: string]: OpenIdClient.TokenSet };
-
-declare module 'express' {
-    interface User {
-        tokenSets: TokenSets;
-    }
-}
-
 const SESSION_MAX_AGE_MILLIS = 60 * 60 * 1000 * 2;
 
 async function getRedisStore() {
