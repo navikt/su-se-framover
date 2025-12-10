@@ -72,7 +72,11 @@ spec:
     outbound:
       rules:
         - application: su-se-framover-redis
+          namespace: supstonad
+          cluster: dev-gcp
         - application: su-se-bakover
+          namespace: supstonad
+          cluster: dev-gcp
 ---
 apiVersion: nais.io/v1alpha1
 kind: Application
@@ -105,3 +109,5 @@ spec:
     inbound:
       rules:
         - application: su-se-framover
+          namespace: supstonad
+          cluster: dev-gcp
