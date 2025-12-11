@@ -2,7 +2,7 @@
     "compilerOptions": {
         "lib": ["ESNext"],
         "outDir": "./dist",
-        "typeRoots": ["./node_modules/@type", "./typings"],
+        "typeRoots": ["./node_modules/@types", "./node_modules/@type", "./typings"],
         "allowSyntheticDefaultImports": true,
         "moduleResolution": "NodeNext",
         "module": "NodeNext",
@@ -11,6 +11,6 @@
         "esModuleInterop": true,
         "strict": true,
         "skipLibCheck": true,
-        "forceConsistentCasingInFileNames": true,
+        "forceConsistentCasingInFileNames": true
     }
 }

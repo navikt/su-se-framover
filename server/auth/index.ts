@@ -9,21 +9,6 @@ import * as Config from '../config.js';
 
 import * as AuthUtils from './utils.js';
 
-declare module 'express-session' {
-    interface SessionData {
-        redirectTo?: string;
-    }
-}
-
-export type TokenSets = { [key: string]: OpenIdClient.TokenSet };
-declare global {
-    namespace Express {
-        interface User {
-            tokenSets: TokenSets;
-        }
-    }
-}
-
 const SESSION_MAX_AGE_MILLIS = 60 * 60 * 1000 * 2;
 
 async function getRedisStore() {
@@ -72,7 +57,6 @@ async function getStrategy(authClient: OpenIdClient.Client) {
         {
             client: authClient,
             params: {
-
                 response_type: Config.auth.responseType,
                 response_mode: Config.auth.responseMode,
                 scope: `openid offline_access ${Config.auth.clientId}/.default`,
