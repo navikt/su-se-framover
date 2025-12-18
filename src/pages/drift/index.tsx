@@ -15,13 +15,13 @@ import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
 import { DatePicker } from '~src/components/inputs/datePicker/DatePicker';
 import { useApiCall } from '~src/lib/hooks';
 import { Nullable } from '~src/lib/types';
+import Statistikk from '~src/pages/drift/components/Statistikk.tsx';
 import Nøkkeltall from '~src/pages/saksbehandling/behandlingsoversikt/nøkkeltall/Nøkkeltall';
 import { toIsoDateOnlyString } from '~src/utils/date/dateUtils';
-
 import DokumentDistribusjon from './components/dokument/DokumentDistribusjon';
 import Personhendelser from './components/personhendelser/Personhendelser';
+import ResendStatistikk from './components/ResendStatistikk.tsx';
 import Gregulering from './components/regulering/G-regulering';
-import ResendStatistikk from './components/Statistikk';
 import { SøknadTabellDrift } from './components/SøknadTabell';
 import Stønadsmottakere from './components/stønadsmottakere/Stønadsmottakere';
 import SendUtbetalingsIder from './components/utbetalingslinjer/SendUtbetalingslinjer';
@@ -231,6 +231,7 @@ const Drift = () => {
                         Nøkkeltall
                     </Button>
 
+                    <Statistikk />
                     <ResendStatistikk />
 
                     <Button

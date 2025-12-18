@@ -1,12 +1,7 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import { Button, Heading, Modal, Textarea } from '@navikt/ds-react';
+import { Button, Heading, Modal } from '@navikt/ds-react';
 import { useState } from 'react';
-
-import {
-    resendSakStatistikkInenforPeriode,
-    resendSpesifikkVedtakstatistikk,
-    resendstatistikkSøknadsbehandlingVedtak,
-} from '~src/api/driftApi';
+import { sakStatistikk } from '~src/api/driftApi';
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
 import { DatePicker } from '~src/components/inputs/datePicker/DatePicker';
 import { useApiCall } from '~src/lib/hooks';
@@ -15,7 +10,7 @@ import { toIsoDateOnlyString } from '~src/utils/date/dateUtils';
 
 import sharedStyles from '../index.module.less';
 
-const ResendStatistikk = () => {
+const Statistikk = () => {
     const [vilResendeStatistikk, setVilResendeStatistikk] = useState<boolean>(false);
 
     return (
@@ -26,45 +21,26 @@ const ResendStatistikk = () => {
                 type="button"
                 onClick={() => setVilResendeStatistikk(true)}
             >
-                Resend statistikk
+                Statistikk
             </Button>
             {vilResendeStatistikk && (
-                <ResendStatistikkModal open={vilResendeStatistikk} onClose={() => setVilResendeStatistikk(false)} />
+                <StatistikkModal open={vilResendeStatistikk} onClose={() => setVilResendeStatistikk(false)} />
             )}
         </>
     );
 };
 
-const ResendStatistikkModal = (props: { open: boolean; onClose: () => void }) => {
-    const [søknadsbehandlingVedtakStatistikkStatus, resendSøknadsbehandlingVedtak] = useApiCall(
-        resendstatistikkSøknadsbehandlingVedtak,
-    );
-    const [spesifikkStatus, resendSpesifikkVedtak] = useApiCall(resendSpesifikkVedtakstatistikk);
-    const [resendSakStatistikkStatus, resendSakStatistikk] = useApiCall(resendSakStatistikkInenforPeriode);
+const StatistikkModal = (props: { open: boolean; onClose: () => void }) => {
+    const [sakStatistikkStatus, sakStatistikkRequest] = useApiCall(sakStatistikk);
 
     const [fraOgMed, setFraOgMed] = useState<Nullable<Date>>(null);
-    const [vedtakId, setVedtakId] = useState<string>('');
-    const [fraOgMedTid, setFraOgMedTid] = useState<Nullable<Date>>(null);
-    const [tilOgMedTid, setTilOgMedTid] = useState<Nullable<Date>>(null);
 
     return (
         <Modal open={props.open} onClose={props.onClose} aria-label={'Statistikk'}>
             <Modal.Body>
                 <div>
                     <Heading size="medium" spacing>
-                        Spesifikk
-                    </Heading>
-
-                    <Textarea label={'vedtak id'} onChange={(v) => setVedtakId(v.target.value)} />
-                    <Button onClick={() => resendSpesifikkVedtak({ vedtakIder: vedtakId })}>
-                        Resend spesifikk vedtak statistikk
-                    </Button>
-                    {RemoteData.isSuccess(spesifikkStatus) && <p>Nice 👍🤌</p>}
-
-                    {RemoteData.isFailure(spesifikkStatus) && <ApiErrorAlert error={spesifikkStatus.error} />}
-
-                    <Heading size="medium" spacing>
-                        Alle
+                        Saker
                     </Heading>
                     <DatePicker
                         label="Fra og med"
@@ -76,58 +52,21 @@ const ResendStatistikkModal = (props: { open: boolean; onClose: () => void }) =>
 
                     <Button
                         onClick={() =>
-                            resendSøknadsbehandlingVedtak({
+                            sakStatistikkRequest({
                                 fraOgMed: toIsoDateOnlyString(fraOgMed!),
-                            })
-                        }
-                    >
-                        Søknadsbehandling vedtak
-                    </Button>
-
-                    {RemoteData.isSuccess(søknadsbehandlingVedtakStatistikkStatus) && <p>Nice 👍🤌</p>}
-
-                    {RemoteData.isFailure(søknadsbehandlingVedtakStatistikkStatus) && (
-                        <ApiErrorAlert error={søknadsbehandlingVedtakStatistikkStatus.error} />
-                    )}
-
-                    <Heading size="medium" spacing>
-                        Saker
-                    </Heading>
-                    <DatePicker
-                        label="Fra og med"
-                        value={fraOgMed}
-                        onChange={(date) => {
-                            setFraOgMedTid(date);
-                        }}
-                    />
-                    <DatePicker
-                        label="Til og med"
-                        value={tilOgMedTid}
-                        onChange={(date) => {
-                            setTilOgMedTid(date);
-                        }}
-                    />
-
-                    <Button
-                        onClick={() =>
-                            resendSakStatistikk({
-                                fraOgMed: toIsoDateOnlyString(fraOgMedTid!),
-                                tilOgMed: toIsoDateOnlyString(tilOgMedTid!),
                             })
                         }
                     >
                         Sak
                     </Button>
 
-                    {RemoteData.isSuccess(resendSakStatistikkStatus) && <p>Nice 👍🤌</p>}
+                    {RemoteData.isSuccess(sakStatistikkStatus) && <p>Nice 👍🤌</p>}
 
-                    {RemoteData.isFailure(resendSakStatistikkStatus) && (
-                        <ApiErrorAlert error={resendSakStatistikkStatus.error} />
-                    )}
+                    {RemoteData.isFailure(sakStatistikkStatus) && <ApiErrorAlert error={sakStatistikkStatus.error} />}
                 </div>
             </Modal.Body>
         </Modal>
     );
 };
 
-export default ResendStatistikk;
+export default Statistikk;
