@@ -10,7 +10,7 @@ import { toIsoDateOnlyString } from '~src/utils/date/dateUtils';
 
 import sharedStyles from '../index.module.less';
 
-const Statistikk = () => {
+const SakStatistikk = () => {
     const [vilResendeStatistikk, setVilResendeStatistikk] = useState<boolean>(false);
 
     return (
@@ -21,16 +21,16 @@ const Statistikk = () => {
                 type="button"
                 onClick={() => setVilResendeStatistikk(true)}
             >
-                Statistikk
+                Saksstatistikk
             </Button>
             {vilResendeStatistikk && (
-                <StatistikkModal open={vilResendeStatistikk} onClose={() => setVilResendeStatistikk(false)} />
+                <SakStatistikkModal open={vilResendeStatistikk} onClose={() => setVilResendeStatistikk(false)} />
             )}
         </>
     );
 };
 
-const StatistikkModal = (props: { open: boolean; onClose: () => void }) => {
+const SakStatistikkModal = (props: { open: boolean; onClose: () => void }) => {
     const [sakStatistikkStatus, sakStatistikkRequest] = useApiCall(sakStatistikk);
 
     const [fraOgMed, setFraOgMed] = useState<Nullable<Date>>(null);
@@ -69,4 +69,4 @@ const StatistikkModal = (props: { open: boolean; onClose: () => void }) => {
     );
 };
 
-export default Statistikk;
+export default SakStatistikk;
