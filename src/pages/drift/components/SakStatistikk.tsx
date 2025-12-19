@@ -57,7 +57,7 @@ const SakStatistikkModal = (props: { open: boolean; onClose: () => void }) => {
                             })
                         }
                     >
-                        Sak
+                        Send statistikk
                     </Button>
 
                     {RemoteData.isSuccess(sakStatistikkStatus) && <p>Nice 👍🤌</p>}
