@@ -57,7 +57,6 @@ const AttesterTilbakekreving = (props: { behandling: ManuellTilbakekrevingsbehan
         <div className={styles.mainContentContainer}>
             <AttesteringsForm
                 behandlingsId={props.behandling.id}
-                fritekst={props.behandling.fritekst ?? ''}
                 redigerbartBrev={false}
                 sakId={props.behandling.sakId}
                 iverksett={{ fn: iverksettCallback, status: iverksettStatus }}
