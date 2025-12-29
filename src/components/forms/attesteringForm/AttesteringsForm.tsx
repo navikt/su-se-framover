@@ -1,17 +1,18 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Alert, Button, Loader, Radio, RadioGroup, Textarea } from '@navikt/ds-react';
-import { useState } from 'react';
+import { Alert, Button, Loader, Radio, RadioGroup } from '@navikt/ds-react';
+import { useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
-
+import { FritekstTyper, hentFritekst, redigerFritekst } from '~src/api/fritekstApi.ts';
 import * as PdfApi from '~src/api/pdfApi.ts';
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
+import TextareaWithAutosave from '~src/components/inputs/textareaWithAutosave/TextareaWithAutosave.tsx';
 import LinkAsButton from '~src/components/linkAsButton/LinkAsButton.tsx';
 import Oppsummeringspanel, {
     Oppsummeringsfarge,
     Oppsummeringsikon,
 } from '~src/components/oppsummering/oppsummeringspanel/Oppsummeringspanel';
-import { ApiResult, useBrevForhåndsvisning } from '~src/lib/hooks';
+import { ApiResult, useApiCall, useBrevForhåndsvisning } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
 import * as Routes from '~src/lib/routes';
 import { Nullable } from '~src/lib/types';
@@ -26,7 +27,7 @@ export interface AttesteringFormData {
     beslutning: Nullable<Beslutning>;
     grunn: Nullable<UnderkjennelseGrunn>;
     kommentar: Nullable<string>;
-    fritekst: Nullable<string>;
+    fritekst: string;
 }
 
 enum Beslutning {
@@ -35,7 +36,7 @@ enum Beslutning {
 }
 
 const schema = yup.object<AttesteringFormData>({
-    fritekst: yup.mixed<Nullable<string>>(),
+    fritekst: yup.mixed<string>(),
     beslutning: yup.string().nullable().required().oneOf([Beslutning.IVERKSETT, Beslutning.UNDERKJENN]),
     grunn: yup.string<UnderkjennelseGrunn>().when('beslutning', {
         is: Beslutning.UNDERKJENN,
@@ -54,12 +55,11 @@ const schema = yup.object<AttesteringFormData>({
 });
 
 interface Props {
-    fritekst: string;
     behandlingsId: string;
     redigerbartBrev: boolean;
     sakId: string;
     iverksett: {
-        fn: (fritekstTiBrev: Nullable<string>) => void;
+        fn: () => void;
         status: ApiResult<unknown>;
     };
     underkjenn: {
@@ -76,18 +76,19 @@ interface Props {
 export const AttesteringsForm = (props: Props) => {
     const { formatMessage } = useI18n({ messages });
 
-    const { control, getValues, watch, handleSubmit } = useForm<AttesteringFormData>({
+    const { control, watch, handleSubmit } = useForm<AttesteringFormData>({
         resolver: yupResolver(schema),
         defaultValues: {
             beslutning: null,
-            fritekst: props.fritekst,
         },
     });
+
+    const [lagreFritekstStatus, lagreFritekst] = useApiCall(redigerFritekst);
 
     const submitHandler = (data: AttesteringFormData) => {
         switch (data.beslutning) {
             case Beslutning.IVERKSETT:
-                props.iverksett.fn(data.fritekst);
+                props.iverksett.fn();
                 break;
             case Beslutning.UNDERKJENN:
                 props.underkjenn.fn(data.grunn!, data.kommentar ?? '');
@@ -96,6 +97,31 @@ export const AttesteringsForm = (props: Props) => {
 
     const [brevStatus, lastNedBrev] = useBrevForhåndsvisning(PdfApi.fetchBrevutkastForSøknadsbehandlingWithFritekst);
     const [showInput, setShowInput] = useState(false);
+
+    const initialValues: AttesteringFormData = {
+        fritekst: '',
+        beslutning: null,
+        grunn: null,
+        kommentar: null,
+    };
+
+    const form = useForm<AttesteringFormData>({
+        defaultValues: initialValues,
+    });
+    useEffect(() => {
+        if (!props.behandlingsId) {
+            return;
+        }
+        hentFritekst({
+            referanseId: props.behandlingsId,
+            sakId: props.sakId,
+            type: FritekstTyper.VEDTAKSBREV_SØKNADSBEHANDLING,
+        }).then((result) => {
+            if (result.status === 'ok' && result.data) {
+                form.setValue('fritekst', result.data.fritekst ?? '');
+            }
+        });
+    }, [props.behandlingsId, props.sakId, form]);
 
     return (
         <div className={styles.redigerContainer}>
@@ -167,7 +193,7 @@ export const AttesteringsForm = (props: Props) => {
                                 lastNedBrev({
                                     sakId: props.sakId,
                                     behandlingId: props.behandlingsId,
-                                    fritekst: getValues('fritekst')!,
+                                    fritekst: form.getValues().fritekst,
                                     underAttestering: true,
                                 })
                             }
@@ -193,20 +219,24 @@ export const AttesteringsForm = (props: Props) => {
                                             {RemoteData.isPending(brevStatus) && <Loader />}
                                         </Button>
                                     ) : (
-                                        <Controller
-                                            control={control}
-                                            name="fritekst"
-                                            render={({ field, fieldState }) => (
-                                                <Textarea
-                                                    className={styles.fritekst}
-                                                    label={formatMessage('input.fritekst.label')}
-                                                    value={field.value ?? ''}
-                                                    onChange={field.onChange}
-                                                    error={fieldState.error?.message}
-                                                    onBlur={field.onBlur}
-                                                    ref={field.ref}
-                                                />
-                                            )}
+                                        <TextareaWithAutosave
+                                            textarea={{
+                                                name: 'fritekst',
+                                                label: formatMessage('input.fritekst.label'),
+                                                control,
+                                                value: watch('fritekst') ?? '',
+                                            }}
+                                            save={{
+                                                handleSave: () => {
+                                                    lagreFritekst({
+                                                        referanseId: props.behandlingsId,
+                                                        sakId: props.sakId,
+                                                        type: FritekstTyper.VEDTAKSBREV_SØKNADSBEHANDLING,
+                                                        fritekst: watch('fritekst') ?? '',
+                                                    });
+                                                },
+                                                status: lagreFritekstStatus,
+                                            }}
                                         />
                                     )}
                                     {RemoteData.isFailure(brevStatus) && (

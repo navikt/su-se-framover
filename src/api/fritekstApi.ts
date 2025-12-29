@@ -10,6 +10,7 @@ export interface Fritekst {
 export const FritekstTyper = {
     FRITEKST_BREV: 'FRITEKST_BREV',
     FORHÅNDSVARSEL_TILBAKEKREVING: 'FORHÅNDSVARSEL_TILBAKEKREVING',
+    VEDTAKSBREV_SØKNADSBEHANDLING: 'VEDTAKSBREV_SØKNADSBEHANDLING',
 } as const;
 
 export type FritekstTyper = (typeof FritekstTyper)[keyof typeof FritekstTyper];
