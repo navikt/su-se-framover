@@ -4,6 +4,7 @@ import { Alert, Button, Loader, Radio, RadioGroup } from '@navikt/ds-react';
 import { useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { FritekstTyper, hentFritekst, redigerFritekst } from '~src/api/fritekstApi.ts';
+import { Behandlingstype } from '~src/api/GrunnlagOgVilkårApi.ts';
 import * as PdfApi from '~src/api/pdfApi.ts';
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
 import TextareaWithAutosave from '~src/components/inputs/textareaWithAutosave/TextareaWithAutosave.tsx';
@@ -58,6 +59,7 @@ interface Props {
     behandlingsId: string;
     redigerbartBrev: boolean;
     sakId: string;
+    behandligstype?: Behandlingstype;
     iverksett: {
         fn: () => void;
         status: ApiResult<unknown>;
@@ -94,8 +96,12 @@ export const AttesteringsForm = (props: Props) => {
                 props.underkjenn.fn(data.grunn!, data.kommentar ?? '');
         }
     };
-
-    const [brevStatus, lastNedBrev] = useBrevForhåndsvisning(PdfApi.fetchBrevutkastForSøknadsbehandlingWithFritekst);
+    const [brevStatusSøknad, lastNedBrevSøknad] = useBrevForhåndsvisning(
+        PdfApi.fetchBrevutkastForSøknadsbehandlingWithFritekst,
+    );
+    const [, lastNedBrevRevurdering] = useBrevForhåndsvisning(
+        PdfApi.fetchBrevutkastForRevurderingMedPotensieltFritekst,
+    );
     const [showInput, setShowInput] = useState(false);
 
     const initialValues: AttesteringFormData = {
@@ -104,6 +110,8 @@ export const AttesteringsForm = (props: Props) => {
         grunn: null,
         kommentar: null,
     };
+
+    const behandlingstype = props.behandligstype ?? Behandlingstype.Søknadsbehandling;
 
     const form = useForm<AttesteringFormData>({
         defaultValues: initialValues,
@@ -189,20 +197,27 @@ export const AttesteringsForm = (props: Props) => {
                             variant="secondary"
                             type="button"
                             className={styles.knapper}
-                            onClick={() =>
-                                lastNedBrev({
-                                    sakId: props.sakId,
-                                    behandlingId: props.behandlingsId,
-                                    fritekst: form.getValues().fritekst,
-                                    underAttestering: true,
-                                })
-                            }
+                            onClick={() => {
+                                if (behandlingstype === Behandlingstype.Revurdering) {
+                                    lastNedBrevRevurdering({
+                                        sakId: props.sakId,
+                                        revurderingId: props.behandlingsId,
+                                    });
+                                } else {
+                                    lastNedBrevSøknad({
+                                        sakId: props.sakId,
+                                        behandlingId: props.behandlingsId,
+                                        fritekst: form.getValues().fritekst,
+                                        underAttestering: true,
+                                    });
+                                }
+                            }}
                         >
                             {formatMessage('knapp.vis')}
                         </Button>
                         <div className={styles.fritekstareaOuterContainer}>
                             <div className={styles.fritekstareaContainer}>
-                                {RemoteData.isFailure(brevStatus) && (
+                                {RemoteData.isFailure(brevStatusSøknad) && (
                                     <Alert variant="error">{formatMessage('feilmelding.brevhentingFeilet')}</Alert>
                                 )}
                                 <div>
@@ -216,7 +231,7 @@ export const AttesteringsForm = (props: Props) => {
                                             }}
                                         >
                                             {formatMessage('knapp.rediger')}
-                                            {RemoteData.isPending(brevStatus) && <Loader />}
+                                            {RemoteData.isPending(brevStatusSøknad) && <Loader />}
                                         </Button>
                                     ) : (
                                         <TextareaWithAutosave
@@ -228,10 +243,14 @@ export const AttesteringsForm = (props: Props) => {
                                             }}
                                             save={{
                                                 handleSave: () => {
+                                                    const type =
+                                                        behandlingstype === Behandlingstype.Revurdering
+                                                            ? FritekstTyper.VEDTAKSBREV_REVURDERING
+                                                            : FritekstTyper.VEDTAKSBREV_SØKNADSBEHANDLING;
                                                     lagreFritekst({
                                                         referanseId: props.behandlingsId,
                                                         sakId: props.sakId,
-                                                        type: FritekstTyper.VEDTAKSBREV_SØKNADSBEHANDLING,
+                                                        type,
                                                         fritekst: watch('fritekst') ?? '',
                                                     });
                                                 },
@@ -239,7 +258,7 @@ export const AttesteringsForm = (props: Props) => {
                                             }}
                                         />
                                     )}
-                                    {RemoteData.isFailure(brevStatus) && (
+                                    {RemoteData.isFailure(brevStatusSøknad) && (
                                         <Alert variant="error">{formatMessage('feilmelding.brevhentingFeilet')}</Alert>
                                     )}
                                 </div>
