@@ -78,10 +78,13 @@ interface Props {
 export const AttesteringsForm = (props: Props) => {
     const { formatMessage } = useI18n({ messages });
 
-    const { control, watch, handleSubmit } = useForm<AttesteringFormData>({
+    const { control, watch, handleSubmit, setValue, getValues } = useForm<AttesteringFormData>({
         resolver: yupResolver(schema),
         defaultValues: {
+            fritekst: '',
             beslutning: null,
+            grunn: null,
+            kommentar: null,
         },
     });
 
@@ -104,18 +107,8 @@ export const AttesteringsForm = (props: Props) => {
     );
     const [showInput, setShowInput] = useState(false);
 
-    const initialValues: AttesteringFormData = {
-        fritekst: '',
-        beslutning: null,
-        grunn: null,
-        kommentar: null,
-    };
-
     const behandlingstype = props.behandligstype ?? Behandlingstype.Søknadsbehandling;
 
-    const form = useForm<AttesteringFormData>({
-        defaultValues: initialValues,
-    });
     useEffect(() => {
         if (!props.behandlingsId) {
             return;
@@ -126,10 +119,10 @@ export const AttesteringsForm = (props: Props) => {
             type: FritekstTyper.VEDTAKSBREV_SØKNADSBEHANDLING,
         }).then((result) => {
             if (result.status === 'ok' && result.data) {
-                form.setValue('fritekst', result.data.fritekst ?? '');
+                setValue('fritekst', result.data.fritekst ?? '');
             }
         });
-    }, [props.behandlingsId, props.sakId, form]);
+    }, [props.behandlingsId, props.sakId, setValue]);
 
     return (
         <div className={styles.redigerContainer}>
@@ -207,7 +200,7 @@ export const AttesteringsForm = (props: Props) => {
                                     lastNedBrevSøknad({
                                         sakId: props.sakId,
                                         behandlingId: props.behandlingsId,
-                                        fritekst: form.getValues().fritekst,
+                                        fritekst: getValues().fritekst,
                                         underAttestering: true,
                                     });
                                 }
@@ -247,11 +240,12 @@ export const AttesteringsForm = (props: Props) => {
                                                         behandlingstype === Behandlingstype.Revurdering
                                                             ? FritekstTyper.VEDTAKSBREV_REVURDERING
                                                             : FritekstTyper.VEDTAKSBREV_SØKNADSBEHANDLING;
+                                                    const currentFritekst = getValues().fritekst ?? '';
                                                     lagreFritekst({
                                                         referanseId: props.behandlingsId,
                                                         sakId: props.sakId,
                                                         type,
-                                                        fritekst: watch('fritekst') ?? '',
+                                                        fritekst: currentFritekst,
                                                     });
                                                 },
                                                 status: lagreFritekstStatus,
