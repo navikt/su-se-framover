@@ -28,6 +28,7 @@ export async function fetchSøknadutskrift(søknadId: string): Promise<ApiClient
 export async function fetchBrevutkastForRevurderingMedPotensieltFritekst(args: {
     sakId: string;
     revurderingId: string;
+    fritekst: string;
 }): Promise<ApiClientResult<Blob>> {
     return apiClient({
         url: `/saker/${args.sakId}/revurderinger/${args.revurderingId}/brevutkast`,
