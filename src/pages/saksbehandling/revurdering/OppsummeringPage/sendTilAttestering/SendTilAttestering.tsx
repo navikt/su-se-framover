@@ -217,6 +217,8 @@ const SendTilAttestering = (props: {
                                                 seBrev({
                                                     sakId: props.sakId,
                                                     revurderingId: props.revurdering.id,
+                                                    fritekst: form.getValues().fritekst ?? '',
+                                                    underAttestering: false,
                                                 }),
                                             status: seBrevStatus,
                                         }}

@@ -124,6 +124,23 @@ export const AttesteringsForm = (props: Props) => {
         });
     }, [props.behandlingsId, props.sakId, setValue]);
 
+    useEffect(() => {
+        if (behandlingstype !== Behandlingstype.Revurdering) {
+            return;
+        }
+        if (!props.behandlingsId) {
+            return;
+        }
+        hentFritekst({
+            referanseId: props.behandlingsId,
+            sakId: props.sakId,
+            type: FritekstTyper.VEDTAKSBREV_REVURDERING,
+        }).then((result) => {
+            if (result.status === 'ok' && result.data) {
+                setValue('fritekst', result.data.fritekst ?? '');
+            }
+        });
+    }, [behandlingstype, props.behandlingsId, props.behandlingsId]);
     return (
         <div className={styles.redigerContainer}>
             <Oppsummeringspanel ikon={Oppsummeringsikon.Blyant} farge={Oppsummeringsfarge.Blå} tittel={'Beslutning'}>
@@ -195,6 +212,8 @@ export const AttesteringsForm = (props: Props) => {
                                     lastNedBrevRevurdering({
                                         sakId: props.sakId,
                                         revurderingId: props.behandlingsId,
+                                        fritekst: getValues().fritekst,
+                                        underAttestering: true,
                                     });
                                 } else {
                                     lastNedBrevSøknad({
