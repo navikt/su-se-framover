@@ -212,8 +212,6 @@ export const AttesteringsForm = (props: Props) => {
                                     lastNedBrevRevurdering({
                                         sakId: props.sakId,
                                         revurderingId: props.behandlingsId,
-                                        fritekst: getValues().fritekst,
-                                        underAttestering: true,
                                     });
                                 } else {
                                     lastNedBrevSøknad({
