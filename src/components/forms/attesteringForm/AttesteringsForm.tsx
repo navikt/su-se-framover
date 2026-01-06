@@ -99,48 +99,46 @@ export const AttesteringsForm = (props: Props) => {
                 props.underkjenn.fn(data.grunn!, data.kommentar ?? '');
         }
     };
-    const [brevStatusSøknad, lastNedBrevSøknad] = useBrevForhåndsvisning(
-        PdfApi.fetchBrevutkastForSøknadsbehandlingWithFritekst,
-    );
-    const [, lastNedBrevRevurdering] = useBrevForhåndsvisning(
-        PdfApi.fetchBrevutkastForRevurderingMedPotensieltFritekst,
-    );
-    const [showInput, setShowInput] = useState(false);
-
     const behandlingstype = props.behandligstype ?? Behandlingstype.Søknadsbehandling;
 
-    useEffect(() => {
-        if (!props.behandlingsId) {
-            return;
-        }
-        hentFritekst({
-            referanseId: props.behandlingsId,
-            sakId: props.sakId,
-            type: FritekstTyper.VEDTAKSBREV_SØKNADSBEHANDLING,
-        }).then((result) => {
-            if (result.status === 'ok' && result.data) {
-                setValue('fritekst', result.data.fritekst ?? '');
+    function lastNedBrev(behandlingstype: Behandlingstype) {
+        const api = (args: { sakId: string; behandlingId: string; fritekst: string; underAttestering?: boolean }) => {
+            if (behandlingstype === Behandlingstype.Revurdering) {
+                return PdfApi.fetchBrevutkastForRevurderingMedPotensieltFritekst({
+                    revurderingId: args.behandlingId,
+                    sakId: args.sakId,
+                    fritekst: args.fritekst,
+                    underAttestering: args.underAttestering,
+                });
+            } else {
+                return PdfApi.fetchBrevutkastForSøknadsbehandlingWithFritekst(args);
             }
-        });
-    }, [props.behandlingsId, props.sakId, setValue]);
+        };
+        return useBrevForhåndsvisning(api);
+    }
+
+    const [seBrevStatus, lastNedBrevBehandling] = lastNedBrev(behandlingstype);
+    const [showInput, setShowInput] = useState(false);
 
     useEffect(() => {
-        if (behandlingstype !== Behandlingstype.Revurdering) {
-            return;
-        }
         if (!props.behandlingsId) {
             return;
         }
+        const type =
+            behandlingstype === Behandlingstype.Revurdering
+                ? FritekstTyper.VEDTAKSBREV_REVURDERING
+                : FritekstTyper.VEDTAKSBREV_SØKNADSBEHANDLING;
         hentFritekst({
             referanseId: props.behandlingsId,
             sakId: props.sakId,
-            type: FritekstTyper.VEDTAKSBREV_REVURDERING,
+            type,
         }).then((result) => {
             if (result.status === 'ok' && result.data) {
                 setValue('fritekst', result.data.fritekst ?? '');
             }
         });
-    }, [behandlingstype, props.behandlingsId, props.behandlingsId]);
+    }, [behandlingstype, props.behandlingsId, props.sakId, setValue]);
+
     return (
         <div className={styles.redigerContainer}>
             <Oppsummeringspanel ikon={Oppsummeringsikon.Blyant} farge={Oppsummeringsfarge.Blå} tittel={'Beslutning'}>
@@ -208,26 +206,19 @@ export const AttesteringsForm = (props: Props) => {
                             type="button"
                             className={styles.knapper}
                             onClick={() => {
-                                if (behandlingstype === Behandlingstype.Revurdering) {
-                                    lastNedBrevRevurdering({
-                                        sakId: props.sakId,
-                                        revurderingId: props.behandlingsId,
-                                    });
-                                } else {
-                                    lastNedBrevSøknad({
-                                        sakId: props.sakId,
-                                        behandlingId: props.behandlingsId,
-                                        fritekst: getValues().fritekst,
-                                        underAttestering: true,
-                                    });
-                                }
+                                lastNedBrevBehandling({
+                                    sakId: props.sakId,
+                                    behandlingId: props.behandlingsId,
+                                    fritekst: getValues().fritekst,
+                                    underAttestering: true,
+                                });
                             }}
                         >
                             {formatMessage('knapp.vis')}
                         </Button>
                         <div className={styles.fritekstareaOuterContainer}>
                             <div className={styles.fritekstareaContainer}>
-                                {RemoteData.isFailure(brevStatusSøknad) && (
+                                {RemoteData.isFailure(seBrevStatus) && (
                                     <Alert variant="error">{formatMessage('feilmelding.brevhentingFeilet')}</Alert>
                                 )}
                                 <div>
@@ -241,7 +232,7 @@ export const AttesteringsForm = (props: Props) => {
                                             }}
                                         >
                                             {formatMessage('knapp.rediger')}
-                                            {RemoteData.isPending(brevStatusSøknad) && <Loader />}
+                                            {RemoteData.isPending(seBrevStatus) && <Loader />}
                                         </Button>
                                     ) : (
                                         <TextareaWithAutosave
@@ -269,7 +260,7 @@ export const AttesteringsForm = (props: Props) => {
                                             }}
                                         />
                                     )}
-                                    {RemoteData.isFailure(brevStatusSøknad) && (
+                                    {RemoteData.isFailure(seBrevStatus) && (
                                         <Alert variant="error">{formatMessage('feilmelding.brevhentingFeilet')}</Alert>
                                     )}
                                 </div>
