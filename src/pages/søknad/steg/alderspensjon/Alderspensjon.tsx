@@ -53,6 +53,7 @@ const Alderspensjon = (props: { nesteUrl: string; forrigeUrl: string; avbrytUrl:
                         <BooleanRadioGroup
                             {...field}
                             legend={formatMessage('alderspensjon.label')}
+                            description={formatMessage('alderspensjon.hjelpetekst')}
                             error={fieldState.error?.message}
                             value={field.value}
                         />
