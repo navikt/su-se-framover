@@ -2,7 +2,7 @@ name: Deploy til prod ved release
 
 on:
     release:
-        types: [published]
+        types: []
 
 permissions: { }
 
