@@ -72,20 +72,20 @@ jobs:
                   VAR: image=${{ needs.build-push-docker-image.outputs.image }}
 
     deploy-to-prod:
-      needs: build-push-docker-image
-      if: ${{ inputs.deploy_prod == true && github.ref == 'refs/heads/master' }}
-      name: Deploy to prod gcp
-      permissions:
-        contents: read
-        id-token: write
-      runs-on: ubuntu-latest
-      steps:
-        - uses: actions/checkout@v5
-        - uses: nais/deploy/actions/deploy@v2
-          env:
-            CLUSTER: prod-gcp
-            RESOURCE: .nais/prod-gcp.yaml
-            VAR: image=${{ needs.build-push-docker-image.outputs.image }}
+        needs: build-push-docker-image
+        if: ${{ inputs.deploy_prod == true && github.ref == 'refs/heads/master' }}
+        name: Deploy to prod gcp
+        permissions:
+            contents: read
+            id-token: write
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v5
+            - uses: nais/deploy/actions/deploy@v2
+              env:
+                  CLUSTER: prod-gcp
+                  RESOURCE: .nais/prod-gcp.yaml
+                  VAR: image=${{ needs.build-push-docker-image.outputs.image }}
 
     generate-draft-release:
         if: (github.ref == 'refs/heads/master')
