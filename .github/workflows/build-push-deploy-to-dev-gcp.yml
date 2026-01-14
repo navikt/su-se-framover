@@ -1,6 +1,9 @@
 name: build-push-deploy-to-gcp.yml
 
 on:
+    push:
+        branches:
+            - '**'
     workflow_dispatch:
       inputs:
         deploy_prod:
