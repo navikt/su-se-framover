@@ -7,6 +7,7 @@ interface JournalpostOk {
     sakId: string;
     journalpostId: string;
 }
+
 export interface JournalpostSøknadOk extends JournalpostOk {
     søknadId: string;
 }
@@ -15,6 +16,7 @@ interface JournalpostFeil {
     sakId: string;
     grunn: string;
 }
+
 export interface JournalpostSøknadFeil extends JournalpostFeil {
     søknadId: string;
 }
@@ -24,6 +26,7 @@ export interface OppgaveOk {
     søknadId: string;
     oppgaveId: string;
 }
+
 export interface OppgaveFeil {
     sakId: string;
     søknadId: string;
@@ -128,13 +131,18 @@ export async function resendSakStatistikkInenforPeriode(args: {
     });
 }
 
-export async function sakStatistikk(args: { fraOgMed: string }): Promise<ApiClientResult<{ status: string }>> {
+export async function sakStatistikk(args: { fraOgMed: string; tilOgMed: string }): Promise<
+    ApiClientResult<{
+        status: string;
+    }>
+> {
     return apiClient({
         url: `/drift/statistikk/sak`,
         method: 'POST',
         request: { headers: new Headers({ Accept: 'application/json' }) },
         body: {
             fraOgMed: args.fraOgMed,
+            tilOgMed: args.tilOgMed,
         },
     });
 }
