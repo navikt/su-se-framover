@@ -34,6 +34,7 @@ const SakStatistikkModal = (props: { open: boolean; onClose: () => void }) => {
     const [sakStatistikkStatus, sakStatistikkRequest] = useApiCall(sakStatistikk);
 
     const [fraOgMed, setFraOgMed] = useState<Nullable<Date>>(null);
+    const [tilOgMed, setTilOgMed] = useState<Nullable<Date>>(null);
 
     return (
         <Modal open={props.open} onClose={props.onClose} aria-label={'Statistikk'}>
@@ -49,11 +50,19 @@ const SakStatistikkModal = (props: { open: boolean; onClose: () => void }) => {
                             setFraOgMed(date);
                         }}
                     />
+                    <DatePicker
+                        label="Til og med"
+                        value={tilOgMed}
+                        onChange={(date) => {
+                            setTilOgMed(date);
+                        }}
+                    />
 
                     <Button
                         onClick={() =>
                             sakStatistikkRequest({
                                 fraOgMed: toIsoDateOnlyString(fraOgMed!),
+                                tilOgMed: toIsoDateOnlyString(tilOgMed!),
                             })
                         }
                     >
