@@ -101,7 +101,6 @@ const AttesterKlage = (props: { sakId: string; klage: Klage; klagensVedtak: Vedt
         <div className={styles.mainContentContainer}>
             <AttesteringsForm
                 behandlingsId={props.klage.id}
-                fritekst={props.klage.fritekstTilBrev ?? ''}
                 redigerbartBrev={false}
                 sakId={props.sakId}
                 iverksett={{

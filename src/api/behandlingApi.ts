@@ -68,14 +68,10 @@ export async function simulerBehandling(
 export async function sendTilAttestering(arg: {
     sakId: string;
     behandlingId: string;
-    fritekstTilBrev: string;
 }): Promise<ApiClientResult<Søknadsbehandling>> {
     return apiClient<Søknadsbehandling>({
         url: `/saker/${arg.sakId}/behandlinger/${arg.behandlingId}/tilAttestering`,
         method: 'POST',
-        body: {
-            fritekst: arg.fritekstTilBrev,
-        },
     });
 }
 
@@ -89,14 +85,10 @@ export async function returnerSøknadsbehandling(arg: { sakId: string; behandlin
 export async function iverksett(arg: {
     sakId: string;
     behandlingId: string;
-    fritekst: string;
 }): Promise<ApiClientResult<Søknadsbehandling>> {
     return apiClient<Søknadsbehandling>({
         url: `/saker/${arg.sakId}/behandlinger/${arg.behandlingId}/iverksett`,
         method: 'POST',
-        body: {
-            fritekst: arg.fritekst,
-        },
     });
 }
 
