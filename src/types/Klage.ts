@@ -124,15 +124,15 @@ export enum KabalVedtakHjemmel {
 export const utfallTilVisning = (utfall: UtfallKey): string => Utfall[utfall];
 export type UtfallKey = keyof typeof Utfall;
 export enum Utfall {
-    TRUKKET = 'TRUKKET',
-    RETUR = 'RETUR',
-    OPPHEVET = 'OPPHEVET',
-    MEDHOLD = 'MEDHOLD - Omgjort av KA',
-    DELVIS_MEDHOLD = 'DELVIS_MEDHOLD - Delvis omgjort av KA',
-    STADFESTELSE = 'STADFESTELSE',
-    UGUNST = 'UGUNST',
-    AVVIST = 'AVVIST',
-    HENLAGT = 'HENLAGT',
+    TRUKKET = 'Trukket',
+    RETUR = 'Retur',
+    OPPHEVET = 'Opphevet',
+    MEDHOLD = 'Omgjort av KA',
+    DELVIS_MEDHOLD = 'Delvis omgjort av KA',
+    STADFESTELSE = 'Stadfestelse',
+    UGUNST = 'Ugunst',
+    AVVIST = 'Avvist',
+    HENLAGT = 'Henlagt',
 }
 
 export interface VedtattUtfall {
