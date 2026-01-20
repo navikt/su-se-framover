@@ -15,7 +15,7 @@ import UnderkjenteAttesteringer from '~src/components/underkjenteAttesteringer/U
 import { useApiCall, useBrevForhåndsvisning } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
 import { DokumentIdType } from '~src/types/dokument/Dokument';
-import { Klage } from '~src/types/Klage';
+import { Klage, utfallTilVisning } from '~src/types/Klage';
 import { Vedtak } from '~src/types/Vedtak';
 import * as DateUtils from '~src/utils/date/dateUtils';
 import { getBlob } from '~src/utils/dokumentUtils';
@@ -57,7 +57,9 @@ const OppsummeringAvKlage = (props: { klage: Klage; klagensVedtak: Vedtak }) => 
                         <VStack gap="2">
                             {props.klage.klagevedtakshistorikk.map((vedtattUtfall, idx) => (
                                 <div key={`${props.klage.id} - ${idx}`}>
-                                    <BodyShort>{vedtattUtfall.utfall ?? 'Anke'}</BodyShort>
+                                    <BodyShort>
+                                        {vedtattUtfall.utfall ? utfallTilVisning(vedtattUtfall.utfall) : 'Anke'}
+                                    </BodyShort>
                                     {vedtattUtfall.klageinstansMottok && (
                                         <BodyShort>
                                             Klageinstans mottok klagen:{' '}

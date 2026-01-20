@@ -121,6 +121,8 @@ export enum KabalVedtakHjemmel {
     FVL_PARAGRAF_32 = 'FVL_PARAGRAF_32',
 }
 
+export const utfallTilVisning = (utfall: UtfallKey): string => Utfall[utfall];
+export type UtfallKey = keyof typeof Utfall;
 export enum Utfall {
     TRUKKET = 'TRUKKET',
     RETUR = 'RETUR',
@@ -134,7 +136,7 @@ export enum Utfall {
 }
 
 export interface VedtattUtfall {
-    utfall: Nullable<Utfall>;
+    utfall: Nullable<UtfallKey>;
     opprettet: string;
     klageinstansMottok: Nullable<string>;
 }

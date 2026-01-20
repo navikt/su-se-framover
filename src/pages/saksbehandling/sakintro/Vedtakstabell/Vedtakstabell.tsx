@@ -23,7 +23,7 @@ import { useI18n } from '~src/lib/i18n';
 import * as Routes from '~src/lib/routes';
 import { OmgjøringModal, Omgjøringsfom } from '~src/pages/saksbehandling/sakintro/Vedtakstabell/OmgjøringModal.tsx';
 import { DokumentIdType } from '~src/types/dokument/Dokument';
-import { Klage, KlageStatus, Utfall, VedtattUtfall } from '~src/types/Klage';
+import { Klage, KlageStatus, UtfallKey, utfallTilVisning, VedtattUtfall } from '~src/types/Klage';
 import { erOmgjøring, Revurdering } from '~src/types/Revurdering.ts';
 import { Søknadsbehandling } from '~src/types/Søknadsbehandling.ts';
 import { Vedtak, VedtakType, VedtakTypeMedOmgjøring } from '~src/types/Vedtak';
@@ -212,7 +212,7 @@ const Vedtakstabell = (props: {
 
                                 const hentSisteUtfallFraKlage = (
                                     klagevedtakshistorikk?: VedtattUtfall[],
-                                ): Utfall | null => {
+                                ): UtfallKey | null => {
                                     if (!klagevedtakshistorikk || klagevedtakshistorikk.length === 0) {
                                         return null;
                                     }
@@ -228,11 +228,12 @@ const Vedtakstabell = (props: {
                                     const sisteUtfall = hentSisteUtfallFraKlage(klage.klagevedtakshistorikk);
 
                                     if (sisteUtfall) {
-                                        return sisteUtfall;
+                                        return utfallTilVisning(sisteUtfall);
                                     }
 
                                     return formatMessage(`datacell.resultat.${klage.status as KlageStatus.OVERSENDT}`);
                                 };
+
                                 return (
                                     <Table.Row key={vedtakEllerKlage.id}>
                                         <Table.DataCell>
