@@ -59,7 +59,7 @@ jobs:
                   tag: ${{ github.sha }}
 
     deploy-to-dev-gcp:
-        if: (github.ref == 'refs/heads/master') || (github.event_name == 'workflow_dispatch')
+        if: (github.event_name == 'workflow_dispatch')
         name: deploy-to-dev-gcp
         permissions:
             contents: read
