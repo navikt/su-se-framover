@@ -8,7 +8,6 @@ import * as sakSlice from '~src/features/saksoversikt/sak.slice';
 import { useAsyncActionCreator } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
 import * as Routes from '~src/lib/routes';
-import { Nullable } from '~src/lib/types';
 import { UnderkjennelseGrunn, UnderkjennelseGrunnBehandling } from '~src/types/Behandling';
 import { Sak } from '~src/types/Sak';
 import { Søknadsbehandling } from '~src/types/Søknadsbehandling';
@@ -31,15 +30,12 @@ const AttesterSøknadsbehandling = (props: { sak: Sak; søknadsbehandling: Søkn
         Routes.navigateToSakIntroWithMessage(navigate, message, props.sak.id);
     };
 
-    const iverksettCallback = (fritekstTilBrev: Nullable<string>) => {
-        attesteringIverksett(
-            { sakId: props.sak.id, behandlingId: props.søknadsbehandling.id, fritekstTilBrev: fritekstTilBrev! },
-            (res) => {
-                fetchSak({ sakId: res.sakId }, () => {
-                    redirectTilSaksoversikt(formatMessage('status.iverksatt'));
-                });
-            },
-        );
+    const iverksettCallback = () => {
+        attesteringIverksett({ sakId: props.sak.id, behandlingId: props.søknadsbehandling.id }, (res) => {
+            fetchSak({ sakId: res.sakId }, () => {
+                redirectTilSaksoversikt(formatMessage('status.iverksatt'));
+            });
+        });
     };
     const underkjennCallback = (grunn: UnderkjennelseGrunn, kommentar: string) =>
         attesteringUnderkjent(
@@ -69,7 +65,6 @@ const AttesterSøknadsbehandling = (props: { sak: Sak; søknadsbehandling: Søkn
         <div className={styles.mainContentContainer}>
             <AttesteringsForm
                 behandlingsId={props.søknadsbehandling.id}
-                fritekst={props.søknadsbehandling.fritekstTilBrev}
                 redigerbartBrev={true}
                 sakId={props.sak.id}
                 iverksett={{ fn: iverksettCallback, status: iverksettStatus }}

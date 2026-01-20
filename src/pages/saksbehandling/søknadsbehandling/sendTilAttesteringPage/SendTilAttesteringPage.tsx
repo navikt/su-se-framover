@@ -1,17 +1,18 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import { Alert, Button, Loader, Textarea } from '@navikt/ds-react';
-import { useMemo } from 'react';
-import { Controller, useForm } from 'react-hook-form';
+import { Alert, Button, Loader } from '@navikt/ds-react';
+import { useEffect, useMemo } from 'react';
+import { useForm } from 'react-hook-form';
 import { useNavigate, useOutletContext } from 'react-router-dom';
-
+import { FritekstTyper, hentFritekst, redigerFritekst } from '~src/api/fritekstApi.ts';
 import * as PdfApi from '~src/api/pdfApi';
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
+import TextareaWithAutosave from '~src/components/inputs/textareaWithAutosave/TextareaWithAutosave.tsx';
 import LinkAsButton from '~src/components/linkAsButton/LinkAsButton';
 import OppsummeringAvSøknadsbehandling from '~src/components/oppsummering/søknadsbehandlingoppsummering/OppsummeringAvSøknadsbehandling';
 import { SaksoversiktContext } from '~src/context/SaksoversiktContext';
 import { useSøknadsbehandlingDraftContextFor } from '~src/context/søknadsbehandlingDraftContext';
 import * as SøknadsbehandlingActions from '~src/features/SøknadsbehandlingActions';
-import { useAsyncActionCreator, useBrevForhåndsvisning } from '~src/lib/hooks';
+import { useApiCall, useAsyncActionCreator, useBrevForhåndsvisning } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
 import * as Routes from '~src/lib/routes';
 import { Sakstype } from '~src/types/Sak';
@@ -34,16 +35,19 @@ interface FormData {
 const SendTilAttesteringPage = () => {
     const props = useOutletContext<SaksoversiktContext>();
     const { formatMessage } = useI18n({ messages });
-
     const navigate = useNavigate();
+
+    const { behandlingId = '' } = Routes.useRouteParams<typeof Routes.saksoversiktValgtBehandling>();
+    const behandling = props.sak.behandlinger.find((x) => x.id === behandlingId);
+
+    const [lagreFritekstStatus, lagreFritekst] = useApiCall(redigerFritekst);
+
     const [sendTilAttesteringStatus, sendTilAttestering] = useAsyncActionCreator(
         SøknadsbehandlingActions.sendTilAttestering,
     );
     const [brevStatus, lastNedBrev] = useBrevForhåndsvisning(PdfApi.fetchBrevutkastForSøknadsbehandlingWithFritekst);
-    const { behandlingId = '' } = Routes.useRouteParams<typeof Routes.saksoversiktValgtBehandling>();
-    const behandling = props.sak.behandlinger.find((x) => x.id === behandlingId);
 
-    const initialValues: FormData = { fritekst: behandling?.fritekstTilBrev ?? '' };
+    const initialValues: FormData = { fritekst: '' };
     const { draft, clearDraft, useDraftFormSubscribe } = useSøknadsbehandlingDraftContextFor<FormData>(
         'SendTilAttesteringPage',
         ({ fritekst }) => fritekst === initialValues.fritekst,
@@ -70,12 +74,11 @@ const SendTilAttesteringPage = () => {
         return vilkårUrl(Vilkårtype.Beregning);
     }, [behandling, sisteVurderteVilkår]);
 
-    const handleSubmit = async (values: FormData) => {
+    const handleSubmit = async () => {
         sendTilAttestering(
             {
                 sakId: props.sak.id,
                 behandlingId: behandlingId,
-                fritekstTilBrev: values.fritekst,
             },
             () => {
                 clearDraft();
@@ -90,6 +93,21 @@ const SendTilAttesteringPage = () => {
     });
     useDraftFormSubscribe(form.watch);
 
+    useEffect(() => {
+        if (!behandlingId) {
+            return;
+        }
+        hentFritekst({
+            referanseId: behandlingId,
+            sakId: props.sak.id,
+            type: FritekstTyper.VEDTAKSBREV_SØKNADSBEHANDLING,
+        }).then((result) => {
+            if (result.status === 'ok' && result.data) {
+                form.setValue('fritekst', result.data.fritekst ?? '');
+            }
+        });
+    }, [behandlingId, props.sak.id, form]);
+
     if (!behandling) {
         return <Alert variant="error">{formatMessage('feilmelding.fantIkkeBehandlingsId')}</Alert>;
     }
@@ -100,17 +118,27 @@ const SendTilAttesteringPage = () => {
                 <OppsummeringAvSøknadsbehandling behandling={behandling} />
                 <div className={styles.fritekstareaOuterContainer}>
                     <div className={styles.fritekstareaContainer}>
-                        <Controller
-                            control={form.control}
-                            name="fritekst"
-                            render={({ field, fieldState }) => (
-                                <Textarea
-                                    label={formatMessage('input.fritekst.label')}
-                                    error={fieldState.error?.message}
-                                    {...field}
-                                />
-                            )}
+                        <TextareaWithAutosave
+                            textarea={{
+                                name: 'fritekst',
+                                label: formatMessage('input.fritekst.label'),
+                                control: form.control,
+                                value: form.watch('fritekst') ?? '',
+                            }}
+                            save={{
+                                handleSave: () => {
+                                    lagreFritekst({
+                                        referanseId: behandlingId,
+                                        sakId: props.sak.id,
+                                        type: FritekstTyper.VEDTAKSBREV_SØKNADSBEHANDLING,
+                                        fritekst: form.watch('fritekst') ?? '',
+                                    });
+                                },
+                                status: lagreFritekstStatus,
+                            }}
                         />
+                    </div>
+                    <div className={styles.visBrevContainer}>
                         {RemoteData.isFailure(brevStatus) && (
                             <Alert variant="error">{formatMessage('feilmelding.brevhentingFeilet')}</Alert>
                         )}

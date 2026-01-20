@@ -4,14 +4,14 @@ import { Radio, RadioGroup, Textarea } from '@navikt/ds-react';
 import { useEffect } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
-
+import { FritekstTyper, hentFritekst, redigerFritekst } from '~src/api/fritekstApi.ts';
 import * as pdfApi from '~src/api/pdfApi';
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
 import TextareaWithAutosave from '~src/components/inputs/textareaWithAutosave/TextareaWithAutosave';
 import OppsummeringAvInformasjonsrevurdering from '~src/components/oppsummering/oppsummeringAvRevurdering/informasjonsrevurdering/OppsummeringAvInformasjonsrevurdering';
 import ToKolonner from '~src/components/toKolonner/ToKolonner';
 import * as RevurderingActions from '~src/features/revurdering/revurderingActions';
-import { useAsyncActionCreator, useBrevForhåndsvisning } from '~src/lib/hooks';
+import { useApiCall, useAsyncActionCreator, useBrevForhåndsvisning } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
 import * as Routes from '~src/lib/routes';
 import { Nullable } from '~src/lib/types';
@@ -26,7 +26,6 @@ import {
 } from '~src/types/Revurdering';
 import { Sakstype } from '~src/types/Sak.ts';
 import { erRevurderingOpphørPgaManglendeDokumentasjon } from '~src/utils/revurdering/revurderingUtils';
-
 import revurderingMessages from '../../revurdering-nb';
 import styles from './SendTilAttestering.module.less';
 import messages from './SendTilAttestering-nb';
@@ -78,6 +77,8 @@ const SendTilAttestering = (props: {
     const { formatMessage } = useI18n({ messages: { ...messages, ...revurderingMessages } });
 
     const [lagreBrevStatus, lagreAction] = useAsyncActionCreator(RevurderingActions.lagreBrevvalg);
+    const [lagreFritekstStatus, lagreFritekst] = useApiCall(redigerFritekst);
+
     const [seBrevStatus, seBrev] = useBrevForhåndsvisning(pdfApi.fetchBrevutkastForRevurderingMedPotensieltFritekst);
     const [sendTilAttesteringStatus, sendtilAttestering] = useAsyncActionCreator(
         RevurderingActions.sendRevurderingTilAttestering,
@@ -135,15 +136,21 @@ const SendTilAttestering = (props: {
     const watch = form.watch();
 
     useEffect(() => {
-        if (
-            watch.valg === Valg.SEND &&
-            watch.fritekst !== null &&
-            watch.fritekst !== props.revurdering.brevvalg.fritekst
-        ) {
-            lagreBrev(watch, () => void 0);
-        }
-        form.clearErrors('fritekst');
-    }, [watch.valg]);
+        if (watch.valg !== Valg.SEND) return;
+
+        const referanseId = props.revurdering.id;
+        if (!referanseId) return;
+
+        hentFritekst({
+            referanseId,
+            sakId: props.sakId,
+            type: FritekstTyper.VEDTAKSBREV_REVURDERING,
+        }).then((result) => {
+            if (result.status === 'ok' && result.data) {
+                form.setValue('fritekst', result.data.fritekst ?? '');
+            }
+        });
+    }, [watch.valg, props.revurdering.id, props.sakId]);
 
     return (
         <ToKolonner tittel={'Vedtaksbrev'} width="40/60">
@@ -201,20 +208,23 @@ const SendTilAttestering = (props: {
                                         save={{
                                             handleSave: () => {
                                                 if (watch.valg === Valg.SEND) {
-                                                    lagreAction({
+                                                    lagreFritekst({
+                                                        referanseId: props.revurdering.id,
                                                         sakId: props.sakId,
-                                                        revurderingId: props.revurdering.id,
-                                                        ...form.getValues(),
+                                                        type: FritekstTyper.VEDTAKSBREV_REVURDERING,
+                                                        fritekst: form.watch('fritekst') ?? '',
                                                     });
                                                 }
                                             },
-                                            status: lagreBrevStatus,
+                                            status: lagreFritekstStatus,
                                         }}
                                         brev={{
                                             handleSeBrev: () =>
                                                 seBrev({
                                                     sakId: props.sakId,
                                                     revurderingId: props.revurdering.id,
+                                                    fritekst: form.getValues().fritekst ?? '',
+                                                    underAttestering: false,
                                                 }),
                                             status: seBrevStatus,
                                         }}

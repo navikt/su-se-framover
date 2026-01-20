@@ -50,10 +50,10 @@ export const startSimulering = createAsyncThunk<
 
 export const sendTilAttestering = createAsyncThunk<
     Søknadsbehandling,
-    { sakId: string; behandlingId: string; fritekstTilBrev: string },
+    { sakId: string; behandlingId: string },
     { rejectValue: ApiError }
->('behandling/tilAttestering', async ({ sakId, behandlingId, fritekstTilBrev }, thunkApi) => {
-    const res = await behandlingApi.sendTilAttestering({ sakId, behandlingId, fritekstTilBrev });
+>('behandling/tilAttestering', async ({ sakId, behandlingId }, thunkApi) => {
+    const res = await behandlingApi.sendTilAttestering({ sakId, behandlingId });
     if (res.status === 'ok') {
         return res.data;
     }
@@ -62,10 +62,10 @@ export const sendTilAttestering = createAsyncThunk<
 
 export const attesteringIverksett = createAsyncThunk<
     Søknadsbehandling,
-    { sakId: string; behandlingId: string; fritekstTilBrev: string },
+    { sakId: string; behandlingId: string },
     { rejectValue: ApiError }
->('behandling/iverksett', async ({ sakId, behandlingId, fritekstTilBrev }, thunkApi) => {
-    const res = await behandlingApi.iverksett({ sakId, behandlingId, fritekst: fritekstTilBrev });
+>('behandling/iverksett', async ({ sakId, behandlingId }, thunkApi) => {
+    const res = await behandlingApi.iverksett({ sakId, behandlingId });
     if (res.status === 'ok') {
         return res.data;
     }
