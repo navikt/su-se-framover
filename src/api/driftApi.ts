@@ -147,6 +147,40 @@ export async function sakStatistikk(args: { fraOgMed: string; tilOgMed: string }
     });
 }
 
+type StatusResult = ApiClientResult<{
+    status: string;
+}>;
+
+export async function lagStønadStatistikk(args: { fraOgMed: string; tilOgMed: string }): Promise<StatusResult> {
+    return stønadStatistikk({
+        ...args,
+        endepunkt: 'lag',
+    });
+}
+
+export async function sendStønadStatistikk(args: { fraOgMed: string; tilOgMed: string }): Promise<StatusResult> {
+    return stønadStatistikk({
+        ...args,
+        endepunkt: 'send',
+    });
+}
+
+async function stønadStatistikk(args: {
+    fraOgMed: string;
+    tilOgMed: string;
+    endepunkt: 'lag' | 'send';
+}): Promise<StatusResult> {
+    return apiClient({
+        url: `/drift/statistikk/stønad/${args.endepunkt}`,
+        method: 'POST',
+        request: { headers: new Headers({ Accept: 'application/json' }) },
+        body: {
+            fraOgMed: args.fraOgMed,
+            tilOgMed: args.tilOgMed,
+        },
+    });
+}
+
 export async function ferdigstillVedtak(args: { vedtakId: string }): Promise<ApiClientResult<{ status: string }>> {
     return apiClient({
         url: `/drift/vedtak/${args.vedtakId}/ferdigstill`,
