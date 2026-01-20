@@ -52,7 +52,7 @@ const OppsummeringAvKlage = (props: { klage: Klage; klagensVedtak: Vedtak }) => 
                 {props.klage.klagevedtakshistorikk.length > 0 && (
                     <div className={styles.utfallshistorikkContainer}>
                         <Heading size="xsmall" level="6">
-                            Utfallshistorikk
+                            Utfallshistorikk fra Kabal
                         </Heading>
                         <VStack gap="2">
                             {props.klage.klagevedtakshistorikk.map((vedtattUtfall, idx) => (
