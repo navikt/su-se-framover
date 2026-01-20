@@ -48,6 +48,7 @@ const schema = yup.object<AttesteringFormData>({
                 [...Object.values(UnderkjennelseGrunnBehandling), ...Object.values(UnderkjennelseGrunnTilbakekreving)],
                 'Du må velge en grunn',
             ),
+        otherwise: yup.string<UnderkjennelseGrunn>().notRequired().nullable(),
     }),
     kommentar: yup.mixed<string>().when('beslutning', {
         is: Beslutning.UNDERKJENN,

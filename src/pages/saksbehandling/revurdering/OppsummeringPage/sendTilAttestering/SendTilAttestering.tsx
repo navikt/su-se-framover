@@ -4,7 +4,7 @@ import { Radio, RadioGroup, Textarea } from '@navikt/ds-react';
 import { useEffect } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
-import { FritekstTyper, redigerFritekst } from '~src/api/fritekstApi.ts';
+import { FritekstTyper, hentFritekst, redigerFritekst } from '~src/api/fritekstApi.ts';
 import * as pdfApi from '~src/api/pdfApi';
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
 import TextareaWithAutosave from '~src/components/inputs/textareaWithAutosave/TextareaWithAutosave';
@@ -136,15 +136,21 @@ const SendTilAttestering = (props: {
     const watch = form.watch();
 
     useEffect(() => {
-        if (
-            watch.valg === Valg.SEND &&
-            watch.fritekst !== null &&
-            watch.fritekst !== props.revurdering.brevvalg.fritekst
-        ) {
-            lagreBrev(watch, () => void 0);
-        }
-        form.clearErrors('fritekst');
-    }, [watch.valg]);
+        if (watch.valg !== Valg.SEND) return;
+
+        const referanseId = props.revurdering.id;
+        if (!referanseId) return;
+
+        hentFritekst({
+            referanseId,
+            sakId: props.sakId,
+            type: FritekstTyper.VEDTAKSBREV_REVURDERING,
+        }).then((result) => {
+            if (result.status === 'ok' && result.data) {
+                form.setValue('fritekst', result.data.fritekst ?? '');
+            }
+        });
+    }, [watch.valg, props.revurdering.id, props.sakId]);
 
     return (
         <ToKolonner tittel={'Vedtaksbrev'} width="40/60">
