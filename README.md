@@ -43,7 +43,7 @@ Vi har erfart at det er lettere å bruke et GUI-verktøy når det kommer til Red
 
 #### Via naisdevice i preprod
 
-- kubectx dev-fss
+- kubectx dev-gcp
 - kubectl --namespace=supstonad get pods # kopier ut redis pod-navnet
 - kubectl --namespace=supstonad port-forward <pod> 6379:6379 # din_port:nais_port
 - Kobler til med hostname: localhost, port: <din_port>, default username og passord finner du ved å kjøre `env` inne i podden.
