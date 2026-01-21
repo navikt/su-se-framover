@@ -150,7 +150,6 @@ const SendTilAttesteringPage = () => {
                                 lastNedBrev({
                                     sakId: props.sak.id,
                                     behandlingId: behandling.id,
-                                    fritekst: form.getValues().fritekst,
                                     underAttestering: false,
                                 });
                             }}
