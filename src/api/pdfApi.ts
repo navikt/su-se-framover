@@ -1,17 +1,16 @@
 import apiClient, { ApiClientResult } from './apiClient';
 import { AvslagBody } from './søknadApi';
 
-export async function fetchBrevutkastForSøknadsbehandlingWithFritekst(args: {
+export async function fetchBrevutkastForSøknadsbehandling(args: {
     sakId: string;
     behandlingId: string;
-    fritekst: string;
     underAttestering?: boolean;
 }): Promise<ApiClientResult<Blob>> {
     return apiClient({
         url: `/saker/${args.sakId}/behandlinger/${args.behandlingId}/vedtaksutkast`,
         method: 'POST',
         request: { headers: new Headers({ Accept: 'application/pdf' }) },
-        body: { fritekst: args.fritekst, underAttestering: args.underAttestering ?? false },
+        body: { underAttestering: args.underAttestering ?? false },
         bodyTransformer: (res) => res.blob(),
     });
 }
@@ -25,11 +24,9 @@ export async function fetchSøknadutskrift(søknadId: string): Promise<ApiClient
     });
 }
 
-export async function fetchBrevutkastForRevurderingMedPotensieltFritekst(args: {
+export async function fetchBrevutkastForRevurdering(args: {
     sakId: string;
     revurderingId: string;
-    fritekst?: string;
-    underAttestering?: boolean;
 }): Promise<ApiClientResult<Blob>> {
     return apiClient({
         url: `/saker/${args.sakId}/revurderinger/${args.revurderingId}/brevutkast`,
