@@ -2,8 +2,7 @@ name: Deploy til prod-gcp ved release
 
 on:
     release:
-        # skal være [published] men skrur ikke på enda
-        types: []
+        types: [published]
 
 permissions: { }
 

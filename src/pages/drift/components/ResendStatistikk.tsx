@@ -26,7 +26,7 @@ const ResendStatistikk = () => {
                 type="button"
                 onClick={() => setVilResendeStatistikk(true)}
             >
-                Resend statistikk
+                Resend statistikk (gammel)
             </Button>
             {vilResendeStatistikk && (
                 <ResendStatistikkModal open={vilResendeStatistikk} onClose={() => setVilResendeStatistikk(false)} />
@@ -52,7 +52,7 @@ const ResendStatistikkModal = (props: { open: boolean; onClose: () => void }) =>
             <Modal.Body>
                 <div>
                     <Heading size="medium" spacing>
-                        Spesifikk
+                        Gammel løsning for statistikk - skal fases ut!
                     </Heading>
 
                     <Textarea label={'vedtak id'} onChange={(v) => setVedtakId(v.target.value)} />
