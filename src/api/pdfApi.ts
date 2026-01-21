@@ -24,7 +24,7 @@ export async function fetchSøknadutskrift(søknadId: string): Promise<ApiClient
     });
 }
 
-export async function fetchBrevutkastForRevurderingMedPotensieltFritekst(args: {
+export async function fetchBrevutkastForRevurdering(args: {
     sakId: string;
     revurderingId: string;
 }): Promise<ApiClientResult<Blob>> {
