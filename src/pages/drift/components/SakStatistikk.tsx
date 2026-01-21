@@ -14,7 +14,7 @@ const SakStatistikk = () => {
     const [vilResendeStatistikk, setVilResendeStatistikk] = useState<boolean>(false);
 
     return (
-        <>
+        <div>
             <Button
                 className={sharedStyles.knapp}
                 variant="secondary"
@@ -26,7 +26,7 @@ const SakStatistikk = () => {
             {vilResendeStatistikk && (
                 <SakStatistikkModal open={vilResendeStatistikk} onClose={() => setVilResendeStatistikk(false)} />
             )}
-        </>
+        </div>
     );
 };
 
