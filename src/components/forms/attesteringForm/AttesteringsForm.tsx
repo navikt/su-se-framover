@@ -103,9 +103,12 @@ export const AttesteringsForm = (props: Props) => {
     const behandlingstype = props.behandligstype ?? Behandlingstype.Søknadsbehandling;
 
     function lastNedBrev(behandlingstype: Behandlingstype) {
-        const api = (args: { sakId: string; behandlingId: string; revurderingId: string }) => {
+        const api = (args: { sakId: string; behandlingId: string; underAttestering?: boolean }) => {
             if (behandlingstype === Behandlingstype.Revurdering) {
-                return PdfApi.fetchBrevutkastForRevurderingMedPotensieltFritekst(args);
+                return PdfApi.fetchBrevutkastForRevurderingMedPotensieltFritekst({
+                    revurderingId: args.behandlingId,
+                    sakId: args.sakId,
+                });
             } else {
                 return PdfApi.fetchBrevutkastForSøknadsbehandlingWithFritekst(args);
             }
@@ -205,7 +208,6 @@ export const AttesteringsForm = (props: Props) => {
                                 lastNedBrevBehandling({
                                     sakId: props.sakId,
                                     behandlingId: props.behandlingsId,
-                                    revurderingId: props.behandlingsId,
                                 });
                             }}
                         >
