@@ -105,12 +105,12 @@ export const AttesteringsForm = (props: Props) => {
     function lastNedBrev(behandlingstype: Behandlingstype) {
         const api = (args: { sakId: string; behandlingId: string; underAttestering?: boolean }) => {
             if (behandlingstype === Behandlingstype.Revurdering) {
-                return PdfApi.fetchBrevutkastForRevurderingMedPotensieltFritekst({
+                return PdfApi.fetchBrevutkastForRevurdering({
                     revurderingId: args.behandlingId,
                     sakId: args.sakId,
                 });
             } else {
-                return PdfApi.fetchBrevutkastForSøknadsbehandlingWithFritekst(args);
+                return PdfApi.fetchBrevutkastForSøknadsbehandling(args);
             }
         };
         return useBrevForhåndsvisning(api);
