@@ -79,7 +79,7 @@ const SendTilAttestering = (props: {
     const [lagreBrevStatus, lagreAction] = useAsyncActionCreator(RevurderingActions.lagreBrevvalg);
     const [lagreFritekstStatus, lagreFritekst] = useApiCall(redigerFritekst);
 
-    const [seBrevStatus, seBrev] = useBrevForhåndsvisning(pdfApi.fetchBrevutkastForRevurderingMedPotensieltFritekst);
+    const [seBrevStatus, seBrev] = useBrevForhåndsvisning(pdfApi.fetchBrevutkastForRevurdering);
     const [sendTilAttesteringStatus, sendtilAttestering] = useAsyncActionCreator(
         RevurderingActions.sendRevurderingTilAttestering,
     );

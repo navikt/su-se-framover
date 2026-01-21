@@ -47,7 +47,7 @@ const AttesterRevurdering = (props: {
     const { formatMessage } = useI18n({ messages: { ...sharedMessages, ...messages } });
     const navigate = useNavigate();
 
-    const [hentPdfStatus, hentPdf] = useApiCall(PdfApi.fetchBrevutkastForRevurderingMedPotensieltFritekst);
+    const [hentPdfStatus, hentPdf] = useApiCall(PdfApi.fetchBrevutkastForRevurdering);
     const dispatch = useAppDispatch();
     const [iverksettStatus, iverksett] = useAsyncActionCreator(RevurderingActions.iverksettRevurdering);
     const [underkjennStatus, underkjenn] = useAsyncActionCreator(RevurderingActions.underkjennRevurdering);

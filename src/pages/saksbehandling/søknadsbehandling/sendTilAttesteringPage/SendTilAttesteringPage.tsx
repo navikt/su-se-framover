@@ -45,7 +45,7 @@ const SendTilAttesteringPage = () => {
     const [sendTilAttesteringStatus, sendTilAttestering] = useAsyncActionCreator(
         SøknadsbehandlingActions.sendTilAttestering,
     );
-    const [brevStatus, lastNedBrev] = useBrevForhåndsvisning(PdfApi.fetchBrevutkastForSøknadsbehandlingWithFritekst);
+    const [brevStatus, lastNedBrev] = useBrevForhåndsvisning(PdfApi.fetchBrevutkastForSøknadsbehandling);
 
     const initialValues: FormData = { fritekst: '' };
     const { draft, clearDraft, useDraftFormSubscribe } = useSøknadsbehandlingDraftContextFor<FormData>(
