@@ -1,7 +1,7 @@
 import apiClient, { ApiClientResult } from './apiClient';
 import { AvslagBody } from './søknadApi';
 
-export async function fetchBrevutkastForSøknadsbehandlingWithFritekst(args: {
+export async function fetchBrevutkastForSøknadsbehandling(args: {
     sakId: string;
     behandlingId: string;
     underAttestering?: boolean;
