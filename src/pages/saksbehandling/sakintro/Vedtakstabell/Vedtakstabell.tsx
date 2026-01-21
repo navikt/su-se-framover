@@ -23,7 +23,7 @@ import { useI18n } from '~src/lib/i18n';
 import * as Routes from '~src/lib/routes';
 import { OmgjøringModal, Omgjøringsfom } from '~src/pages/saksbehandling/sakintro/Vedtakstabell/OmgjøringModal.tsx';
 import { DokumentIdType } from '~src/types/dokument/Dokument';
-import { Klage, KlageStatus } from '~src/types/Klage';
+import { Klage, KlageStatus, UtfallKey, utfallTilVisning, VedtattUtfall } from '~src/types/Klage';
 import { erOmgjøring, Revurdering } from '~src/types/Revurdering.ts';
 import { Søknadsbehandling } from '~src/types/Søknadsbehandling.ts';
 import { Vedtak, VedtakType, VedtakTypeMedOmgjøring } from '~src/types/Vedtak';
@@ -132,187 +132,224 @@ const Vedtakstabell = (props: {
                 )}
                 tableBody={(sortertKolonne, sortVerdi) => (
                     <Table.Body>
-                        {sorterTabell(props.vedtakOgOversendteKlager, sortertKolonne, sortVerdi).map((vedtak) => {
-                            const [hentDokumenterStatus, hentDokumenter] = useApiCall(DokumentApi.hentDokumenter);
-                            //brevet for vedtak på tilbakekreving ligger ikke som et dokument i basen på samme måte som andre vedtak.
-                            //og kan derfor ikke hentes gjennom hentDokumenter
-                            const [tilbakekrevingsbrevStatus, hentTilbakekrevingsbrev] = useApiCall(
-                                forhåndsvisVedtaksbrevTilbakekrevingsbehandling,
-                            );
-                            const [startNysøknadsbehandlingStatus, startNySøknadsbehandling] = useAsyncActionCreator(
-                                VedtakActions.startNySøknadsbehandling,
-                            );
+                        {sorterTabell(props.vedtakOgOversendteKlager, sortertKolonne, sortVerdi).map(
+                            (vedtakEllerKlage) => {
+                                const [hentDokumenterStatus, hentDokumenter] = useApiCall(DokumentApi.hentDokumenter);
+                                //brevet for vedtakEllerKlage på tilbakekreving ligger ikke som et dokument i basen på samme måte som andre vedtakEllerKlage.
+                                //og kan derfor ikke hentes gjennom hentDokumenter
+                                const [tilbakekrevingsbrevStatus, hentTilbakekrevingsbrev] = useApiCall(
+                                    forhåndsvisVedtaksbrevTilbakekrevingsbehandling,
+                                );
+                                const [startNysøknadsbehandlingStatus, startNySøknadsbehandling] =
+                                    useAsyncActionCreator(VedtakActions.startNySøknadsbehandling);
 
-                            //pakker hver status inn i egen useEffect, så flere feil ikke blir vist samtidig i toasts
-                            useEffect(() => {
-                                if (RemoteData.isFailure(startNysøknadsbehandlingStatus)) {
-                                    insert(
-                                        createToast({
-                                            type: ToastType.ERROR,
-                                            duration: 5000,
-                                            message: apiErrorMessages(startNysøknadsbehandlingStatus.error),
-                                        }),
-                                    );
-                                }
-                            }, [startNysøknadsbehandlingStatus]);
+                                //pakker hver status inn i egen useEffect, så flere feil ikke blir vist samtidig i toasts
+                                useEffect(() => {
+                                    if (RemoteData.isFailure(startNysøknadsbehandlingStatus)) {
+                                        insert(
+                                            createToast({
+                                                type: ToastType.ERROR,
+                                                duration: 5000,
+                                                message: apiErrorMessages(startNysøknadsbehandlingStatus.error),
+                                            }),
+                                        );
+                                    }
+                                }, [startNysøknadsbehandlingStatus]);
 
-                            useEffect(() => {
-                                if (RemoteData.isFailure(tilbakekrevingsbrevStatus)) {
-                                    insert(
-                                        createToast({
-                                            type: ToastType.ERROR,
-                                            duration: 5000,
-                                            message: apiErrorMessages(tilbakekrevingsbrevStatus.error),
-                                        }),
-                                    );
-                                }
-                            }, [tilbakekrevingsbrevStatus]);
+                                useEffect(() => {
+                                    if (RemoteData.isFailure(tilbakekrevingsbrevStatus)) {
+                                        insert(
+                                            createToast({
+                                                type: ToastType.ERROR,
+                                                duration: 5000,
+                                                message: apiErrorMessages(tilbakekrevingsbrevStatus.error),
+                                            }),
+                                        );
+                                    }
+                                }, [tilbakekrevingsbrevStatus]);
 
-                            useEffect(() => {
-                                if (RemoteData.isFailure(hentDokumenterStatus)) {
-                                    insert(
-                                        createToast({
-                                            type: ToastType.ERROR,
-                                            duration: 5000,
-                                            message: apiErrorMessages(hentDokumenterStatus.error),
-                                        }),
-                                    );
-                                }
-                            }, [hentDokumenterStatus]);
+                                useEffect(() => {
+                                    if (RemoteData.isFailure(hentDokumenterStatus)) {
+                                        insert(
+                                            createToast({
+                                                type: ToastType.ERROR,
+                                                duration: 5000,
+                                                message: apiErrorMessages(hentDokumenterStatus.error),
+                                            }),
+                                        );
+                                    }
+                                }, [hentDokumenterStatus]);
 
-                            const hentVedtakstype = (vedtak: Vedtak): VedtakType | VedtakTypeMedOmgjøring => {
-                                if (vedtak.type === VedtakType.ENDRING) {
-                                    const revurdering = props.revurderinger.find((r) => r.id === vedtak.behandlingId);
-                                    if (revurdering) {
-                                        if (erOmgjøring(revurdering.årsak)) {
-                                            return VedtakTypeMedOmgjøring.REVURDERING_OMGJØRING;
+                                const hentVedtakstype = (vedtak: Vedtak): VedtakType | VedtakTypeMedOmgjøring => {
+                                    if (vedtak.type === VedtakType.ENDRING) {
+                                        const revurdering = props.revurderinger.find(
+                                            (r) => r.id === vedtak.behandlingId,
+                                        );
+                                        if (revurdering) {
+                                            if (erOmgjøring(revurdering.årsak)) {
+                                                return VedtakTypeMedOmgjøring.REVURDERING_OMGJØRING;
+                                            } else {
+                                                return vedtak.type;
+                                            }
                                         } else {
                                             return vedtak.type;
                                         }
-                                    } else {
-                                        return vedtak.type;
                                     }
-                                }
-                                if (vedtak.type === VedtakType.SØKNAD) {
-                                    const behandling = props.behandlinger.find((b) => b.id === vedtak.behandlingId);
-                                    if (behandling) {
-                                        if (behandling.omgjøringsårsak) {
-                                            return VedtakTypeMedOmgjøring.SØKNAD_OMGJØRING;
+                                    if (vedtak.type === VedtakType.SØKNAD) {
+                                        const behandling = props.behandlinger.find((b) => b.id === vedtak.behandlingId);
+                                        if (behandling) {
+                                            if (behandling.omgjøringsårsak) {
+                                                return VedtakTypeMedOmgjøring.SØKNAD_OMGJØRING;
+                                            } else {
+                                                return vedtak.type;
+                                            }
                                         } else {
                                             return vedtak.type;
                                         }
-                                    } else {
-                                        return vedtak.type;
                                     }
-                                }
-                                return vedtak.type;
-                            };
+                                    return vedtak.type;
+                                };
 
-                            return (
-                                <Table.Row key={vedtak.id}>
-                                    <Table.DataCell>
-                                        {isOversendtKlage(vedtak)
-                                            ? formatMessage(
-                                                  `datacell.vedtakstype.${vedtak.status as KlageStatus.OVERSENDT}`,
-                                              )
-                                            : formatMessage(`datacell.vedtakstype.${hentVedtakstype(vedtak)}`)}
-                                    </Table.DataCell>
-                                    <Table.DataCell>
-                                        {isOversendtKlage(vedtak)
-                                            ? formatMessage(
-                                                  `datacell.resultat.${vedtak.status as KlageStatus.OVERSENDT}`,
-                                              )
-                                            : formatMessage(`datacell.resultat.${vedtak.type}`)}
-                                    </Table.DataCell>
-                                    <Table.DataCell>
-                                        {'periode' in vedtak && vedtak.periode ? formatPeriode(vedtak.periode) : '-'}
-                                    </Table.DataCell>
-                                    <Table.DataCell>{formatDateTime(vedtak.opprettet)}</Table.DataCell>
-                                    <Table.DataCell>
-                                        <Link
-                                            to={Routes.vedtakEllerKlageOppsummering.createURL({
-                                                sakId: props.sakId,
-                                                vedtakEllerKlageId: vedtak.id,
-                                            })}
-                                        >
-                                            {formatMessage('dataCell.seOppsummering')}
-                                        </Link>
-                                    </Table.DataCell>
-                                    <Table.DataCell className={styles.vedtaksbrevDataCell}>
-                                        {!isOversendtKlage(vedtak) && skalDokumentIkkeGenereres(vedtak) && (
-                                            <BodyShort>{formatMessage('datacell.brev.skalIkkeGenerere')}</BodyShort>
-                                        )}
-                                        {!isOversendtKlage(vedtak) && erDokumentIkkeGenerertEnda(vedtak) && (
-                                            <BodyShort>{formatMessage('datacell.brev.ikkeGenerert')}</BodyShort>
-                                        )}
+                                const hentSisteUtfallFraKlage = (
+                                    klagevedtakshistorikk?: VedtattUtfall[],
+                                ): UtfallKey | null => {
+                                    if (!klagevedtakshistorikk || klagevedtakshistorikk.length === 0) {
+                                        return null;
+                                    }
 
-                                        {(isOversendtKlage(vedtak) || erDokumentGenerertEllerSenere(vedtak)) && (
-                                            <Button
-                                                className={styles.seBrevButton}
-                                                variant="secondary"
-                                                size={'small'}
-                                                loading={
-                                                    RemoteData.isPending(hentDokumenterStatus) ||
-                                                    RemoteData.isPending(tilbakekrevingsbrevStatus)
-                                                }
-                                                onClick={() => {
-                                                    if (isVedtak(vedtak) && vedtak.type === VedtakType.TILBAKEKREVING) {
-                                                        hentTilbakekrevingsbrev(
-                                                            {
-                                                                sakId: props.sakId,
-                                                                behandlingId: vedtak.behandlingId,
-                                                            },
-                                                            (res) => window.open(URL.createObjectURL(res)),
-                                                        );
-                                                    } else {
-                                                        hentDokumenter(
-                                                            {
-                                                                id: vedtak.id,
-                                                                idType: isOversendtKlage(vedtak)
-                                                                    ? DokumentIdType.Klage
-                                                                    : DokumentIdType.Vedtak,
-                                                            },
-                                                            (dokumenter) =>
-                                                                window.open(
-                                                                    URL.createObjectURL(getBlob(dokumenter[0])),
-                                                                ),
-                                                        );
-                                                    }
-                                                }}
+                                    const siste = klagevedtakshistorikk.reduce((nyeste, current) =>
+                                        new Date(current.opprettet) > new Date(nyeste.opprettet) ? current : nyeste,
+                                    );
+
+                                    return siste.utfall ?? null;
+                                };
+
+                                const hentResultatEllerTekstForOversendtKlage = (klage: Klage): string => {
+                                    const sisteUtfall = hentSisteUtfallFraKlage(klage.klagevedtakshistorikk);
+
+                                    if (sisteUtfall) {
+                                        return utfallTilVisning(sisteUtfall);
+                                    }
+
+                                    return formatMessage(`datacell.resultat.${klage.status as KlageStatus.OVERSENDT}`);
+                                };
+
+                                return (
+                                    <Table.Row key={vedtakEllerKlage.id}>
+                                        <Table.DataCell>
+                                            {isOversendtKlage(vedtakEllerKlage)
+                                                ? formatMessage(
+                                                      `datacell.vedtakstype.${vedtakEllerKlage.status as KlageStatus.OVERSENDT}`,
+                                                  )
+                                                : formatMessage(
+                                                      `datacell.vedtakstype.${hentVedtakstype(vedtakEllerKlage)}`,
+                                                  )}
+                                        </Table.DataCell>
+                                        <Table.DataCell>
+                                            {isOversendtKlage(vedtakEllerKlage)
+                                                ? hentResultatEllerTekstForOversendtKlage(vedtakEllerKlage)
+                                                : formatMessage(`datacell.resultat.${vedtakEllerKlage.type}`)}
+                                        </Table.DataCell>
+                                        <Table.DataCell>
+                                            {'periode' in vedtakEllerKlage && vedtakEllerKlage.periode
+                                                ? formatPeriode(vedtakEllerKlage.periode)
+                                                : '-'}
+                                        </Table.DataCell>
+                                        <Table.DataCell>{formatDateTime(vedtakEllerKlage.opprettet)}</Table.DataCell>
+                                        <Table.DataCell>
+                                            <Link
+                                                to={Routes.vedtakEllerKlageOppsummering.createURL({
+                                                    sakId: props.sakId,
+                                                    vedtakEllerKlageId: vedtakEllerKlage.id,
+                                                })}
                                             >
-                                                <EnvelopeClosedIcon />
-                                            </Button>
-                                        )}
-                                    </Table.DataCell>
-                                    <Table.DataCell>
-                                        {isVedtak(vedtak) && vedtak.kanStarteNyBehandling && (
-                                            <>
+                                                {formatMessage('dataCell.seOppsummering')}
+                                            </Link>
+                                        </Table.DataCell>
+                                        <Table.DataCell className={styles.vedtaksbrevDataCell}>
+                                            {!isOversendtKlage(vedtakEllerKlage) &&
+                                                skalDokumentIkkeGenereres(vedtakEllerKlage) && (
+                                                    <BodyShort>
+                                                        {formatMessage('datacell.brev.skalIkkeGenerere')}
+                                                    </BodyShort>
+                                                )}
+                                            {!isOversendtKlage(vedtakEllerKlage) &&
+                                                erDokumentIkkeGenerertEnda(vedtakEllerKlage) && (
+                                                    <BodyShort>{formatMessage('datacell.brev.ikkeGenerert')}</BodyShort>
+                                                )}
+
+                                            {(isOversendtKlage(vedtakEllerKlage) ||
+                                                erDokumentGenerertEllerSenere(vedtakEllerKlage)) && (
                                                 <Button
-                                                    size="small"
-                                                    variant="tertiary"
-                                                    onClick={() => setÅpenModal(true)}
-                                                >
-                                                    {formatMessage('dataCell.startNyBehandling')}
-                                                </Button>
-                                                <OmgjøringModal
-                                                    klager={props.klager}
-                                                    åpenModal={åpenModal}
-                                                    setÅpenModal={(åpen: boolean) => setÅpenModal(åpen)}
-                                                    startNysøknadsbehandlingStatus={startNysøknadsbehandlingStatus}
-                                                    startNyBehandling={(form: Omgjøringsfom) =>
-                                                        startNySøknadsbehandling({
-                                                            sakId: props.sakId,
-                                                            vedtakId: vedtak.id,
-                                                            body: form,
-                                                        })
+                                                    className={styles.seBrevButton}
+                                                    variant="secondary"
+                                                    size={'small'}
+                                                    loading={
+                                                        RemoteData.isPending(hentDokumenterStatus) ||
+                                                        RemoteData.isPending(tilbakekrevingsbrevStatus)
                                                     }
-                                                />
-                                            </>
-                                        )}
-                                    </Table.DataCell>
-                                </Table.Row>
-                            );
-                        })}
+                                                    onClick={() => {
+                                                        if (
+                                                            isVedtak(vedtakEllerKlage) &&
+                                                            vedtakEllerKlage.type === VedtakType.TILBAKEKREVING
+                                                        ) {
+                                                            hentTilbakekrevingsbrev(
+                                                                {
+                                                                    sakId: props.sakId,
+                                                                    behandlingId: vedtakEllerKlage.behandlingId,
+                                                                },
+                                                                (res) => window.open(URL.createObjectURL(res)),
+                                                            );
+                                                        } else {
+                                                            hentDokumenter(
+                                                                {
+                                                                    id: vedtakEllerKlage.id,
+                                                                    idType: isOversendtKlage(vedtakEllerKlage)
+                                                                        ? DokumentIdType.Klage
+                                                                        : DokumentIdType.Vedtak,
+                                                                },
+                                                                (dokumenter) =>
+                                                                    window.open(
+                                                                        URL.createObjectURL(getBlob(dokumenter[0])),
+                                                                    ),
+                                                            );
+                                                        }
+                                                    }}
+                                                >
+                                                    <EnvelopeClosedIcon />
+                                                </Button>
+                                            )}
+                                        </Table.DataCell>
+                                        <Table.DataCell>
+                                            {isVedtak(vedtakEllerKlage) && vedtakEllerKlage.kanStarteNyBehandling && (
+                                                <>
+                                                    <Button
+                                                        size="small"
+                                                        variant="tertiary"
+                                                        onClick={() => setÅpenModal(true)}
+                                                    >
+                                                        {formatMessage('dataCell.startNyBehandling')}
+                                                    </Button>
+                                                    <OmgjøringModal
+                                                        klager={props.klager}
+                                                        åpenModal={åpenModal}
+                                                        setÅpenModal={(åpen: boolean) => setÅpenModal(åpen)}
+                                                        startNysøknadsbehandlingStatus={startNysøknadsbehandlingStatus}
+                                                        startNyBehandling={(form: Omgjøringsfom) =>
+                                                            startNySøknadsbehandling({
+                                                                sakId: props.sakId,
+                                                                vedtakId: vedtakEllerKlage.id,
+                                                                body: form,
+                                                            })
+                                                        }
+                                                    />
+                                                </>
+                                            )}
+                                        </Table.DataCell>
+                                    </Table.Row>
+                                );
+                            },
+                        )}
                     </Table.Body>
                 )}
             />

@@ -121,20 +121,36 @@ export enum KabalVedtakHjemmel {
     FVL_PARAGRAF_32 = 'FVL_PARAGRAF_32',
 }
 
-export enum Utfall {
-    TRUKKET = 'TRUKKET',
-    RETUR = 'RETUR',
-    OPPHEVET = 'OPPHEVET',
-    MEDHOLD = 'MEDHOLD',
-    DELVIS_MEDHOLD = 'DELVIS_MEDHOLD',
-    STADFESTELSE = 'STADFESTELSE',
-    UGUNST = 'UGUNST',
-    AVVIST = 'AVVIST',
-    HENLAGT = 'HENLAGT',
-}
+export const Utfall = {
+    TRUKKET: 'TRUKKET',
+    RETUR: 'RETUR',
+    OPPHEVET: 'OPPHEVET',
+    MEDHOLD: 'MEDHOLD',
+    DELVIS_MEDHOLD: 'DELVIS_MEDHOLD',
+    STADFESTELSE: 'STADFESTELSE',
+    UGUNST: 'UGUNST',
+    AVVIST: 'AVVIST',
+    HENLAGT: 'HENLAGT',
+} as const;
+
+export type UtfallKey = (typeof Utfall)[keyof typeof Utfall];
+
+export const UtfallLabel: Record<UtfallKey, string> = {
+    TRUKKET: 'Trukket',
+    RETUR: 'Retur',
+    OPPHEVET: 'Opphevet',
+    MEDHOLD: 'Omgjort av KA',
+    DELVIS_MEDHOLD: 'Delvis omgjort av KA',
+    STADFESTELSE: 'Stadfestelse',
+    UGUNST: 'Ugunst',
+    AVVIST: 'Avvist',
+    HENLAGT: 'Henlagt',
+};
+
+export const utfallTilVisning = (utfall: UtfallKey): string => UtfallLabel[utfall];
 
 export interface VedtattUtfall {
-    utfall: Nullable<Utfall>;
+    utfall: Nullable<UtfallKey>;
     opprettet: string;
     klageinstansMottok: Nullable<string>;
 }
