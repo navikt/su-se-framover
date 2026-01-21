@@ -1,5 +1,5 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import { Button, Heading, Modal } from '@navikt/ds-react';
+import { Alert, Button, Heading, Modal } from '@navikt/ds-react';
 import { useState } from 'react';
 import { lagStønadStatistikk, sendStønadStatistikk } from '~src/api/driftApi';
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
@@ -74,6 +74,14 @@ const StønadStatistikkModal = (props: { open: boolean; onClose: () => void }) =
                     {RemoteData.isFailure(lagStønadstatistikkStatus) && (
                         <ApiErrorAlert error={lagStønadstatistikkStatus.error} />
                     )}
+                    {RemoteData.isFailure(lagStønadstatistikkStatus) &&
+                        lagStønadstatistikkStatus.error.statusCode === 504 && (
+                            <Alert variant="info">
+                                Som oftest er tar det lang tid å lage statistikk for en hel måned eller mer så timeout
+                                betyr ikke nødvendigvis feil. Sjekk logger om det feiler og verifiser i database at
+                                statistikk er opprettet om noen minutter.
+                            </Alert>
+                        )}
                 </div>
                 <div>
                     <Heading size="medium" spacing>
