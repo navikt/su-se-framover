@@ -69,19 +69,15 @@ const StønadStatistikkModal = (props: { open: boolean; onClose: () => void }) =
                     >
                         Lag
                     </Button>
-                    {RemoteData.isPending(lagStønadstatistikkStatus) && <p> Lager stønadstatistikk... </p>}
-                    {RemoteData.isSuccess(lagStønadstatistikkStatus) && <p> Nice 👍🤌</p>}
+                    {RemoteData.isPending(lagStønadstatistikkStatus) && (
+                        <p> Ber om opprettelse av stønadstatistikk... </p>
+                    )}
+                    {RemoteData.isSuccess(lagStønadstatistikkStatus) && (
+                        <p> Generering er påbegynt. Følg med i logger. </p>
+                    )}
                     {RemoteData.isFailure(lagStønadstatistikkStatus) && (
                         <ApiErrorAlert error={lagStønadstatistikkStatus.error} />
                     )}
-                    {RemoteData.isFailure(lagStønadstatistikkStatus) &&
-                        lagStønadstatistikkStatus.error.statusCode === 504 && (
-                            <Alert variant="info">
-                                Som oftest er tar det lang tid å lage statistikk for en hel måned eller mer så timeout
-                                betyr ikke nødvendigvis feil. Sjekk logger om det feiler og verifiser i database at
-                                statistikk er opprettet om noen minutter.
-                            </Alert>
-                        )}
                 </div>
                 <div>
                     <Heading size="medium" spacing>
