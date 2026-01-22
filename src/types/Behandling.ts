@@ -22,7 +22,6 @@ export interface Attestering {
     attestant: string;
     opprettet: string;
     underkjennelse: Nullable<Underkjennelse>;
-    fritekstTilBrev: Nullable<string>;
 }
 
 export interface Underkjennelse {
