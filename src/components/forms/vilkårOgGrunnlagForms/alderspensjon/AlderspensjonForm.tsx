@@ -1,4 +1,5 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
+import { InformationSquareIcon } from '@navikt/aksel-icons';
 import { Radio, RadioGroup } from '@navikt/ds-react';
 import { ReactNode } from 'react';
 import { Controller } from 'react-hook-form';
@@ -13,6 +14,7 @@ import { useI18n } from '~src/lib/i18n';
 import UtfallSomIkkeStøttes from '~src/pages/saksbehandling/revurdering/utfallSomIkkeStøttes/UtfallSomIkkeStøttes.tsx';
 import { FormWrapper } from '~src/pages/saksbehandling/søknadsbehandling/FormWrapper';
 import { PensjonsOpplysningerUtvidetSvar } from '~src/types/grunnlagsdataOgVilkårsvurderinger/alder/Aldersvilkår';
+import styles from './alderspensjon.module.less';
 
 interface Props extends VilkårFormProps<AlderspensjonPeriodisertFormData> {
     begrensTilEnPeriode?: boolean;
@@ -41,7 +43,17 @@ export const AlderspensjonForm = (props: Props) => {
                                 render={({ field, fieldState }) => (
                                     <RadioGroup
                                         {...field}
-                                        legend={formatMessage('label.folketrygd')}
+                                        legend={
+                                            <span className={styles.legendWithInfo}>
+                                                {formatMessage('label.folketrygd')}
+                                                <span className={styles.infoIconWrapper}>
+                                                    <InformationSquareIcon />
+                                                    <span className={styles.infoText}>
+                                                        {formatMessage('alderspensjon.hjelpetekst')}
+                                                    </span>
+                                                </span>
+                                            </span>
+                                        }
                                         error={fieldState.error?.message}
                                         value={field.value ?? ''}
                                     >
