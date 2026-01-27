@@ -15,6 +15,7 @@ import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
 import { DatePicker } from '~src/components/inputs/datePicker/DatePicker';
 import { useApiCall } from '~src/lib/hooks';
 import { Nullable } from '~src/lib/types';
+import KontrollsamtaleOversikt from '~src/pages/drift/components/KontrollsamtaleOversikt.tsx';
 import SakStatistikk from '~src/pages/drift/components/SakStatistikk.tsx';
 import StønadStatistikk from '~src/pages/drift/components/StønadStatistikk.tsx';
 import Nøkkeltall from '~src/pages/saksbehandling/behandlingsoversikt/nøkkeltall/Nøkkeltall';
@@ -246,6 +247,8 @@ const Drift = () => {
                         Fiks vedtak
                     </Button>
                     <SendUtbetalingsIder />
+
+                    <KontrollsamtaleOversikt />
                 </div>
                 {knappTrykket === Knapp.FIX_SØKNADER && RemoteData.isFailure(fixSøknaderResponse) && (
                     <Alert className={styles.alert} variant="error">
