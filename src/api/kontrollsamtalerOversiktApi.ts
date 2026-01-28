@@ -1,17 +1,19 @@
 import apiClient, { ApiClientResult } from './apiClient';
 
-export async function hentKontrollsamtaleoversikt(): Promise<ApiClientResult<KontrollsamtalerDrift>> {
+export async function hentKontrollsamtaleoversikt(): Promise<ApiClientResult<KontrollsamtaleDriftOversikt>> {
     return apiClient({
         url: `/drift/kontrollsamtaler`,
         method: 'GET',
     });
 }
 
-export interface KontrollsamtalerDrift {
-    kontrollsamtaleAntall: KontrollsamtaleAntall[];
+export interface KontrollsamtaleDriftOversikt {
+    nesteMåned: KontrollsamtaleMånedOversikt;
+    inneværendeMåned: KontrollsamtaleMånedOversikt;
 }
 
-export interface KontrollsamtaleAntall {
+export interface KontrollsamtaleMånedOversikt {
     frist: Date;
-    antall: number;
+    antallInnkallinger: number;
+    sakerMedStans: string[];
 }

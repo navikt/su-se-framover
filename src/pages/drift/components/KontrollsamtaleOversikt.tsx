@@ -1,13 +1,11 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import { isSuccess } from '@devexperts/remote-data-ts';
-import { Button, Heading, Loader, Modal } from '@navikt/ds-react';
-import { isPending } from '@reduxjs/toolkit';
+import { Button, Heading, Loader, Modal, Textarea } from '@navikt/ds-react';
 import { useEffect, useState } from 'react';
-import { hentKontrollsamtaler } from '~src/api/kontrollsamtaleApi.ts';
 import { hentKontrollsamtaleoversikt } from '~src/api/kontrollsamtalerOversiktApi.ts';
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert.tsx';
 import { pipe } from '~src/lib/fp';
 import { useApiCall } from '~src/lib/hooks.ts';
+import { formatDate } from '~src/utils/date/dateUtils.ts';
 import sharedStyles from '../index.module.less';
 
 const KontrollsamtaleOversikt = () => {
@@ -56,12 +54,30 @@ const KontrollsamtalerModal = (props: { open: boolean; onClose: () => void }) =>
                             (error) => <ApiErrorAlert error={error} />,
                             (kontrollSamtaleoversikt) => (
                                 <div>
-                                    {kontrollSamtaleoversikt.kontrollsamtaleAntall.map((antall, index) => (
-                                        <div key={index}>
-                                            <div>samtaler med frist {antall.frist.toString()}</div>
-                                            <div>Antall {antall.antall}</div>
-                                        </div>
-                                    ))}
+                                    <div>
+                                        <Heading size={'xsmall'}>
+                                            Antall innkallinger med frist (
+                                            {formatDate(kontrollSamtaleoversikt.nesteMåned.frist.toString())}):
+                                        </Heading>
+                                        <div>{kontrollSamtaleoversikt.nesteMåned.antallInnkallinger}</div>
+                                    </div>
+                                    <div>
+                                        <Heading size={'xsmall'}>
+                                            Antall innkallinger med frist (
+                                            {formatDate(kontrollSamtaleoversikt.inneværendeMåned.frist.toString())}):{' '}
+                                        </Heading>
+                                        <div>{kontrollSamtaleoversikt.inneværendeMåned.antallInnkallinger}</div>
+                                    </div>
+                                    <div>
+                                        <Heading size={'xsmall'}>Antall som har ført til stans </Heading>
+                                        <div>{kontrollSamtaleoversikt.inneværendeMåned.sakerMedStans.length}</div>
+                                    </div>
+                                    <div>
+                                        <Heading size={'xsmall'}>Saker:</Heading>
+                                        <Textarea label={undefined}>
+                                            {kontrollSamtaleoversikt.inneværendeMåned.sakerMedStans.join(',\n')}
+                                        </Textarea>
+                                    </div>
                                 </div>
                             ),
                         ),
