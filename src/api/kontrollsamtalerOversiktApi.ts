@@ -8,8 +8,8 @@ export async function hentKontrollsamtaleoversikt(): Promise<ApiClientResult<Kon
 }
 
 export interface KontrollsamtaleDriftOversikt {
-    inneværendeMåned: KontrollsamtaleMånedOversikt;
     utgåttMåned: KontrollsamtaleMånedOversikt;
+    inneværendeMåned: KontrollsamtaleMånedOversikt;
 }
 
 export interface KontrollsamtaleMånedOversikt {
