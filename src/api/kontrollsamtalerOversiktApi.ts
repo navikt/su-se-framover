@@ -13,7 +13,6 @@ export interface KontrollsamtaleDriftOversikt {
 }
 
 export interface KontrollsamtaleMånedOversikt {
-    frist: Date;
     antallInnkallinger: number;
     sakerMedStans: string[];
 }

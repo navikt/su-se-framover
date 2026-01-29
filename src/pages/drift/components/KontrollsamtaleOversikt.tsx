@@ -5,7 +5,6 @@ import { hentKontrollsamtaleoversikt } from '~src/api/kontrollsamtalerOversiktAp
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert.tsx';
 import { pipe } from '~src/lib/fp';
 import { useApiCall } from '~src/lib/hooks.ts';
-import { formatDate } from '~src/utils/date/dateUtils.ts';
 import sharedStyles from '../index.module.less';
 
 const KontrollsamtaleOversikt = () => {
@@ -55,17 +54,11 @@ const KontrollsamtalerModal = (props: { open: boolean; onClose: () => void }) =>
                             (kontrollSamtaleoversikt) => (
                                 <div>
                                     <div>
-                                        <Heading size={'xsmall'}>
-                                            Antall innkallinger denne måned (
-                                            {formatDate(kontrollSamtaleoversikt.utgåttMåned.frist.toString())}):
-                                        </Heading>
+                                        <Heading size={'xsmall'}>Antall innkallinger denne måned</Heading>
                                         <div>{kontrollSamtaleoversikt.utgåttMåned.antallInnkallinger}</div>
                                     </div>
                                     <div>
-                                        <Heading size={'xsmall'}>
-                                            Antall innkallinger måned som var (
-                                            {formatDate(kontrollSamtaleoversikt.inneværendeMåned.frist.toString())}):{' '}
-                                        </Heading>
+                                        <Heading size={'xsmall'}>Antall innkallinger måned som var</Heading>
                                         <div>{kontrollSamtaleoversikt.inneværendeMåned.antallInnkallinger}</div>
                                     </div>
                                     <div>
