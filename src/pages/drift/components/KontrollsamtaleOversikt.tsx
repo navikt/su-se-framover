@@ -55,20 +55,20 @@ const KontrollsamtalerModal = (props: { open: boolean; onClose: () => void }) =>
                                 <div>
                                     <div>
                                         <Heading size={'xsmall'}>Antall innkallinger denne måned</Heading>
-                                        <div>{kontrollSamtaleoversikt.utgåttMåned.antallInnkallinger}</div>
-                                    </div>
-                                    <div>
-                                        <Heading size={'xsmall'}>Antall innkallinger måned som var</Heading>
                                         <div>{kontrollSamtaleoversikt.inneværendeMåned.antallInnkallinger}</div>
                                     </div>
                                     <div>
+                                        <Heading size={'xsmall'}>Antall innkallinger måned som var</Heading>
+                                        <div>{kontrollSamtaleoversikt.utgåttMåned.antallInnkallinger}</div>
+                                    </div>
+                                    <div>
                                         <Heading size={'xsmall'}>Antall som har ført til stans </Heading>
-                                        <div>{kontrollSamtaleoversikt.inneværendeMåned.sakerMedStans.length}</div>
+                                        <div>{kontrollSamtaleoversikt.utgåttMåned.sakerMedStans.length}</div>
                                     </div>
                                     <div>
                                         <Heading size={'xsmall'}>Saker:</Heading>
                                         <Textarea label={undefined}>
-                                            {kontrollSamtaleoversikt.inneværendeMåned.sakerMedStans.join(',\n')}
+                                            {kontrollSamtaleoversikt.utgåttMåned.sakerMedStans.join(',\n')}
                                         </Textarea>
                                     </div>
                                 </div>
