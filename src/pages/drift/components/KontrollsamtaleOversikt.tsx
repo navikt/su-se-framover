@@ -56,14 +56,14 @@ const KontrollsamtalerModal = (props: { open: boolean; onClose: () => void }) =>
                                 <div>
                                     <div>
                                         <Heading size={'xsmall'}>
-                                            Antall innkallinger med frist (
-                                            {formatDate(kontrollSamtaleoversikt.nesteMåned.frist.toString())}):
+                                            Antall innkallinger denne måned (
+                                            {formatDate(kontrollSamtaleoversikt.utgåttMåned.frist.toString())}):
                                         </Heading>
-                                        <div>{kontrollSamtaleoversikt.nesteMåned.antallInnkallinger}</div>
+                                        <div>{kontrollSamtaleoversikt.utgåttMåned.antallInnkallinger}</div>
                                     </div>
                                     <div>
                                         <Heading size={'xsmall'}>
-                                            Antall innkallinger med frist (
+                                            Antall innkallinger måned som var (
                                             {formatDate(kontrollSamtaleoversikt.inneværendeMåned.frist.toString())}):{' '}
                                         </Heading>
                                         <div>{kontrollSamtaleoversikt.inneværendeMåned.antallInnkallinger}</div>
