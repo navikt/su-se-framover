@@ -38,12 +38,14 @@ const StønadStatistikkModal = (props: { open: boolean; onClose: () => void }) =
     const [tilOgMed, setTilOgMed] = useState<Nullable<Date>>(null);
 
     return (
-        <Modal open={props.open} onClose={props.onClose} aria-label={'Statistikk'}>
+        <Modal
+            open={props.open}
+            onClose={props.onClose}
+            aria-label={'Statistikk'}
+            header={{ heading: 'Lag stønadstatistikk' }}
+        >
             <Modal.Body>
                 <div>
-                    <Heading size="medium" spacing>
-                        Lag stønadstatistikk
-                    </Heading>
                     <MonthPicker
                         label="Fra og med"
                         value={fraOgMed}

@@ -39,12 +39,14 @@ const KontrollsamtalerModal = (props: { open: boolean; onClose: () => void }) =>
     }, []);
 
     return (
-        <Modal open={props.open} onClose={props.onClose} aria-label={'Statistikk'}>
+        <Modal
+            open={props.open}
+            onClose={props.onClose}
+            aria-label={'Statistikk'}
+            header={{ heading: 'Kontrollsamtaler' }}
+        >
             <Modal.Body>
                 <div>
-                    <Heading size="medium" spacing>
-                        Kontrollsamtaler
-                    </Heading>
                     {pipe(
                         hentKontrollsamtaleoversiktStatus,
                         RemoteData.fold(
