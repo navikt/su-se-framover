@@ -1,5 +1,5 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import { Button, Heading, Modal } from '@navikt/ds-react';
+import { Button, Modal } from '@navikt/ds-react';
 import { useState } from 'react';
 import { sakStatistikk } from '~src/api/driftApi';
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
@@ -37,12 +37,14 @@ const SakStatistikkModal = (props: { open: boolean; onClose: () => void }) => {
     const [tilOgMed, setTilOgMed] = useState<Nullable<Date>>(null);
 
     return (
-        <Modal open={props.open} onClose={props.onClose} aria-label={'Statistikk'}>
+        <Modal
+            open={props.open}
+            onClose={props.onClose}
+            aria-label={'Statistikk'}
+            header={{ heading: 'Sakstatistikk' }}
+        >
             <Modal.Body>
                 <div>
-                    <Heading size="medium" spacing>
-                        Saker
-                    </Heading>
                     <DatePicker
                         label="Fra og med"
                         value={fraOgMed}
