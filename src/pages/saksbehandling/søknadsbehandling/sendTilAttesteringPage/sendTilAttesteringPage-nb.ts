@@ -17,6 +17,8 @@ export default {
     'knapp.tilbake': 'Tilbake',
     'knapp.vis': 'Vis brev',
     'knapp.leggtilmottaker': 'Legg til mottaker',
+    'knapp.lukkmottaker': 'Lukk mottaker',
+    'knapp.vismottaker': 'Vis mottaker',
 
     'oppsummering.vilkårsvurderinger.tittel': 'Vilkårsvurderinger',
 
