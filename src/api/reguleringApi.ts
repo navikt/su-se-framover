@@ -1,7 +1,7 @@
 import { Nullable } from '~src/lib/types';
 import { Fradrag } from '~src/types/Fradrag';
 import { Uføregrunnlag } from '~src/types/grunnlagsdataOgVilkårsvurderinger/uføre/Uføregrunnlag';
-import { Regulering, ReguleringOversiktsstatus } from '~src/types/Regulering';
+import { Regulering, ReguleringGrunnlagsdata, ReguleringOversiktsstatus } from '~src/types/Regulering';
 
 import apiClient, { ApiClientResult } from './apiClient';
 
@@ -161,4 +161,13 @@ export async function reguleringssupplement(args: { innhold: File | string }): P
             },
         });
     }
+}
+
+export async function hentReguleringGrunnlagsdata(args: {
+    reguleringId: string;
+}): Promise<ApiClientResult<ReguleringGrunnlagsdata>> {
+    return apiClient({
+        url: `reguleringer/manuell/${args.reguleringId}`,
+        method: 'GET',
+    });
 }
