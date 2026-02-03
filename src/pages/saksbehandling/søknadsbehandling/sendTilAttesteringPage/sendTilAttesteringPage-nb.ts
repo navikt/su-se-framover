@@ -16,6 +16,7 @@ export default {
     'knapp.sendTilAttestering': 'Send til attestering',
     'knapp.tilbake': 'Tilbake',
     'knapp.vis': 'Vis brev',
+    'knapp.leggtilmottaker': 'Legg til mottaker',
 
     'oppsummering.vilkårsvurderinger.tittel': 'Vilkårsvurderinger',
 

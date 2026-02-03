@@ -1,6 +1,6 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { Alert, Button, Loader } from '@navikt/ds-react';
-import { useEffect, useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useNavigate, useOutletContext } from 'react-router-dom';
 import { FritekstTyper, hentFritekst, redigerFritekst } from '~src/api/fritekstApi.ts';
@@ -15,6 +15,7 @@ import * as SøknadsbehandlingActions from '~src/features/SøknadsbehandlingActi
 import { useApiCall, useAsyncActionCreator, useBrevForhåndsvisning } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
 import * as Routes from '~src/lib/routes';
+import { MottakerForm } from '~src/pages/saksbehandling/mottaker/Mottaker.tsx';
 import { Sakstype } from '~src/types/Sak';
 import { Vilkårtype, VilkårVurderingStatus } from '~src/types/Vilkårsvurdering';
 import {
@@ -41,6 +42,7 @@ const SendTilAttesteringPage = () => {
     const behandling = props.sak.behandlinger.find((x) => x.id === behandlingId);
 
     const [lagreFritekstStatus, lagreFritekst] = useApiCall(redigerFritekst);
+    const [skalLeggeTilMottaker, setSkalLeggeTilMottaker] = useState(false);
 
     const [sendTilAttesteringStatus, sendTilAttestering] = useAsyncActionCreator(
         SøknadsbehandlingActions.sendTilAttestering,
@@ -159,6 +161,20 @@ const SendTilAttesteringPage = () => {
                             {RemoteData.isPending(brevStatus) && <Loader />}
                         </Button>
                     </div>
+                </div>
+                <div>
+                    <Button
+                        variant="secondary"
+                        className={styles.visBrevKnapp}
+                        type="button"
+                        onClick={() => setSkalLeggeTilMottaker(true)}
+                        size="small"
+                    >
+                        {formatMessage('knapp.leggtilmottaker')}
+                    </Button>
+                    {skalLeggeTilMottaker && (
+                        <MottakerForm sakId={props.sak.id} referanseId={behandling.id} referanseType={'SØKNAD'} />
+                    )}
                 </div>
                 <div className={styles.navigeringContainer}>
                     <LinkAsButton variant="secondary" href={tilbakeUrl}>
