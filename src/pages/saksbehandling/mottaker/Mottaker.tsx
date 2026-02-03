@@ -125,9 +125,16 @@ export function MottakerForm({ sakId, referanseId, referanseType }: MottakerForm
         }
 
         const payload: LagreMottakerRequest = {
-            ...data,
+            navn: data.navn.trim(),
             foedselsnummer: data.foedselsnummer?.trim() || undefined,
             orgnummer: data.orgnummer?.trim() || undefined,
+            adresse: {
+                adresselinje1: data.adresse.adresselinje1.trim(),
+                adresselinje2: data.adresse.adresselinje2?.trim() || undefined,
+                adresselinje3: data.adresse.adresselinje3?.trim() || undefined,
+                postnummer: data.adresse.postnummer.trim(),
+                poststed: data.adresse.poststed.trim(),
+            },
             sakId,
             referanseId,
             referanseType,
@@ -183,7 +190,7 @@ export function MottakerForm({ sakId, referanseId, referanseType }: MottakerForm
     return (
         <div>
             <h2>{harEksisterendeMottaker ? 'Oppdater mottaker' : 'Legg til mottaker'}</h2>
-            <form onSubmit={handleSubmit(onSubmit)}>
+            <div>
                 <fieldset disabled={erOpptatt}>
                     <input {...register('navn')} placeholder="Navn" required />
                     <input {...register('foedselsnummer')} placeholder="Fødselsnummer (valgfritt)" />
@@ -193,11 +200,18 @@ export function MottakerForm({ sakId, referanseId, referanseType }: MottakerForm
                     <input {...register('adresse.adresselinje3')} placeholder="Adresse linje 3" />
                     <input {...register('adresse.postnummer')} placeholder="Postnummer" required />
                     <input {...register('adresse.poststed')} placeholder="Poststed" required />
-                    <button type="submit" disabled={erOpptatt}>
+                    <button
+                        type="button"
+                        onClick={(event) => {
+                            event.preventDefault();
+                            event.stopPropagation();
+                            handleSubmit(onSubmit)();
+                        }}
+                    >
                         {submitLabel}
                     </button>
                 </fieldset>
-            </form>
+            </div>
 
             <div style={{ marginTop: 20 }}>
                 <button onClick={handleSlett} disabled={erOpptatt || !harEksisterendeMottaker}>
