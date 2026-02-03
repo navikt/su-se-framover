@@ -4,8 +4,6 @@ import { pipe } from 'fp-ts/lib/function';
 import { useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useNavigate, useOutletContext } from 'react-router-dom';
-
-import { hentgjeldendeGrunnlagsdataOgVilkårsvurderinger } from '~src/api/GrunnlagOgVilkårApi';
 import * as reguleringApi from '~src/api/reguleringApi';
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
 import FradragForm from '~src/components/forms/vilkårOgGrunnlagForms/fradrag/FradragForm';
@@ -58,8 +56,8 @@ const ManuellRegulering = () => {
     const props = useOutletContext<SaksoversiktContext>();
     const urlParams = Routes.useRouteParams<typeof Routes.manuellRegulering>();
     const regulering = props.sak.reguleringer.find((r) => r.id === urlParams.reguleringId);
-    const [gjeldendeGrunnlagsdataOgVilkårsvurderinger, hentGjeldendeGrunnlagsdataOgVilkårsvurderinger] = useApiCall(
-        hentgjeldendeGrunnlagsdataOgVilkårsvurderinger,
+    const [hentReguleringGrunnlagsdataStatus, hentReguleringGrunnlagsdata] = useApiCall(
+        reguleringApi.hentReguleringGrunnlagsdata,
     );
     const [regulerStatus, reguler] = useApiCall(reguleringApi.regulerManuelt);
     const [, hentSak] = useAsyncActionCreator(sakSlice.fetchSakByIdEllerNummer);
@@ -112,41 +110,34 @@ const ManuellRegulering = () => {
         );
 
     useEffect(() => {
-        hentGjeldendeGrunnlagsdataOgVilkårsvurderinger(
-            {
-                sakId: props.sak.id,
-                fraOgMed: regulering.periode.fraOgMed,
-                tilOgMed: regulering.periode.tilOgMed,
-            },
-            (data) =>
-                form.reset({
-                    uføre:
-                        data.grunnlagsdataOgVilkårsvurderinger.uføre?.vurderinger
-                            .map((v) => v?.grunnlag)
-                            .filter(filtrerRegulerbarIEU) ?? [],
-                    fradrag: fjernFradragSomIkkeErVelgbareEkskludertNavYtelserTilLivsopphold(
-                        data.grunnlagsdataOgVilkårsvurderinger.fradrag,
-                    ).map((f) =>
-                        fradragTilFradragFormData(f, {
-                            fraOgMed: parseIsoDateOnly(regulering.periode.fraOgMed),
-                            tilOgMed: parseIsoDateOnly(regulering.periode.tilOgMed),
-                        }),
-                    ),
-                }),
-        );
+        hentReguleringGrunnlagsdata({ reguleringId: regulering.id }, (data) => {
+            const uføre = data.uføreUnderRegulering ?? data.uføreFraGjeldendeVedtak;
+            const fradrag = data.fradragUnderRegulering ?? data.fradragFraGjeldendeVedtak;
+
+            form.reset({
+                uføre: uføre.filter(filtrerRegulerbarIEU) ?? [],
+                fradrag: fjernFradragSomIkkeErVelgbareEkskludertNavYtelserTilLivsopphold(fradrag).map((f) =>
+                    fradragTilFradragFormData(f, {
+                        fraOgMed: parseIsoDateOnly(regulering.periode.fraOgMed),
+                        tilOgMed: parseIsoDateOnly(regulering.periode.tilOgMed),
+                    }),
+                ),
+            });
+        });
     }, []);
 
     return pipe(
-        gjeldendeGrunnlagsdataOgVilkårsvurderinger,
+        hentReguleringGrunnlagsdataStatus,
         RemoteData.fold(
             () => <Loader />,
             () => <Loader />,
             () => null,
-            (gjeldendeVedtaksdata) => {
-                const { uføre, fradrag } = gjeldendeVedtaksdata.grunnlagsdataOgVilkårsvurderinger;
-                const uføregrunnlag = uføre?.vurderinger.map((v) => v?.grunnlag).filter(filtrerRegulerbarIEU) ?? [];
+            (reguleringsGrunnlagsdata) => {
+                const uføreFraGjeldendeVedtak = reguleringsGrunnlagsdata.uføreFraGjeldendeVedtak;
+                const fradragFraGjeldendeVedtak = reguleringsGrunnlagsdata.fradragFraGjeldendeVedtak;
+                const uføregrunnlag = uføreFraGjeldendeVedtak.filter(filtrerRegulerbarIEU) ?? [];
                 const harRegulerbarIEU = uføregrunnlag.some((v) => v.forventetInntekt > 0);
-                const harRegulerbarFradrag = fradrag.some((f) => måReguleresManuelt(f.type));
+                const harRegulerbarFradrag = fradragFraGjeldendeVedtak.some((f) => måReguleresManuelt(f.type));
 
                 return (
                     <div className={styles.pageContainer}>
