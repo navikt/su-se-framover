@@ -114,8 +114,6 @@ const ManuellRegulering = () => {
             const uføre = data.uføreUnderRegulering ?? data.uføreFraGjeldendeVedtak;
             const fradrag = data.fradragUnderRegulering ?? data.fradragFraGjeldendeVedtak;
 
-            console.log(data);
-
             form.reset({
                 uføre: uføre.filter(filtrerRegulerbarIEU) ?? [],
                 fradrag: fjernFradragSomIkkeErVelgbareEkskludertNavYtelserTilLivsopphold(fradrag).map((f) =>
