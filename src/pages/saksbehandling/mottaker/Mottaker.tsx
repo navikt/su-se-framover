@@ -5,14 +5,16 @@ import {
     LagreMottakerRequest,
     lagreMottaker,
     MottakerIdentifikator,
+    MottakerResponse,
     oppdaterMottaker,
+    ReferanseType,
     slettMottaker,
 } from '~src/api/mottakerClient.ts';
 
 interface MottakerFormProps {
     sakId: string;
     referanseId: string;
-    referanseType: 'SØKNAD' | 'REVURDERING';
+    referanseType: ReferanseType;
 }
 
 type FormValues = LagreMottakerRequest;
@@ -22,6 +24,7 @@ export function MottakerForm({ sakId, referanseId, referanseType }: MottakerForm
         () => ({
             navn: '',
             foedselsnummer: '',
+            orgnummer: '',
             adresse: {
                 adresselinje1: '',
                 adresselinje2: '',
@@ -29,10 +32,11 @@ export function MottakerForm({ sakId, referanseId, referanseType }: MottakerForm
                 postnummer: '',
                 poststed: '',
             },
+            sakId,
             referanseType,
             referanseId,
         }),
-        [referanseId, referanseType],
+        [referanseId, referanseType, sakId],
     );
 
     const { register, handleSubmit, reset, formState } = useForm<FormValues>({
@@ -41,6 +45,27 @@ export function MottakerForm({ sakId, referanseId, referanseType }: MottakerForm
     const [message, setMessage] = useState<string | null>(null);
     const [loading, setLoading] = useState<boolean>(true);
     const [harEksisterendeMottaker, setHarEksisterendeMottaker] = useState<boolean>(false);
+    const [mottakerId, setMottakerId] = useState<string | null>(null);
+
+    const fyllSkjema = (mottaker: MottakerResponse) => {
+        setHarEksisterendeMottaker(true);
+        setMottakerId(mottaker.id);
+        reset({
+            navn: mottaker.navn ?? '',
+            foedselsnummer: mottaker.foedselsnummer ?? '',
+            orgnummer: mottaker.orgnummer ?? '',
+            adresse: {
+                adresselinje1: mottaker.adresse?.adresselinje1 ?? '',
+                adresselinje2: mottaker.adresse?.adresselinje2 ?? '',
+                adresselinje3: mottaker.adresse?.adresselinje3 ?? '',
+                postnummer: mottaker.adresse?.postnummer ?? '',
+                poststed: mottaker.adresse?.poststed ?? '',
+            },
+            sakId,
+            referanseType,
+            referanseId,
+        });
+    };
 
     useEffect(() => {
         let aktiv = true;
@@ -53,34 +78,26 @@ export function MottakerForm({ sakId, referanseId, referanseType }: MottakerForm
 
             if (!aktiv) return;
 
-            if (res.status === 'ok' && res.data) {
-                setHarEksisterendeMottaker(true);
-                reset({
-                    navn: res.data.navn ?? '',
-                    foedselsnummer: res.data.foedselsnummer ?? '',
-                    adresse: {
-                        adresselinje1: res.data.adresse?.adresselinje1 ?? '',
-                        adresselinje2: res.data.adresse?.adresselinje2 ?? '',
-                        adresselinje3: res.data.adresse?.adresselinje3 ?? '',
-                        postnummer: res.data.adresse?.postnummer ?? '',
-                        poststed: res.data.adresse?.poststed ?? '',
-                    },
-                    referanseType,
-                    referanseId,
-                });
-                setMessage('Mottaker funnet – du kan oppdatere.');
-            } else if (res.status === 'error' && res.error.statusCode === 404) {
+            if (res.status === 'ok') {
+                if (res.data) {
+                    fyllSkjema(res.data);
+                    setMessage('Mottaker funnet – du kan oppdatere.');
+                } else {
+                    setHarEksisterendeMottaker(false);
+                    setMottakerId(null);
+                    reset(emptyFormValues);
+                    setMessage('Ingen mottaker funnet – du kan opprette ny.');
+                }
+            } else if (res.error.statusCode === 404) {
                 setHarEksisterendeMottaker(false);
+                setMottakerId(null);
                 reset(emptyFormValues);
                 setMessage('Ingen mottaker funnet – du kan opprette ny.');
             } else {
                 setHarEksisterendeMottaker(false);
+                setMottakerId(null);
                 reset(emptyFormValues);
-                setMessage(
-                    res.status === 'error'
-                        ? (res.error.body?.message ?? 'Kunne ikke hente mottaker')
-                        : 'Kunne ikke hente mottaker',
-                );
+                setMessage(res.error.body?.message ?? 'Kunne ikke hente mottaker');
             }
 
             setLoading(false);
@@ -96,14 +113,32 @@ export function MottakerForm({ sakId, referanseId, referanseType }: MottakerForm
     const onSubmit = async (data: FormValues) => {
         setMessage(null);
 
+        const harFnr = Boolean(data.foedselsnummer?.trim());
+        const harOrgnr = Boolean(data.orgnummer?.trim());
+        if (harFnr && harOrgnr) {
+            setMessage('Du kan ikke fylle ut både fødselsnummer og organisasjonsnummer.');
+            return;
+        }
+        if (!harFnr && !harOrgnr) {
+            setMessage('Du må fylle ut enten fødselsnummer eller organisasjonsnummer.');
+            return;
+        }
+
         const payload: LagreMottakerRequest = {
             ...data,
+            foedselsnummer: data.foedselsnummer?.trim() || undefined,
+            orgnummer: data.orgnummer?.trim() || undefined,
+            sakId,
             referanseId,
             referanseType,
         };
 
         if (harEksisterendeMottaker) {
-            const res = await oppdaterMottaker(sakId, payload);
+            if (!mottakerId) {
+                setMessage('Mangler mottaker-id fra backend – kan ikke oppdatere.');
+                return;
+            }
+            const res = await oppdaterMottaker(sakId, { ...payload, id: mottakerId });
             if (res.status === 'ok') {
                 setMessage('Mottaker oppdatert!');
             } else {
@@ -114,8 +149,13 @@ export function MottakerForm({ sakId, referanseId, referanseType }: MottakerForm
 
         const res = await lagreMottaker(sakId, payload);
         if (res.status === 'ok') {
-            setHarEksisterendeMottaker(true);
             setMessage('Mottaker opprettet!');
+            setLoading(true);
+            const hentRes = await hentMottaker(sakId, referanseType, referanseId);
+            if (hentRes.status === 'ok' && hentRes.data) {
+                fyllSkjema(hentRes.data);
+            }
+            setLoading(false);
         } else {
             setMessage(res.error.body?.message ?? 'Kunne ikke opprette mottaker');
         }
@@ -129,6 +169,7 @@ export function MottakerForm({ sakId, referanseId, referanseType }: MottakerForm
 
         if (res.status === 'ok') {
             setHarEksisterendeMottaker(false);
+            setMottakerId(null);
             reset(emptyFormValues);
             setMessage('Mottaker slettet!');
         } else {
@@ -146,6 +187,7 @@ export function MottakerForm({ sakId, referanseId, referanseType }: MottakerForm
                 <fieldset disabled={erOpptatt}>
                     <input {...register('navn')} placeholder="Navn" required />
                     <input {...register('foedselsnummer')} placeholder="Fødselsnummer (valgfritt)" />
+                    <input {...register('orgnummer')} placeholder="Organisasjonsnummer (valgfritt)" />
                     <input {...register('adresse.adresselinje1')} placeholder="Adresse linje 1" required />
                     <input {...register('adresse.adresselinje2')} placeholder="Adresse linje 2" />
                     <input {...register('adresse.adresselinje3')} placeholder="Adresse linje 3" />

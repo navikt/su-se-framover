@@ -1,10 +1,11 @@
 import apiClient, { ApiClientResult } from './apiClient';
 
-export type ReferanseType = 'SØKNAD' | 'REVURDERING';
+export type ReferanseType = 'SØKNAD' | 'VEDTAK' | 'REVURDERING' | 'KLAGE';
 
 export interface LagreMottakerRequest {
     navn: string;
     foedselsnummer?: string;
+    orgnummer?: string;
     adresse: {
         adresselinje1: string;
         adresselinje2?: string | null;
@@ -12,15 +13,33 @@ export interface LagreMottakerRequest {
         postnummer: string;
         poststed: string;
     };
+    sakId: string;
     referanseType: ReferanseType;
     referanseId: string;
 }
 
 export interface OppdaterMottakerRequest extends LagreMottakerRequest {
-    id?: string; // eksisterende mottaker id (valgfri hvis backend identifiserer via referanse)
+    id: string; // eksisterende mottaker id
 }
 
 export interface MottakerIdentifikator {
+    referanseType: ReferanseType;
+    referanseId: string;
+}
+
+export interface MottakerResponse {
+    id: string;
+    navn: string;
+    foedselsnummer?: string | null;
+    orgnummer?: string | null;
+    adresse: {
+        adresselinje1?: string | null;
+        adresselinje2?: string | null;
+        adresselinje3?: string | null;
+        postnummer: string;
+        poststed: string;
+    };
+    sakId: string;
     referanseType: ReferanseType;
     referanseId: string;
 }
@@ -32,7 +51,7 @@ export async function hentMottaker(
     sakId: string,
     referanseType: ReferanseType,
     referanseId: string,
-): Promise<ApiClientResult<LagreMottakerRequest | null>> {
+): Promise<ApiClientResult<MottakerResponse | null>> {
     return apiClient({
         url: `/mottaker/${sakId}/${referanseType}/${referanseId}`,
         method: 'GET',
