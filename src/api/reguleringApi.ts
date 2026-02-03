@@ -116,7 +116,7 @@ export async function hentSakerMedÅpneBehandlinger(): Promise<ApiClientResult<n
 
 export async function avsluttRegulering({ reguleringId }: { reguleringId: string }): Promise<ApiClientResult<void>> {
     return apiClient({
-        url: `/reguleringer/avslutt/${reguleringId}`,
+        url: `reguleringer/manuell/${reguleringId}/avslutt`,
         method: 'POST',
     });
 }
