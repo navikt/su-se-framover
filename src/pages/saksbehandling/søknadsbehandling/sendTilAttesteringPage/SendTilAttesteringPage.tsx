@@ -117,13 +117,9 @@ const SendTilAttesteringPage = () => {
             return;
         }
 
-        let aktiv = true;
-
         const sjekkMottaker = async () => {
             setMottakerFinnes(null);
             const res = await hentMottaker(props.sak.id, 'SØKNAD', behandling.id);
-
-            if (!aktiv) return;
 
             if (res.status === 'ok' && res.data) {
                 setMottakerFinnes(true);
@@ -138,10 +134,6 @@ const SendTilAttesteringPage = () => {
         };
 
         sjekkMottaker();
-
-        return () => {
-            aktiv = false;
-        };
     }, [behandling, props.sak.id]);
 
     if (!behandling) {

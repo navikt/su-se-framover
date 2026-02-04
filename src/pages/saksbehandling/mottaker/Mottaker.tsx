@@ -93,8 +93,6 @@ export function MottakerForm({ sakId, referanseId, referanseType, onClose }: Mot
     }, [watch]);
 
     useEffect(() => {
-        let aktiv = true;
-
         const hentOgFyll = async () => {
             setLoading(true);
             setFeedback(null);
@@ -102,8 +100,6 @@ export function MottakerForm({ sakId, referanseId, referanseType, onClose }: Mot
             setDeleteState('idle');
 
             const res = await hentMottaker(sakId, referanseType, referanseId);
-
-            if (!aktiv) return;
 
             if (res.status === 'ok') {
                 if (res.data) {
@@ -134,10 +130,6 @@ export function MottakerForm({ sakId, referanseId, referanseType, onClose }: Mot
         };
 
         hentOgFyll();
-
-        return () => {
-            aktiv = false;
-        };
     }, [sakId, referanseId, referanseType, reset, emptyFormValues]);
 
     const onSubmit = async (data: FormValues) => {
