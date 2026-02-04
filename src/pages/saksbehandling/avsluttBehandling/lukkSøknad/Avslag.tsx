@@ -2,9 +2,8 @@ import { FieldError } from 'react-hook-form';
 
 import * as søknadApi from '~src/api/søknadApi.ts';
 import { BrevInput } from '~src/components/inputs/brevInput/BrevInput.tsx';
-import { AvslagBrevtyper } from '~src/pages/saksbehandling/avsluttBehandling/lukkSøknad/lukkSøknadUtils.ts';
+import { DokumentIdType } from '~src/types/dokument/Dokument.ts';
 import { LukkSøknadBegrunnelse } from '~src/types/Søknad.ts';
-
 import styles from './lukkSøknad.module.less';
 
 interface AvlsagProps {
@@ -25,7 +24,7 @@ const Avslag = (props: AvlsagProps) => {
                         body: {
                             type: LukkSøknadBegrunnelse.Avslag,
                             brevConfig: {
-                                brevtype: AvslagBrevtyper.Vedtaksbrev,
+                                brevtype: DokumentIdType.Vedtak,
                                 fritekst: props.fritekstValue,
                             },
                         },

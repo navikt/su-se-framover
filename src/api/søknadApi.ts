@@ -1,22 +1,25 @@
 import { Nullable } from '~src/lib/types';
-import { AvslagBrevConfig } from '~src/pages/saksbehandling/avsluttBehandling/lukkSøknad/lukkSøknadUtils';
+import { DokumentIdType } from '~src/types/dokument/Dokument.ts';
 import { Sak } from '~src/types/Sak';
 import { LukkSøknadBegrunnelse, LukkSøknadResponse, Søknad } from '~src/types/Søknad';
 import { SøknadInnholdAlder, SøknadInnholdUføre } from '~src/types/Søknadinnhold';
-
 import apiClient, { ApiClientResult } from './apiClient';
 
 interface Trukket {
     type: LukkSøknadBegrunnelse.Trukket;
     datoSøkerTrakkSøknad: string;
 }
+
 interface Bortfalt {
     type: LukkSøknadBegrunnelse.Bortfalt;
 }
 
 interface Avslag {
     type: LukkSøknadBegrunnelse.Avslag;
-    brevConfig: Nullable<AvslagBrevConfig>;
+    brevConfig: Nullable<{
+        fritekst: string;
+        brevtype: DokumentIdType.Vedtak;
+    }>;
 }
 
 export type LukkSøknadBodyTypes = Trukket | Bortfalt | Avslag;

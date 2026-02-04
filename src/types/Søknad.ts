@@ -25,6 +25,11 @@ export enum LukkSøknadBegrunnelse {
     Bortfalt = 'BORTFALT',
     Avslag = 'AVSLAG',
 }
+export enum AvsluttSøknadsbehandlingBegrunnelse {
+    ManglendeDok = 'MANGLENDE_DOK',
+}
+
+export type LukkSøknadOgAvsluttSøknadsbehandlingType = LukkSøknadBegrunnelse | AvsluttSøknadsbehandlingBegrunnelse;
 
 interface Saksbehandler {
     navIdent: string;

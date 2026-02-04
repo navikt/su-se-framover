@@ -9,7 +9,7 @@ import messages from './avsluttBehandling-nb';
 import AvsluttKlage from './avsluttKlage/AvsluttKlage';
 import AvsluttRevurdering from './avsluttRevurdering/AvsluttRevurdering';
 import AvsluttTilbakekreving from './avsluttTilbakekreving/AvsluttTilbakekreving';
-import LukkSøknadOgAvsluttBehandlingNy from './lukkSøknad/LukkSøknadNy';
+import LukkSøknadOgAvsluttBehandling from './lukkSøknad/LukkSøknad.tsx';
 
 const AvsluttBehandling = () => {
     const props = useOutletContext<SaksoversiktContext>();
@@ -44,7 +44,7 @@ const AvsluttBehandling = () => {
 
                 <div className={styles.mainContent}>
                     {(søknad || søknadsbehandling) && (
-                        <LukkSøknadOgAvsluttBehandlingNy søknad={(søknad || søknadsbehandling?.søknad)!} />
+                        <LukkSøknadOgAvsluttBehandling søknad={(søknad || søknadsbehandling?.søknad)!} />
                     )}
                     {revurdering && <AvsluttRevurdering sakId={props.sak.id} revurdering={revurdering} />}
                     {klage && <AvsluttKlage sakId={props.sak.id} klage={klage} />}

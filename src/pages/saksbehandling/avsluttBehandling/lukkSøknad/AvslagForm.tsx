@@ -10,10 +10,8 @@ import AvsluttBehandlingBunnknapper from '~src/pages/saksbehandling/avsluttBehan
 import Avslag from '~src/pages/saksbehandling/avsluttBehandling/lukkSøknad/Avslag.tsx';
 import styles from '~src/pages/saksbehandling/avsluttBehandling/lukkSøknad/lukkSøknad.module.less';
 import nb from '~src/pages/saksbehandling/avsluttBehandling/lukkSøknad/lukkSøknad-nb.ts';
-import {
-    AvslagBrevtyper,
-    fritekstSchema,
-} from '~src/pages/saksbehandling/avsluttBehandling/lukkSøknad/lukkSøknadUtils.ts';
+import { fritekstSchema } from '~src/pages/saksbehandling/avsluttBehandling/lukkSøknad/lukkSøknadUtils.ts';
+import { DokumentIdType } from '~src/types/dokument/Dokument.ts';
 import { LukkSøknadBegrunnelse, Søknad } from '~src/types/Søknad.ts';
 
 export const AvslagForm = (props: { søknad: Søknad; sakId: string }) => {
@@ -40,7 +38,7 @@ export const AvslagForm = (props: { søknad: Søknad; sakId: string }) => {
                 body: {
                     type: LukkSøknadBegrunnelse.Avslag,
                     brevConfig: {
-                        brevtype: AvslagBrevtyper.Vedtaksbrev,
+                        brevtype: DokumentIdType.Vedtak,
                         fritekst: values.fritekst,
                     },
                 },
