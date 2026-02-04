@@ -23,7 +23,7 @@ export interface Lukket {
 export enum LukkSøknadBegrunnelse {
     Trukket = 'TRUKKET',
     Bortfalt = 'BORTFALT',
-    Avvist = 'AVSLAG',
+    Avslag = 'AVSLAG',
 }
 
 interface Saksbehandler {

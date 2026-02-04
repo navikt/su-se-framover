@@ -2,19 +2,19 @@ import { FieldError } from 'react-hook-form';
 
 import * as søknadApi from '~src/api/søknadApi.ts';
 import { BrevInput } from '~src/components/inputs/brevInput/BrevInput.tsx';
-import { AvvistBrevtyper } from '~src/pages/saksbehandling/avsluttBehandling/lukkSøknad/lukkSøknadUtils.ts';
+import { AvslagBrevtyper } from '~src/pages/saksbehandling/avsluttBehandling/lukkSøknad/lukkSøknadUtils.ts';
 import { LukkSøknadBegrunnelse } from '~src/types/Søknad.ts';
 
 import styles from './lukkSøknad.module.less';
 
-interface AvvistProps {
+interface AvlsagProps {
     søknadId: string;
     fritekstValue: string;
     fritekstError?: FieldError;
     onFritekstChange: (value: string) => void;
 }
 
-const Avvist = (props: AvvistProps) => {
+const Avslag = (props: AvlsagProps) => {
     return (
         <div className={styles.container}>
             <BrevInput
@@ -23,9 +23,9 @@ const Avvist = (props: AvvistProps) => {
                     søknadApi.hentLukketSøknadsBrevutkast({
                         søknadId: props.søknadId,
                         body: {
-                            type: LukkSøknadBegrunnelse.Avvist,
+                            type: LukkSøknadBegrunnelse.Avslag,
                             brevConfig: {
-                                brevtype: AvvistBrevtyper.Vedtaksbrev,
+                                brevtype: AvslagBrevtyper.Vedtaksbrev,
                                 fritekst: props.fritekstValue,
                             },
                         },
@@ -38,4 +38,4 @@ const Avvist = (props: AvvistProps) => {
     );
 };
 
-export default Avvist;
+export default Avslag;

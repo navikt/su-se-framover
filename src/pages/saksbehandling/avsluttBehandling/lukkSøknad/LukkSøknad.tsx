@@ -1,5 +1,4 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import { yupResolver } from '@hookform/resolvers/yup';
 import { Select } from '@navikt/ds-react';
 import { Controller, useForm } from 'react-hook-form';
 import { useNavigate, useOutletContext } from 'react-router-dom';
@@ -12,19 +11,18 @@ import { pickRemoteData } from '~src/lib/fp';
 import { useAsyncActionCreator } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
 import * as Routes from '~src/lib/routes';
-import Avvist from '~src/pages/saksbehandling/avsluttBehandling/lukkSøknad/Avvist.tsx';
+import Avslag from '~src/pages/saksbehandling/avsluttBehandling/lukkSøknad/Avslag.tsx';
 import { LukkSøknadBegrunnelse, Søknad } from '~src/types/Søknad';
 import { Søknadstype } from '~src/types/Søknadinnhold';
 import { sorterUtbetalingsperioder } from '~src/types/Utbetalingsperiode.ts';
 import { startenPåMnd } from '~src/utils/date/dateUtils.ts';
 import AvsluttBehandlingBunnknapper from '../avsluttBehandlingBunnknapper/AvsluttBehandlingBunnknapper';
-import AvslåttSøknad from './avslag/AvslåttSøknad';
+import AvslagDokumentasjon from './avslag/AvslagDokumentasjon.tsx';
 import styles from './lukkSøknad.module.less';
 import nb from './lukkSøknad-nb';
 import {
+    AvslagBrevtyper,
     AvsluttSøknadsbehandlingBegrunnelse,
-    AvvistBrevtyper,
-    getLukkSøknadValidationSchema,
     LukkSøknadOgAvsluttSøknadsbehandlingFormData,
     LukkSøknadOgAvsluttSøknadsbehandlingType,
     lukkSøknadInitialValues,
@@ -53,7 +51,7 @@ const LukkSøknadOgAvsluttBehandling = (props: { søknad: Søknad }) => {
         return new Date() >= toMndFørTilogMed;
     }
     const fjernForTidligSøknad = (begrunnelse: LukkSøknadBegrunnelse) =>
-        !(begrunnelse === LukkSøknadBegrunnelse.Avvist && kanSøke);
+        !(begrunnelse === LukkSøknadBegrunnelse.Avslag && kanSøke);
 
     const kanSøke = sjekkOmkanSøke();
 
@@ -91,9 +89,12 @@ const LukkSøknadOgAvsluttBehandling = (props: { søknad: Søknad }) => {
 
     const form = useForm<LukkSøknadOgAvsluttSøknadsbehandlingFormData>({
         defaultValues: lukkSøknadInitialValues,
+        /*
         resolver(values, ...args) {
             return yupResolver(getLukkSøknadValidationSchema(values.begrunnelse))(values, ...args);
         },
+
+         */
     });
 
     const watchBegrunnelse = form.watch('begrunnelse');
@@ -158,12 +159,12 @@ const LukkSøknadOgAvsluttBehandling = (props: { søknad: Søknad }) => {
                 />
             )}
 
-            {watchBegrunnelse === LukkSøknadBegrunnelse.Avvist && (
+            {watchBegrunnelse === LukkSøknadBegrunnelse.Avslag && (
                 <Controller
                     control={form.control}
                     name="avvist.fritekst"
                     render={({ field, fieldState }) => (
-                        <Avvist
+                        <Avslag
                             søknadId={props.søknad.id}
                             fritekstValue={field.value}
                             fritekstError={fieldState.error}
@@ -178,7 +179,7 @@ const LukkSøknadOgAvsluttBehandling = (props: { søknad: Søknad }) => {
                     control={form.control}
                     name="manglendeDok.fritekst"
                     render={({ field, fieldState }) => (
-                        <AvslåttSøknad
+                        <AvslagDokumentasjon
                             søknadId={props.søknad.id}
                             fritekstValue={field.value}
                             fritekstError={fieldState.error}
@@ -215,11 +216,11 @@ function lagBody(values: LukkSøknadOgAvsluttSøknadsbehandlingFormData): LukkS�
             return {
                 type: values.begrunnelse,
             };
-        case LukkSøknadBegrunnelse.Avvist:
+        case LukkSøknadBegrunnelse.Avslag:
             return {
                 type: values.begrunnelse,
                 brevConfig: {
-                    brevtype: AvvistBrevtyper.Vedtaksbrev,
+                    brevtype: AvslagBrevtyper.Vedtaksbrev,
                     fritekst: values.avvist.fritekst,
                 },
             };

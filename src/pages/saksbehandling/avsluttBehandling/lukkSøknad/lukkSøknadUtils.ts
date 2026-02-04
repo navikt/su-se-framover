@@ -34,15 +34,22 @@ export enum AvsluttSøknadsbehandlingBegrunnelse {
 
 export type LukkSøknadOgAvsluttSøknadsbehandlingType = LukkSøknadBegrunnelse | AvsluttSøknadsbehandlingBegrunnelse;
 
-export enum AvvistBrevtyper {
+export enum AvslagBrevtyper {
     Vedtaksbrev = 'VEDTAK',
-    Fritekstsbrev = 'FRITEKST',
 }
 
-export interface AvvistBrevConfig {
+export interface AvslagBrevConfig {
     fritekst: string;
-    brevtype: AvvistBrevtyper;
+    brevtype: AvslagBrevtyper;
 }
+
+export const fritekstSchema = yup.object({
+    fritekst: yup.string().required().min(1).nullable(false).typeError('Du må legge inn fritekst til brevet'),
+});
+
+export const trukketSøknadSchema = yup.object({
+    datoSøkerTrakkSøknad: yup.string().nullable(false).required().typeError('Du må velge dato'),
+});
 
 export function getLukkSøknadValidationSchema(begrunnelse: Nullable<LukkSøknadOgAvsluttSøknadsbehandlingType>) {
     switch (begrunnelse) {
@@ -52,7 +59,7 @@ export function getLukkSøknadValidationSchema(begrunnelse: Nullable<LukkSøknad
                     datoSøkerTrakkSøknad: yup.string().nullable(false).required().typeError('Du må velge dato'),
                 }),
             });
-        case LukkSøknadBegrunnelse.Avvist:
+        case LukkSøknadBegrunnelse.Avslag:
             return yup.object({
                 avvist: yup.object({
                     fritekst: yup
@@ -78,7 +85,7 @@ export function getLukkSøknadValidationSchema(begrunnelse: Nullable<LukkSøknad
                         [
                             LukkSøknadBegrunnelse.Trukket,
                             LukkSøknadBegrunnelse.Bortfalt,
-                            LukkSøknadBegrunnelse.Avvist,
+                            LukkSøknadBegrunnelse.Avslag,
                             AvsluttSøknadsbehandlingBegrunnelse.ManglendeDok,
                         ],
                         'Du må velge begrunnelse for å avslutte behandlingen',

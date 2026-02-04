@@ -1,5 +1,5 @@
 import { Nullable } from '~src/lib/types';
-import { AvvistBrevConfig } from '~src/pages/saksbehandling/avsluttBehandling/lukkSøknad/lukkSøknadUtils';
+import { AvslagBrevConfig } from '~src/pages/saksbehandling/avsluttBehandling/lukkSøknad/lukkSøknadUtils';
 import { Sak } from '~src/types/Sak';
 import { LukkSøknadBegrunnelse, LukkSøknadResponse, Søknad } from '~src/types/Søknad';
 import { SøknadInnholdAlder, SøknadInnholdUføre } from '~src/types/Søknadinnhold';
@@ -14,12 +14,12 @@ interface Bortfalt {
     type: LukkSøknadBegrunnelse.Bortfalt;
 }
 
-interface Avvist {
-    type: LukkSøknadBegrunnelse.Avvist;
-    brevConfig: Nullable<AvvistBrevConfig>;
+interface Avslag {
+    type: LukkSøknadBegrunnelse.Avslag;
+    brevConfig: Nullable<AvslagBrevConfig>;
 }
 
-export type LukkSøknadBodyTypes = Trukket | Bortfalt | Avvist;
+export type LukkSøknadBodyTypes = Trukket | Bortfalt | Avslag;
 
 export interface AvslagBody {
     fritekst: string;
