@@ -11,38 +11,17 @@ import { AvslagForm } from '~src/pages/saksbehandling/avsluttBehandling/lukkSøk
 import { BortfaltForm } from '~src/pages/saksbehandling/avsluttBehandling/lukkSøknad/BortfaltForm.tsx';
 import styles from '~src/pages/saksbehandling/avsluttBehandling/lukkSøknad/lukkSøknad.module.less';
 import nb from '~src/pages/saksbehandling/avsluttBehandling/lukkSøknad/lukkSøknad-nb.ts';
-import { TrukketForm } from '~src/pages/saksbehandling/avsluttBehandling/lukkSøknad/TrukketForm.tsx';
 import {
-    AvsluttSøknadsbehandlingBegrunnelse,
-    LukkSøknadBegrunnelse,
-    LukkSøknadOgAvsluttSøknadsbehandlingType,
-    Søknad,
-} from '~src/types/Søknad.ts';
-import { sorterUtbetalingsperioder } from '~src/types/Utbetalingsperiode.ts';
-import { startenPåMnd } from '~src/utils/date/dateUtils.ts';
+    forTidligÅSøkeNyPeriode,
+    lukkSøknadBegrunnelseI18nId,
+} from '~src/pages/saksbehandling/avsluttBehandling/lukkSøknad/lukkSøknadUtils.ts';
+import { TrukketForm } from '~src/pages/saksbehandling/avsluttBehandling/lukkSøknad/TrukketForm.tsx';
+import { AvsluttSøknadsbehandlingBegrunnelse, LukkSøknadBegrunnelse, Søknad } from '~src/types/Søknad.ts';
 
 const LukkSøknadOgAvsluttBehandling = (props: { søknad: Søknad }) => {
     const { formatMessage } = useI18n({ messages: nb });
-
     const [valgtBegrunnelse, setValgtbegrunnelse] = useState<string>('velgBegrunnelse');
-
     const sak = useOutletContext<SaksoversiktContext>().sak;
-
-    function sjekkOmkanSøke(): boolean {
-        if (sak.utbetalinger.length === 0) {
-            return true;
-        }
-        const sortertUtbetalingsperioder = sorterUtbetalingsperioder(sak.utbetalinger);
-        const sisteUtbetalingsDato = new Date(
-            sortertUtbetalingsperioder[sortertUtbetalingsperioder.length - 1].tilOgMed,
-        );
-        const toMndFørTilogMed = startenPåMnd(sisteUtbetalingsDato);
-        toMndFørTilogMed.setMonth(toMndFørTilogMed.getMonth() - 1);
-        return new Date() >= toMndFørTilogMed;
-    }
-
-    const fjernForTidligSøknad = (begrunnelse: LukkSøknadBegrunnelse) =>
-        !(begrunnelse === LukkSøknadBegrunnelse.Avslag && sjekkOmkanSøke());
 
     return (
         <div>
@@ -51,33 +30,42 @@ const LukkSøknadOgAvsluttBehandling = (props: { søknad: Søknad }) => {
                     label={formatMessage('lukkSøknadOgAvsluttSøknadsbehandling.begrunnelseForAvsluttelse')}
                     value={valgtBegrunnelse}
                     onChange={(e) => {
-                        console.log(e.target.value);
                         setValgtbegrunnelse(e.target.value);
                     }}
                 >
                     <option value="velgBegrunnelse">{formatMessage('selector.velgBegrunnelse')}</option>
-                    {Object.values(LukkSøknadBegrunnelse)
-                        .filter(fjernForTidligSøknad)
-                        .map((begrunnelse) => (
-                            <option value={begrunnelse} key={begrunnelse}>
-                                {formatMessage(lukkSøknadBegrunnelseI18nId[begrunnelse])}
-                            </option>
-                        ))}
-                    {Object.values(AvsluttSøknadsbehandlingBegrunnelse).map((begrunnelse) => (
-                        <option value={begrunnelse} key={begrunnelse}>
-                            {formatMessage(lukkSøknadBegrunnelseI18nId[begrunnelse])}
+                    <option value={LukkSøknadBegrunnelse.Trukket} key={LukkSøknadBegrunnelse.Trukket}>
+                        {formatMessage(lukkSøknadBegrunnelseI18nId[LukkSøknadBegrunnelse.Trukket])}
+                    </option>
+                    <option value={LukkSøknadBegrunnelse.Bortfalt} key={LukkSøknadBegrunnelse.Bortfalt}>
+                        {formatMessage(lukkSøknadBegrunnelseI18nId[LukkSøknadBegrunnelse.Bortfalt])}
+                    </option>
+                    {!forTidligÅSøkeNyPeriode(sak) && (
+                        <option value={LukkSøknadBegrunnelse.Avslag} key={LukkSøknadBegrunnelse.Avslag}>
+                            {formatMessage(lukkSøknadBegrunnelseI18nId[LukkSøknadBegrunnelse.Avslag])}
                         </option>
-                    ))}
+                    )}
+                    <option
+                        value={AvsluttSøknadsbehandlingBegrunnelse.ManglendeDok}
+                        key={AvsluttSøknadsbehandlingBegrunnelse.ManglendeDok}
+                    >
+                        {formatMessage(lukkSøknadBegrunnelseI18nId[AvsluttSøknadsbehandlingBegrunnelse.ManglendeDok])}
+                    </option>
                 </Select>
             </div>
+
             {valgtBegrunnelse === LukkSøknadBegrunnelse.Trukket && <TrukketForm søknad={props.søknad} sakId={sak.id} />}
+
             {valgtBegrunnelse === LukkSøknadBegrunnelse.Bortfalt && (
                 <BortfaltForm søknad={props.søknad} sakId={sak.id} />
             )}
+
             {valgtBegrunnelse === LukkSøknadBegrunnelse.Avslag && <AvslagForm søknad={props.søknad} sakId={sak.id} />}
+
             {valgtBegrunnelse === AvsluttSøknadsbehandlingBegrunnelse.ManglendeDok && (
                 <AvslagDokumentasjonForm søknad={props.søknad} sakId={sak.id} />
             )}
+
             {valgtBegrunnelse === 'velgBegrunnelse' && (
                 <LinkAsButton href={Routes.saksoversiktValgtSak.createURL({ sakId: sak.id })} variant="secondary">
                     <ChevronLeftIcon />
@@ -86,13 +74,6 @@ const LukkSøknadOgAvsluttBehandling = (props: { søknad: Søknad }) => {
             )}
         </div>
     );
-};
-
-const lukkSøknadBegrunnelseI18nId: { [key in LukkSøknadOgAvsluttSøknadsbehandlingType]: keyof typeof nb } = {
-    TRUKKET: 'lukking.begrunnelse.trukket',
-    BORTFALT: 'lukking.begrunnelse.bortfalt',
-    AVSLAG: 'lukking.begrunnelse.avslag',
-    MANGLENDE_DOK: 'avslutt.manglendeDokumentasjon',
 };
 
 export default LukkSøknadOgAvsluttBehandling;
