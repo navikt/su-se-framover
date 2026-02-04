@@ -1,8 +1,11 @@
 import RedisStore from 'connect-redis';
+import type { Request } from 'express';
 import { Express } from 'express';
 import session from 'express-session';
-import http from 'http';
-import * as OpenIdClient from 'openid-client';
+import type { Configuration, TokenEndpointResponse, TokenEndpointResponseHelpers } from 'openid-client';
+import { buildEndSessionUrl } from 'openid-client';
+import { Strategy } from 'openid-client/passport';
+import type { AuthenticateCallback } from 'passport';
 import passport from 'passport';
 import { createClient } from 'redis';
 import * as Config from '../config.js';
@@ -52,29 +55,21 @@ async function setupSession(app: Express) {
     );
 }
 
-async function getStrategy(authClient: OpenIdClient.Client) {
-    return new OpenIdClient.Strategy(
+async function getStrategy(authConfig: Configuration) {
+    return new Strategy(
         {
-            client: authClient,
-            params: {
-                response_type: Config.auth.responseType,
-                response_mode: Config.auth.responseMode,
-                scope: `openid offline_access ${Config.auth.clientId}/.default`,
-            },
-            extras: { clientAssertionPayload: { aud: authClient.issuer.metadata['token_endpoint'] } },
-            usePKCE: 'S256',
+            config: authConfig,
+            callbackURL: Config.auth.loginRedirectUri,
+            scope: `openid offline_access ${Config.auth.clientId}/.default`,
             passReqToCallback: true,
         },
-        (
-            req: http.IncomingMessage,
-            tokenSet: OpenIdClient.TokenSet,
-            done: (err: null, user?: Express.User) => void,
-        ) => {
-            if (!tokenSet.expired()) {
+        (req: Request, tokenSet: TokenEndpointResponse & TokenEndpointResponseHelpers, done: AuthenticateCallback) => {
+            const storedToken = AuthUtils.toStoredTokenSet(tokenSet);
+            if (!AuthUtils.isTokenExpired(storedToken)) {
                 req.log.debug('OpenIdClient.Strategy: Mapping tokenSet to User.');
                 return done(null, {
                     tokenSets: {
-                        [AuthUtils.tokenSetSelfId]: tokenSet,
+                        [AuthUtils.tokenSetSelfId]: storedToken,
                     },
                 });
             }
@@ -87,14 +82,14 @@ async function getStrategy(authClient: OpenIdClient.Client) {
     );
 }
 
-export default async function setupAuth(app: Express, authClient: OpenIdClient.Client) {
+export default async function setupAuth(app: Express, authConfig: Configuration) {
     await setupSession(app);
 
     app.use(passport.initialize());
     app.use(passport.session());
 
     const authName = Config.isDev ? 'localAuth' : 'aad';
-    const authStrategy = await getStrategy(authClient);
+    const authStrategy = await getStrategy(authConfig);
 
     passport.use(authName, authStrategy);
     passport.serializeUser((user, done) => {
@@ -119,9 +114,11 @@ export default async function setupAuth(app: Express, authClient: OpenIdClient.C
         req.logout(() => req.log.warn('Utlogging av bruker feilet.'));
         req.session.destroy(() => {
             res.clearCookie(Config.server.sessionCookieName);
-            const endSessionUrl = authClient.endSessionUrl({ post_logout_redirect_uri: Config.auth.logoutRedirectUri });
+            const endSessionUrl = buildEndSessionUrl(authConfig, {
+                post_logout_redirect_uri: Config.auth.logoutRedirectUri,
+            });
             req.log.debug(`Redirecting user via Azure's end_session_endpoint: ${endSessionUrl}`);
-            res.redirect(endSessionUrl);
+            res.redirect(endSessionUrl.toString());
         });
     });
     app.get('/oauth2/callback', passport.authenticate(authName, { failureRedirect: '/login-failed' }), (req, res) => {

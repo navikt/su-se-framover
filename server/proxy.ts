@@ -1,12 +1,12 @@
 import express from 'express';
 import expressHttpProxy from 'express-http-proxy';
-import * as OpenIdClient from 'openid-client';
+import type * as OpenIdClient from 'openid-client';
 import { Logger } from 'pino';
 
 import * as AuthUtils from './auth/utils.js';
 import * as Config from './config.js';
 
-export default function setup(authClient: OpenIdClient.Client) {
+export default function setup(authClient: OpenIdClient.Configuration) {
     const router = express.Router();
 
     const proxy = (log: Logger, accessToken?: string) =>

@@ -32,10 +32,10 @@ export default async function expressStart() {
     );
 
     app.use(compression());
-    const authClient = await AuthUtils.getOpenIdClient(Config.auth.discoverUrl);
-    await setupAuth(app, authClient);
+    const authConfig = await AuthUtils.getOpenIdClient(Config.auth.discoverUrl);
+    await setupAuth(app, authConfig);
 
-    app.use(setupProxy(authClient));
+    app.use(setupProxy(authConfig));
 
     app.use(await routes());
 
