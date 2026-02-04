@@ -1,5 +1,6 @@
-import { Alert, BodyShort, Box, Button, Heading, HStack, Label, TextField, VStack } from '@navikt/ds-react';
-import { useEffect, useMemo, useState } from 'react';
+import { CheckmarkCircleFillIcon } from '@navikt/aksel-icons';
+import { Alert, BodyShort, Box, Button, Heading, HStack, Label, Loader, TextField, VStack } from '@navikt/ds-react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import {
     hentMottaker,
@@ -23,6 +24,7 @@ interface MottakerFormProps {
 type FormValues = LagreMottakerRequest;
 type FeedbackVariant = 'success' | 'error' | 'info' | 'warning';
 type Feedback = { text: string; variant: FeedbackVariant };
+type ActionState = 'idle' | 'loading' | 'success' | 'error';
 
 export function MottakerForm({ sakId, referanseId, referanseType, onClose }: MottakerFormProps) {
     const emptyFormValues = useMemo<FormValues>(
@@ -44,17 +46,21 @@ export function MottakerForm({ sakId, referanseId, referanseType, onClose }: Mot
         [referanseId, referanseType, sakId],
     );
 
-    const { register, handleSubmit, reset, formState, setError, clearErrors } = useForm<FormValues>({
+    const { register, handleSubmit, reset, formState, setError, clearErrors, watch } = useForm<FormValues>({
         defaultValues: emptyFormValues,
     });
     const [feedback, setFeedback] = useState<Feedback | null>(null);
     const [loading, setLoading] = useState<boolean>(true);
     const [harEksisterendeMottaker, setHarEksisterendeMottaker] = useState<boolean>(false);
     const [mottakerId, setMottakerId] = useState<string | null>(null);
+    const [saveState, setSaveState] = useState<ActionState>('idle');
+    const [deleteState, setDeleteState] = useState<ActionState>('idle');
+    const skipClearOnChangeRef = useRef(false);
 
     const fyllSkjema = (mottaker: MottakerResponse) => {
         setHarEksisterendeMottaker(true);
         setMottakerId(mottaker.id);
+        skipClearOnChangeRef.current = true;
         reset({
             navn: mottaker.navn ?? '',
             foedselsnummer: mottaker.foedselsnummer ?? '',
@@ -73,11 +79,27 @@ export function MottakerForm({ sakId, referanseId, referanseType, onClose }: Mot
     };
 
     useEffect(() => {
+        const subscription = watch(() => {
+            if (skipClearOnChangeRef.current) {
+                skipClearOnChangeRef.current = false;
+                return;
+            }
+            setSaveState('idle');
+            setDeleteState('idle');
+            setFeedback(null);
+        });
+
+        return () => subscription.unsubscribe();
+    }, [watch]);
+
+    useEffect(() => {
         let aktiv = true;
 
         const hentOgFyll = async () => {
             setLoading(true);
             setFeedback(null);
+            setSaveState('idle');
+            setDeleteState('idle');
 
             const res = await hentMottaker(sakId, referanseType, referanseId);
 
@@ -90,17 +112,20 @@ export function MottakerForm({ sakId, referanseId, referanseType, onClose }: Mot
                 } else {
                     setHarEksisterendeMottaker(false);
                     setMottakerId(null);
+                    skipClearOnChangeRef.current = true;
                     reset(emptyFormValues);
                     setFeedback({ text: 'Ingen mottaker funnet – du kan opprette ny.', variant: 'info' });
                 }
             } else if (res.error.statusCode === 404) {
                 setHarEksisterendeMottaker(false);
                 setMottakerId(null);
+                skipClearOnChangeRef.current = true;
                 reset(emptyFormValues);
                 setFeedback({ text: 'Ingen mottaker funnet – du kan opprette ny.', variant: 'info' });
             } else {
                 setHarEksisterendeMottaker(false);
                 setMottakerId(null);
+                skipClearOnChangeRef.current = true;
                 reset(emptyFormValues);
                 setFeedback({ text: res.error.body?.message ?? 'Kunne ikke hente mottaker', variant: 'error' });
             }
@@ -148,23 +173,33 @@ export function MottakerForm({ sakId, referanseId, referanseType, onClose }: Mot
             referanseType,
         };
 
+        setSaveState('loading');
+
         if (harEksisterendeMottaker) {
             if (!mottakerId) {
                 setFeedback({ text: 'Mangler mottaker-id fra backend – kan ikke oppdatere.', variant: 'error' });
+                setSaveState('error');
                 return;
             }
             const res = await oppdaterMottaker(sakId, { ...payload, id: mottakerId });
             if (res.status === 'ok') {
-                setFeedback({ text: 'Mottaker oppdatert!', variant: 'success' });
+                setSaveState('success');
+                skipClearOnChangeRef.current = true;
+                reset({
+                    ...payload,
+                    adresse: { ...payload.adresse },
+                });
+                clearErrors();
             } else {
                 setFeedback({ text: res.error.body?.message ?? 'Kunne ikke oppdatere mottaker', variant: 'error' });
+                setSaveState('error');
             }
             return;
         }
 
         const res = await lagreMottaker(sakId, payload);
         if (res.status === 'ok') {
-            setFeedback({ text: 'Mottaker opprettet!', variant: 'success' });
+            setSaveState('success');
             setLoading(true);
             const hentRes = await hentMottaker(sakId, referanseType, referanseId);
             if (hentRes.status === 'ok' && hentRes.data) {
@@ -173,11 +208,13 @@ export function MottakerForm({ sakId, referanseId, referanseType, onClose }: Mot
             setLoading(false);
         } else {
             setFeedback({ text: res.error.body?.message ?? 'Kunne ikke opprette mottaker', variant: 'error' });
+            setSaveState('error');
         }
     };
 
     const handleSlett = async () => {
         setFeedback(null);
+        setDeleteState('loading');
 
         const identifikator: MottakerIdentifikator = { referanseType, referanseId };
         const res = await slettMottaker(sakId, identifikator);
@@ -185,24 +222,34 @@ export function MottakerForm({ sakId, referanseId, referanseType, onClose }: Mot
         if (res.status === 'ok') {
             setHarEksisterendeMottaker(false);
             setMottakerId(null);
+            setSaveState('idle');
+            setDeleteState('success');
+            skipClearOnChangeRef.current = true;
             reset({
                 ...emptyFormValues,
                 adresse: { ...emptyFormValues.adresse },
             });
             clearErrors();
-            setFeedback({ text: 'Mottaker slettet!', variant: 'success' });
         } else {
             setFeedback({ text: res.error.body?.message ?? 'Kunne ikke slette mottaker', variant: 'error' });
+            setDeleteState('error');
         }
     };
 
-    const erOpptatt = loading || formState.isSubmitting;
+    const erOpptatt = loading || saveState === 'loading' || deleteState === 'loading';
     const submitLabel = harEksisterendeMottaker ? 'Oppdater mottaker' : 'Opprett mottaker';
+    const lagreIkon = saveState === 'success' ? <CheckmarkCircleFillIcon /> : undefined;
+    const slettIkon = deleteState === 'success' ? <CheckmarkCircleFillIcon /> : undefined;
 
     return (
         <Box background="surface-default" padding="6" borderWidth="1" borderRadius="medium" className={styles.panel}>
             <VStack gap="5">
-                <Heading size="small">{harEksisterendeMottaker ? 'Oppdater mottaker' : 'Legg til mottaker'}</Heading>
+                <HStack gap="2" align="center">
+                    <Heading size="small">
+                        {harEksisterendeMottaker ? 'Oppdater mottaker' : 'Legg til mottaker'}
+                    </Heading>
+                    {loading && <Loader size="small" title="Henter mottaker" />}
+                </HStack>
 
                 <HStack gap="6" className={styles.meta}>
                     <div>
@@ -291,8 +338,9 @@ export function MottakerForm({ sakId, referanseId, referanseType, onClose }: Mot
                                             event.stopPropagation();
                                             handleSubmit(onSubmit)();
                                         }}
-                                        loading={formState.isSubmitting}
+                                        loading={saveState === 'loading'}
                                         disabled={erOpptatt}
+                                        icon={lagreIkon}
                                     >
                                         {submitLabel}
                                     </Button>
@@ -301,6 +349,8 @@ export function MottakerForm({ sakId, referanseId, referanseType, onClose }: Mot
                                         variant="danger"
                                         onClick={handleSlett}
                                         disabled={erOpptatt || !harEksisterendeMottaker}
+                                        loading={deleteState === 'loading'}
+                                        icon={slettIkon}
                                     >
                                         Slett mottaker
                                     </Button>
