@@ -17,7 +17,8 @@ export const lukkSøknadBegrunnelseI18nId: { [key in LukkSøknadOgAvsluttSøknad
  */
 export function forTidligÅSøkeNyPeriode(sak: Sak): boolean {
     if (sak.utbetalinger.length === 0) {
-        return true;
+        // Aldri for tidlig å søke for første periode
+        return false;
     }
     const sortertUtbetalingsperioder = sorterUtbetalingsperioder(sak.utbetalinger);
     const sisteUtbetalingsDato = new Date(sortertUtbetalingsperioder[sortertUtbetalingsperioder.length - 1].tilOgMed);
