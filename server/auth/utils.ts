@@ -69,7 +69,7 @@ export async function getOrRefreshOnBehalfOfToken(
         tokenSets[Config.auth.suSeBakoverUri] = refreshedOnBehalfOfToken;
         return refreshedOnBehalfOfToken;
     }
-    return tokenSets[Config.auth.suSeBakoverUri];
+    return onBehalfOfToken;
 }
 
 async function getOrRefreshSelfTokenIfExpired(
@@ -117,6 +117,10 @@ async function requestOnBehalfOfToken(
 
 export async function getOpenIdClient(issuerUrl: string): Promise<OpenIdClient.Configuration> {
     try {
+        const discoveryOptions =
+            Config.isDev && issuerUrl.startsWith('http://')
+                ? { execute: [OpenIdClient.allowInsecureRequests] }
+                : undefined;
         const privateKeyJwk = Config.auth.jwks?.keys?.find((key: OpenIdClient.JWK) => key.kty === 'RSA' && 'd' in key);
         if (!privateKeyJwk) {
             throw Error('Missing private RSA key in JWKS config.');
@@ -140,6 +144,7 @@ export async function getOpenIdClient(issuerUrl: string): Promise<OpenIdClient.C
                 token_endpoint_auth_signing_alg: Config.auth.tokenEndpointAuthSigningAlg,
             },
             clientAuth,
+            discoveryOptions,
         );
     } catch (e) {
         logger.error(`Could not discover issuer: ${issuerUrl}`);
