@@ -13,7 +13,7 @@ export const lukkSøknadBegrunnelseI18nId: { [key in LukkSøknadOgAvsluttSøknad
 };
 
 /*
- * Kun øknader som er sendt inn to måneder før et vedtak opphører skal avslås
+ * Kun søknader som er sendt inn to måneder før et vedtak opphører skal avslås uten "vanlig" behandling
  */
 export function forTidligÅSøkeNyPeriode(sak: Sak): boolean {
     if (sak.utbetalinger.length === 0) {

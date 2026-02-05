@@ -40,7 +40,7 @@ const LukkSøknadOgAvsluttBehandling = (props: { søknad: Søknad }) => {
                     <option value={LukkSøknadBegrunnelse.Bortfalt} key={LukkSøknadBegrunnelse.Bortfalt}>
                         {formatMessage(lukkSøknadBegrunnelseI18nId[LukkSøknadBegrunnelse.Bortfalt])}
                     </option>
-                    {!forTidligÅSøkeNyPeriode(sak) && (
+                    {forTidligÅSøkeNyPeriode(sak) && (
                         <option value={LukkSøknadBegrunnelse.Avslag} key={LukkSøknadBegrunnelse.Avslag}>
                             {formatMessage(lukkSøknadBegrunnelseI18nId[LukkSøknadBegrunnelse.Avslag])}
                         </option>
