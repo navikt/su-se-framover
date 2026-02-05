@@ -1,11 +1,52 @@
 name-template: 'v$RESOLVED_VERSION'
 tag-template: 'v$RESOLVED_VERSION'
 template: |
-    ## Hva er nytt?
+  ## Hva er nytt?
 
-    $CHANGES
+  $CHANGES
 categories:
-    - title: '🧶 Avhengighetsoppdateringer'
-      label: 'dependencies'
-    - title: '🛠  Teknisk'
-      label: 'tech'
+  - title: '🛠️ Avhengighetsoppdateringer'
+    labels:
+      - 'dependencies'
+      - 'dependabot'
+  - title: '🚀 Features'
+    labels:
+      - 'feature'
+      - 'enhancement'
+  - title: '🐛 Bug Fixes'
+    labels:
+      - 'fix'
+      - 'bugfix'
+      - 'bug'
+  - title: '🧹 Refactoring'
+    labels:
+      - 'refactoring'
+      - 'refactor'
+  - title: '📖 Dokumentasjon'
+    labels:
+      - 'documentation'
+      - 'docs'
+      - 'doc'
+  - title: '📦 Andre endringer'
+    labels: [ ] #dekker alle andre branches navn som ikke inneholder de over
+autolabeler:
+  - label: 'feature'
+    branch:
+      - '/^feature\/.+/i'
+
+  - label: 'bug'
+    branch:
+      - '/^(bugfiks|bugfix|fix)\/.+/i'
+
+  - label: 'refactor'
+    branch:
+      - '/^refactor\/.+/i'
+
+  - label: 'documentation'
+    branch:
+      - '/^doc\/.+/i'
+
+  - label: 'dependencies'
+    branch:
+      - '/^dependabot\/.+/i'
+
