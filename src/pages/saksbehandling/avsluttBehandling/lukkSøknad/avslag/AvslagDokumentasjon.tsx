@@ -13,7 +13,7 @@ interface Props {
     onFritekstChange: (value: string) => void;
 }
 
-const AvslåttSøknad = (props: Props) => {
+const AvslagDokumentasjon = (props: Props) => {
     return (
         <div className={styles.container}>
             <BrevInput
@@ -33,4 +33,4 @@ const AvslåttSøknad = (props: Props) => {
     );
 };
 
-export default AvslåttSøknad;
+export default AvslagDokumentasjon;

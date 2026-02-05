@@ -23,8 +23,13 @@ export interface Lukket {
 export enum LukkSøknadBegrunnelse {
     Trukket = 'TRUKKET',
     Bortfalt = 'BORTFALT',
-    Avvist = 'AVSLAG',
+    Avslag = 'AVSLAG',
 }
+export enum AvsluttSøknadsbehandlingBegrunnelse {
+    ManglendeDok = 'MANGLENDE_DOK',
+}
+
+export type LukkSøknadOgAvsluttSøknadsbehandlingType = LukkSøknadBegrunnelse | AvsluttSøknadsbehandlingBegrunnelse;
 
 interface Saksbehandler {
     navIdent: string;

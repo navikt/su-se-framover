@@ -1,245 +1,79 @@
-import * as RemoteData from '@devexperts/remote-data-ts';
-import { yupResolver } from '@hookform/resolvers/yup';
+import { ChevronLeftIcon } from '@navikt/aksel-icons';
 import { Select } from '@navikt/ds-react';
-import { Controller, useForm } from 'react-hook-form';
-import { useNavigate, useOutletContext } from 'react-router-dom';
-
-import { LukkSøknadBodyTypes } from '~src/api/søknadApi';
-import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
-import { SaksoversiktContext } from '~src/context/SaksoversiktContext.ts';
-import * as SøknadActions from '~src/features/søknad/SøknadActions';
-import { pickRemoteData } from '~src/lib/fp';
-import { useAsyncActionCreator } from '~src/lib/hooks';
+import { useState } from 'react';
+import { useOutletContext } from 'react-router-dom';
+import LinkAsButton from '~src/components/linkAsButton/LinkAsButton';
+import { SaksoversiktContext } from '~src/context/SaksoversiktContext';
 import { useI18n } from '~src/lib/i18n';
 import * as Routes from '~src/lib/routes';
-import Avvist from '~src/pages/saksbehandling/avsluttBehandling/lukkSøknad/Avvist.tsx';
-import { LukkSøknadBegrunnelse, Søknad } from '~src/types/Søknad';
-import { Søknadstype } from '~src/types/Søknadinnhold';
-import { sorterUtbetalingsperioder } from '~src/types/Utbetalingsperiode.ts';
-import { startenPåMnd } from '~src/utils/date/dateUtils.ts';
-import AvsluttBehandlingBunnknapper from '../avsluttBehandlingBunnknapper/AvsluttBehandlingBunnknapper';
-import AvslåttSøknad from './avslag/AvslåttSøknad';
-import styles from './lukkSøknad.module.less';
-import nb from './lukkSøknad-nb';
+import { AvslagDokumentasjonForm } from '~src/pages/saksbehandling/avsluttBehandling/lukkSøknad/AvslagDokumentasjonForm';
+import { AvslagForm } from '~src/pages/saksbehandling/avsluttBehandling/lukkSøknad/AvslagForm';
+import { BortfaltForm } from '~src/pages/saksbehandling/avsluttBehandling/lukkSøknad/BortfaltForm';
+import styles from '~src/pages/saksbehandling/avsluttBehandling/lukkSøknad/lukkSøknad.module.less';
+import nb from '~src/pages/saksbehandling/avsluttBehandling/lukkSøknad/lukkSøknad-nb';
 import {
-    AvsluttSøknadsbehandlingBegrunnelse,
-    AvvistBrevtyper,
-    getLukkSøknadValidationSchema,
-    LukkSøknadOgAvsluttSøknadsbehandlingFormData,
-    LukkSøknadOgAvsluttSøknadsbehandlingType,
-    lukkSøknadInitialValues,
-} from './lukkSøknadUtils';
-import Trukket from './Trukket';
+    forTidligÅSøkeNyPeriode,
+    lukkSøknadBegrunnelseI18nId,
+} from '~src/pages/saksbehandling/avsluttBehandling/lukkSøknad/lukkSøknadUtils';
+import { TrukketForm } from '~src/pages/saksbehandling/avsluttBehandling/lukkSøknad/TrukketForm';
+import { AvsluttSøknadsbehandlingBegrunnelse, LukkSøknadBegrunnelse, Søknad } from '~src/types/Søknad';
 
 const LukkSøknadOgAvsluttBehandling = (props: { søknad: Søknad }) => {
-    const navigate = useNavigate();
     const { formatMessage } = useI18n({ messages: nb });
-    const [søknadLukketStatus, lukkSøknad, resetLukkSøknadStatus] = useAsyncActionCreator(SøknadActions.lukkSøknad);
-    const [avslagManglendeDokStatus, avslåPgaManglendeDok, resetAvslagManglendeDokStatus] = useAsyncActionCreator(
-        SøknadActions.avslåSøknad,
-    );
-
+    const [valgtBegrunnelse, setValgtbegrunnelse] = useState<string>('velgBegrunnelse');
     const sak = useOutletContext<SaksoversiktContext>().sak;
-    function sjekkOmkanSøke(): boolean {
-        if (sak.utbetalinger.length === 0) {
-            return true;
-        }
-        const sortertUtbetalingsperioder = sorterUtbetalingsperioder(sak.utbetalinger);
-        const sisteUtbetalingsDato = new Date(
-            sortertUtbetalingsperioder[sortertUtbetalingsperioder.length - 1].tilOgMed,
-        );
-        const toMndFørTilogMed = startenPåMnd(sisteUtbetalingsDato);
-        toMndFørTilogMed.setMonth(toMndFørTilogMed.getMonth() - 1);
-        return new Date() >= toMndFørTilogMed;
-    }
-    const fjernForTidligSøknad = (begrunnelse: LukkSøknadBegrunnelse) =>
-        !(begrunnelse === LukkSøknadBegrunnelse.Avvist && kanSøke);
-
-    const kanSøke = sjekkOmkanSøke();
-
-    const submitStatus = pickRemoteData(søknadLukketStatus, avslagManglendeDokStatus);
-
-    const handleSubmit = async (values: LukkSøknadOgAvsluttSøknadsbehandlingFormData) => {
-        if (!values.begrunnelse) {
-            return;
-        }
-
-        if (values.begrunnelse === AvsluttSøknadsbehandlingBegrunnelse.ManglendeDok) {
-            avslåPgaManglendeDok(
-                {
-                    søknadId: props.søknad.id,
-                    body: { fritekst: values.manglendeDok.fritekst! },
-                },
-                () => {
-                    const message = formatMessage('avslutt.behandlingHarBlittAvsluttet');
-                    return Routes.navigateToSakIntroWithMessage(navigate, message, sak.id);
-                },
-            );
-        } else {
-            lukkSøknad(
-                {
-                    søknadId: props.søknad.id,
-                    body: lagBody(values),
-                },
-                () => {
-                    const message = formatMessage('avslutt.behandlingHarBlittAvsluttet');
-                    Routes.navigateToSakIntroWithMessage(navigate, message, sak.id);
-                },
-            );
-        }
-    };
-
-    const form = useForm<LukkSøknadOgAvsluttSøknadsbehandlingFormData>({
-        defaultValues: lukkSøknadInitialValues,
-        resolver(values, ...args) {
-            return yupResolver(getLukkSøknadValidationSchema(values.begrunnelse))(values, ...args);
-        },
-    });
-
-    const watchBegrunnelse = form.watch('begrunnelse');
-
-    const handleRequestValidate = (onSuccess: () => void): void => {
-        form.handleSubmit(onSuccess)();
-    };
 
     return (
-        <form onSubmit={form.handleSubmit(handleSubmit)} className={styles.formContainer}>
+        <div>
             <div className={styles.selectContainer}>
-                <Controller
-                    control={form.control}
-                    name="begrunnelse"
-                    render={({ field, fieldState }) => (
-                        <Select
-                            label={formatMessage('lukkSøknadOgAvsluttSøknadsbehandling.begrunnelseForAvsluttelse')}
-                            value={field.value ?? ''}
-                            onChange={(e) => {
-                                // Resetter sånn at feilmeldinger fra andre underskjema ikke henger igjen
-                                resetAvslagManglendeDokStatus();
-                                resetLukkSøknadStatus();
-                                form.reset({
-                                    ...lukkSøknadInitialValues,
-                                    begrunnelse: e.target.value as LukkSøknadOgAvsluttSøknadsbehandlingType,
-                                });
-                            }}
-                            error={fieldState.error?.message}
-                        >
-                            <option value="velgBegrunnelse">{formatMessage('selector.velgBegrunnelse')}</option>
-                            {Object.values(LukkSøknadBegrunnelse)
-                                .filter(fjernForTidligSøknad)
-                                .map((begrunnelse) => (
-                                    <option value={begrunnelse} key={begrunnelse}>
-                                        {formatMessage(lukkSøknadBegrunnelseI18nId[begrunnelse])}
-                                    </option>
-                                ))}
-                            {Object.values(AvsluttSøknadsbehandlingBegrunnelse).map((begrunnelse) => (
-                                <option value={begrunnelse} key={begrunnelse}>
-                                    {formatMessage(lukkSøknadBegrunnelseI18nId[begrunnelse])}
-                                </option>
-                            ))}
-                        </Select>
+                <Select
+                    label={formatMessage('lukkSøknadOgAvsluttSøknadsbehandling.begrunnelseForAvsluttelse')}
+                    value={valgtBegrunnelse}
+                    onChange={(e) => {
+                        setValgtbegrunnelse(e.target.value);
+                    }}
+                >
+                    <option value="velgBegrunnelse">{formatMessage('selector.velgBegrunnelse')}</option>
+                    <option value={LukkSøknadBegrunnelse.Trukket} key={LukkSøknadBegrunnelse.Trukket}>
+                        {formatMessage(lukkSøknadBegrunnelseI18nId[LukkSøknadBegrunnelse.Trukket])}
+                    </option>
+                    <option value={LukkSøknadBegrunnelse.Bortfalt} key={LukkSøknadBegrunnelse.Bortfalt}>
+                        {formatMessage(lukkSøknadBegrunnelseI18nId[LukkSøknadBegrunnelse.Bortfalt])}
+                    </option>
+                    {forTidligÅSøkeNyPeriode(sak) && (
+                        <option value={LukkSøknadBegrunnelse.Avslag} key={LukkSøknadBegrunnelse.Avslag}>
+                            {formatMessage(lukkSøknadBegrunnelseI18nId[LukkSøknadBegrunnelse.Avslag])}
+                        </option>
                     )}
-                />
+                    <option
+                        value={AvsluttSøknadsbehandlingBegrunnelse.ManglendeDok}
+                        key={AvsluttSøknadsbehandlingBegrunnelse.ManglendeDok}
+                    >
+                        {formatMessage(lukkSøknadBegrunnelseI18nId[AvsluttSøknadsbehandlingBegrunnelse.ManglendeDok])}
+                    </option>
+                </Select>
             </div>
 
-            {watchBegrunnelse === LukkSøknadBegrunnelse.Trukket && (
-                <Controller
-                    control={form.control}
-                    name="trukket.datoSøkerTrakkSøknad"
-                    render={({ field, fieldState }) => (
-                        <Trukket
-                            datoSøkerTrakkSøknad={field.value}
-                            søknadId={props.søknad.id}
-                            søknadOpprettet={hentOpprettetDatoFraSøknad(props.søknad)}
-                            feilmelding={fieldState.error?.message}
-                            onDatoSøkerTrakkSøknadChange={field.onChange}
-                            onRequestValidate={handleRequestValidate}
-                        />
-                    )}
-                />
+            {valgtBegrunnelse === LukkSøknadBegrunnelse.Trukket && <TrukketForm søknad={props.søknad} sakId={sak.id} />}
+
+            {valgtBegrunnelse === LukkSøknadBegrunnelse.Bortfalt && (
+                <BortfaltForm søknad={props.søknad} sakId={sak.id} />
             )}
 
-            {watchBegrunnelse === LukkSøknadBegrunnelse.Avvist && (
-                <Controller
-                    control={form.control}
-                    name="avvist.fritekst"
-                    render={({ field, fieldState }) => (
-                        <Avvist
-                            søknadId={props.søknad.id}
-                            fritekstValue={field.value}
-                            fritekstError={fieldState.error}
-                            onFritekstChange={field.onChange}
-                        />
-                    )}
-                />
+            {valgtBegrunnelse === LukkSøknadBegrunnelse.Avslag && <AvslagForm søknad={props.søknad} sakId={sak.id} />}
+
+            {valgtBegrunnelse === AvsluttSøknadsbehandlingBegrunnelse.ManglendeDok && (
+                <AvslagDokumentasjonForm søknad={props.søknad} sakId={sak.id} />
             )}
 
-            {watchBegrunnelse === AvsluttSøknadsbehandlingBegrunnelse.ManglendeDok && (
-                <Controller
-                    control={form.control}
-                    name="manglendeDok.fritekst"
-                    render={({ field, fieldState }) => (
-                        <AvslåttSøknad
-                            søknadId={props.søknad.id}
-                            fritekstValue={field.value}
-                            fritekstError={fieldState.error}
-                            onFritekstChange={field.onChange}
-                        />
-                    )}
-                />
+            {valgtBegrunnelse === 'velgBegrunnelse' && (
+                <LinkAsButton href={Routes.saksoversiktValgtSak.createURL({ sakId: sak.id })} variant="secondary">
+                    <ChevronLeftIcon />
+                    {formatMessage('link.tilbake')}
+                </LinkAsButton>
             )}
-
-            <div>{RemoteData.isFailure(submitStatus) && <ApiErrorAlert error={submitStatus.error} />}</div>
-
-            <AvsluttBehandlingBunnknapper
-                sakId={sak.id}
-                submitButtonText={
-                    watchBegrunnelse === AvsluttSøknadsbehandlingBegrunnelse.ManglendeDok
-                        ? formatMessage('knapp.avslåSøknad')
-                        : formatMessage('knapp.lukkSøknad')
-                }
-                isSubmitPending={RemoteData.isPending(submitStatus)}
-            />
-        </form>
+        </div>
     );
-};
-
-function lagBody(values: LukkSøknadOgAvsluttSøknadsbehandlingFormData): LukkSøknadBodyTypes {
-    switch (values.begrunnelse) {
-        case LukkSøknadBegrunnelse.Trukket:
-            return {
-                type: values.begrunnelse,
-                datoSøkerTrakkSøknad: values.trukket.datoSøkerTrakkSøknad!,
-            };
-
-        case LukkSøknadBegrunnelse.Bortfalt:
-            return {
-                type: values.begrunnelse,
-            };
-        case LukkSøknadBegrunnelse.Avvist:
-            return {
-                type: values.begrunnelse,
-                brevConfig: {
-                    brevtype: AvvistBrevtyper.Vedtaksbrev,
-                    fritekst: values.avvist.fritekst,
-                },
-            };
-        default:
-            throw new Error('LukkSøknadBegrunnelse har ugyldig verdi');
-    }
-}
-
-function hentOpprettetDatoFraSøknad(søknad: Søknad) {
-    if (søknad.søknadInnhold.forNav.type === Søknadstype.Papirsøknad) {
-        return søknad.søknadInnhold.forNav.mottaksdatoForSøknad;
-    }
-    return søknad.opprettet;
-}
-
-const lukkSøknadBegrunnelseI18nId: { [key in LukkSøknadOgAvsluttSøknadsbehandlingType]: keyof typeof nb } = {
-    TRUKKET: 'lukking.begrunnelse.trukket',
-    BORTFALT: 'lukking.begrunnelse.bortfalt',
-    AVSLAG: 'lukking.begrunnelse.avslag',
-    MANGLENDE_DOK: 'avslutt.manglendeDokumentasjon',
 };
 
 export default LukkSøknadOgAvsluttBehandling;

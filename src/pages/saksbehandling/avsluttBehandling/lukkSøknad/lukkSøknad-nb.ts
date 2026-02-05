@@ -28,7 +28,7 @@ export default {
 
     'lukking.begrunnelse.trukket': 'Trukket',
     'lukking.begrunnelse.bortfalt': 'Bortfalt',
-    'lukking.begrunnelse.avslag': 'Avslag-innvilget stønad',
+    'lukking.begrunnelse.avslag': 'Avslag innvilget stønad',
 
     'lukking.søknad.fantIkkeSøknad': 'Fant ikke søknad med søknad id: ',
     'lukking.søknad.harBlittLukket': 'Søknaden har blitt lukket',
