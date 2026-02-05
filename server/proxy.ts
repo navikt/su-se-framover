@@ -6,7 +6,7 @@ import { Logger } from 'pino';
 import * as AuthUtils from './auth/utils.js';
 import * as Config from './config.js';
 
-export default function setup(authClient: OpenIdClient.Configuration) {
+export default function setup(authConfig: OpenIdClient.Configuration) {
     const router = express.Router();
 
     const proxy = (log: Logger, accessToken?: string) =>
@@ -43,7 +43,7 @@ export default function setup(authClient: OpenIdClient.Configuration) {
             return;
         }
 
-        AuthUtils.getOrRefreshOnBehalfOfToken(authClient, user.tokenSets, req.log)
+        AuthUtils.getOrRefreshOnBehalfOfToken(authConfig, user.tokenSets, req.log)
             .then((onBehalfOfToken) => {
                 if (!onBehalfOfToken.access_token) {
                     res.status(500).send('Failed to fetch access token on behalf of user.');
