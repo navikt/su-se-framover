@@ -17,15 +17,17 @@ import {
 import { struct } from 'fp-ts/Eq';
 import * as A from 'fp-ts/lib/Array';
 import * as S from 'fp-ts/string';
+import { useEffect } from 'react';
 import { Control, Controller, useForm } from 'react-hook-form';
 import { Link, useNavigate } from 'react-router-dom';
-
+import { FritekstTyper, hentFritekst, redigerFritekst } from '~src/api/fritekstApi.ts';
 import * as pdfApi from '~src/api/pdfApi';
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
+import TextareaWithAutosave from '~src/components/inputs/textareaWithAutosave/TextareaWithAutosave.tsx';
 import LinkAsButton from '~src/components/linkAsButton/LinkAsButton';
 import ToKolonner from '~src/components/toKolonner/ToKolonner';
 import * as klageActions from '~src/features/klage/klageActions';
-import { useAsyncActionCreator, useBrevForhåndsvisning } from '~src/lib/hooks';
+import { useApiCall, useAsyncActionCreator, useBrevForhåndsvisning } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
 import * as Routes from '~src/lib/routes';
 import { eqNullable, Nullable } from '~src/lib/types';
@@ -33,9 +35,7 @@ import yup from '~src/lib/validering';
 import { KabalVedtakHjemmel, Klage, KlageStatus, KlageSteg, KlageVurderingType } from '~src/types/Klage';
 import { OmgjøringsGrunn } from '~src/types/Revurdering';
 import { erKlageVurdert, erKlageVurdertBekreftet } from '~src/utils/klage/klageUtils';
-
 import sharedStyles from '../klage.module.less';
-
 import messages from './VurderingAvKlage-nb';
 import styles from './vurderingAvKlage.module.less';
 
@@ -53,7 +53,7 @@ interface VurderingAvKlageFormData {
     klageVurderingType: Nullable<KlageVurderingType>;
     omgjør: OmgjørFormData;
     kabaldata: KabalData;
-    fritekstTilBrev: Nullable<string>;
+    fritekst: string;
 }
 
 const eqOmgjør = struct<OmgjørFormData>({
@@ -104,25 +104,23 @@ const schema = yup.object<VurderingAvKlageFormData>({
             }),
             otherwise: yup.object().nullable(),
         }),
-    fritekstTilBrev: yup
-        .mixed<Nullable<string>>()
-        .when('klageVurderingType', (klageVurderingType: KlageVurderingType) => {
-            if (
-                klageVurderingType === KlageVurderingType.OMGJØR ||
-                klageVurderingType === KlageVurderingType.DELVIS_OMGJØRING_EGEN_VEDTAKSINSTANS
-            ) {
-                return yup.string().nullable();
-            } else {
-                return yup.string().nullable().required('Brevet må ha tekst');
-            }
-        }),
+    fritekst: yup.mixed<string>().when('klageVurderingType', (klageVurderingType: KlageVurderingType) => {
+        if (
+            klageVurderingType === KlageVurderingType.OMGJØR ||
+            klageVurderingType === KlageVurderingType.DELVIS_OMGJØRING_EGEN_VEDTAKSINSTANS
+        ) {
+            return yup.string().nullable();
+        } else {
+            return yup.string().nullable().required('Brevet må ha tekst');
+        }
+    }),
 });
 
 const eqVurderingAvKlageFormData = struct<VurderingAvKlageFormData>({
     klageVurderingType: eqNullable(S.Eq),
     omgjør: eqOmgjør,
     kabaldata: eqKabalData,
-    fritekstTilBrev: eqNullable(S.Eq),
+    fritekst: S.Eq,
 });
 
 const VurderingAvKlage = (props: { sakId: string; klage: Klage }) => {
@@ -134,6 +132,8 @@ const VurderingAvKlage = (props: { sakId: string; klage: Klage }) => {
     );
     const [bekreftVurderingerStatus, bekreftVurderinger] = useAsyncActionCreator(klageActions.bekreftVurderinger);
     const [brevStatus, hentBrev] = useBrevForhåndsvisning(pdfApi.hentBrevutkastForKlage);
+
+    const [lagreFritekstStatus, lagreFritekst] = useApiCall(redigerFritekst);
 
     const hjelpetekstLink =
         'https://navno.sharepoint.com/sites/fag-og-ytelser-pensjon-supplerende-stonad/SitePages/Midlertidig-rutine-for-klagebehandling---supplerende-st%C3%B8nad-til-uf%C3%B8re-flyktninger.aspx?OR=Teams-HL&CT=1645705340996&sourceId=&params=%7B%22AppName%22%3A%22Teams-Desktop%22%2C%22AppVersion%22%3A%2228%2F22010300411%22%7D';
@@ -170,13 +170,14 @@ const VurderingAvKlage = (props: { sakId: string; klage: Klage }) => {
                       ? (props.klage.vedtaksvurdering?.delvisOmgjøringKa?.klagenotat ?? null)
                       : null,
         },
-        fritekstTilBrev: props.klage.fritekstTilBrev,
+        fritekst: '',
     };
 
     const {
         handleSubmit,
         watch,
         control,
+        setValue,
         formState: { isDirty },
     } = useForm<VurderingAvKlageFormData>({
         resolver: yupResolver(schema),
@@ -215,14 +216,7 @@ const VurderingAvKlage = (props: { sakId: string; klage: Klage }) => {
                           begrunnelse: data.omgjør.begrunnelse ? data.omgjør.begrunnelse : null,
                       }
                     : null,
-            fritekstTilBrev: data.fritekstTilBrev,
         };
-    };
-
-    const onSeBrevClick = (data: VurderingAvKlageFormData) => {
-        lagreVurderingAvKlage(lagOpprettholdApiBody(data), () => {
-            hentBrev({ sakId: props.sakId, klageId: props.klage.id });
-        });
     };
 
     const handleLagreVurderingAvKlageClick = (data: VurderingAvKlageFormData) => {
@@ -289,6 +283,19 @@ const VurderingAvKlage = (props: { sakId: string; klage: Klage }) => {
     const ikkeMedhold =
         klageVurderingTypeWatch === KlageVurderingType.OPPRETTHOLD ||
         klageVurderingTypeWatch === KlageVurderingType.DELVIS_OMGJØRING_KA;
+
+    useEffect(() => {
+        hentFritekst({
+            referanseId: props.klage.id,
+            sakId: props.sakId,
+            type: FritekstTyper.VEDTAKSBREV_KLAGE,
+        }).then((result) => {
+            if (result.status === 'ok' && result.data) {
+                setValue('fritekst', result.data.fritekst ?? '');
+            }
+        });
+    }, [props.klage.id, props.sakId]);
+
     return (
         <ToKolonner tittel={formatMessage('page.tittel')}>
             {{
@@ -331,41 +338,47 @@ const VurderingAvKlage = (props: { sakId: string; klage: Klage }) => {
                             <>
                                 <OpprettholdVedtakForm control={control} />
                                 <div className={styles.fritesktOgVisBrevContainer}>
-                                    <Controller
-                                        control={control}
-                                        name={'fritekstTilBrev'}
-                                        render={({ field, fieldState }) => (
-                                            <Textarea
-                                                {...field}
-                                                minRows={5}
-                                                label={
-                                                    <div className={styles.fritekstLabelOgHjelpeTekstContainer}>
-                                                        <Label>{formatMessage('form.fritekst.label')}</Label>
-                                                        <HelpText>
-                                                            {/*Er mulig Folka fra designsystemet tillatter rikt innhold da noen har hatt et issue med det  */}
-                                                            {/*@ts-ignore */}
-                                                            <Label className={styles.hjelpetekst}>
-                                                                <DsReactLink href={hjelpetekstLink} target="_blank">
-                                                                    {formatMessage('form.fritekst.hjelpeTekst')}
-                                                                </DsReactLink>
-                                                            </Label>
-                                                        </HelpText>
-                                                    </div>
-                                                }
-                                                value={field.value ?? ''}
-                                                error={fieldState.error?.message}
-                                            />
-                                        )}
+                                    <TextareaWithAutosave
+                                        textarea={{
+                                            name: 'fritekst',
+                                            label: (
+                                                <div className={styles.fritekstLabelOgHjelpeTekstContainer}>
+                                                    <Label>{formatMessage('form.fritekst.label')}</Label>
+                                                    <HelpText>
+                                                        {/*Er mulig Folka fra designsystemet tillatter rikt innhold da noen har hatt et issue med det  */}
+                                                        {/*@ts-ignore */}
+                                                        <Label className={styles.hjelpetekst}>
+                                                            <DsReactLink href={hjelpetekstLink} target="_blank">
+                                                                {formatMessage('form.fritekst.hjelpeTekst')}
+                                                            </DsReactLink>
+                                                        </Label>
+                                                    </HelpText>
+                                                </div>
+                                            ),
+                                            description: [formatMessage('form.fritekst.hjelpeTekst')],
+                                            control: control,
+                                            value: watch('fritekst') ?? '',
+                                        }}
+                                        save={{
+                                            handleSave: () => {
+                                                lagreFritekst({
+                                                    referanseId: props.klage.id,
+                                                    sakId: props.sakId,
+                                                    type: FritekstTyper.VEDTAKSBREV_KLAGE,
+                                                    fritekst: watch('fritekst') ?? '',
+                                                });
+                                            },
+                                            status: lagreFritekstStatus,
+                                        }}
+                                        brev={{
+                                            handleSeBrev: () =>
+                                                hentBrev({
+                                                    sakId: props.sakId,
+                                                    klageId: props.klage.id,
+                                                }),
+                                            status: brevStatus,
+                                        }}
                                     />
-                                    <Button
-                                        type="button"
-                                        className={styles.seBrevButton}
-                                        variant="secondary"
-                                        loading={RemoteData.isPending(brevStatus)}
-                                        onClick={() => onSeBrevClick(watch())}
-                                    >
-                                        {formatMessage('knapp.seBrev')}
-                                    </Button>
                                     {RemoteData.isFailure(brevStatus) && <ApiErrorAlert error={brevStatus.error} />}
                                 </div>
                             </>

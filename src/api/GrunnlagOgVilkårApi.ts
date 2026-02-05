@@ -20,6 +20,7 @@ import apiClient, { ErrorMessage } from './apiClient';
 export enum Behandlingstype {
     Søknadsbehandling = 'Søknadsbehandling',
     Revurdering = 'Revurdering',
+    Klage = 'Klage',
 }
 
 export type VilkårOgGrunnlagApiResult<T extends InformasjonsRevurdering = InformasjonsRevurdering> =
@@ -40,6 +41,8 @@ const mapBehandlingstypeTilBaseUrl = (sakId: string, behandlingId: string, b: Be
             return `/saker/${sakId}/behandlinger/${behandlingId}`;
         case Behandlingstype.Revurdering:
             return `/saker/${sakId}/revurderinger/${behandlingId}`;
+        case Behandlingstype.Klage:
+            return `/saker/${sakId}/klager/${behandlingId}`;
     }
 };
 
@@ -123,6 +126,8 @@ export const lagreBosituasjon = async (arg: BehandlingstypeMedApiRequest<Bositua
                 method: 'POST',
                 body: { bosituasjoner: arg.bosituasjoner },
             });
+        case Behandlingstype.Klage:
+            throw new Error('Klage støtter ikke lagring av bosituasjon');
     }
 };
 

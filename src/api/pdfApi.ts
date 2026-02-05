@@ -72,6 +72,7 @@ export async function hentBrevutkastForKlage(arg: { sakId: string; klageId: stri
     return apiClient({
         url: `/saker/${arg.sakId}/klager/${arg.klageId}/brevutkast`,
         method: 'POST',
+        request: { headers: new Headers({ Accept: 'application/pdf' }) },
         bodyTransformer: (res) => res.blob(),
     });
 }

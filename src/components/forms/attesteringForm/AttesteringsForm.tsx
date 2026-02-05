@@ -61,6 +61,9 @@ interface Props {
     redigerbartBrev: boolean;
     sakId: string;
     behandligstype?: Behandlingstype;
+
+    lagreFritekst?: () => void;
+
     iverksett: {
         fn: () => void;
         status: ApiResult<unknown>;
@@ -91,7 +94,24 @@ export const AttesteringsForm = (props: Props) => {
 
     const [lagreFritekstStatus, lagreFritekst] = useApiCall(redigerFritekst);
 
+    const lagreFritekstForBekreft = () => {
+        const type =
+            behandlingstype === Behandlingstype.Klage
+                ? FritekstTyper.VEDTAKSBREV_KLAGE
+                : behandlingstype === Behandlingstype.Revurdering
+                  ? FritekstTyper.VEDTAKSBREV_REVURDERING
+                  : FritekstTyper.VEDTAKSBREV_SØKNADSBEHANDLING;
+        const currentFritekst = getValues().fritekst ?? '';
+        lagreFritekst({
+            referanseId: props.behandlingsId,
+            sakId: props.sakId,
+            type,
+            fritekst: currentFritekst,
+        });
+    };
     const submitHandler = (data: AttesteringFormData) => {
+        lagreFritekstForBekreft();
+
         switch (data.beslutning) {
             case Beslutning.IVERKSETT:
                 props.iverksett.fn();
@@ -109,6 +129,11 @@ export const AttesteringsForm = (props: Props) => {
                     revurderingId: args.behandlingId,
                     sakId: args.sakId,
                 });
+            } else if (behandlingstype === Behandlingstype.Klage) {
+                return PdfApi.hentBrevutkastForKlage({
+                    klageId: args.behandlingId,
+                    sakId: args.sakId,
+                });
             } else {
                 return PdfApi.fetchBrevutkastForSøknadsbehandling(args);
             }
@@ -124,9 +149,11 @@ export const AttesteringsForm = (props: Props) => {
             return;
         }
         const type =
-            behandlingstype === Behandlingstype.Revurdering
-                ? FritekstTyper.VEDTAKSBREV_REVURDERING
-                : FritekstTyper.VEDTAKSBREV_SØKNADSBEHANDLING;
+            behandlingstype === Behandlingstype.Klage
+                ? FritekstTyper.VEDTAKSBREV_KLAGE
+                : behandlingstype === Behandlingstype.Revurdering
+                  ? FritekstTyper.VEDTAKSBREV_REVURDERING
+                  : FritekstTyper.VEDTAKSBREV_SØKNADSBEHANDLING;
         hentFritekst({
             referanseId: props.behandlingsId,
             sakId: props.sakId,
@@ -240,19 +267,7 @@ export const AttesteringsForm = (props: Props) => {
                                                 value: watch('fritekst') ?? '',
                                             }}
                                             save={{
-                                                handleSave: () => {
-                                                    const type =
-                                                        behandlingstype === Behandlingstype.Revurdering
-                                                            ? FritekstTyper.VEDTAKSBREV_REVURDERING
-                                                            : FritekstTyper.VEDTAKSBREV_SØKNADSBEHANDLING;
-                                                    const currentFritekst = getValues().fritekst ?? '';
-                                                    lagreFritekst({
-                                                        referanseId: props.behandlingsId,
-                                                        sakId: props.sakId,
-                                                        type,
-                                                        fritekst: currentFritekst,
-                                                    });
-                                                },
+                                                handleSave: lagreFritekstForBekreft,
                                                 status: lagreFritekstStatus,
                                             }}
                                         />

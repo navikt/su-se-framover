@@ -1,6 +1,6 @@
 import { Alert } from '@navikt/ds-react';
 import { Link, useNavigate } from 'react-router-dom';
-
+import { Behandlingstype } from '~src/api/GrunnlagOgVilkårApi.ts';
 import AttesteringsForm from '~src/components/forms/attesteringForm/AttesteringsForm';
 import OppsummeringAvKlage from '~src/components/oppsummering/oppsummeringAvKlage/OppsummeringAvKlage';
 import * as klageActions from '~src/features/klage/klageActions';
@@ -101,8 +101,9 @@ const AttesterKlage = (props: { sakId: string; klage: Klage; klagensVedtak: Vedt
         <div className={styles.mainContentContainer}>
             <AttesteringsForm
                 behandlingsId={props.klage.id}
-                redigerbartBrev={false}
+                redigerbartBrev={true}
                 sakId={props.sakId}
+                behandligstype={Behandlingstype.Klage}
                 iverksett={{
                     fn: iverksettCallback().callback,
                     status: iverksettCallback().status,

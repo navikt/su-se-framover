@@ -43,7 +43,6 @@ export interface VurderingRequest {
     delvisomgjøring_egen_instans: Nullable<Omgjør>;
     oppretthold: Nullable<OversendelseKabal>;
     delvisomgjøringKa: Nullable<OversendelseKabal>;
-    fritekstTilBrev: Nullable<string>;
 }
 
 export const erKlageOpprettet = (k: Klage) => k.status === KlageStatus.OPPRETTET;
