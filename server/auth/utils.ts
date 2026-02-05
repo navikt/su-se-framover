@@ -1,4 +1,3 @@
-import type { JsonWebKey } from 'node:crypto';
 import { webcrypto } from 'node:crypto';
 import * as OpenIdClient from 'openid-client';
 import { Logger } from 'pino';
@@ -9,6 +8,7 @@ import type { NormalizedTokenSet, StoredTokenSet, TokenSets } from '../typings/e
 
 const TOKEN_EXPIRY_SKEW_MILLIS = 60 * 1000;
 export const tokenSetSelfId = 'self';
+type JsonWebKey = webcrypto.JsonWebKey;
 
 function getTokenSetById(tokenSets: TokenSets, id: string): NormalizedTokenSet | null {
     if (!(id in tokenSets)) {
