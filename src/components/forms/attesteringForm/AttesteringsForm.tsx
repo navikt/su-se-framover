@@ -60,9 +60,7 @@ interface Props {
     behandlingsId: string;
     redigerbartBrev: boolean;
     sakId: string;
-    behandligstype?: Behandlingstype;
-
-    lagreFritekst?: () => void;
+    behandlingstype?: Behandlingstype;
 
     iverksett: {
         fn: () => void;
@@ -120,7 +118,7 @@ export const AttesteringsForm = (props: Props) => {
                 props.underkjenn.fn(data.grunn!, data.kommentar ?? '');
         }
     };
-    const behandlingstype = props.behandligstype ?? Behandlingstype.Søknadsbehandling;
+    const behandlingstype = props.behandlingstype ?? Behandlingstype.Søknadsbehandling;
 
     function lastNedBrev(behandlingstype: Behandlingstype) {
         const api = (args: { sakId: string; behandlingId: string; underAttestering?: boolean }) => {

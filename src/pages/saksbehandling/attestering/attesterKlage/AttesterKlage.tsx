@@ -103,7 +103,7 @@ const AttesterKlage = (props: { sakId: string; klage: Klage; klagensVedtak: Vedt
                 behandlingsId={props.klage.id}
                 redigerbartBrev={true}
                 sakId={props.sakId}
-                behandligstype={Behandlingstype.Klage}
+                behandlingstype={Behandlingstype.Klage}
                 iverksett={{
                     fn: iverksettCallback().callback,
                     status: iverksettCallback().status,

@@ -49,9 +49,7 @@ export default {
     'form.vurdering.label': 'Vurdering',
     'form.fritekst.label': 'Brev til bruker og klageinstans',
     'form.fritekst.hjelpeTekst': 'Se rutine på Navet',
-
-    brevtekst: 'Brevtekst',
-    'feilmelding.brevhentingFeilet': 'En feil skjedde under generering av brev',
+    'form.fritekst.description': 'Brevet blir lagret automatisk',
 
     'knapp.seBrev': 'Se brev',
     'knapp.lagre': 'Lagre og fortsett senere',

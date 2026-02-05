@@ -294,7 +294,7 @@ const VurderingAvKlage = (props: { sakId: string; klage: Klage }) => {
                 setValue('fritekst', result.data.fritekst ?? '');
             }
         });
-    }, [props.klage.id, props.sakId]);
+    }, [props.klage.id, props.sakId, setValue]);
 
     return (
         <ToKolonner tittel={formatMessage('page.tittel')}>
@@ -355,7 +355,7 @@ const VurderingAvKlage = (props: { sakId: string; klage: Klage }) => {
                                                     </HelpText>
                                                 </div>
                                             ),
-                                            description: [formatMessage('form.fritekst.hjelpeTekst')],
+                                            description: [formatMessage('form.fritekst.description')],
                                             control: control,
                                             value: watch('fritekst') ?? '',
                                         }}

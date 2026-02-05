@@ -15,8 +15,6 @@ export default {
     'framdriftsindikator.avvisning': 'Avvisning',
     'framdriftsindikator.oppsummering': 'Oppsummering',
 
-    'brev.fritekst.description': 'Brevet blir lagret automatisk',
-
     'framdriftsindikator.vurderingOgAvvisning': 'Vurdering/Avvisning',
 
     'feil.fantIkkeKlage': 'Fant ikke klage',
