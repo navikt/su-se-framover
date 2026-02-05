@@ -18,7 +18,9 @@ function getTokenSetById(tokenSets: TokenSets, id: string): NormalizedTokenSet |
     const tokenSet = tokenSets[id];
     if (typeof tokenSet.receivedAt !== 'number') {
         // Denne kan være et object (f.eks. hvis den er hentet fra redis)
-        tokenSet.receivedAt = Date.now();
+        const normalized = { ...tokenSet, receivedAt: Date.now() };
+        tokenSets[id] = normalized;
+        return normalized as NormalizedTokenSet;
     }
     return tokenSet as NormalizedTokenSet;
 }
