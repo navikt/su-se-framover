@@ -2,21 +2,21 @@ import { ChevronLeftIcon } from '@navikt/aksel-icons';
 import { Select } from '@navikt/ds-react';
 import { useState } from 'react';
 import { useOutletContext } from 'react-router-dom';
-import LinkAsButton from '~src/components/linkAsButton/LinkAsButton.tsx';
-import { SaksoversiktContext } from '~src/context/SaksoversiktContext.ts';
-import { useI18n } from '~src/lib/i18n.ts';
+import LinkAsButton from '~src/components/linkAsButton/LinkAsButton';
+import { SaksoversiktContext } from '~src/context/SaksoversiktContext';
+import { useI18n } from '~src/lib/i18n';
 import * as Routes from '~src/lib/routes';
-import { AvslagDokumentasjonForm } from '~src/pages/saksbehandling/avsluttBehandling/lukkSøknad/AvslagDokumentasjonForm.tsx';
-import { AvslagForm } from '~src/pages/saksbehandling/avsluttBehandling/lukkSøknad/AvslagForm.tsx';
-import { BortfaltForm } from '~src/pages/saksbehandling/avsluttBehandling/lukkSøknad/BortfaltForm.tsx';
+import { AvslagDokumentasjonForm } from '~src/pages/saksbehandling/avsluttBehandling/lukkSøknad/AvslagDokumentasjonForm';
+import { AvslagForm } from '~src/pages/saksbehandling/avsluttBehandling/lukkSøknad/AvslagForm';
+import { BortfaltForm } from '~src/pages/saksbehandling/avsluttBehandling/lukkSøknad/BortfaltForm';
 import styles from '~src/pages/saksbehandling/avsluttBehandling/lukkSøknad/lukkSøknad.module.less';
-import nb from '~src/pages/saksbehandling/avsluttBehandling/lukkSøknad/lukkSøknad-nb.ts';
+import nb from '~src/pages/saksbehandling/avsluttBehandling/lukkSøknad/lukkSøknad-nb';
 import {
     forTidligÅSøkeNyPeriode,
     lukkSøknadBegrunnelseI18nId,
-} from '~src/pages/saksbehandling/avsluttBehandling/lukkSøknad/lukkSøknadUtils.ts';
-import { TrukketForm } from '~src/pages/saksbehandling/avsluttBehandling/lukkSøknad/TrukketForm.tsx';
-import { AvsluttSøknadsbehandlingBegrunnelse, LukkSøknadBegrunnelse, Søknad } from '~src/types/Søknad.ts';
+} from '~src/pages/saksbehandling/avsluttBehandling/lukkSøknad/lukkSøknadUtils';
+import { TrukketForm } from '~src/pages/saksbehandling/avsluttBehandling/lukkSøknad/TrukketForm';
+import { AvsluttSøknadsbehandlingBegrunnelse, LukkSøknadBegrunnelse, Søknad } from '~src/types/Søknad';
 
 const LukkSøknadOgAvsluttBehandling = (props: { søknad: Søknad }) => {
     const { formatMessage } = useI18n({ messages: nb });

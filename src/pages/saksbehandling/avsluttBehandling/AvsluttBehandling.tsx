@@ -9,7 +9,7 @@ import messages from './avsluttBehandling-nb';
 import AvsluttKlage from './avsluttKlage/AvsluttKlage';
 import AvsluttRevurdering from './avsluttRevurdering/AvsluttRevurdering';
 import AvsluttTilbakekreving from './avsluttTilbakekreving/AvsluttTilbakekreving';
-import LukkSøknadOgAvsluttBehandling from './lukkSøknad/LukkSøknad.tsx';
+import LukkSøknadOgAvsluttBehandling from './lukkSøknad/LukkSøknad';
 
 const AvsluttBehandling = () => {
     const props = useOutletContext<SaksoversiktContext>();
