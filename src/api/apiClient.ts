@@ -55,10 +55,17 @@ export default async function apiClient<TSuccess>(arg: {
     });
 
     if (res.ok) {
+        if (res.status === 204 || res.status === 205) {
+            return success(undefined as TSuccess, res.status);
+        }
         if (arg.bodyTransformer) {
             return success(await arg.bodyTransformer(res), res.status);
         }
-        return success(await res.json(), res.status);
+        const text = await res.text();
+        if (!text.trim()) {
+            return success(undefined as TSuccess, res.status);
+        }
+        return success(JSON.parse(text) as TSuccess, res.status);
     }
 
     const authenticateChallengeHeader = res.headers.get('WWW-Authenticate');

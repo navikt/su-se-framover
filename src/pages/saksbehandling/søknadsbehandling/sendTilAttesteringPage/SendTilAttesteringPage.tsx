@@ -1,9 +1,10 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { Alert, Button, Loader } from '@navikt/ds-react';
-import { useEffect, useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useNavigate, useOutletContext } from 'react-router-dom';
 import { FritekstTyper, hentFritekst, redigerFritekst } from '~src/api/fritekstApi.ts';
+import { hentMottaker } from '~src/api/mottakerClient.ts';
 import * as PdfApi from '~src/api/pdfApi';
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
 import TextareaWithAutosave from '~src/components/inputs/textareaWithAutosave/TextareaWithAutosave.tsx';
@@ -15,6 +16,7 @@ import * as SøknadsbehandlingActions from '~src/features/SøknadsbehandlingActi
 import { useApiCall, useAsyncActionCreator, useBrevForhåndsvisning } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
 import * as Routes from '~src/lib/routes';
+import { MottakerForm } from '~src/pages/saksbehandling/mottaker/Mottaker.tsx';
 import { Sakstype } from '~src/types/Sak';
 import { Vilkårtype, VilkårVurderingStatus } from '~src/types/Vilkårsvurdering';
 import {
@@ -41,6 +43,9 @@ const SendTilAttesteringPage = () => {
     const behandling = props.sak.behandlinger.find((x) => x.id === behandlingId);
 
     const [lagreFritekstStatus, lagreFritekst] = useApiCall(redigerFritekst);
+    const [skalLeggeTilMottaker, setSkalLeggeTilMottaker] = useState(false);
+    const [mottakerFinnes, setMottakerFinnes] = useState<boolean | null>(null);
+    const [mottakerFetchError, setMottakerFetchError] = useState<string | null>(null);
 
     const [sendTilAttesteringStatus, sendTilAttestering] = useAsyncActionCreator(
         SøknadsbehandlingActions.sendTilAttestering,
@@ -108,6 +113,34 @@ const SendTilAttesteringPage = () => {
         });
     }, [behandlingId, props.sak.id, form]);
 
+    useEffect(() => {
+        if (!behandling) {
+            return;
+        }
+
+        const sjekkMottaker = async () => {
+            setMottakerFinnes(null);
+            setMottakerFetchError(null);
+            const res = await hentMottaker(props.sak.id, 'SØKNAD', behandling.id);
+
+            if (res.status === 'ok' && res.data) {
+                setMottakerFinnes(true);
+                setSkalLeggeTilMottaker(true);
+                setMottakerFetchError(null);
+            } else if (res.status === 'error' && res.error.statusCode === 404) {
+                setMottakerFinnes(false);
+                setSkalLeggeTilMottaker(false);
+                setMottakerFetchError(null);
+            } else {
+                setMottakerFinnes(false);
+                setSkalLeggeTilMottaker(false);
+                setMottakerFetchError(formatMessage('feilmelding.kanIkkeHenteMottaker'));
+            }
+        };
+
+        sjekkMottaker();
+    }, [behandling, props.sak.id]);
+
     if (!behandling) {
         return <Alert variant="error">{formatMessage('feilmelding.fantIkkeBehandlingsId')}</Alert>;
     }
@@ -159,6 +192,35 @@ const SendTilAttesteringPage = () => {
                             {RemoteData.isPending(brevStatus) && <Loader />}
                         </Button>
                     </div>
+                </div>
+                <div>
+                    {mottakerFetchError && (
+                        <Alert variant="error" size="small">
+                            {mottakerFetchError}
+                        </Alert>
+                    )}
+                    <Button
+                        variant="secondary"
+                        className={styles.visBrevKnapp}
+                        type="button"
+                        onClick={() => setSkalLeggeTilMottaker((prev) => !prev)}
+                        size="small"
+                        disabled={mottakerFinnes === null}
+                    >
+                        {skalLeggeTilMottaker
+                            ? formatMessage('knapp.lukkmottaker')
+                            : mottakerFinnes
+                              ? formatMessage('knapp.vismottaker')
+                              : formatMessage('knapp.leggtilmottaker')}
+                    </Button>
+                    {skalLeggeTilMottaker && (
+                        <MottakerForm
+                            sakId={props.sak.id}
+                            referanseId={behandling.id}
+                            referanseType={'SØKNAD'}
+                            onClose={() => setSkalLeggeTilMottaker(false)}
+                        />
+                    )}
                 </div>
                 <div className={styles.navigeringContainer}>
                     <LinkAsButton variant="secondary" href={tilbakeUrl}>
