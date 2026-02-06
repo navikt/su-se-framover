@@ -10,6 +10,7 @@ export default {
     'sendTilAttestering.button.label': 'Send til attestering',
     'notification.sendtForhåndsvarsel': 'Forhåndsvarsel er sendt',
     'notification.sendtTilAttestering': 'Revurderingen er sendt til attestering',
+    'feilmelding.kanIkkeHenteMottaker': 'Kan ikke hente mottaker',
 
     'brevInput.tekstTilVedtaksbrev.tittel': 'Tekst til vedtaksbrev',
     'brevInput.tekstTilForhåndsvarsel.tittel': 'Tekst til forhåndsvarsel',
@@ -18,6 +19,9 @@ export default {
 
     brevtekst: 'Brevtekst',
     begrunnelse: 'Behandlingsnotat',
+    'knapp.leggtilmottaker': 'Legg til mottaker',
+    'knapp.lukkmottaker': 'Lukk mottaker',
+    'knapp.vismottaker': 'Vis mottaker',
     'brevvalg.header': 'Valg for vedtaksbrev',
     'brevvalg.skal.det.sendes.brev': 'Skal det sendes vedtaksbrev til bruker?',
     'brevvalg.lagre': 'Lagre',
