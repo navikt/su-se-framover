@@ -16,7 +16,7 @@ const messages = {
 const TextareaWithAutosave = <T extends object, U extends FieldValues>(props: {
     textarea: {
         name: Path<U>;
-        label: string;
+        label: React.ReactNode;
         control: Control<U>;
         value: string;
         description?: string[];

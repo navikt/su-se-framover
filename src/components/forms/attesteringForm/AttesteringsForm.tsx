@@ -60,7 +60,8 @@ interface Props {
     behandlingsId: string;
     redigerbartBrev: boolean;
     sakId: string;
-    behandligstype?: Behandlingstype;
+    behandlingstype?: Behandlingstype;
+
     iverksett: {
         fn: () => void;
         status: ApiResult<unknown>;
@@ -91,7 +92,24 @@ export const AttesteringsForm = (props: Props) => {
 
     const [lagreFritekstStatus, lagreFritekst] = useApiCall(redigerFritekst);
 
+    const lagreFritekstForBekreft = () => {
+        const type =
+            behandlingstype === Behandlingstype.Klage
+                ? FritekstTyper.VEDTAKSBREV_KLAGE
+                : behandlingstype === Behandlingstype.Revurdering
+                  ? FritekstTyper.VEDTAKSBREV_REVURDERING
+                  : FritekstTyper.VEDTAKSBREV_SØKNADSBEHANDLING;
+        const currentFritekst = getValues().fritekst ?? '';
+        lagreFritekst({
+            referanseId: props.behandlingsId,
+            sakId: props.sakId,
+            type,
+            fritekst: currentFritekst,
+        });
+    };
     const submitHandler = (data: AttesteringFormData) => {
+        lagreFritekstForBekreft();
+
         switch (data.beslutning) {
             case Beslutning.IVERKSETT:
                 props.iverksett.fn();
@@ -100,13 +118,18 @@ export const AttesteringsForm = (props: Props) => {
                 props.underkjenn.fn(data.grunn!, data.kommentar ?? '');
         }
     };
-    const behandlingstype = props.behandligstype ?? Behandlingstype.Søknadsbehandling;
+    const behandlingstype = props.behandlingstype ?? Behandlingstype.Søknadsbehandling;
 
     function lastNedBrev(behandlingstype: Behandlingstype) {
         const api = (args: { sakId: string; behandlingId: string; underAttestering?: boolean }) => {
             if (behandlingstype === Behandlingstype.Revurdering) {
                 return PdfApi.fetchBrevutkastForRevurdering({
                     revurderingId: args.behandlingId,
+                    sakId: args.sakId,
+                });
+            } else if (behandlingstype === Behandlingstype.Klage) {
+                return PdfApi.hentBrevutkastForKlage({
+                    klageId: args.behandlingId,
                     sakId: args.sakId,
                 });
             } else {
@@ -124,9 +147,11 @@ export const AttesteringsForm = (props: Props) => {
             return;
         }
         const type =
-            behandlingstype === Behandlingstype.Revurdering
-                ? FritekstTyper.VEDTAKSBREV_REVURDERING
-                : FritekstTyper.VEDTAKSBREV_SØKNADSBEHANDLING;
+            behandlingstype === Behandlingstype.Klage
+                ? FritekstTyper.VEDTAKSBREV_KLAGE
+                : behandlingstype === Behandlingstype.Revurdering
+                  ? FritekstTyper.VEDTAKSBREV_REVURDERING
+                  : FritekstTyper.VEDTAKSBREV_SØKNADSBEHANDLING;
         hentFritekst({
             referanseId: props.behandlingsId,
             sakId: props.sakId,
@@ -240,19 +265,7 @@ export const AttesteringsForm = (props: Props) => {
                                                 value: watch('fritekst') ?? '',
                                             }}
                                             save={{
-                                                handleSave: () => {
-                                                    const type =
-                                                        behandlingstype === Behandlingstype.Revurdering
-                                                            ? FritekstTyper.VEDTAKSBREV_REVURDERING
-                                                            : FritekstTyper.VEDTAKSBREV_SØKNADSBEHANDLING;
-                                                    const currentFritekst = getValues().fritekst ?? '';
-                                                    lagreFritekst({
-                                                        referanseId: props.behandlingsId,
-                                                        sakId: props.sakId,
-                                                        type,
-                                                        fritekst: currentFritekst,
-                                                    });
-                                                },
+                                                handleSave: lagreFritekstForBekreft,
                                                 status: lagreFritekstStatus,
                                             }}
                                         />
