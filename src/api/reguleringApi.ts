@@ -140,22 +140,11 @@ export async function beregnRegulering({
     });
 }
 
-export async function regulerManuelt({
-    reguleringId,
-    fradrag,
-    uføre,
-}: {
-    reguleringId: string;
-    fradrag: Fradrag[];
-    uføre: Uføregrunnlag[];
-}): Promise<ApiClientResult<Regulering>> {
+export async function regulerManuelt({ reguleringId }: { reguleringId: string }): Promise<ApiClientResult<Regulering>> {
     return apiClient({
         url: `reguleringer/manuell/${reguleringId}`,
         method: 'POST',
-        body: {
-            fradrag,
-            uføre,
-        },
+        body: {},
     });
 }
 
@@ -185,7 +174,6 @@ export async function reguleringssupplement(args: { innhold: File | string }): P
 export async function hentManuellRegulering(args: {
     reguleringId: string;
 }): Promise<ApiClientResult<ManuellRegulering>> {
-    console.log(args.reguleringId);
     return apiClient({
         url: `reguleringer/manuell/${args.reguleringId}`,
         method: 'GET',

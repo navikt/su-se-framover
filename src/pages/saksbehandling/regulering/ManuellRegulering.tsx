@@ -14,7 +14,8 @@ import {
 import OppsummeringAvBeregningOgSimulering from '~src/components/oppsummering/oppsummeringAvBeregningOgsimulering/OppsummeringAvBeregningOgSimulering.tsx';
 import { OppsummeringPar } from '~src/components/oppsummering/oppsummeringpar/OppsummeringPar';
 import { SaksoversiktContext } from '~src/context/SaksoversiktContext';
-import { useApiCall } from '~src/lib/hooks';
+import * as sakSlice from '~src/features/saksoversikt/sak.slice';
+import { useApiCall, useAsyncActionCreator } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
 import * as Routes from '~src/lib/routes';
 import { Nullable } from '~src/lib/types.ts';
@@ -52,10 +53,17 @@ const ManuellRegulering = () => {
     const props = useOutletContext<SaksoversiktContext>();
     const [regulering, setRegulering] = useState<Regulering | null>(null);
     const [manuellReguleringStatus, hentManuellRegulering] = useApiCall(reguleringApi.hentManuellRegulering);
-    const [regulerStatus, _] = useApiCall(reguleringApi.regulerManuelt);
+    const [regulerStatus, reguler] = useApiCall(reguleringApi.regulerManuelt);
     const [beregnStatus, beregn] = useApiCall(reguleringApi.beregnRegulering);
+
     const navigate = useNavigate();
     const navigateBack = () => navigate(Routes.saksoversiktValgtSak.createURL({ sakId: props.sak.id }));
+
+    const [, hentSak] = useAsyncActionCreator(sakSlice.fetchSakByIdEllerNummer);
+    const tilSakoversikt = () =>
+        hentSak({ saksnummer: props.sak.saksnummer.toString() }, () => {
+            Routes.navigateToSakIntroWithMessage(navigate, formatMessage('notification'), props.sak.id);
+        });
 
     interface BeregnReguleringForm {
         uføre: Uføregrunnlag[];
@@ -104,6 +112,24 @@ const ManuellRegulering = () => {
                     ),
                 },
                 (data) => setRegulering(data),
+            );
+        }
+    };
+
+    const ferdigstillEllerTilAttestering = (reguleringId: string) => {
+        // TODO skal legges til bryter
+        const skalAttestere = false;
+        if (skalAttestere) {
+            // TODO
+            tilSakoversikt();
+        } else {
+            reguler(
+                {
+                    reguleringId: reguleringId,
+                },
+                () => {
+                    tilSakoversikt();
+                },
             );
         }
     };
@@ -211,7 +237,10 @@ const ManuellRegulering = () => {
                                 <Button onClick={navigateBack} variant="secondary" type="button">
                                     {formatMessage('knapper.tilbake')}
                                 </Button>
-                                <Button type="submit" loading={RemoteData.isPending(regulerStatus)}>
+                                <Button
+                                    onClick={() => ferdigstillEllerTilAttestering(regulering.id)}
+                                    loading={RemoteData.isPending(regulerStatus)}
+                                >
                                     {formatMessage('knapper.send')}
                                 </Button>
                             </div>
