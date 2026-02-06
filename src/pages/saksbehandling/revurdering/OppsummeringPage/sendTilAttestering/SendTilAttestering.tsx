@@ -1,10 +1,11 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Radio, RadioGroup, Textarea } from '@navikt/ds-react';
-import { useEffect } from 'react';
+import { Alert, Button, Loader, Radio, RadioGroup, Textarea } from '@navikt/ds-react';
+import { useEffect, useMemo, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import { FritekstTyper, hentFritekst, redigerFritekst } from '~src/api/fritekstApi.ts';
+import { hentMottaker } from '~src/api/mottakerClient.ts';
 import * as pdfApi from '~src/api/pdfApi';
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
 import TextareaWithAutosave from '~src/components/inputs/textareaWithAutosave/TextareaWithAutosave';
@@ -16,6 +17,7 @@ import { useI18n } from '~src/lib/i18n';
 import * as Routes from '~src/lib/routes';
 import { Nullable } from '~src/lib/types';
 import yup from '~src/lib/validering';
+import { MottakerForm } from '~src/pages/saksbehandling/mottaker/Mottaker.tsx';
 import { FormWrapper } from '~src/pages/saksbehandling/søknadsbehandling/FormWrapper';
 import { GrunnlagsdataOgVilkårsvurderinger } from '~src/types/grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
 import {
@@ -78,6 +80,10 @@ const SendTilAttestering = (props: {
 
     const [lagreBrevStatus, lagreAction] = useAsyncActionCreator(RevurderingActions.lagreBrevvalg);
     const [lagreFritekstStatus, lagreFritekst] = useApiCall(redigerFritekst);
+    const [skalLeggeTilMottaker, setSkalLeggeTilMottaker] = useState(false);
+    const [mottakerFinnes, setMottakerFinnes] = useState<boolean | null>(null);
+    const [mottakerFetchError, setMottakerFetchError] = useState<string | null>(null);
+    const mottakerErrorTekst = useMemo(() => formatMessage('feilmelding.kanIkkeHenteMottaker'), [formatMessage]);
 
     const [seBrevStatus, seBrev] = useBrevForhåndsvisning(pdfApi.fetchBrevutkastForRevurdering);
     const [sendTilAttesteringStatus, sendtilAttestering] = useAsyncActionCreator(
@@ -151,6 +157,35 @@ const SendTilAttestering = (props: {
             }
         });
     }, [watch.valg, props.revurdering.id, props.sakId]);
+
+    useEffect(() => {
+        if (!props.revurdering.id) {
+            return;
+        }
+
+        const sjekkMottaker = async () => {
+            setMottakerFinnes(null);
+            setMottakerFetchError(null);
+
+            const res = await hentMottaker(props.sakId, 'REVURDERING', props.revurdering.id);
+
+            if (res.status === 'ok' && res.data) {
+                setMottakerFinnes(true);
+                setSkalLeggeTilMottaker(true);
+                setMottakerFetchError(null);
+            } else if (res.status === 'error' && res.error.statusCode === 404) {
+                setMottakerFinnes(false);
+                setSkalLeggeTilMottaker(false);
+                setMottakerFetchError(null);
+            } else {
+                setMottakerFinnes(false);
+                setSkalLeggeTilMottaker(false);
+                setMottakerFetchError(mottakerErrorTekst);
+            }
+        };
+
+        sjekkMottaker();
+    }, [mottakerErrorTekst, props.revurdering.id, props.sakId]);
 
     return (
         <ToKolonner tittel={'Vedtaksbrev'} width="40/60">
@@ -228,6 +263,38 @@ const SendTilAttestering = (props: {
                                         }}
                                     />
                                 )}
+                                <div className={styles.mottakerSection}>
+                                    {mottakerFetchError && (
+                                        <Alert variant="error" size="small">
+                                            {mottakerFetchError}
+                                        </Alert>
+                                    )}
+                                    <Button
+                                        variant="secondary"
+                                        className={styles.mottakerToggle}
+                                        type="button"
+                                        onClick={() => setSkalLeggeTilMottaker((prev) => !prev)}
+                                        size="small"
+                                        disabled={mottakerFinnes === null}
+                                    >
+                                        {skalLeggeTilMottaker
+                                            ? formatMessage('knapp.lukkmottaker')
+                                            : mottakerFinnes
+                                              ? formatMessage('knapp.vismottaker')
+                                              : formatMessage('knapp.leggtilmottaker')}
+                                        {mottakerFinnes === null && (
+                                            <Loader size="small" className={styles.buttonSpinner} />
+                                        )}
+                                    </Button>
+                                    {skalLeggeTilMottaker && (
+                                        <MottakerForm
+                                            sakId={props.sakId}
+                                            referanseId={props.revurdering.id}
+                                            referanseType={'REVURDERING'}
+                                            onClose={() => setSkalLeggeTilMottaker(false)}
+                                        />
+                                    )}
+                                </div>
                                 <Controller
                                     control={form.control}
                                     name={'begrunnelse'}
