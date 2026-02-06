@@ -1,7 +1,6 @@
 import { Nullable } from '~src/lib/types';
-import { Uføregrunnlag } from '~src/types/grunnlagsdataOgVilkårsvurderinger/uføre/Uføregrunnlag.ts';
 import { Beregning } from './Beregning';
-import { Fradrag, Fradragskategori, FradragTilhører } from './Fradrag';
+import { Fradragskategori, FradragTilhører } from './Fradrag';
 import { GrunnlagsdataOgVilkårsvurderinger } from './grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
 import { Periode, PeriodeMedOptionalTilOgMed } from './Periode';
 import { Sakstype } from './Sak';
@@ -171,10 +170,7 @@ export interface Eksterndata {
     nettoYtelseskomponent: string;
 }
 
-export interface ReguleringGrunnlagsdata {
-    uføreFraGjeldendeVedtak: Uføregrunnlag[];
-    fradragFraGjeldendeVedtak: Fradrag[];
-
-    uføreUnderRegulering: Nullable<Uføregrunnlag[]>;
-    fradragUnderRegulering: Nullable<Fradrag[]>;
+export interface ManuellRegulering {
+    gjeldendeVedtaksdata: GrunnlagsdataOgVilkårsvurderinger;
+    regulering: Regulering;
 }
