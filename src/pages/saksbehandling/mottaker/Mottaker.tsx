@@ -195,6 +195,7 @@ export function MottakerForm({ sakId, referanseId, referanseType, onClose }: Mot
         const res = await lagreMottaker(sakId, payload);
         if (res.status === 'ok') {
             setSaveState('success');
+            setFeedback({ text: 'Mottaker opprettet!', variant: 'success' });
             setLoading(true);
             const hentRes = await hentMottaker(sakId, referanseType, referanseId);
             if (hentRes.status === 'ok' && hentRes.data) {

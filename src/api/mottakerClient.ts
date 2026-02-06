@@ -33,7 +33,7 @@ export interface MottakerResponse {
     foedselsnummer?: string | null;
     orgnummer?: string | null;
     adresse: {
-        adresselinje1?: string | null;
+        adresselinje1: string;
         adresselinje2?: string | null;
         adresselinje3?: string | null;
         postnummer: string;
