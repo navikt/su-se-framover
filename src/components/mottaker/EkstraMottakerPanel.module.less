@@ -1,0 +1,11 @@
+@import '@styles/variables.less';
+
+.container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
+    gap: @spacing-s;
+}
+
+.adresse {
+    grid-column: 1 / -1;
+}
