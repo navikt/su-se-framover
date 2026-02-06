@@ -263,38 +263,40 @@ const SendTilAttestering = (props: {
                                         }}
                                     />
                                 )}
-                                <div className={styles.mottakerSection}>
-                                    {mottakerFetchError && (
-                                        <Alert variant="error" size="small">
-                                            {mottakerFetchError}
-                                        </Alert>
-                                    )}
-                                    <Button
-                                        variant="secondary"
-                                        className={styles.mottakerToggle}
-                                        type="button"
-                                        onClick={() => setSkalLeggeTilMottaker((prev) => !prev)}
-                                        size="small"
-                                        disabled={mottakerFinnes === null}
-                                    >
-                                        {skalLeggeTilMottaker
-                                            ? formatMessage('knapp.lukkmottaker')
-                                            : mottakerFinnes
-                                              ? formatMessage('knapp.vismottaker')
-                                              : formatMessage('knapp.leggtilmottaker')}
-                                        {mottakerFinnes === null && (
-                                            <Loader size="small" className={styles.buttonSpinner} />
+                                {watch.valg === Valg.SEND && (
+                                    <div className={styles.mottakerSection}>
+                                        {mottakerFetchError && (
+                                            <Alert variant="error" size="small">
+                                                {mottakerFetchError}
+                                            </Alert>
                                         )}
-                                    </Button>
-                                    {skalLeggeTilMottaker && (
-                                        <MottakerForm
-                                            sakId={props.sakId}
-                                            referanseId={props.revurdering.id}
-                                            referanseType={'REVURDERING'}
-                                            onClose={() => setSkalLeggeTilMottaker(false)}
-                                        />
-                                    )}
-                                </div>
+                                        <Button
+                                            variant="secondary"
+                                            className={styles.mottakerToggle}
+                                            type="button"
+                                            onClick={() => setSkalLeggeTilMottaker((prev) => !prev)}
+                                            size="small"
+                                            disabled={mottakerFinnes === null}
+                                        >
+                                            {skalLeggeTilMottaker
+                                                ? formatMessage('knapp.lukkmottaker')
+                                                : mottakerFinnes
+                                                  ? formatMessage('knapp.vismottaker')
+                                                  : formatMessage('knapp.leggtilmottaker')}
+                                            {mottakerFinnes === null && (
+                                                <Loader size="small" className={styles.buttonSpinner} />
+                                            )}
+                                        </Button>
+                                        {skalLeggeTilMottaker && (
+                                            <MottakerForm
+                                                sakId={props.sakId}
+                                                referanseId={props.revurdering.id}
+                                                referanseType={'REVURDERING'}
+                                                onClose={() => setSkalLeggeTilMottaker(false)}
+                                            />
+                                        )}
+                                    </div>
+                                )}
                                 <Controller
                                     control={form.control}
                                     name={'begrunnelse'}
