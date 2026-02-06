@@ -45,6 +45,7 @@ const SendTilAttesteringPage = () => {
     const [lagreFritekstStatus, lagreFritekst] = useApiCall(redigerFritekst);
     const [skalLeggeTilMottaker, setSkalLeggeTilMottaker] = useState(false);
     const [mottakerFinnes, setMottakerFinnes] = useState<boolean | null>(null);
+    const [mottakerFetchError, setMottakerFetchError] = useState<string | null>(null);
 
     const [sendTilAttesteringStatus, sendTilAttestering] = useAsyncActionCreator(
         SøknadsbehandlingActions.sendTilAttestering,
@@ -119,17 +120,21 @@ const SendTilAttesteringPage = () => {
 
         const sjekkMottaker = async () => {
             setMottakerFinnes(null);
+            setMottakerFetchError(null);
             const res = await hentMottaker(props.sak.id, 'SØKNAD', behandling.id);
 
             if (res.status === 'ok' && res.data) {
                 setMottakerFinnes(true);
                 setSkalLeggeTilMottaker(true);
+                setMottakerFetchError(null);
             } else if (res.status === 'error' && res.error.statusCode === 404) {
                 setMottakerFinnes(false);
                 setSkalLeggeTilMottaker(false);
+                setMottakerFetchError(null);
             } else {
                 setMottakerFinnes(false);
                 setSkalLeggeTilMottaker(false);
+                setMottakerFetchError(formatMessage('feilmelding.kanIkkeHenteMottaker'));
             }
         };
 
@@ -189,6 +194,11 @@ const SendTilAttesteringPage = () => {
                     </div>
                 </div>
                 <div>
+                    {mottakerFetchError && (
+                        <Alert variant="error" size="small">
+                            {mottakerFetchError}
+                        </Alert>
+                    )}
                     <Button
                         variant="secondary"
                         className={styles.visBrevKnapp}

@@ -57,6 +57,17 @@ export function MottakerForm({ sakId, referanseId, referanseType, onClose }: Mot
     const [deleteState, setDeleteState] = useState<ActionState>('idle');
     const skipClearOnChangeRef = useRef(false);
 
+    const resetTilTomtSkjema = (feedbackNeste: Feedback) => {
+        setHarEksisterendeMottaker(false);
+        setMottakerId(null);
+        skipClearOnChangeRef.current = true;
+        reset({
+            ...emptyFormValues,
+            adresse: { ...emptyFormValues.adresse },
+        });
+        setFeedback(feedbackNeste);
+    };
+
     const fyllSkjema = (mottaker: MottakerResponse) => {
         setHarEksisterendeMottaker(true);
         setMottakerId(mottaker.id);
@@ -106,24 +117,15 @@ export function MottakerForm({ sakId, referanseId, referanseType, onClose }: Mot
                     fyllSkjema(res.data);
                     setFeedback({ text: 'Mottaker funnet – du kan oppdatere.', variant: 'info' });
                 } else {
-                    setHarEksisterendeMottaker(false);
-                    setMottakerId(null);
-                    skipClearOnChangeRef.current = true;
-                    reset(emptyFormValues);
-                    setFeedback({ text: 'Ingen mottaker funnet – du kan opprette ny.', variant: 'info' });
+                    resetTilTomtSkjema({ text: 'Ingen mottaker funnet – du kan opprette ny.', variant: 'info' });
                 }
             } else if (res.error.statusCode === 404) {
-                setHarEksisterendeMottaker(false);
-                setMottakerId(null);
-                skipClearOnChangeRef.current = true;
-                reset(emptyFormValues);
-                setFeedback({ text: 'Ingen mottaker funnet – du kan opprette ny.', variant: 'info' });
+                resetTilTomtSkjema({ text: 'Ingen mottaker funnet – du kan opprette ny.', variant: 'info' });
             } else {
-                setHarEksisterendeMottaker(false);
-                setMottakerId(null);
-                skipClearOnChangeRef.current = true;
-                reset(emptyFormValues);
-                setFeedback({ text: res.error.body?.message ?? 'Kunne ikke hente mottaker', variant: 'error' });
+                resetTilTomtSkjema({
+                    text: res.error.body?.message ?? 'Kunne ikke hente mottaker',
+                    variant: 'error',
+                });
             }
 
             setLoading(false);
@@ -182,6 +184,7 @@ export function MottakerForm({ sakId, referanseId, referanseType, onClose }: Mot
                     adresse: { ...payload.adresse },
                 });
                 clearErrors();
+                setFeedback({ text: 'Mottaker oppdatert!', variant: 'success' });
             } else {
                 setFeedback({ text: res.error.body?.message ?? 'Kunne ikke oppdatere mottaker', variant: 'error' });
                 setSaveState('error');
@@ -212,15 +215,9 @@ export function MottakerForm({ sakId, referanseId, referanseType, onClose }: Mot
         const res = await slettMottaker(sakId, identifikator);
 
         if (res.status === 'ok') {
-            setHarEksisterendeMottaker(false);
-            setMottakerId(null);
             setSaveState('idle');
             setDeleteState('success');
-            skipClearOnChangeRef.current = true;
-            reset({
-                ...emptyFormValues,
-                adresse: { ...emptyFormValues.adresse },
-            });
+            resetTilTomtSkjema({ text: 'Mottaker slettet!', variant: 'success' });
             clearErrors();
         } else {
             setFeedback({ text: res.error.body?.message ?? 'Kunne ikke slette mottaker', variant: 'error' });
@@ -269,7 +266,13 @@ export function MottakerForm({ sakId, referanseId, referanseType, onClose }: Mot
                             <HStack gap="4" className={styles.row}>
                                 <TextField
                                     label="Fødselsnummer"
-                                    {...register('foedselsnummer')}
+                                    {...register('foedselsnummer', {
+                                        validate: (value) => {
+                                            const trimmed = value?.trim();
+                                            if (!trimmed) return true;
+                                            return /^\d{11}$/.test(trimmed) || 'Fødselsnummer må være 11 siffer.';
+                                        },
+                                    })}
                                     inputMode="numeric"
                                     autoComplete="off"
                                     error={formState.errors.foedselsnummer?.message}

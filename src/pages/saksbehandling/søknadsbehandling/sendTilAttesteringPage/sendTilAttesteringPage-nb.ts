@@ -12,6 +12,7 @@ export default {
     'feilmelding.ikkeGjortEnBeregning': 'Det er ikke gjort en beregning',
     'feilmelding.sendingFeilet': 'Sending feilet',
     'feilmelding.brevhentingFeilet': 'En feil skjedde under generering av brev',
+    'feilmelding.kanIkkeHenteMottaker': 'Kan ikke hente mottaker',
 
     'knapp.sendTilAttestering': 'Send til attestering',
     'knapp.tilbake': 'Tilbake',
