@@ -68,7 +68,7 @@ export const EkstraMottakerPanel = (props: Props) => {
             setFeil(res.error.body?.message ?? formatMessage('feilmelding.kanIkkeHenteMottaker'));
         };
 
-        hentEkstraMottaker();
+        void hentEkstraMottaker();
     }, [formatMessage, props.referanseId, props.referanseType, props.sakId]);
 
     if (!mottaker && !feil) {
