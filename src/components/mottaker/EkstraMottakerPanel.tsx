@@ -34,20 +34,15 @@ export const EkstraMottakerPanel = (props: Props) => {
     const { formatMessage } = useI18n({ messages });
     const [mottaker, setMottaker] = useState<MottakerResponse | null>(null);
     const [feil, setFeil] = useState<string | null>(null);
-
-    if (!props.referanseId) {
-        return (
-            <Oppsummeringspanel
-                ikon={Oppsummeringsikon.Email}
-                farge={Oppsummeringsfarge.Grønn}
-                tittel={props.tittel ?? formatMessage('ekstramottaker.tittel')}
-            >
-                <Alert variant="warning">{formatMessage('ekstramottaker.manglerReferanseId')}</Alert>
-            </Oppsummeringspanel>
-        );
-    }
+    const manglerReferanseId = !props.referanseId;
 
     useEffect(() => {
+        if (manglerReferanseId) {
+            setMottaker(null);
+            setFeil(null);
+            return;
+        }
+
         setMottaker(null);
         setFeil(null);
 
@@ -69,7 +64,19 @@ export const EkstraMottakerPanel = (props: Props) => {
         };
 
         void hentEkstraMottaker();
-    }, [formatMessage, props.referanseId, props.referanseType, props.sakId]);
+    }, [formatMessage, manglerReferanseId, props.referanseId, props.referanseType, props.sakId]);
+
+    if (manglerReferanseId) {
+        return (
+            <Oppsummeringspanel
+                ikon={Oppsummeringsikon.Email}
+                farge={Oppsummeringsfarge.Grønn}
+                tittel={props.tittel ?? formatMessage('ekstramottaker.tittel')}
+            >
+                <Alert variant="warning">{formatMessage('ekstramottaker.manglerReferanseId')}</Alert>
+            </Oppsummeringspanel>
+        );
+    }
 
     if (!mottaker && !feil) {
         return null;
