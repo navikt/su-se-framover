@@ -35,11 +35,6 @@ const DokumenterPage = () => {
     const props = useOutletContext<SaksoversiktContext>();
     const navigate = useNavigate();
 
-    const showEksterne =
-        window.location.hostname.endsWith('.intern.dev.nav.no') ||
-        window.location.hostname === 'localhost' ||
-        window.location.hostname === '127.0.0.1';
-
     return (
         <div className={styles.outerContainer}>
             <div className={styles.container}>
@@ -50,7 +45,7 @@ const DokumenterPage = () => {
                             <Heading size="small">Brev i sak</Heading>
                             <VisDokumenter id={props.sak.id} idType={DokumentIdType.Sak} />
                             <Heading size="small">Eksterne dokumenter</Heading>
-                            {showEksterne && <VisEksterneDokumenter sakId={props.sak.id} />}
+                            <VisEksterneDokumenter sakId={props.sak.id} />
                         </VStack>
                         <Button
                             className={styles.tilbakeknapp}
