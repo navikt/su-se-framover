@@ -4,11 +4,12 @@ import { Alert, Button, Loader, Radio, RadioGroup } from '@navikt/ds-react';
 import { useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { FritekstTyper, hentFritekst, redigerFritekst } from '~src/api/fritekstApi.ts';
-import { Behandlingstype } from '~src/api/GrunnlagOgVilkårApi.ts';
+import { ReferanseType } from '~src/api/mottakerClient.ts';
 import * as PdfApi from '~src/api/pdfApi.ts';
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
 import TextareaWithAutosave from '~src/components/inputs/textareaWithAutosave/TextareaWithAutosave.tsx';
 import LinkAsButton from '~src/components/linkAsButton/LinkAsButton.tsx';
+import EkstraMottakerPanel from '~src/components/mottaker/EkstraMottakerPanel';
 import Oppsummeringspanel, {
     Oppsummeringsfarge,
     Oppsummeringsikon,
@@ -56,11 +57,13 @@ const schema = yup.object<AttesteringFormData>({
     }),
 });
 
+export type AttesteringsBehandlingstype = 'SØKNAD' | 'REVURDERING' | 'KLAGE' | 'TILBAKEKREVING';
+
 interface Props {
     behandlingsId: string;
     redigerbartBrev: boolean;
     sakId: string;
-    behandligstype?: Behandlingstype;
+    behandlingstype: AttesteringsBehandlingstype;
     iverksett: {
         fn: () => void;
         status: ApiResult<unknown>;
@@ -100,17 +103,22 @@ export const AttesteringsForm = (props: Props) => {
                 props.underkjenn.fn(data.grunn!, data.kommentar ?? '');
         }
     };
-    const behandlingstype = props.behandligstype ?? Behandlingstype.Søknadsbehandling;
+    const behandlingstype = props.behandlingstype;
 
-    function lastNedBrev(behandlingstype: Behandlingstype) {
+    function lastNedBrev(behandlingstype: AttesteringsBehandlingstype) {
         const api = (args: { sakId: string; behandlingId: string; underAttestering?: boolean }) => {
-            if (behandlingstype === Behandlingstype.Revurdering) {
-                return PdfApi.fetchBrevutkastForRevurdering({
-                    revurderingId: args.behandlingId,
-                    sakId: args.sakId,
-                });
-            } else {
-                return PdfApi.fetchBrevutkastForSøknadsbehandling(args);
+            switch (behandlingstype) {
+                case 'REVURDERING':
+                    return PdfApi.fetchBrevutkastForRevurdering({
+                        revurderingId: args.behandlingId,
+                        sakId: args.sakId,
+                    });
+                case 'SØKNAD':
+                    return PdfApi.fetchBrevutkastForSøknadsbehandling(args);
+                case 'KLAGE':
+                    return PdfApi.hentBrevutkastForKlage({ sakId: args.sakId, klageId: args.behandlingId });
+                default:
+                    return Promise.resolve({ status: 'ok' as const, data: new Blob(), statusCode: 204 });
             }
         };
         return useBrevForhåndsvisning(api);
@@ -119,24 +127,30 @@ export const AttesteringsForm = (props: Props) => {
     const [seBrevStatus, lastNedBrevBehandling] = lastNedBrev(behandlingstype);
     const [showInput, setShowInput] = useState(false);
 
+    const fritekstType =
+        behandlingstype === 'REVURDERING'
+            ? FritekstTyper.VEDTAKSBREV_REVURDERING
+            : behandlingstype === 'SØKNAD'
+              ? FritekstTyper.VEDTAKSBREV_SØKNADSBEHANDLING
+              : null;
+
     useEffect(() => {
-        if (!props.behandlingsId) {
+        if (!props.behandlingsId || !props.redigerbartBrev || !fritekstType) {
             return;
         }
-        const type =
-            behandlingstype === Behandlingstype.Revurdering
-                ? FritekstTyper.VEDTAKSBREV_REVURDERING
-                : FritekstTyper.VEDTAKSBREV_SØKNADSBEHANDLING;
         hentFritekst({
             referanseId: props.behandlingsId,
             sakId: props.sakId,
-            type,
+            type: fritekstType,
         }).then((result) => {
             if (result.status === 'ok' && result.data) {
                 setValue('fritekst', result.data.fritekst ?? '');
             }
         });
-    }, [behandlingstype, props.behandlingsId, props.sakId, setValue]);
+    }, [fritekstType, props.behandlingsId, props.redigerbartBrev, props.sakId, setValue]);
+
+    const ekstraMottakerReferanseType: ReferanseType | null =
+        behandlingstype === 'TILBAKEKREVING' ? null : behandlingstype;
 
     return (
         <div className={styles.redigerContainer}>
@@ -241,15 +255,14 @@ export const AttesteringsForm = (props: Props) => {
                                             }}
                                             save={{
                                                 handleSave: () => {
-                                                    const type =
-                                                        behandlingstype === Behandlingstype.Revurdering
-                                                            ? FritekstTyper.VEDTAKSBREV_REVURDERING
-                                                            : FritekstTyper.VEDTAKSBREV_SØKNADSBEHANDLING;
+                                                    if (!fritekstType) {
+                                                        return;
+                                                    }
                                                     const currentFritekst = getValues().fritekst ?? '';
                                                     lagreFritekst({
                                                         referanseId: props.behandlingsId,
                                                         sakId: props.sakId,
-                                                        type,
+                                                        type: fritekstType,
                                                         fritekst: currentFritekst,
                                                     });
                                                 },
@@ -265,6 +278,13 @@ export const AttesteringsForm = (props: Props) => {
                         </div>
                     </div>
                 </Oppsummeringspanel>
+            )}
+            {ekstraMottakerReferanseType && (
+                <EkstraMottakerPanel
+                    sakId={props.sakId}
+                    referanseId={props.behandlingsId}
+                    referanseType={ekstraMottakerReferanseType}
+                />
             )}
         </div>
     );

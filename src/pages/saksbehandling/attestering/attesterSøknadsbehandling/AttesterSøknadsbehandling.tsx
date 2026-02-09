@@ -67,6 +67,7 @@ const AttesterSøknadsbehandling = (props: { sak: Sak; søknadsbehandling: Søkn
                 behandlingsId={props.søknadsbehandling.id}
                 redigerbartBrev={true}
                 sakId={props.sak.id}
+                behandlingstype="SØKNAD"
                 iverksett={{ fn: iverksettCallback, status: iverksettStatus }}
                 underkjenn={{
                     fn: underkjennCallback,

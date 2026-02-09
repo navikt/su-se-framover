@@ -101,6 +101,7 @@ const AttesterKlage = (props: { sakId: string; klage: Klage; klagensVedtak: Vedt
         <div className={styles.mainContentContainer}>
             <AttesteringsForm
                 behandlingsId={props.klage.id}
+                behandlingstype="KLAGE"
                 redigerbartBrev={false}
                 sakId={props.sakId}
                 iverksett={{

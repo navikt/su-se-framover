@@ -3,7 +3,7 @@ import { Accordion, Alert, Button, Heading, Loader } from '@navikt/ds-react';
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import { Behandlingstype, hentgjeldendeGrunnlagsdataOgVilkårsvurderinger } from '~src/api/GrunnlagOgVilkårApi';
+import { hentgjeldendeGrunnlagsdataOgVilkårsvurderinger } from '~src/api/GrunnlagOgVilkårApi';
 import * as PdfApi from '~src/api/pdfApi';
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
 import { AttesteringsForm } from '~src/components/forms/attesteringForm/AttesteringsForm';
@@ -125,7 +125,7 @@ const AttesterRevurdering = (props: {
                         behandlingsId={props.revurdering.id}
                         redigerbartBrev={true}
                         sakId={props.sakInfo.id}
-                        behandligstype={Behandlingstype.Revurdering}
+                        behandlingstype="REVURDERING"
                         iverksett={{ fn: iverksettCallback, status: iverksettStatus }}
                         underkjenn={{
                             fn: underkjennCallback,
