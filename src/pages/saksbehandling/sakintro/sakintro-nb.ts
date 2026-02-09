@@ -18,7 +18,7 @@ export default {
     'popover.option.revurder': 'Revurder',
     'popover.option.tilbakekreving': 'Tilbakekreving',
 
-    'link.dokumenter': 'Brev sendt fra SU',
+    'link.dokumenter': 'Brev for sak',
     'link.kontrollsamtale': 'Kontrollsamtale',
     'link.utenlandsopphold': 'Utenlandsopphold',
     'link.brev': 'Opprett nytt fritekstbrev',
