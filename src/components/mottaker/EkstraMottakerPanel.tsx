@@ -28,7 +28,6 @@ interface Props {
     referanseId: string;
     referanseType: ReferanseType;
     tittel?: string;
-    className?: string;
 }
 
 export const EkstraMottakerPanel = (props: Props) => {
@@ -42,7 +41,6 @@ export const EkstraMottakerPanel = (props: Props) => {
                 ikon={Oppsummeringsikon.Email}
                 farge={Oppsummeringsfarge.Grønn}
                 tittel={props.tittel ?? formatMessage('ekstramottaker.tittel')}
-                className={props.className}
             >
                 <Alert variant="warning">{formatMessage('ekstramottaker.manglerReferanseId')}</Alert>
             </Oppsummeringspanel>
@@ -82,7 +80,6 @@ export const EkstraMottakerPanel = (props: Props) => {
             ikon={Oppsummeringsikon.Email}
             farge={Oppsummeringsfarge.Grønn}
             tittel={props.tittel ?? formatMessage('ekstramottaker.tittel')}
-            className={props.className}
         >
             {feil && <Alert variant="error">{feil}</Alert>}
             {mottaker && (
