@@ -63,7 +63,7 @@ interface Props {
     behandlingsId: string;
     redigerbartBrev: boolean;
     sakId: string;
-    behandligstype: AttesteringsBehandlingstype;
+    behandlingstype: AttesteringsBehandlingstype;
     iverksett: {
         fn: () => void;
         status: ApiResult<unknown>;
@@ -103,7 +103,7 @@ export const AttesteringsForm = (props: Props) => {
                 props.underkjenn.fn(data.grunn!, data.kommentar ?? '');
         }
     };
-    const behandlingstype = props.behandligstype;
+    const behandlingstype = props.behandlingstype;
 
     function lastNedBrev(behandlingstype: AttesteringsBehandlingstype) {
         const api = (args: { sakId: string; behandlingId: string; underAttestering?: boolean }) => {
@@ -149,18 +149,8 @@ export const AttesteringsForm = (props: Props) => {
         });
     }, [fritekstType, props.behandlingsId, props.redigerbartBrev, props.sakId, setValue]);
 
-    const ekstraMottakerReferanseType: ReferanseType | null = (() => {
-        switch (behandlingstype) {
-            case 'SØKNAD':
-                return 'SØKNAD';
-            case 'REVURDERING':
-                return 'REVURDERING';
-            case 'KLAGE':
-                return 'KLAGE';
-            case 'TILBAKEKREVING':
-                return null;
-        }
-    })();
+    const ekstraMottakerReferanseType: ReferanseType | null =
+        behandlingstype === 'TILBAKEKREVING' ? null : behandlingstype;
 
     return (
         <div className={styles.redigerContainer}>

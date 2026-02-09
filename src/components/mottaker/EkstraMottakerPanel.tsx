@@ -43,14 +43,11 @@ export const EkstraMottakerPanel = (props: Props) => {
             return;
         }
 
-        let isMounted = true;
         setMottaker(null);
         setFeil(null);
 
         const hentEkstraMottaker = async () => {
             const res = await hentMottaker(props.sakId, props.referanseType, props.referanseId);
-
-            if (!isMounted) return;
 
             if (res.status === 'ok') {
                 setMottaker(res.data ?? null);
@@ -67,10 +64,6 @@ export const EkstraMottakerPanel = (props: Props) => {
         };
 
         hentEkstraMottaker();
-
-        return () => {
-            isMounted = false;
-        };
     }, [formatMessage, props.referanseId, props.referanseType, props.sakId]);
 
     if (!mottaker && !feil) {

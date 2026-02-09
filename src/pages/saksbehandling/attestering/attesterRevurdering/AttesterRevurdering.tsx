@@ -125,7 +125,7 @@ const AttesterRevurdering = (props: {
                         behandlingsId={props.revurdering.id}
                         redigerbartBrev={true}
                         sakId={props.sakInfo.id}
-                        behandligstype="REVURDERING"
+                        behandlingstype="REVURDERING"
                         iverksett={{ fn: iverksettCallback, status: iverksettStatus }}
                         underkjenn={{
                             fn: underkjennCallback,

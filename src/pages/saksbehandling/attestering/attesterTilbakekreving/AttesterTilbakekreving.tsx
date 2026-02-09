@@ -59,7 +59,7 @@ const AttesterTilbakekreving = (props: { behandling: ManuellTilbakekrevingsbehan
                 behandlingsId={props.behandling.id}
                 redigerbartBrev={false}
                 sakId={props.behandling.sakId}
-                behandligstype="TILBAKEKREVING"
+                behandlingstype="TILBAKEKREVING"
                 iverksett={{ fn: iverksettCallback, status: iverksettStatus }}
                 underkjenn={{
                     fn: underkjennCallback,
