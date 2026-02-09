@@ -35,6 +35,8 @@ const DokumenterPage = () => {
     const props = useOutletContext<SaksoversiktContext>();
     const navigate = useNavigate();
 
+    const isLocal = process.env.NODE_ENV === 'development';
+
     return (
         <div className={styles.outerContainer}>
             <div className={styles.container}>
@@ -45,7 +47,7 @@ const DokumenterPage = () => {
                             <Heading size="small">Brev i sak</Heading>
                             <VisDokumenter id={props.sak.id} idType={DokumentIdType.Sak} />
                             <Heading size="small">Eksterne dokumenter</Heading>
-                            <VisEksterneDokumenter sakId={props.sak.id} />
+                            {isLocal && <VisEksterneDokumenter sakId={props.sak.id} />}
                         </VStack>
                         <Button
                             className={styles.tilbakeknapp}

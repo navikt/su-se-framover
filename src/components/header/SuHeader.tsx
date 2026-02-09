@@ -11,8 +11,6 @@ interface Props {
     user: LoggedInUser | null;
 }
 
-//TODO - lag classnames etc
-
 const SuHeader = (props: Props) => {
     const isLocal = process.env.NODE_ENV === 'development';
 
