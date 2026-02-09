@@ -256,6 +256,9 @@ const ManuellRegulering = () => {
     } else {
         return (
             <div className={styles.feil}>
+                {RemoteData.isFailure(manuellReguleringStatus) && (
+                    <ApiErrorAlert error={manuellReguleringStatus.error} />
+                )}
                 <Alert variant="error">{formatMessage('fantIkkeRegulering')}</Alert>
                 <Button onClick={navigateBack} variant="secondary" type="button">
                     {formatMessage('knapper.tilbake')}
