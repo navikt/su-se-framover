@@ -25,6 +25,12 @@ import { getBlob, getPdfBlob } from '~src/utils/dokumentUtils';
 import DokumentHeader from './DokumentHeader';
 import styles from './dokumenterPage.module.less';
 
+const openPdfInNewTab = (blob: Blob) => {
+    const url = URL.createObjectURL(blob);
+    window.open(url, '_blank', 'noopener,noreferrer');
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+};
+
 const DokumenterPage = () => {
     const props = useOutletContext<SaksoversiktContext>();
     const navigate = useNavigate();
@@ -143,7 +149,7 @@ const DokumentPanel = (props: { sakId: string; dokument: Dokument }) => {
     const [skalDistribuere, setSkalDistribuere] = useState<boolean>(false);
 
     const handleDokumentClick = (dokument: Dokument) => {
-        window.open(URL.createObjectURL(getBlob(dokument)));
+        openPdfInNewTab(getBlob(dokument));
     };
 
     return (
@@ -196,7 +202,7 @@ const EksterntDokumentPanel = (props: { dokument: KlageinstansDokument }) => {
         : 'Ukjent dato';
 
     const handleDokumentClick = (dokument: KlageinstansDokument) => {
-        window.open(URL.createObjectURL(getPdfBlob(dokument.pdfBase64)), '_blank', 'noopener,noreferrer');
+        openPdfInNewTab(getPdfBlob(dokument.pdfBase64));
     };
 
     return (
