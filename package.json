@@ -52,7 +52,7 @@
     "@navikt/aksel-icons": "7.33.0",
     "@navikt/ds-css": "7.33.0",
     "@navikt/ds-react": "7.33.0",
-    "@reduxjs/toolkit": "2.10.1",
+    "@reduxjs/toolkit": "2.11.2",
     "@types/jest": "30.0.0",
     "@types/react-dom": "^19.2.2",
     "classnames": "2.5.1",
