@@ -95,7 +95,7 @@ export const VisDokumenter = (props: { id: string; idType: DokumentIdType; ingen
     );
 };
 
-const VisEksterneDokumenter = (props: { sakId: string; ingenBrevTekst?: string }) => {
+const VisEksterneDokumenter = (props: { sakId: string }) => {
     const [dokumenterState, fetchDokumenter] = useApiCall(hentEksterneDokumenter);
 
     useEffect(() => {
@@ -113,7 +113,7 @@ const VisEksterneDokumenter = (props: { sakId: string; ingenBrevTekst?: string }
             (err) => <ApiErrorAlert error={err} />,
             (dokumenter) => {
                 if (dokumenter.length === 0) {
-                    return <Alert variant="info">{props.ingenBrevTekst ?? 'Fant ingen eksterne dokumenter'}</Alert>;
+                    return <Alert variant="info">Fant ingen eksterne dokumenter</Alert>;
                 }
 
                 const sorterteDokumenter = [...dokumenter].sort((a, b) => {
