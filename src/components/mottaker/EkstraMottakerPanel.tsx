@@ -36,13 +36,20 @@ export const EkstraMottakerPanel = (props: Props) => {
     const [mottaker, setMottaker] = useState<MottakerResponse | null>(null);
     const [feil, setFeil] = useState<string | null>(null);
 
-    useEffect(() => {
-        if (!props.referanseId) {
-            setMottaker(null);
-            setFeil(null);
-            return;
-        }
+    if (!props.referanseId) {
+        return (
+            <Oppsummeringspanel
+                ikon={Oppsummeringsikon.Email}
+                farge={Oppsummeringsfarge.Grønn}
+                tittel={props.tittel ?? formatMessage('ekstramottaker.tittel')}
+                className={props.className}
+            >
+                <Alert variant="warning">{formatMessage('ekstramottaker.manglerReferanseId')}</Alert>
+            </Oppsummeringspanel>
+        );
+    }
 
+    useEffect(() => {
         setMottaker(null);
         setFeil(null);
 
