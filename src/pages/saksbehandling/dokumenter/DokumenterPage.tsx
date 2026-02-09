@@ -35,16 +35,12 @@ const DokumenterPage = () => {
                 <DokumentHeader saksnummer={props.sak.saksnummer} />
                 <div className={styles.contentContainer}>
                     <VStack gap="5">
-                        <div className={styles.columns}>
-                            <section className={styles.column}>
-                                <Heading size="small">Eksterne dokumenter</Heading>
-                                <VisEksterneDokumenter sakId={props.sak.id} />
-                            </section>
-                            <section className={styles.column}>
-                                <Heading size="small">Brev sendt fra SU</Heading>
-                                <VisDokumenter id={props.sak.id} idType={DokumentIdType.Sak} />
-                            </section>
-                        </div>
+                        <VStack gap="4">
+                            <Heading size="small">Brev i sak</Heading>
+                            <VisDokumenter id={props.sak.id} idType={DokumentIdType.Sak} />
+                            <Heading size="small">Eksterne dokumenter</Heading>
+                            <VisEksterneDokumenter sakId={props.sak.id} />
+                        </VStack>
                         <Button
                             className={styles.tilbakeknapp}
                             variant="secondary"
