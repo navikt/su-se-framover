@@ -1,6 +1,5 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { Alert, BodyShort, Button, Heading, Label, Loader, Modal, TextField } from '@navikt/ds-react';
-import { pipe } from 'fp-ts/lib/function';
 import { useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useNavigate, useOutletContext } from 'react-router-dom';
@@ -12,6 +11,7 @@ import {
     fradragFormdataTilFradrag,
     fradragTilFradragFormData,
 } from '~src/components/forms/vilkårOgGrunnlagForms/fradrag/FradragFormUtils';
+import OppsummeringAvBeregningOgSimulering from '~src/components/oppsummering/oppsummeringAvBeregningOgsimulering/OppsummeringAvBeregningOgSimulering';
 import { OppsummeringPar } from '~src/components/oppsummering/oppsummeringpar/OppsummeringPar';
 import { SaksoversiktContext } from '~src/context/SaksoversiktContext';
 import * as sakSlice from '~src/features/saksoversikt/sak.slice';
@@ -30,6 +30,7 @@ import {
     FantIkkeVedtakForApril,
     FinnesFlerePerioderAvFradrag,
     FradragErUtenlandsinntekt,
+    Regulering,
     Reguleringssupplement,
     SupplementFor,
     SupplementHarFlereVedtaksperioderForFradrag,
@@ -41,195 +42,235 @@ import {
 import { parseIsoDateOnly } from '~src/utils/date/dateUtils';
 import { fjernFradragSomIkkeErVelgbareEkskludertNavYtelserTilLivsopphold } from '~src/utils/fradrag/fradragUtil';
 import { formatPeriode, formatPeriodeMedOptionalTilOgMed } from '~src/utils/periode/periodeUtils';
-
 import reguleringstext from '../behandlingsoversikt/regulering/regulering-nb';
 import styles from './manuellRegulering.module.less';
 import messages from './manuellRegulering-nb';
 
-interface FormData {
-    uføre: Uføregrunnlag[];
-    fradrag: FradragFormData[];
-}
-
 const ManuellRegulering = () => {
     const { formatMessage } = useI18n({ messages });
-    const props = useOutletContext<SaksoversiktContext>();
     const urlParams = Routes.useRouteParams<typeof Routes.manuellRegulering>();
-    const regulering = props.sak.reguleringer.find((r) => r.id === urlParams.reguleringId);
-    const [hentReguleringGrunnlagsdataStatus, hentReguleringGrunnlagsdata] = useApiCall(
-        reguleringApi.hentReguleringGrunnlagsdata,
-    );
+    const reguleringId = urlParams.reguleringId;
+    const props = useOutletContext<SaksoversiktContext>();
+    const [regulering, setRegulering] = useState<Regulering | null>(null);
+    const [manuellReguleringStatus, hentManuellRegulering] = useApiCall(reguleringApi.hentManuellRegulering);
     const [regulerStatus, reguler] = useApiCall(reguleringApi.regulerManuelt);
-    const [, hentSak] = useAsyncActionCreator(sakSlice.fetchSakByIdEllerNummer);
+    const [beregnStatus, beregn] = useApiCall(reguleringApi.beregnRegulering);
+
     const navigate = useNavigate();
+    const navigateBack = () => navigate(Routes.saksoversiktValgtSak.createURL({ sakId: props.sak.id }));
 
-    const BackButton = () => (
-        <Button
-            onClick={() => navigate(Routes.saksoversiktValgtSak.createURL({ sakId: props.sak.id }))}
-            variant="secondary"
-            type="button"
-        >
-            {formatMessage('knapper.tilbake')}
-        </Button>
-    );
-    const filtrerRegulerbarIEU = (grunnlag: Nullable<Uføregrunnlag>): grunnlag is Uføregrunnlag => grunnlag !== null;
+    const [, hentSak] = useAsyncActionCreator(sakSlice.fetchSakByIdEllerNummer);
+    const tilSakoversikt = () =>
+        hentSak({ saksnummer: props.sak.saksnummer.toString() }, () => {
+            Routes.navigateToSakIntroWithMessage(navigate, formatMessage('notification'), props.sak.id);
+        });
 
-    if (!regulering) {
-        return (
-            <div className={styles.feil}>
-                <Alert variant="error">{formatMessage('fantIkkeRegulering')}</Alert>
-                <BackButton />
-            </div>
-        );
+    interface BeregnReguleringForm {
+        uføre: Uføregrunnlag[];
+        fradrag: FradragFormData[];
     }
 
-    const form = useForm<FormData>({
+    const form = useForm<BeregnReguleringForm>({
         defaultValues: {
             uføre: [],
             fradrag: [],
         },
     });
 
-    const onSubmit = (values: FormData) =>
-        reguler(
-            {
-                uføre: values.uføre,
-                reguleringId: regulering.id,
-                fradrag: values.fradrag.map((f) =>
-                    fradragFormdataTilFradrag(f, {
-                        fraOgMed: parseIsoDateOnly(regulering.periode.fraOgMed)!,
-                        tilOgMed: parseIsoDateOnly(regulering.periode.tilOgMed)!,
-                    }),
-                ),
-            },
-            () => {
-                hentSak({ saksnummer: props.sak.saksnummer.toString() }, () => {
-                    Routes.navigateToSakIntroWithMessage(navigate, formatMessage('notification'), props.sak.id);
-                });
-            },
-        );
-
     useEffect(() => {
-        hentReguleringGrunnlagsdata({ reguleringId: regulering.id }, (data) => {
-            const uføre = data.uføreUnderRegulering ?? data.uføreFraGjeldendeVedtak;
-            const fradrag = data.fradragUnderRegulering ?? data.fradragFraGjeldendeVedtak;
+        if (reguleringId) {
+            hentManuellRegulering({ reguleringId: reguleringId }, (data) => {
+                setRegulering(data.regulering);
+                const uføre =
+                    data.regulering.grunnlagsdataOgVilkårsvurderinger.uføre?.vurderinger.map((v) => v?.grunnlag) ?? [];
+                const fradrag = data.regulering.grunnlagsdataOgVilkårsvurderinger.fradrag;
 
-            form.reset({
-                uføre: uføre.filter(filtrerRegulerbarIEU) ?? [],
-                fradrag: fjernFradragSomIkkeErVelgbareEkskludertNavYtelserTilLivsopphold(fradrag).map((f) =>
-                    fradragTilFradragFormData(f, {
-                        fraOgMed: parseIsoDateOnly(regulering.periode.fraOgMed),
-                        tilOgMed: parseIsoDateOnly(regulering.periode.tilOgMed),
-                    }),
-                ),
+                form.reset({
+                    uføre: uføre.filter(filtrerRegulerbarIEU),
+                    fradrag: fjernFradragSomIkkeErVelgbareEkskludertNavYtelserTilLivsopphold(fradrag).map((f) =>
+                        fradragTilFradragFormData(f, {
+                            fraOgMed: parseIsoDateOnly(data.regulering.periode.fraOgMed),
+                            tilOgMed: parseIsoDateOnly(data.regulering.periode.tilOgMed),
+                        }),
+                    ),
+                });
             });
-        });
-    }, []);
+        }
+    }, [reguleringId, hentManuellRegulering, form]);
 
-    return pipe(
-        hentReguleringGrunnlagsdataStatus,
-        RemoteData.fold(
-            () => <Loader />,
-            () => <Loader />,
-            () => null,
-            (reguleringsGrunnlagsdata) => {
-                const uføreFraGjeldendeVedtak = reguleringsGrunnlagsdata.uføreFraGjeldendeVedtak;
-                const fradragFraGjeldendeVedtak = reguleringsGrunnlagsdata.fradragFraGjeldendeVedtak;
-                const uføregrunnlag = uføreFraGjeldendeVedtak.filter(filtrerRegulerbarIEU) ?? [];
-                const harRegulerbarIEU = uføregrunnlag.some((v) => v.forventetInntekt > 0);
-                const harRegulerbarFradrag = fradragFraGjeldendeVedtak.some((f) => måReguleresManuelt(f.type));
+    const submitBeregning = (values: BeregnReguleringForm) => {
+        if (regulering != null && reguleringId) {
+            beregn(
+                {
+                    uføre: values.uføre,
+                    reguleringId: reguleringId,
+                    fradrag: values.fradrag.map((f) =>
+                        fradragFormdataTilFradrag(f, {
+                            fraOgMed: parseIsoDateOnly(regulering.periode.fraOgMed)!,
+                            tilOgMed: parseIsoDateOnly(regulering.periode.tilOgMed)!,
+                        }),
+                    ),
+                },
+                (data) => setRegulering(data),
+            );
+        }
+    };
 
-                return (
-                    <div className={styles.pageContainer}>
-                        <Heading level="2" size="large" className={styles.tittel}>
-                            {formatMessage('tittel')}
-                        </Heading>
-                        <main className={styles.mainContentContainer}>
-                            <form onSubmit={form.handleSubmit(onSubmit)} className={styles.form}>
-                                <div className={styles.container}>
-                                    <ÅrsakForManuellRegulering årsaker={regulering.årsakForManuell} />
-                                    <Heading
-                                        level="3"
-                                        size="medium"
-                                    >{`${formatMessage('periode')}: ${formatPeriode(regulering.periode)}`}</Heading>
+    const ferdigstillEllerTilAttestering = (reguleringId: string) => {
+        // TODO skal legges til bryter
+        const skalAttestere = false;
+        if (skalAttestere) {
+            // TODO
+            tilSakoversikt();
+        } else {
+            reguler(
+                {
+                    reguleringId: reguleringId,
+                },
+                () => {
+                    tilSakoversikt();
+                },
+            );
+        }
+    };
 
-                                    <div className={styles.regulering}>
-                                        <Heading level="3" size="medium" className={styles.kategoriTittel}>
-                                            {formatMessage('reguler.ieu')}
-                                        </Heading>
+    if (RemoteData.isPending(manuellReguleringStatus)) {
+        return <Loader />;
+    }
+    if (RemoteData.isSuccess(manuellReguleringStatus) && regulering !== null) {
+        const { uføre, fradrag } = manuellReguleringStatus.value.gjeldendeVedtaksdata;
+        const uføregrunnlag = uføre?.vurderinger.map((v) => v?.grunnlag).filter(filtrerRegulerbarIEU) ?? [];
+        const harRegulerbarIEU = uføregrunnlag.some((v) => v.forventetInntekt > 0);
+        const harRegulerbarFradrag = fradrag.some((f) => måReguleresManuelt(f.type));
 
-                                        {harRegulerbarIEU ? (
-                                            form
-                                                .getValues('uføre')
-                                                .filter((u) => u.forventetInntekt > 0)
-                                                .map((u, index) => (
-                                                    <div key={u.id} className={styles.ieu}>
-                                                        <p>
-                                                            {`${formatMessage('ieu.verdi.tidligere')}: ${
-                                                                uføregrunnlag[index].forventetInntekt
-                                                            } kr`}
-                                                        </p>
-                                                        <Controller
-                                                            control={form.control}
-                                                            name={`uføre.${index}.forventetInntekt`}
-                                                            render={({ field }) => (
-                                                                <TextField
-                                                                    value={field.value.toString()}
-                                                                    size="medium"
-                                                                    onChange={field.onChange}
-                                                                    label={formatMessage('ieu', {
-                                                                        dato: formatPeriode(u.periode),
-                                                                    })}
-                                                                />
-                                                            )}
-                                                        />
-                                                    </div>
-                                                ))
-                                        ) : (
-                                            <p>{formatMessage('ingen.ieu')}.</p>
-                                        )}
-                                    </div>
+        return (
+            <div className={styles.pageContainer}>
+                <Heading level="2" size="large" className={styles.tittel}>
+                    {formatMessage('tittel')}
+                </Heading>
+                <main className={styles.mainContentContainer}>
+                    <div className={styles.form}>
+                        <div className={styles.container}>
+                            <ÅrsakForManuellRegulering årsaker={regulering.årsakForManuell} />
+                            <Heading
+                                level="3"
+                                size="medium"
+                            >{`${formatMessage('periode')}: ${formatPeriode(regulering.periode)}`}</Heading>
 
-                                    <div className={styles.regulering}>
-                                        <Heading level="3" size="medium" className={styles.kategoriTittel}>
-                                            {formatMessage('reguler.fradrag')}
-                                        </Heading>
-                                        {harRegulerbarFradrag ? (
-                                            <FradragForm
-                                                name={'fradrag'}
-                                                control={form.control}
-                                                setValue={form.setValue}
-                                                beregningsDato={{
-                                                    fraOgMed: parseIsoDateOnly(regulering.periode.fraOgMed),
-                                                    tilOgMed: parseIsoDateOnly(regulering.periode.tilOgMed),
-                                                }}
-                                                harEPS={false}
-                                            />
-                                        ) : (
-                                            <p>{formatMessage('ingen.fradrag')}.</p>
-                                        )}
-                                    </div>
-                                    {RemoteData.isFailure(regulerStatus) && (
-                                        <ApiErrorAlert error={regulerStatus.error} />
+                            <form onSubmit={form.handleSubmit(submitBeregning)} className={styles.form}>
+                                <div className={styles.regulering}>
+                                    <Heading level="3" size="medium" className={styles.kategoriTittel}>
+                                        {formatMessage('reguler.ieu')}
+                                    </Heading>
+
+                                    {harRegulerbarIEU ? (
+                                        form
+                                            .getValues('uføre')
+                                            .filter((u) => u.forventetInntekt > 0)
+                                            .map((u, index) => (
+                                                <div key={u.id} className={styles.ieu}>
+                                                    <p>
+                                                        {`${formatMessage('ieu.verdi.tidligere')}: ${
+                                                            uføregrunnlag[index].forventetInntekt
+                                                        } kr`}
+                                                    </p>
+                                                    <Controller
+                                                        control={form.control}
+                                                        name={`uføre.${index}.forventetInntekt`}
+                                                        render={({ field }) => (
+                                                            <TextField
+                                                                value={field.value.toString()}
+                                                                size="medium"
+                                                                onChange={field.onChange}
+                                                                label={formatMessage('ieu', {
+                                                                    dato: formatPeriode(u.periode),
+                                                                })}
+                                                            />
+                                                        )}
+                                                    />
+                                                </div>
+                                            ))
+                                    ) : (
+                                        <p>{formatMessage('ingen.ieu')}.</p>
                                     )}
-                                    <div className={styles.knapper}>
-                                        <BackButton />
-                                        <Button type="submit" loading={RemoteData.isPending(regulerStatus)}>
-                                            {formatMessage('knapper.send')}
-                                        </Button>
-                                    </div>
                                 </div>
+
+                                <div className={styles.regulering}>
+                                    <Heading level="3" size="medium" className={styles.kategoriTittel}>
+                                        {formatMessage('reguler.fradrag')}
+                                    </Heading>
+                                    {harRegulerbarFradrag ? (
+                                        <FradragForm
+                                            name={'fradrag'}
+                                            control={form.control}
+                                            setValue={form.setValue}
+                                            beregningsDato={{
+                                                fraOgMed: parseIsoDateOnly(regulering.periode.fraOgMed),
+                                                tilOgMed: parseIsoDateOnly(regulering.periode.tilOgMed),
+                                            }}
+                                            harEPS={false}
+                                        />
+                                    ) : (
+                                        <p>{formatMessage('ingen.fradrag')}.</p>
+                                    )}
+                                </div>
+
+                                <Button
+                                    className={styles.regulering}
+                                    variant="secondary"
+                                    type="submit"
+                                    loading={RemoteData.isPending(beregnStatus)}
+                                >
+                                    Beregn og simuler
+                                </Button>
+
+                                {RemoteData.isFailure(beregnStatus) && <ApiErrorAlert error={beregnStatus.error} />}
+                                {regulering.beregning && (
+                                    <OppsummeringAvBeregningOgSimulering
+                                        eksterngrunnlagSkatt={null}
+                                        beregning={regulering.beregning}
+                                        simulering={regulering.simulering}
+                                    />
+                                )}
                             </form>
-                            <SupplementOversikt supplement={regulering.supplement} />
-                        </main>
+
+                            {RemoteData.isFailure(regulerStatus) && <ApiErrorAlert error={regulerStatus.error} />}
+                            <div className={styles.knapper}>
+                                <Button onClick={navigateBack} variant="secondary" type="button">
+                                    {formatMessage('knapper.tilbake')}
+                                </Button>
+                                <Button
+                                    disabled={!regulering.beregning}
+                                    onClick={() => ferdigstillEllerTilAttestering(regulering.id)}
+                                    loading={RemoteData.isPending(regulerStatus)}
+                                >
+                                    {formatMessage('knapper.send')}
+                                </Button>
+                            </div>
+                        </div>
                     </div>
-                );
-            },
-        ),
-    );
+                    <SupplementOversikt supplement={regulering.supplement} />
+                </main>
+            </div>
+        );
+    } else {
+        return (
+            <div className={styles.feil}>
+                {RemoteData.isFailure(manuellReguleringStatus) && (
+                    <ApiErrorAlert error={manuellReguleringStatus.error} />
+                )}
+                <Alert variant="error">{formatMessage('fantIkkeRegulering')}</Alert>
+                <Button onClick={navigateBack} variant="secondary" type="button">
+                    {formatMessage('knapper.tilbake')}
+                </Button>
+            </div>
+        );
+    }
 };
 
 export default ManuellRegulering;
+
+const filtrerRegulerbarIEU = (grunnlag: Nullable<Uføregrunnlag>): grunnlag is Uføregrunnlag => grunnlag !== null;
 
 const ÅrsakForManuellRegulering = (props: { årsaker: ÅrsakForManuell[] }) => {
     const { formatMessage } = useI18n({ messages: { ...reguleringstext } });

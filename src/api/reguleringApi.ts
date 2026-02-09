@@ -1,7 +1,7 @@
 import { Nullable } from '~src/lib/types';
 import { Fradrag } from '~src/types/Fradrag';
 import { Uføregrunnlag } from '~src/types/grunnlagsdataOgVilkårsvurderinger/uføre/Uføregrunnlag';
-import { Regulering, ReguleringGrunnlagsdata, ReguleringOversiktsstatus } from '~src/types/Regulering';
+import { ManuellRegulering, Regulering, ReguleringOversiktsstatus } from '~src/types/Regulering';
 
 import apiClient, { ApiClientResult } from './apiClient';
 
@@ -121,7 +121,7 @@ export async function avsluttRegulering({ reguleringId }: { reguleringId: string
     });
 }
 
-export async function regulerManuelt({
+export async function beregnRegulering({
     reguleringId,
     fradrag,
     uføre,
@@ -131,12 +131,20 @@ export async function regulerManuelt({
     uføre: Uføregrunnlag[];
 }): Promise<ApiClientResult<Regulering>> {
     return apiClient({
-        url: `reguleringer/manuell/${reguleringId}`,
+        url: `reguleringer/manuell/${reguleringId}/beregn`,
         method: 'POST',
         body: {
             fradrag,
             uføre,
         },
+    });
+}
+
+export async function regulerManuelt({ reguleringId }: { reguleringId: string }): Promise<ApiClientResult<Regulering>> {
+    return apiClient({
+        url: `reguleringer/manuell/${reguleringId}`,
+        method: 'POST',
+        body: {},
     });
 }
 
@@ -163,9 +171,9 @@ export async function reguleringssupplement(args: { innhold: File | string }): P
     }
 }
 
-export async function hentReguleringGrunnlagsdata(args: {
+export async function hentManuellRegulering(args: {
     reguleringId: string;
-}): Promise<ApiClientResult<ReguleringGrunnlagsdata>> {
+}): Promise<ApiClientResult<ManuellRegulering>> {
     return apiClient({
         url: `reguleringer/manuell/${args.reguleringId}`,
         method: 'GET',
