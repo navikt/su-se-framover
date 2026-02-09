@@ -6,7 +6,7 @@ import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useNavigate, useOutletContext } from 'react-router-dom';
 
-import { distribuerDokument } from '~src/api/dokumentApi';
+import { distribuerDokument, hentEksterneDokumenter } from '~src/api/dokumentApi';
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
 import DokumentDistribusjonForm from '~src/components/forms/dokument/distribusjon/DokumentDistribusjonForm';
 import {
@@ -19,8 +19,9 @@ import { pipe } from '~src/lib/fp';
 import { useApiCall, useAsyncActionCreator } from '~src/lib/hooks';
 import { navigateToSakIntroWithMessage, saksoversiktValgtSak } from '~src/lib/routes';
 import { Dokument, DokumentIdType } from '~src/types/dokument/Dokument';
+import { KlageinstansDokument } from '~src/types/dokument/KlageinstansDokument';
 import * as DateUtils from '~src/utils/date/dateUtils';
-import { getBlob } from '~src/utils/dokumentUtils';
+import { getBlob, getPdfBlob } from '~src/utils/dokumentUtils';
 import DokumentHeader from './DokumentHeader';
 import styles from './dokumenterPage.module.less';
 
@@ -34,7 +35,16 @@ const DokumenterPage = () => {
                 <DokumentHeader saksnummer={props.sak.saksnummer} />
                 <div className={styles.contentContainer}>
                     <VStack gap="5">
-                        <VisDokumenter id={props.sak.id} idType={DokumentIdType.Sak} />
+                        <div className={styles.columns}>
+                            <section className={styles.column}>
+                                <Heading size="small">Eksterne dokumenter</Heading>
+                                <VisEksterneDokumenter sakId={props.sak.id} />
+                            </section>
+                            <section className={styles.column}>
+                                <Heading size="small">Brev sendt fra SU</Heading>
+                                <VisDokumenter id={props.sak.id} idType={DokumentIdType.Sak} />
+                            </section>
+                        </div>
                         <Button
                             className={styles.tilbakeknapp}
                             variant="secondary"
@@ -89,6 +99,50 @@ export const VisDokumenter = (props: { id: string; idType: DokumentIdType; ingen
     );
 };
 
+const VisEksterneDokumenter = (props: { sakId: string; ingenBrevTekst?: string }) => {
+    const [dokumenterState, fetchDokumenter] = useApiCall(hentEksterneDokumenter);
+
+    useEffect(() => {
+        fetchDokumenter({ sakId: props.sakId });
+    }, [props.sakId]);
+
+    return pipe(
+        dokumenterState,
+        RemoteData.fold3(
+            () => (
+                <div className={styles.loaderContainer}>
+                    <Loader size="large" title="Henter eksterne dokumenter..." />
+                </div>
+            ),
+            (err) => <ApiErrorAlert error={err} />,
+            (dokumenter) => {
+                if (dokumenter.length === 0) {
+                    return <Alert variant="info">{props.ingenBrevTekst ?? 'Fant ingen eksterne dokumenter'}</Alert>;
+                }
+
+                const sorterteDokumenter = [...dokumenter].sort((a, b) => {
+                    if (a.datoOpprettet && b.datoOpprettet) {
+                        return b.datoOpprettet.localeCompare(a.datoOpprettet);
+                    }
+                    if (a.datoOpprettet) return -1;
+                    if (b.datoOpprettet) return 1;
+                    return 0;
+                });
+
+                return (
+                    <ol className={styles.dokumentliste}>
+                        {sorterteDokumenter.map((d) => (
+                            <li key={`${d.journalpostId}-${d.dokumentInfoId}`}>
+                                <EksterntDokumentPanel dokument={d} />
+                            </li>
+                        ))}
+                    </ol>
+                );
+            },
+        ),
+    );
+};
+
 const DokumentPanel = (props: { sakId: string; dokument: Dokument }) => {
     const [skalDistribuere, setSkalDistribuere] = useState<boolean>(false);
 
@@ -134,6 +188,33 @@ const DokumentPanel = (props: { sakId: string; dokument: Dokument }) => {
                         onClose={() => setSkalDistribuere(false)}
                     />
                 )}
+            </HStack>
+        </Box>
+    );
+};
+
+const EksterntDokumentPanel = (props: { dokument: KlageinstansDokument }) => {
+    const tittel = props.dokument.dokumentTittel ?? props.dokument.journalpostTittel ?? 'Uten tittel';
+    const datoOpprettet = props.dokument.datoOpprettet
+        ? DateUtils.formatDate(props.dokument.datoOpprettet)
+        : 'Ukjent dato';
+
+    const handleDokumentClick = (dokument: KlageinstansDokument) => {
+        window.open(URL.createObjectURL(getPdfBlob(dokument.pdfBase64)), '_blank', 'noopener,noreferrer');
+    };
+
+    return (
+        <Box background="surface-default" padding="6" borderWidth="1" borderRadius="medium" shadow="small">
+            <HStack justify="space-between" align="center">
+                <HStack align="center">
+                    <FileTextIcon className={styles.dokumentikon} />
+                    <VStack gap="1">
+                        <Heading size="medium">
+                            <Link onClick={() => handleDokumentClick(props.dokument)}>{tittel}</Link>
+                        </Heading>
+                        <BodyShort className={styles.linkPanelBeskrivelse}>{datoOpprettet}</BodyShort>
+                    </VStack>
+                </HStack>
             </HStack>
         </Box>
     );
