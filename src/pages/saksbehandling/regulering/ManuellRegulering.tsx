@@ -11,16 +11,16 @@ import {
     fradragFormdataTilFradrag,
     fradragTilFradragFormData,
 } from '~src/components/forms/vilkårOgGrunnlagForms/fradrag/FradragFormUtils';
-import OppsummeringAvBeregningOgSimulering from '~src/components/oppsummering/oppsummeringAvBeregningOgsimulering/OppsummeringAvBeregningOgSimulering.tsx';
+import OppsummeringAvBeregningOgSimulering from '~src/components/oppsummering/oppsummeringAvBeregningOgsimulering/OppsummeringAvBeregningOgSimulering';
 import { OppsummeringPar } from '~src/components/oppsummering/oppsummeringpar/OppsummeringPar';
 import { SaksoversiktContext } from '~src/context/SaksoversiktContext';
 import * as sakSlice from '~src/features/saksoversikt/sak.slice';
 import { useApiCall, useAsyncActionCreator } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
 import * as Routes from '~src/lib/routes';
-import { Nullable } from '~src/lib/types.ts';
+import { Nullable } from '~src/lib/types';
 import { måReguleresManuelt } from '~src/types/Fradrag';
-import { Uføregrunnlag } from '~src/types/grunnlagsdataOgVilkårsvurderinger/uføre/Uføregrunnlag.ts';
+import { Uføregrunnlag } from '~src/types/grunnlagsdataOgVilkårsvurderinger/uføre/Uføregrunnlag';
 import {
     BrukerManglerSupplement,
     DelvisOpphør,
@@ -96,14 +96,14 @@ const ManuellRegulering = () => {
                 });
             });
         }
-    }, []);
+    }, [reguleringId, hentManuellRegulering, form]);
 
     const submitBeregning = (values: BeregnReguleringForm) => {
-        if (regulering != null) {
+        if (regulering != null && reguleringId) {
             beregn(
                 {
                     uføre: values.uføre,
-                    reguleringId: reguleringId!,
+                    reguleringId: reguleringId,
                     fradrag: values.fradrag.map((f) =>
                         fradragFormdataTilFradrag(f, {
                             fraOgMed: parseIsoDateOnly(regulering.periode.fraOgMed)!,
@@ -223,6 +223,8 @@ const ManuellRegulering = () => {
                                 >
                                     Beregn og simuler
                                 </Button>
+
+                                {RemoteData.isFailure(beregnStatus) && <ApiErrorAlert error={beregnStatus.error} />}
                                 {regulering.beregning && (
                                     <OppsummeringAvBeregningOgSimulering
                                         eksterngrunnlagSkatt={null}
@@ -238,6 +240,7 @@ const ManuellRegulering = () => {
                                     {formatMessage('knapper.tilbake')}
                                 </Button>
                                 <Button
+                                    disabled={!regulering.beregning}
                                     onClick={() => ferdigstillEllerTilAttestering(regulering.id)}
                                     loading={RemoteData.isPending(regulerStatus)}
                                 >
