@@ -231,17 +231,6 @@ const EksterntDokumentPanel = (props: { dokument: KlageinstansDokument }) => {
         ? DateUtils.formatDate(props.dokument.datoOpprettet)
         : 'Ukjent dato';
     const distribueringsadresse = props.dokument.distribueringsadresse;
-    const adresselinjer = distribueringsadresse
-        ? [
-              distribueringsadresse.adresselinje1,
-              distribueringsadresse.adresselinje2,
-              distribueringsadresse.adresselinje3,
-          ].filter((linje): linje is string => Boolean(linje && linje.trim()))
-        : [];
-    const poststedLinje = distribueringsadresse
-        ? [distribueringsadresse.postnummer, distribueringsadresse.poststed].filter(Boolean).join(' ')
-        : '';
-    const adresseLinjerMedPoststed = [...adresselinjer, poststedLinje].filter(Boolean);
 
     const handleDokumentClick = (dokument: KlageinstansDokument) => {
         openPdfInNewTab(getPdfBlob(dokument.pdfBase64));
@@ -265,14 +254,23 @@ const EksterntDokumentPanel = (props: { dokument: KlageinstansDokument }) => {
                     <Accordion.Item>
                         <Accordion.Header>Adresse</Accordion.Header>
                         <Accordion.Content>
-                            {adresseLinjerMedPoststed.length > 0 ? (
+                            {distribueringsadresse ? (
                                 <VStack gap="1">
-                                    {adresseLinjerMedPoststed.map((linje, index) => (
-                                        <BodyShort key={`${linje}-${index}`}>{linje}</BodyShort>
-                                    ))}
+                                    {distribueringsadresse.adresselinje1 && (
+                                        <BodyShort>{distribueringsadresse.adresselinje1}</BodyShort>
+                                    )}
+                                    {distribueringsadresse.adresselinje2 && (
+                                        <BodyShort>{distribueringsadresse.adresselinje2}</BodyShort>
+                                    )}
+                                    {distribueringsadresse.adresselinje3 && (
+                                        <BodyShort>{distribueringsadresse.adresselinje3}</BodyShort>
+                                    )}
+                                    <BodyShort>
+                                        {distribueringsadresse.postnummer} {distribueringsadresse.poststed}
+                                    </BodyShort>
                                 </VStack>
                             ) : (
-                                <BodyShort>Ingen Adresse funnet</BodyShort>
+                                <BodyShort>Ingen Adresse</BodyShort>
                             )}
                         </Accordion.Content>
                     </Accordion.Item>
