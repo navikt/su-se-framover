@@ -44,7 +44,7 @@ const DokumenterPage = () => {
                         <VStack gap="4">
                             <Heading size="small">Brev i sak</Heading>
                             <VisDokumenter id={props.sak.id} idType={DokumentIdType.Sak} />
-                            <Heading size="small">Eksterne dokumenter</Heading>
+                            <Heading size="small">Eksterne dokumenter for klage</Heading>
                             <VisEksterneDokumenter sakId={props.sak.id} />
                         </VStack>
                         <Button
@@ -119,7 +119,7 @@ const VisEksterneDokumenter = (props: { sakId: string }) => {
             (err) => <ApiErrorAlert error={err} />,
             (dokumenter) => {
                 if (dokumenter.length === 0) {
-                    return <Alert variant="info">Fant ingen eksterne dokumenter</Alert>;
+                    return <Alert variant="info">Fant ingen eksterne dokumenter for klage</Alert>;
                 }
 
                 const sorterteDokumenter = [...dokumenter].sort((a, b) => {
