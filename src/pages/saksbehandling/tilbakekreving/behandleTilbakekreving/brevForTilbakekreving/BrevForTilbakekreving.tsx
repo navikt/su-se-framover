@@ -4,7 +4,7 @@ import { Radio, RadioGroup } from '@navikt/ds-react';
 import { useEffect, useRef } from 'react';
 import { Controller, UseFormTrigger, useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
-import { hentFritekst } from '~src/api/fritekstApi.ts';
+import { FritekstTyper, hentFritekst } from '~src/api/fritekstApi.ts';
 import { forhåndsvisVedtaksbrevTilbakekrevingsbehandling } from '~src/api/tilbakekrevingApi';
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
 import TextareaWithAutosave from '~src/components/inputs/textareaWithAutosave/TextareaWithAutosave';
@@ -114,7 +114,7 @@ const BrevForTilbakekreving = (props: {
         hentFritekst({
             referanseId,
             sakId: props.sakId,
-            type: 'VEDTAKSBREV_TILBAKEKREVING',
+            type: FritekstTyper.VEDTAKSBREV_TILBAKEKREVING,
         }).then((res) => {
             if (res.status === 'ok' && res.data) {
                 form.setValue('fritekst', res.data.fritekst ?? '');
