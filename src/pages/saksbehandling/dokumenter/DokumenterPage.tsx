@@ -1,7 +1,20 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { ChevronLeftIcon, FileTextIcon } from '@navikt/aksel-icons';
-import { Alert, BodyShort, Box, Button, Heading, HStack, Link, Loader, Modal, Tag, VStack } from '@navikt/ds-react';
+import {
+    Accordion,
+    Alert,
+    BodyShort,
+    Box,
+    Button,
+    Heading,
+    HStack,
+    Link,
+    Loader,
+    Modal,
+    Tag,
+    VStack,
+} from '@navikt/ds-react';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useNavigate, useOutletContext } from 'react-router-dom';
@@ -217,6 +230,18 @@ const EksterntDokumentPanel = (props: { dokument: KlageinstansDokument }) => {
     const datoOpprettet = props.dokument.datoOpprettet
         ? DateUtils.formatDate(props.dokument.datoOpprettet)
         : 'Ukjent dato';
+    const distribueringsadresse = props.dokument.distribueringsadresse;
+    const adresselinjer = distribueringsadresse
+        ? [
+              distribueringsadresse.adresselinje1,
+              distribueringsadresse.adresselinje2,
+              distribueringsadresse.adresselinje3,
+          ].filter((linje): linje is string => Boolean(linje && linje.trim()))
+        : [];
+    const poststedLinje = distribueringsadresse
+        ? [distribueringsadresse.postnummer, distribueringsadresse.poststed].filter(Boolean).join(' ')
+        : '';
+    const adresseLinjerMedPoststed = [...adresselinjer, poststedLinje].filter(Boolean);
 
     const handleDokumentClick = (dokument: KlageinstansDokument) => {
         openPdfInNewTab(getPdfBlob(dokument.pdfBase64));
@@ -224,17 +249,35 @@ const EksterntDokumentPanel = (props: { dokument: KlageinstansDokument }) => {
 
     return (
         <Box background="surface-default" padding="6" borderWidth="1" borderRadius="medium" shadow="small">
-            <HStack justify="space-between" align="center">
-                <HStack align="center">
-                    <FileTextIcon className={styles.dokumentikon} />
-                    <VStack gap="1">
-                        <Heading size="medium">
-                            <Link onClick={() => handleDokumentClick(props.dokument)}>{tittel}</Link>
-                        </Heading>
-                        <BodyShort className={styles.linkPanelBeskrivelse}>{datoOpprettet}</BodyShort>
-                    </VStack>
+            <VStack gap="2">
+                <HStack justify="space-between" align="center">
+                    <HStack align="center">
+                        <FileTextIcon className={styles.dokumentikon} />
+                        <VStack gap="1">
+                            <Heading size="medium">
+                                <Link onClick={() => handleDokumentClick(props.dokument)}>{tittel}</Link>
+                            </Heading>
+                            <BodyShort className={styles.linkPanelBeskrivelse}>{datoOpprettet}</BodyShort>
+                        </VStack>
+                    </HStack>
                 </HStack>
-            </HStack>
+                <Accordion className={styles.eksterntDokumentAccordion} size="small">
+                    <Accordion.Item>
+                        <Accordion.Header>Adresse</Accordion.Header>
+                        <Accordion.Content>
+                            {adresseLinjerMedPoststed.length > 0 ? (
+                                <VStack gap="1">
+                                    {adresseLinjerMedPoststed.map((linje, index) => (
+                                        <BodyShort key={`${linje}-${index}`}>{linje}</BodyShort>
+                                    ))}
+                                </VStack>
+                            ) : (
+                                <BodyShort>Ingen Adresse funnet</BodyShort>
+                            )}
+                        </Accordion.Content>
+                    </Accordion.Item>
+                </Accordion>
+            </VStack>
         </Box>
     );
 };

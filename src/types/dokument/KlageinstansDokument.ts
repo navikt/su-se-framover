@@ -10,4 +10,13 @@ export interface KlageinstansDokument {
     dokumentstatus: Nullable<string>;
     variantFormat: string;
     pdfBase64: string;
+    distribueringsadresse: Nullable<Distribueringsadresse>;
+}
+
+export interface Distribueringsadresse {
+    adresselinje1: Nullable<string>;
+    adresselinje2: Nullable<string>;
+    adresselinje3: Nullable<string>;
+    postnummer: string;
+    poststed: string;
 }
