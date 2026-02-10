@@ -54,7 +54,7 @@ const DokumentDistribusjonsModal = (props: { visModal: boolean; onClose: () => v
         distribuer({
             dokumentId: values.dokumentId,
             sakId: values.sakId,
-            adressadresselinje1: values.distribusjon.adresser[0].adresselinje!,
+            adressadresselinje1: values.distribusjon.adresser[0].adresselinje,
             adressadresselinje2: values.distribusjon.adresser[1]?.adresselinje
                 ? values.distribusjon.adresser[1].adresselinje
                 : null,

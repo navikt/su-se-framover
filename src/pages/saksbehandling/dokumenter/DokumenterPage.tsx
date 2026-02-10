@@ -2,7 +2,7 @@ import * as RemoteData from '@devexperts/remote-data-ts';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { ChevronLeftIcon, FileTextIcon } from '@navikt/aksel-icons';
 import { Alert, BodyShort, Box, Button, Heading, HStack, Link, Loader, Modal, Tag, VStack } from '@navikt/ds-react';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useNavigate, useOutletContext } from 'react-router-dom';
 
@@ -77,14 +77,9 @@ const DokumenterPage = () => {
 
 export const VisDokumenter = (props: { id: string; idType: DokumentIdType; ingenBrevTekst?: string }) => {
     const [dokumenterState, fetchDokumenter] = useAsyncActionCreator(sakSlice.hentDokumenter);
-    const fetchDokumenterRef = useRef(fetchDokumenter);
 
     useEffect(() => {
-        fetchDokumenterRef.current = fetchDokumenter;
-    }, [fetchDokumenter]);
-
-    useEffect(() => {
-        fetchDokumenterRef.current({
+        fetchDokumenter({
             id: props.id,
             idType: props.idType,
         });
@@ -119,14 +114,9 @@ export const VisDokumenter = (props: { id: string; idType: DokumentIdType; ingen
 
 const VisEksterneDokumenter = (props: { sakId: string }) => {
     const [dokumenterState, fetchDokumenter] = useApiCall(hentEksterneDokumenter);
-    const fetchDokumenterRef = useRef(fetchDokumenter);
 
     useEffect(() => {
-        fetchDokumenterRef.current = fetchDokumenter;
-    }, [fetchDokumenter]);
-
-    useEffect(() => {
-        fetchDokumenterRef.current({ sakId: props.sakId });
+        fetchDokumenter({ sakId: props.sakId });
     }, [props.sakId]);
 
     return pipe(
