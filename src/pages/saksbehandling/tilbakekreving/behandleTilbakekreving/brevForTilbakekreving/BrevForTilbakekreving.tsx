@@ -4,7 +4,7 @@ import { Radio, RadioGroup } from '@navikt/ds-react';
 import { useEffect, useRef } from 'react';
 import { Controller, UseFormTrigger, useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
-
+import { hentFritekst } from '~src/api/fritekstApi.ts';
 import { forhåndsvisVedtaksbrevTilbakekrevingsbehandling } from '~src/api/tilbakekrevingApi';
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
 import TextareaWithAutosave from '~src/components/inputs/textareaWithAutosave/TextareaWithAutosave';
@@ -22,13 +22,11 @@ import * as routes from '~src/lib/routes';
 import { Nullable } from '~src/lib/types';
 import { hookFormErrorsTilFeiloppsummering } from '~src/lib/validering';
 import { ManuellTilbakekrevingsbehandling, TilbakekrevingSteg } from '~src/types/ManuellTilbakekrevingsbehandling';
-
 import messages from '../../Tilbakekreving-nb';
-
 import styles from './BrevForTilbakekreving.module.less';
 import { BrevForTilbakekrevingFormData, brevForTilbakekrevingSchema } from './BrevForTilbakekrevingUtils';
 
-type HandleBrevtekstSave = { skalSendeBrev: boolean; brevtekst: Nullable<string> };
+type HandleBrevtekstSave = { skalSendeBrev: boolean; fritekst: Nullable<string> };
 type HandleNotatSave = { notat: Nullable<string> };
 
 const BrevForTilbakekreving = (props: {
@@ -47,7 +45,7 @@ const BrevForTilbakekreving = (props: {
         resolver: yupResolver(brevForTilbakekrevingSchema),
         defaultValues: {
             skalSendeBrev: props.tilbakekreving.fritekst !== null,
-            brevtekst: props.tilbakekreving.fritekst,
+            fritekst: props.tilbakekreving.fritekst,
             notat: props.tilbakekreving.notat ?? '',
         },
     });
@@ -74,7 +72,7 @@ const BrevForTilbakekreving = (props: {
                 sakId: props.sakId,
                 saksversjon: saksversjonRef.current,
                 behandlingId: props.tilbakekreving.id,
-                brevtekst: data.skalSendeBrev ? data.brevtekst : null,
+                brevtekst: data.skalSendeBrev ? data.fritekst : null,
             },
             onSuccess,
         );
@@ -107,6 +105,22 @@ const BrevForTilbakekreving = (props: {
         );
     };
 
+    const watch = form.watch();
+    useEffect(() => {
+        if (!watch.skalSendeBrev) return;
+        const referanseId = props.tilbakekreving.id;
+        if (!referanseId) return;
+
+        hentFritekst({
+            referanseId,
+            sakId: props.sakId,
+            type: 'VEDTAKSBREV_TILBAKEKREVING',
+        }).then((res) => {
+            if (res.status === 'ok' && res.data) {
+                form.setValue('fritekst', res.data.fritekst ?? '');
+            }
+        });
+    }, [watch.skalSendeBrev, props.tilbakekreving.id, props.sakId]);
     return (
         <ToKolonner tittel={formatMessage('brevForTilbakekreving.tittel')}>
             {{
@@ -134,10 +148,10 @@ const BrevForTilbakekreving = (props: {
                             {form.watch('skalSendeBrev') && (
                                 <TextareaWithAutosave
                                     textarea={{
-                                        name: 'brevtekst',
+                                        name: 'fritekst',
                                         label: formatMessage('brevForTilbakekreving.fritekst.label'),
                                         control: form.control,
-                                        value: form.watch('brevtekst') ?? '',
+                                        value: form.watch('fritekst') ?? '',
                                         description: [formatMessage('brevForTilbakekreving.fritekst.description')],
                                     }}
                                     save={{
@@ -146,7 +160,7 @@ const BrevForTilbakekreving = (props: {
                                                 handleBrevtekstSave(
                                                     {
                                                         skalSendeBrev: form.getValues('skalSendeBrev'),
-                                                        brevtekst: form.getValues('brevtekst')!,
+                                                        fritekst: form.getValues('fritekst')!,
                                                     },
                                                     () => void 0,
                                                 );
