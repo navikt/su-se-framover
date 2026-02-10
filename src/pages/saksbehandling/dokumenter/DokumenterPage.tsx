@@ -25,6 +25,8 @@ import { getBlob, getPdfBlob } from '~src/utils/dokumentUtils';
 import DokumentHeader from './DokumentHeader';
 import styles from './dokumenterPage.module.less';
 
+const REVOKE_FALLBACK_MS = 5_000;
+
 const openPdfInNewTab = (blob: Blob) => {
     const url = URL.createObjectURL(blob);
     const newWindow = window.open(url, '_blank', 'noopener,noreferrer');
@@ -33,13 +35,17 @@ const openPdfInNewTab = (blob: Blob) => {
         return;
     }
 
-    newWindow.addEventListener(
-        'load',
-        () => {
-            URL.revokeObjectURL(url);
-        },
-        { once: true },
-    );
+    let revoked = false;
+    const revoke = () => {
+        if (revoked) return;
+        revoked = true;
+        URL.revokeObjectURL(url);
+        window.clearTimeout(fallbackTimeoutId);
+    };
+
+    const fallbackTimeoutId = window.setTimeout(revoke, REVOKE_FALLBACK_MS);
+
+    newWindow.addEventListener('load', revoke, { once: true });
 };
 
 const DokumenterPage = () => {
