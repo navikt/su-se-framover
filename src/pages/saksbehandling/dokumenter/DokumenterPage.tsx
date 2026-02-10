@@ -2,7 +2,7 @@ import * as RemoteData from '@devexperts/remote-data-ts';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { ChevronLeftIcon, FileTextIcon } from '@navikt/aksel-icons';
 import { Alert, BodyShort, Box, Button, Heading, HStack, Link, Loader, Modal, Tag, VStack } from '@navikt/ds-react';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useNavigate, useOutletContext } from 'react-router-dom';
 
@@ -27,8 +27,19 @@ import styles from './dokumenterPage.module.less';
 
 const openPdfInNewTab = (blob: Blob) => {
     const url = URL.createObjectURL(blob);
-    window.open(url, '_blank', 'noopener,noreferrer');
-    setTimeout(() => URL.revokeObjectURL(url), 1000);
+    const newWindow = window.open(url, '_blank', 'noopener,noreferrer');
+    if (!newWindow) {
+        URL.revokeObjectURL(url);
+        return;
+    }
+
+    newWindow.addEventListener(
+        'load',
+        () => {
+            URL.revokeObjectURL(url);
+        },
+        { once: true },
+    );
 };
 
 const DokumenterPage = () => {
@@ -66,13 +77,18 @@ const DokumenterPage = () => {
 
 export const VisDokumenter = (props: { id: string; idType: DokumentIdType; ingenBrevTekst?: string }) => {
     const [dokumenterState, fetchDokumenter] = useAsyncActionCreator(sakSlice.hentDokumenter);
+    const fetchDokumenterRef = useRef(fetchDokumenter);
 
     useEffect(() => {
-        fetchDokumenter({
+        fetchDokumenterRef.current = fetchDokumenter;
+    }, [fetchDokumenter]);
+
+    useEffect(() => {
+        fetchDokumenterRef.current({
             id: props.id,
             idType: props.idType,
         });
-    }, [props.id]);
+    }, [props.id, props.idType]);
 
     return pipe(
         dokumenterState,
@@ -103,9 +119,14 @@ export const VisDokumenter = (props: { id: string; idType: DokumentIdType; ingen
 
 const VisEksterneDokumenter = (props: { sakId: string }) => {
     const [dokumenterState, fetchDokumenter] = useApiCall(hentEksterneDokumenter);
+    const fetchDokumenterRef = useRef(fetchDokumenter);
 
     useEffect(() => {
-        fetchDokumenter({ sakId: props.sakId });
+        fetchDokumenterRef.current = fetchDokumenter;
+    }, [fetchDokumenter]);
+
+    useEffect(() => {
+        fetchDokumenterRef.current({ sakId: props.sakId });
     }, [props.sakId]);
 
     return pipe(
@@ -240,7 +261,7 @@ const DistribueringsModal = (props: { sakId: string; dokumentId: string; visModa
             {
                 sakId: props.sakId,
                 dokumentId: props.dokumentId,
-                adressadresselinje1: values.adresser[0].adresselinje!,
+                adressadresselinje1: values.adresser[0]?.adresselinje ?? '',
                 adressadresselinje2: values.adresser[1]?.adresselinje ? values.adresser[1].adresselinje : null,
                 adressadresselinje3: values.adresser[2]?.adresselinje ? values.adresser[2].adresselinje : null,
                 postnummer: values.postnummer,
@@ -253,9 +274,11 @@ const DistribueringsModal = (props: { sakId: string; dokumentId: string; visModa
     };
 
     return (
-        <Modal aria-labelledby="Distribuer dokument" open={props.visModal} onClose={props.onClose}>
+        <Modal aria-labelledby="distribuer-dokument-heading" open={props.visModal} onClose={props.onClose}>
             <Modal.Header>
-                <Heading size="medium">Distribuer et dokument</Heading>
+                <Heading id="distribuer-dokument-heading" size="medium">
+                    Distribuer et dokument
+                </Heading>
                 <BodyShort>I de fleste tilfeller vil distribuering av brev skje av seg selv.</BodyShort>
                 <BodyShort>
                     Likevel vil det være et fåtall av tilfeller der brev ikke kan distribueres automatisk, f.eks ved
