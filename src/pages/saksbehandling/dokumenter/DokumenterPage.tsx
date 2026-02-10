@@ -25,10 +25,27 @@ import { getBlob, getPdfBlob } from '~src/utils/dokumentUtils';
 import DokumentHeader from './DokumentHeader';
 import styles from './dokumenterPage.module.less';
 
+const REVOKE_FALLBACK_MS = 5_000;
+
 const openPdfInNewTab = (blob: Blob) => {
     const url = URL.createObjectURL(blob);
-    window.open(url, '_blank', 'noopener,noreferrer');
-    setTimeout(() => URL.revokeObjectURL(url), 1000);
+    const newWindow = window.open(url, '_blank', 'noopener,noreferrer');
+    if (!newWindow) {
+        URL.revokeObjectURL(url);
+        return;
+    }
+
+    let revoked = false;
+    const revoke = () => {
+        if (revoked) return;
+        revoked = true;
+        URL.revokeObjectURL(url);
+        window.clearTimeout(fallbackTimeoutId);
+    };
+
+    const fallbackTimeoutId = window.setTimeout(revoke, REVOKE_FALLBACK_MS);
+
+    newWindow.addEventListener('load', revoke, { once: true });
 };
 
 const DokumenterPage = () => {
@@ -72,7 +89,7 @@ export const VisDokumenter = (props: { id: string; idType: DokumentIdType; ingen
             id: props.id,
             idType: props.idType,
         });
-    }, [props.id]);
+    }, [props.id, props.idType]);
 
     return pipe(
         dokumenterState,
@@ -240,7 +257,7 @@ const DistribueringsModal = (props: { sakId: string; dokumentId: string; visModa
             {
                 sakId: props.sakId,
                 dokumentId: props.dokumentId,
-                adressadresselinje1: values.adresser[0].adresselinje!,
+                adressadresselinje1: values.adresser[0]?.adresselinje ?? '',
                 adressadresselinje2: values.adresser[1]?.adresselinje ? values.adresser[1].adresselinje : null,
                 adressadresselinje3: values.adresser[2]?.adresselinje ? values.adresser[2].adresselinje : null,
                 postnummer: values.postnummer,
@@ -253,9 +270,11 @@ const DistribueringsModal = (props: { sakId: string; dokumentId: string; visModa
     };
 
     return (
-        <Modal aria-labelledby="Distribuer dokument" open={props.visModal} onClose={props.onClose}>
+        <Modal aria-labelledby="distribuer-dokument-heading" open={props.visModal} onClose={props.onClose}>
             <Modal.Header>
-                <Heading size="medium">Distribuer et dokument</Heading>
+                <Heading id="distribuer-dokument-heading" size="medium">
+                    Distribuer et dokument
+                </Heading>
                 <BodyShort>I de fleste tilfeller vil distribuering av brev skje av seg selv.</BodyShort>
                 <BodyShort>
                     Likevel vil det være et fåtall av tilfeller der brev ikke kan distribueres automatisk, f.eks ved
