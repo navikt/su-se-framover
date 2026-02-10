@@ -191,7 +191,6 @@ const DokumentPanel = (props: { sakId: string; dokument: Dokument }) => {
                         <Heading size="medium">
                             <Link onClick={() => handleDokumentClick(props.dokument)}>{props.dokument.tittel}</Link>
                         </Heading>
-
                         <BodyShort className={styles.linkPanelBeskrivelse}>
                             {DateUtils.formatDateTime(props.dokument.opprettet)}
                             <Tag variant={props.dokument.journalført ? 'success' : 'error'} size="small">
@@ -230,7 +229,9 @@ const EksterntDokumentPanel = (props: { dokument: KlageinstansDokument }) => {
     const datoOpprettet = props.dokument.datoOpprettet
         ? DateUtils.formatDate(props.dokument.datoOpprettet)
         : 'Ukjent dato';
-    const distribueringsadresse = props.dokument.distribueringsadresse;
+    const utsendingsinfo = props.dokument.utsendingsinfo;
+    const utsendingsinfoTekst =
+        utsendingsinfo?.fysiskpostSendt?.trim() || utsendingsinfo?.digitalpostSendt?.trim() || null;
 
     const handleDokumentClick = (dokument: KlageinstansDokument) => {
         openPdfInNewTab(getPdfBlob(dokument.pdfBase64));
@@ -254,23 +255,10 @@ const EksterntDokumentPanel = (props: { dokument: KlageinstansDokument }) => {
                     <Accordion.Item>
                         <Accordion.Header>Adresse</Accordion.Header>
                         <Accordion.Content>
-                            {distribueringsadresse ? (
-                                <VStack gap="1">
-                                    {distribueringsadresse.adresselinje1 && (
-                                        <BodyShort>{distribueringsadresse.adresselinje1}</BodyShort>
-                                    )}
-                                    {distribueringsadresse.adresselinje2 && (
-                                        <BodyShort>{distribueringsadresse.adresselinje2}</BodyShort>
-                                    )}
-                                    {distribueringsadresse.adresselinje3 && (
-                                        <BodyShort>{distribueringsadresse.adresselinje3}</BodyShort>
-                                    )}
-                                    <BodyShort>
-                                        {distribueringsadresse.postnummer} {distribueringsadresse.poststed}
-                                    </BodyShort>
-                                </VStack>
+                            {utsendingsinfoTekst ? (
+                                <div style={{ whiteSpace: 'pre-wrap' }}>{utsendingsinfoTekst}</div>
                             ) : (
-                                <BodyShort>Ingen Adresse</BodyShort>
+                                <BodyShort>Vi har ikke noen adresse</BodyShort>
                             )}
                         </Accordion.Content>
                     </Accordion.Item>
