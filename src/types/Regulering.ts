@@ -176,3 +176,7 @@ export interface ManuellRegulering {
     gjeldendeVedtaksdata: GrunnlagsdataOgVilkårsvurderinger;
     regulering: Regulering;
 }
+
+export enum UnderkjennelseGrunnRegulering {
+    REGULERING_ER_FEIL = 'REGULERING_ER_FEIL',
+}

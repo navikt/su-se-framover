@@ -2,6 +2,7 @@ import { Nullable } from '~src/lib/types';
 
 import { GrunnlagsdataOgVilkårsvurderinger } from './grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
 import { UnderkjennelseGrunnTilbakekreving } from './ManuellTilbakekrevingsbehandling';
+import { UnderkjennelseGrunnRegulering } from './Regulering';
 import { RevurderingStatus } from './Revurdering';
 import { Sakstype } from './Sak';
 import { SøknadsbehandlingStatus } from './Søknadsbehandling';
@@ -29,7 +30,10 @@ export interface Underkjennelse {
     kommentar: string;
 }
 
-export type UnderkjennelseGrunn = UnderkjennelseGrunnBehandling | UnderkjennelseGrunnTilbakekreving;
+export type UnderkjennelseGrunn =
+    | UnderkjennelseGrunnBehandling
+    | UnderkjennelseGrunnTilbakekreving
+    | UnderkjennelseGrunnRegulering;
 
 export enum UnderkjennelseGrunnBehandling {
     INNGANGSVILKÅRENE_ER_FEILVURDERT = 'INNGANGSVILKÅRENE_ER_FEILVURDERT',

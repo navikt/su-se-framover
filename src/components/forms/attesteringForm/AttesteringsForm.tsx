@@ -21,6 +21,7 @@ import { Nullable } from '~src/lib/types';
 import yup from '~src/lib/validering';
 import { UnderkjennelseGrunn, UnderkjennelseGrunnBehandling } from '~src/types/Behandling';
 import { UnderkjennelseGrunnTilbakekreving } from '~src/types/ManuellTilbakekrevingsbehandling';
+import { UnderkjennelseGrunnRegulering } from '~src/types/Regulering.ts';
 import styles from './attesteringsForm.module.less';
 import messages from './attesteringsForm-nb';
 import UnderkjennelsesForm from './UnderkjennelsesForm';
@@ -46,7 +47,11 @@ const schema = yup.object<AttesteringFormData>({
             .string()
             .required()
             .oneOf(
-                [...Object.values(UnderkjennelseGrunnBehandling), ...Object.values(UnderkjennelseGrunnTilbakekreving)],
+                [
+                    ...Object.values(UnderkjennelseGrunnBehandling),
+                    ...Object.values(UnderkjennelseGrunnTilbakekreving),
+                    UnderkjennelseGrunnRegulering.REGULERING_ER_FEIL,
+                ],
                 'Du må velge en grunn',
             ),
         otherwise: yup.string<UnderkjennelseGrunn>().notRequired().nullable(),
@@ -57,7 +62,7 @@ const schema = yup.object<AttesteringFormData>({
     }),
 });
 
-export type AttesteringsBehandlingstype = 'SØKNAD' | 'REVURDERING' | 'KLAGE' | 'TILBAKEKREVING';
+export type AttesteringsBehandlingstype = 'SØKNAD' | 'REVURDERING' | 'KLAGE' | 'TILBAKEKREVING' | 'REGULERING';
 
 interface Props {
     behandlingsId: string;
@@ -150,7 +155,7 @@ export const AttesteringsForm = (props: Props) => {
     }, [fritekstType, props.behandlingsId, props.redigerbartBrev, props.sakId, setValue]);
 
     const ekstraMottakerReferanseType: ReferanseType | null =
-        behandlingstype === 'TILBAKEKREVING' ? null : behandlingstype;
+        behandlingstype === 'TILBAKEKREVING' || behandlingstype === 'REGULERING' ? null : behandlingstype;
 
     return (
         <div className={styles.redigerContainer}>

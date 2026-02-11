@@ -1,5 +1,6 @@
 import { UnderkjennelseGrunn, UnderkjennelseGrunnBehandling } from '~src/types/Behandling';
 import { UnderkjennelseGrunnTilbakekreving } from '~src/types/ManuellTilbakekrevingsbehandling';
+import { UnderkjennelseGrunnRegulering } from '~src/types/Regulering.ts';
 
 export const underkjennelsesGrunnTextMapper: { [key in UnderkjennelseGrunn]: string } = {
     [UnderkjennelseGrunnBehandling.ANDRE_FORHOLD]: 'Andre forhold',
@@ -12,4 +13,5 @@ export const underkjennelsesGrunnTextMapper: { [key in UnderkjennelseGrunn]: str
     [UnderkjennelseGrunnTilbakekreving.SKAL_AVKORTES]: 'Skal avkortes',
     [UnderkjennelseGrunnTilbakekreving.UTDATERT_KRAVGRUNNLAG]: 'Utdatert kravgrunnlag',
     [UnderkjennelseGrunnTilbakekreving.VURDERINGEN_ER_FEIL]: 'Vurderingen er feil',
+    [UnderkjennelseGrunnRegulering.REGULERING_ER_FEIL]: 'Regulering er feil',
 };
