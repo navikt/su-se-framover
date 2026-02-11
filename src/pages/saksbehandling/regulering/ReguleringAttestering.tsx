@@ -6,7 +6,6 @@ import { useApiCall } from '~src/lib/hooks.ts';
 import * as Routes from '~src/lib/routes.ts';
 import styles from '~src/pages/saksbehandling/regulering/manuellRegulering.module.less';
 import { useAppDispatch } from '~src/redux/Store.ts';
-import { UnderkjennelseGrunnBehandling } from '~src/types/Behandling.ts';
 import { Regulering, UnderkjennelseGrunnRegulering } from '~src/types/Regulering.ts';
 
 interface Props {
