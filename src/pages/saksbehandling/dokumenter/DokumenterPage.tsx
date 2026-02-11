@@ -19,7 +19,7 @@ import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useNavigate, useOutletContext } from 'react-router-dom';
 
-import { distribuerDokument, hentEksterneDokumenter } from '~src/api/dokumentApi';
+import { distribuerDokument, hentAdresseForDokument, hentEksterneDokumenter } from '~src/api/dokumentApi';
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
 import DokumentDistribusjonForm from '~src/components/forms/dokument/distribusjon/DokumentDistribusjonForm';
 import {
@@ -60,6 +60,9 @@ const openPdfInNewTab = (blob: Blob) => {
 
     newWindow.addEventListener('load', revoke, { once: true });
 };
+
+const getUtsendingsinfoTekst = (utsendingsinfo: KlageinstansDokument['utsendingsinfo']) =>
+    utsendingsinfo?.fysiskpostSendt?.trim() || utsendingsinfo?.digitalpostSendt?.trim() || null;
 
 const DokumenterPage = () => {
     const props = useOutletContext<SaksoversiktContext>();
@@ -177,6 +180,20 @@ const VisEksterneDokumenter = (props: { sakId: string }) => {
 
 const DokumentPanel = (props: { sakId: string; dokument: Dokument }) => {
     const [skalDistribuere, setSkalDistribuere] = useState<boolean>(false);
+    const [adresseDokument, setAdresseDokument] = useState<KlageinstansDokument | null>(null);
+    const [adresseStatus, hentAdresse] = useApiCall(hentAdresseForDokument);
+    const [adresseApen, setAdresseApen] = useState(false);
+    const journalpostId = props.dokument.journalpostId ?? null;
+    const kanHenteAdresse = props.dokument.journalført;
+    const utsendingsinfoTekst = getUtsendingsinfoTekst(adresseDokument?.utsendingsinfo ?? null);
+
+    const handleAdresseKlikk = () => {
+        const nextOpen = !adresseApen;
+        setAdresseApen(nextOpen);
+        if (nextOpen && kanHenteAdresse && journalpostId && (!adresseDokument || !utsendingsinfoTekst)) {
+            hentAdresse({ dokumentId: props.dokument.id, journalpostId }, (dokument) => setAdresseDokument(dokument));
+        }
+    };
 
     const handleDokumentClick = (dokument: Dokument) => {
         openPdfInNewTab(getBlob(dokument));
@@ -184,42 +201,68 @@ const DokumentPanel = (props: { sakId: string; dokument: Dokument }) => {
 
     return (
         <Box background="surface-default" padding="6" borderWidth="1" borderRadius="medium" shadow="small">
-            <HStack justify="space-between" align="center">
-                <HStack align="center">
-                    <FileTextIcon className={styles.dokumentikon} />
-                    <VStack gap="1">
-                        <Heading size="medium">
-                            <Link onClick={() => handleDokumentClick(props.dokument)}>{props.dokument.tittel}</Link>
-                        </Heading>
-                        <BodyShort className={styles.linkPanelBeskrivelse}>
-                            {DateUtils.formatDateTime(props.dokument.opprettet)}
-                            <Tag variant={props.dokument.journalført ? 'success' : 'error'} size="small">
-                                {props.dokument.journalført ? 'Journalført' : 'Ikke journalført'}
-                            </Tag>
-                            <Tag variant={props.dokument.brevErBestilt ? 'success' : 'error'} size="small">
-                                {props.dokument.brevErBestilt ? 'Sendt' : 'Ikke sendt'}
-                            </Tag>
-                        </BodyShort>
-                    </VStack>
+            <VStack gap="2">
+                <HStack justify="space-between" align="center">
+                    <HStack align="center">
+                        <FileTextIcon className={styles.dokumentikon} />
+                        <VStack gap="1">
+                            <Heading size="medium">
+                                <Link onClick={() => handleDokumentClick(props.dokument)}>{props.dokument.tittel}</Link>
+                            </Heading>
+                            <BodyShort className={styles.linkPanelBeskrivelse}>
+                                {DateUtils.formatDateTime(props.dokument.opprettet)}
+                                <Tag variant={props.dokument.journalført ? 'success' : 'error'} size="small">
+                                    {props.dokument.journalført ? 'Journalført' : 'Ikke journalført'}
+                                </Tag>
+                                <Tag variant={props.dokument.brevErBestilt ? 'success' : 'error'} size="small">
+                                    {props.dokument.brevErBestilt ? 'Sendt' : 'Ikke sendt'}
+                                </Tag>
+                            </BodyShort>
+                        </VStack>
+                    </HStack>
+                    {props.dokument.journalført && !props.dokument.brevErBestilt && (
+                        <Button
+                            style={{ alignSelf: 'flex-end' }}
+                            variant="secondary"
+                            onClick={() => setSkalDistribuere(true)}
+                        >
+                            Distribuer
+                        </Button>
+                    )}
+                    {skalDistribuere && (
+                        <DistribueringsModal
+                            sakId={props.sakId}
+                            dokumentId={props.dokument.id}
+                            visModal={skalDistribuere}
+                            onClose={() => setSkalDistribuere(false)}
+                        />
+                    )}
                 </HStack>
-                {props.dokument.journalført && !props.dokument.brevErBestilt && (
-                    <Button
-                        style={{ alignSelf: 'flex-end' }}
-                        variant="secondary"
-                        onClick={() => setSkalDistribuere(true)}
-                    >
-                        Distribuer
-                    </Button>
-                )}
-                {skalDistribuere && (
-                    <DistribueringsModal
-                        sakId={props.sakId}
-                        dokumentId={props.dokument.id}
-                        visModal={skalDistribuere}
-                        onClose={() => setSkalDistribuere(false)}
-                    />
-                )}
-            </HStack>
+                <Accordion className={styles.eksterntDokumentAccordion} size="small">
+                    <Accordion.Item open={adresseApen}>
+                        <Accordion.Header type="button" onClick={handleAdresseKlikk}>
+                            Adresse
+                        </Accordion.Header>
+                        <Accordion.Content>
+                            {!kanHenteAdresse ? (
+                                <BodyShort>Vi har ikke noen adresse</BodyShort>
+                            ) : !journalpostId ? (
+                                <BodyShort>Vi har ikke noen adresse</BodyShort>
+                            ) : RemoteData.isPending(adresseStatus) ? (
+                                <Loader size="small" title="Henter adresse..." />
+                            ) : RemoteData.isFailure(adresseStatus) ? (
+                                <ApiErrorAlert error={adresseStatus.error} />
+                            ) : utsendingsinfoTekst ? (
+                                <BodyShort as="div" className={styles.preWrap}>
+                                    {utsendingsinfoTekst}
+                                </BodyShort>
+                            ) : adresseDokument ? (
+                                <BodyShort>Vi har ikke noen adresse</BodyShort>
+                            ) : null}
+                        </Accordion.Content>
+                    </Accordion.Item>
+                </Accordion>
+            </VStack>
         </Box>
     );
 };
@@ -229,9 +272,7 @@ const EksterntDokumentPanel = (props: { dokument: KlageinstansDokument }) => {
     const datoOpprettet = props.dokument.datoOpprettet
         ? DateUtils.formatDate(props.dokument.datoOpprettet)
         : 'Ukjent dato';
-    const utsendingsinfo = props.dokument.utsendingsinfo;
-    const utsendingsinfoTekst =
-        utsendingsinfo?.fysiskpostSendt?.trim() || utsendingsinfo?.digitalpostSendt?.trim() || null;
+    const utsendingsinfoTekst = getUtsendingsinfoTekst(props.dokument.utsendingsinfo);
 
     const handleDokumentClick = (dokument: KlageinstansDokument) => {
         openPdfInNewTab(getPdfBlob(dokument.pdfBase64));

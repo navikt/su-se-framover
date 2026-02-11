@@ -21,6 +21,16 @@ export async function hentEksterneDokumenter(arg: { sakId: string }): Promise<Ap
     });
 }
 
+export async function hentAdresseForDokument(arg: {
+    dokumentId: string;
+    journalpostId: string;
+}): Promise<ApiClientResult<KlageinstansDokument>> {
+    return apiClient({
+        url: `/dokumenter/eksterne/${arg.dokumentId}/${arg.journalpostId}`,
+        method: 'GET',
+    });
+}
+
 export const getDokument = (arg: { dokumentId: string }) => {
     return apiClient<Blob>({
         url: `/dokumenter/${arg.dokumentId}`,
