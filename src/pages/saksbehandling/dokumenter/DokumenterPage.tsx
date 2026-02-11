@@ -1,7 +1,20 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { ChevronLeftIcon, FileTextIcon } from '@navikt/aksel-icons';
-import { Alert, BodyShort, Box, Button, Heading, HStack, Link, Loader, Modal, Tag, VStack } from '@navikt/ds-react';
+import {
+    Accordion,
+    Alert,
+    BodyShort,
+    Box,
+    Button,
+    Heading,
+    HStack,
+    Link,
+    Loader,
+    Modal,
+    Tag,
+    VStack,
+} from '@navikt/ds-react';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useNavigate, useOutletContext } from 'react-router-dom';
@@ -178,7 +191,6 @@ const DokumentPanel = (props: { sakId: string; dokument: Dokument }) => {
                         <Heading size="medium">
                             <Link onClick={() => handleDokumentClick(props.dokument)}>{props.dokument.tittel}</Link>
                         </Heading>
-
                         <BodyShort className={styles.linkPanelBeskrivelse}>
                             {DateUtils.formatDateTime(props.dokument.opprettet)}
                             <Tag variant={props.dokument.journalført ? 'success' : 'error'} size="small">
@@ -217,6 +229,9 @@ const EksterntDokumentPanel = (props: { dokument: KlageinstansDokument }) => {
     const datoOpprettet = props.dokument.datoOpprettet
         ? DateUtils.formatDate(props.dokument.datoOpprettet)
         : 'Ukjent dato';
+    const utsendingsinfo = props.dokument.utsendingsinfo;
+    const utsendingsinfoTekst =
+        utsendingsinfo?.fysiskpostSendt?.trim() || utsendingsinfo?.digitalpostSendt?.trim() || null;
 
     const handleDokumentClick = (dokument: KlageinstansDokument) => {
         openPdfInNewTab(getPdfBlob(dokument.pdfBase64));
@@ -224,17 +239,33 @@ const EksterntDokumentPanel = (props: { dokument: KlageinstansDokument }) => {
 
     return (
         <Box background="surface-default" padding="6" borderWidth="1" borderRadius="medium" shadow="small">
-            <HStack justify="space-between" align="center">
-                <HStack align="center">
-                    <FileTextIcon className={styles.dokumentikon} />
-                    <VStack gap="1">
-                        <Heading size="medium">
-                            <Link onClick={() => handleDokumentClick(props.dokument)}>{tittel}</Link>
-                        </Heading>
-                        <BodyShort className={styles.linkPanelBeskrivelse}>{datoOpprettet}</BodyShort>
-                    </VStack>
+            <VStack gap="2">
+                <HStack justify="space-between" align="center">
+                    <HStack align="center">
+                        <FileTextIcon className={styles.dokumentikon} />
+                        <VStack gap="1">
+                            <Heading size="medium">
+                                <Link onClick={() => handleDokumentClick(props.dokument)}>{tittel}</Link>
+                            </Heading>
+                            <BodyShort className={styles.linkPanelBeskrivelse}>{datoOpprettet}</BodyShort>
+                        </VStack>
+                    </HStack>
                 </HStack>
-            </HStack>
+                <Accordion className={styles.eksterntDokumentAccordion} size="small">
+                    <Accordion.Item>
+                        <Accordion.Header>Adresse</Accordion.Header>
+                        <Accordion.Content>
+                            {utsendingsinfoTekst ? (
+                                <BodyShort as="div" className={styles.preWrap}>
+                                    {utsendingsinfoTekst}
+                                </BodyShort>
+                            ) : (
+                                <BodyShort>Vi har ikke noen adresse</BodyShort>
+                            )}
+                        </Accordion.Content>
+                    </Accordion.Item>
+                </Accordion>
+            </VStack>
         </Box>
     );
 };
