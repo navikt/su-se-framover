@@ -32,7 +32,7 @@ import { pipe } from '~src/lib/fp';
 import { useApiCall, useAsyncActionCreator } from '~src/lib/hooks';
 import { navigateToSakIntroWithMessage, saksoversiktValgtSak } from '~src/lib/routes';
 import { Dokument, DokumentIdType } from '~src/types/dokument/Dokument';
-import { KlageinstansDokument } from '~src/types/dokument/KlageinstansDokument';
+import { DokumentUtsendingsinfo, KlageinstansDokument, Utsendingsinfo } from '~src/types/dokument/KlageinstansDokument';
 import * as DateUtils from '~src/utils/date/dateUtils';
 import { getBlob, getPdfBlob } from '~src/utils/dokumentUtils';
 import DokumentHeader from './DokumentHeader';
@@ -61,7 +61,7 @@ const openPdfInNewTab = (blob: Blob) => {
     newWindow.addEventListener('load', revoke, { once: true });
 };
 
-const getUtsendingsinfoTekst = (utsendingsinfo: KlageinstansDokument['utsendingsinfo']) =>
+const getUtsendingsinfoTekst = (utsendingsinfo: Utsendingsinfo | null) =>
     utsendingsinfo?.fysiskpostSendt?.trim() || utsendingsinfo?.digitalpostSendt?.trim() || null;
 
 const DokumenterPage = () => {
@@ -180,7 +180,7 @@ const VisEksterneDokumenter = (props: { sakId: string }) => {
 
 const DokumentPanel = (props: { sakId: string; dokument: Dokument }) => {
     const [skalDistribuere, setSkalDistribuere] = useState<boolean>(false);
-    const [adresseDokument, setAdresseDokument] = useState<KlageinstansDokument | null>(null);
+    const [adresseDokument, setAdresseDokument] = useState<DokumentUtsendingsinfo | null>(null);
     const [adresseStatus, hentAdresse] = useApiCall(hentAdresseForDokument);
     const [adresseApen, setAdresseApen] = useState(false);
     const journalpostId = props.dokument.journalpostId ?? null;
