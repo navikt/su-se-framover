@@ -188,9 +188,9 @@ const DokumentPanel = (props: { sakId: string; dokument: Dokument }) => {
     const utsendingsinfoTekst = getUtsendingsinfoTekst(adresseDokument?.utsendingsinfo ?? null);
 
     const handleAdresseKlikk = () => {
-        const nextOpen = !adresseApen;
-        setAdresseApen(nextOpen);
-        if (nextOpen && kanHenteAdresse && journalpostId && (!adresseDokument || !utsendingsinfoTekst)) {
+        const åpenStatus = !adresseApen;
+        setAdresseApen(åpenStatus);
+        if (åpenStatus && journalpostId && (!adresseDokument || !utsendingsinfoTekst)) {
             hentAdresse({ dokumentId: props.dokument.id, journalpostId }, (dokument) => setAdresseDokument(dokument));
         }
     };
@@ -238,30 +238,34 @@ const DokumentPanel = (props: { sakId: string; dokument: Dokument }) => {
                         />
                     )}
                 </HStack>
-                <Accordion className={styles.eksterntDokumentAccordion} size="small">
-                    <Accordion.Item open={adresseApen}>
-                        <Accordion.Header type="button" onClick={handleAdresseKlikk}>
-                            Adresse
-                        </Accordion.Header>
-                        <Accordion.Content>
-                            {!kanHenteAdresse ? (
-                                <BodyShort>Vi har ikke noen adresse</BodyShort>
-                            ) : !journalpostId ? (
-                                <BodyShort>Vi har ikke noen adresse</BodyShort>
-                            ) : RemoteData.isPending(adresseStatus) ? (
-                                <Loader size="small" title="Henter adresse..." />
-                            ) : RemoteData.isFailure(adresseStatus) ? (
-                                <ApiErrorAlert error={adresseStatus.error} />
-                            ) : utsendingsinfoTekst ? (
-                                <BodyShort as="div" className={styles.preWrap}>
-                                    {utsendingsinfoTekst}
-                                </BodyShort>
-                            ) : adresseDokument ? (
-                                <BodyShort>Vi har ikke noen adresse</BodyShort>
-                            ) : null}
-                        </Accordion.Content>
-                    </Accordion.Item>
-                </Accordion>
+                {kanHenteAdresse ? (
+                    <Accordion className={styles.eksterntDokumentAccordion} size="small">
+                        <Accordion.Item open={adresseApen}>
+                            <Accordion.Header type="button" onClick={handleAdresseKlikk}>
+                                Adresse
+                            </Accordion.Header>
+                            <Accordion.Content>
+                                {!journalpostId ? (
+                                    <BodyShort>Vi har ikke noen adresse</BodyShort>
+                                ) : RemoteData.isPending(adresseStatus) ? (
+                                    <Loader size="small" title="Henter adresse..." />
+                                ) : RemoteData.isFailure(adresseStatus) ? (
+                                    <ApiErrorAlert error={adresseStatus.error} />
+                                ) : utsendingsinfoTekst ? (
+                                    <BodyShort as="div" className={styles.preWrap}>
+                                        {utsendingsinfoTekst}
+                                    </BodyShort>
+                                ) : adresseDokument ? (
+                                    <BodyShort>Vi har ikke noen adresse</BodyShort>
+                                ) : null}
+                            </Accordion.Content>
+                        </Accordion.Item>
+                    </Accordion>
+                ) : (
+                    <BodyShort className={styles.adresseInfo}>
+                        Adresse finnes ikke fordi brevet ikke er distribuert.
+                    </BodyShort>
+                )}
             </VStack>
         </Box>
     );
