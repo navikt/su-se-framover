@@ -246,7 +246,7 @@ const DokumentPanel = (props: { sakId: string; dokument: Dokument }) => {
                             </Accordion.Header>
                             <Accordion.Content>
                                 {!journalpostId ? (
-                                    <BodyShort>Vi har ikke noen adresse</BodyShort>
+                                    <BodyShort>Journalpost-id mangler</BodyShort>
                                 ) : RemoteData.isPending(adresseStatus) ? (
                                     <Loader size="small" title="Henter adresse..." />
                                 ) : RemoteData.isFailure(adresseStatus) ? (
@@ -256,7 +256,7 @@ const DokumentPanel = (props: { sakId: string; dokument: Dokument }) => {
                                         {utsendingsinfoTekst}
                                     </BodyShort>
                                 ) : adresseDokument ? (
-                                    <BodyShort>Vi har ikke noen adresse</BodyShort>
+                                    <BodyShort>Ingen adresse funnet</BodyShort>
                                 ) : null}
                             </Accordion.Content>
                         </Accordion.Item>
