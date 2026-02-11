@@ -28,6 +28,8 @@ export interface Regulering {
 
 export enum Reguleringsstatus {
     OPPRETTET = 'OPPRETTET',
+    BEREGNET = 'BEREGNET',
+    ATTESTERING = 'ATTESTERING',
     IVERKSATT = 'IVERKSATT',
     AVSLUTTET = 'AVSLUTTET',
 }

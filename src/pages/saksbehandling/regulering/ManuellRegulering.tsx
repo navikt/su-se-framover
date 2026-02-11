@@ -31,6 +31,7 @@ import {
     FinnesFlerePerioderAvFradrag,
     FradragErUtenlandsinntekt,
     Regulering,
+    Reguleringsstatus,
     Reguleringssupplement,
     SupplementFor,
     SupplementHarFlereVedtaksperioderForFradrag,
@@ -53,6 +54,7 @@ const ManuellRegulering = () => {
     const props = useOutletContext<SaksoversiktContext>();
     const [regulering, setRegulering] = useState<Regulering | null>(null);
     const [manuellReguleringStatus, hentManuellRegulering] = useApiCall(reguleringApi.hentManuellRegulering);
+    const [tilAttesteringStatus, tilAttestering] = useApiCall(reguleringApi.tilAttestering);
     const [regulerStatus, reguler] = useApiCall(reguleringApi.regulerManuelt);
     const [beregnStatus, beregn] = useApiCall(reguleringApi.beregnRegulering);
 
@@ -96,7 +98,15 @@ const ManuellRegulering = () => {
                 });
             });
         }
-    }, [reguleringId, hentManuellRegulering, form]);
+    }, [reguleringId]);
+
+    const readOnly = () => {
+        if (regulering === null) {
+            return true;
+        }
+        console.log(regulering.reguleringsstatus);
+        return ![Reguleringsstatus.OPPRETTET, Reguleringsstatus.BEREGNET].includes(regulering.reguleringsstatus);
+    };
 
     const submitBeregning = (values: BeregnReguleringForm) => {
         if (regulering != null && reguleringId) {
@@ -116,20 +126,24 @@ const ManuellRegulering = () => {
         }
     };
 
-    const ferdigstillEllerTilAttestering = (reguleringId: string) => {
-        // TODO skal legges til bryter
-        const skalAttestere = false;
-        if (skalAttestere) {
-            // TODO
-            tilSakoversikt();
-        } else {
+    const ferdigstillEllerTilAttestering = () => {
+        if (regulering == null) {
+            return;
+        }
+        if (regulering.reguleringsstatus === Reguleringsstatus.BEREGNET) {
+            tilAttestering(
+                {
+                    reguleringId: regulering.id,
+                },
+                () => tilSakoversikt(),
+            );
+        }
+        if (regulering.reguleringsstatus === Reguleringsstatus.ATTESTERING) {
             reguler(
                 {
-                    reguleringId: reguleringId,
+                    reguleringId: regulering.id,
                 },
-                () => {
-                    tilSakoversikt();
-                },
+                () => tilSakoversikt(),
             );
         }
     };
@@ -179,6 +193,7 @@ const ManuellRegulering = () => {
                                                         name={`uføre.${index}.forventetInntekt`}
                                                         render={({ field }) => (
                                                             <TextField
+                                                                disabled={readOnly()}
                                                                 value={field.value.toString()}
                                                                 size="medium"
                                                                 onChange={field.onChange}
@@ -209,20 +224,23 @@ const ManuellRegulering = () => {
                                                 tilOgMed: parseIsoDateOnly(regulering.periode.tilOgMed),
                                             }}
                                             harEPS={false}
+                                            readonly={readOnly()}
                                         />
                                     ) : (
                                         <p>{formatMessage('ingen.fradrag')}.</p>
                                     )}
                                 </div>
 
-                                <Button
-                                    className={styles.regulering}
-                                    variant="secondary"
-                                    type="submit"
-                                    loading={RemoteData.isPending(beregnStatus)}
-                                >
-                                    Beregn og simuler
-                                </Button>
+                                {regulering.reguleringsstatus !== Reguleringsstatus.ATTESTERING && (
+                                    <Button
+                                        className={styles.regulering}
+                                        variant="secondary"
+                                        type="submit"
+                                        loading={RemoteData.isPending(beregnStatus)}
+                                    >
+                                        Beregn og simuler
+                                    </Button>
+                                )}
 
                                 {RemoteData.isFailure(beregnStatus) && <ApiErrorAlert error={beregnStatus.error} />}
                                 {regulering.beregning && (
@@ -234,6 +252,9 @@ const ManuellRegulering = () => {
                                 )}
                             </form>
 
+                            {RemoteData.isFailure(tilAttesteringStatus) && (
+                                <ApiErrorAlert error={tilAttesteringStatus.error} />
+                            )}
                             {RemoteData.isFailure(regulerStatus) && <ApiErrorAlert error={regulerStatus.error} />}
                             <div className={styles.knapper}>
                                 <Button onClick={navigateBack} variant="secondary" type="button">
@@ -241,10 +262,13 @@ const ManuellRegulering = () => {
                                 </Button>
                                 <Button
                                     disabled={!regulering.beregning}
-                                    onClick={() => ferdigstillEllerTilAttestering(regulering.id)}
-                                    loading={RemoteData.isPending(regulerStatus)}
+                                    onClick={ferdigstillEllerTilAttestering}
+                                    loading={
+                                        RemoteData.isPending(tilAttesteringStatus) ||
+                                        RemoteData.isPending(regulerStatus)
+                                    }
                                 >
-                                    {formatMessage('knapper.send')}
+                                    Til attestering
                                 </Button>
                             </div>
                         </div>

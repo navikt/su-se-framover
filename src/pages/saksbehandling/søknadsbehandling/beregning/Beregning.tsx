@@ -219,6 +219,7 @@ const Beregning = (props: VilkårsvurderingBaseProps & ExtendedBeregningProps) =
                                     hentBosituasjongrunnlag(props.behandling.grunnlagsdataOgVilkårsvurderinger).fnr !==
                                     null
                                 }
+                                readonly={false}
                             />
                         </div>
                         <div className={styles.textareaContainer}>

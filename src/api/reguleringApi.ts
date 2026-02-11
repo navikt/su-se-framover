@@ -140,6 +140,14 @@ export async function beregnRegulering({
     });
 }
 
+export async function tilAttestering({ reguleringId }: { reguleringId: string }): Promise<ApiClientResult<Regulering>> {
+    return apiClient({
+        url: `reguleringer/manuell/${reguleringId}/attestering`,
+        method: 'POST',
+        body: {},
+    });
+}
+
 export async function regulerManuelt({ reguleringId }: { reguleringId: string }): Promise<ApiClientResult<Regulering>> {
     return apiClient({
         url: `reguleringer/manuell/${reguleringId}`,
