@@ -256,7 +256,9 @@ const EksterntDokumentPanel = (props: { dokument: KlageinstansDokument }) => {
                         <Accordion.Header>Adresse</Accordion.Header>
                         <Accordion.Content>
                             {utsendingsinfoTekst ? (
-                                <div style={{ whiteSpace: 'pre-wrap' }}>{utsendingsinfoTekst}</div>
+                                <BodyShort as="div" className={styles.preWrap}>
+                                    {utsendingsinfoTekst}
+                                </BodyShort>
                             ) : (
                                 <BodyShort>Vi har ikke noen adresse</BodyShort>
                             )}

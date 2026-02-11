@@ -1,5 +1,7 @@
 @import '@styles/variables.less';
 
+@dokumentikon-size: 36px;
+
 //----------- Header styles ------------------------------------
 .headerContainer {
     display: flex;
@@ -82,8 +84,8 @@
 
 .dokumentikon {
     margin-right: @spacing;
-    width: 36px;
-    height: 36px;
+    width: @dokumentikon-size;
+    height: @dokumentikon-size;
 }
 
 .linkPanelBeskrivelse {
@@ -97,7 +99,11 @@
 }
 
 .eksterntDokumentAccordion {
-    margin-left: calc(36px + @spacing);
+    margin-left: calc(@dokumentikon-size + @spacing);
+}
+
+.preWrap {
+    white-space: pre-wrap;
 }
 
 .formContainer {
