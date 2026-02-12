@@ -13,8 +13,21 @@ $ cp .env.template .env # for å sette opp lokale miljøvariabler
 $ npm install # installerer avhengigheter
 ```
 
-Starte for lokal utvikling:
+# Moduler release age
+NPM er låst til at pakker må ha en release tid på 20 dager. -> min-release-age=20
+Dette er låst i .npmrc lokalt og i `npm ci --min-release-age 20` for pakker i ci builds.
+Hvis dette skjer får man en slik feilmelding:
+```sh
+    npm error code ETARGET
+    npm error notarget No matching version found for vite-tsconfig-paths@6.0.5 with a date before 1/23/2026, 1:30:50 PM.
+    npm error notarget In most cases you or one of your dependencies are requesting
+    npm error notarget a package version that doesn't exist.
+```
 
+Verifisere min-release-age kan gjøres ved å kjøre `npm config get before` -> en dato for --min-release-age dager siden.
+Kan overstyres lokalt ved å kjøre npm install --min-release-age 5 feks(dager).
+
+Starte for lokal utvikling:
 ```sh
 $ docker compose up # starter Redis og mock-oauth2-server (se under for mer info)
 $ npm start

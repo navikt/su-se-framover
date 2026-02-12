@@ -34,7 +34,7 @@ jobs:
             - name: Ensure npm has min-release-age support
               # Denne versjonen er første med min-release-age support
               run: |
-                npm i -g npm@11.10.0 
+                npm i -g npm@11.10.0
                 npm -v
             - name: install-deps-client-and-server
               run: npm ci --min-release-age 20
