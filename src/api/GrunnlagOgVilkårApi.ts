@@ -12,9 +12,9 @@ import { OpplysningspliktRequest } from '~src/types/grunnlagsdataOgVilkårsvurde
 import { PersonligOppmøteVilkårRequest } from '~src/types/grunnlagsdataOgVilkårsvurderinger/personligOppmøte/PersonligOppmøteVilkår';
 import { UførevilkårRequest } from '~src/types/grunnlagsdataOgVilkårsvurderinger/uføre/Uførevilkår';
 import { UtenlandsoppholdRequest } from '~src/types/grunnlagsdataOgVilkårsvurderinger/utenlandsopphold/Utenlandsopphold';
+import { ManuellTilbakekrevingsbehandling } from '~src/types/ManuellTilbakekrevingsbehandling.ts';
 import { InformasjonsRevurdering, OpprettetRevurdering } from '~src/types/Revurdering';
 import { Søknadsbehandling } from '~src/types/Søknadsbehandling';
-
 import apiClient, { ErrorMessage } from './apiClient';
 
 export enum Behandlingstype {
@@ -127,7 +127,11 @@ export const lagreBosituasjon = async (arg: BehandlingstypeMedApiRequest<Bositua
                 body: { bosituasjoner: arg.bosituasjoner },
             });
         case Behandlingstype.Tilbakekreving:
-            throw new Error('Not implemented');
+            return apiClient<ManuellTilbakekrevingsbehandling>({
+                url: `/saker/${arg.sakId}/tilbakekrevinger/${arg.behandlingId}/bosituasjongrunnlag`,
+                method: 'POST',
+                body: { bosituasjoner: arg.bosituasjoner },
+            });
     }
 };
 
