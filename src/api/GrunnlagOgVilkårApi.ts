@@ -42,7 +42,7 @@ const mapBehandlingstypeTilBaseUrl = (sakId: string, behandlingId: string, b: Be
         case Behandlingstype.Revurdering:
             return `/saker/${sakId}/revurderinger/${behandlingId}`;
         case Behandlingstype.Tilbakekreving:
-            return;
+            return `/saker/${sakId}/tilbakekrevinger/${behandlingId}`;
     }
 };
 
