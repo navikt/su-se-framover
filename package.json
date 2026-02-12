@@ -13,7 +13,7 @@
     "eslint-fix": "biome check --write",
     "lint": "biome check",
     "preview": "vite preview",
-    "postinstall": "cd server && npm ci",
+    "postinstall": "cd server && npm ci --min-release-age 20",
     "start": "NODE_ENV=development nodemon && vite",
     "test": "jest --passWithNoTests",
     "build": "vite build",
@@ -38,7 +38,7 @@
   "license": "MIT",
   "engines": {
     "node": ">=24.1.0 <25.0.0",
-    "npm": ">=11.3.0"
+    "npm": ">=11.10.0"
   },
   "bugs": {
     "url": "https://github.com/navikt/su-se-framover/issues"
