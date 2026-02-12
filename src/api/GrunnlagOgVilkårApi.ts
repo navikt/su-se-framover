@@ -12,7 +12,7 @@ import { OpplysningspliktRequest } from '~src/types/grunnlagsdataOgVilkårsvurde
 import { PersonligOppmøteVilkårRequest } from '~src/types/grunnlagsdataOgVilkårsvurderinger/personligOppmøte/PersonligOppmøteVilkår';
 import { UførevilkårRequest } from '~src/types/grunnlagsdataOgVilkårsvurderinger/uføre/Uførevilkår';
 import { UtenlandsoppholdRequest } from '~src/types/grunnlagsdataOgVilkårsvurderinger/utenlandsopphold/Utenlandsopphold';
-import { InformasjonsRevurdering, OpprettetRevurdering, Tilbakekrevingsbehandling } from '~src/types/Revurdering';
+import { InformasjonsRevurdering, OpprettetRevurdering } from '~src/types/Revurdering';
 import { Søknadsbehandling } from '~src/types/Søknadsbehandling';
 
 import apiClient, { ErrorMessage } from './apiClient';
@@ -42,7 +42,7 @@ const mapBehandlingstypeTilBaseUrl = (sakId: string, behandlingId: string, b: Be
         case Behandlingstype.Revurdering:
             return `/saker/${sakId}/revurderinger/${behandlingId}`;
         case Behandlingstype.Tilbakekreving:
-            return `/saker/${sakId}/tilbakekrevinger/${behandlingId}`;
+            return;
     }
 };
 
@@ -127,11 +127,7 @@ export const lagreBosituasjon = async (arg: BehandlingstypeMedApiRequest<Bositua
                 body: { bosituasjoner: arg.bosituasjoner },
             });
         case Behandlingstype.Tilbakekreving:
-            return apiClient<Tilbakekrevingsbehandling>({
-                url: `/saker/${arg.sakId}/tilbakekrevinger/${arg.behandlingId}/bosituasjongrunnlag`,
-                method: 'POST',
-                body: { bosituasjoner: arg.bosituasjoner },
-            });
+            throw new Error('Not implemented');
     }
 };
 
