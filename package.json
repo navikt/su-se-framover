@@ -13,7 +13,7 @@
     "eslint-fix": "biome check --write",
     "lint": "biome check",
     "preview": "vite preview",
-    "postinstall": "cd server && npm ci --min-release-age 20",
+    "postinstall": "cd server && npm ci",
     "start": "NODE_ENV=development nodemon && vite",
     "test": "jest --passWithNoTests",
     "build": "vite build",
