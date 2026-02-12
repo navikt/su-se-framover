@@ -17,3 +17,7 @@ export interface Utsendingsinfo {
     fysiskpostSendt: Nullable<string>;
     digitalpostSendt: Nullable<string>;
 }
+
+export interface DokumentUtsendingsinfo {
+    utsendingsinfo: Nullable<Utsendingsinfo>;
+}

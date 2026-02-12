@@ -2,6 +2,7 @@ import { Nullable } from '~src/lib/types';
 
 export interface Dokument {
     id: string;
+    journalpostId: Nullable<string>;
     tittel: string;
     opprettet: string;
     dokument: string;

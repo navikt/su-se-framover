@@ -1,6 +1,6 @@
 import { DistribuerDokumentRequest } from '~src/pages/drift/components/dokument/DokumentDistribusjonUtils';
 import { Dokument, DokumentIdType } from '~src/types/dokument/Dokument';
-import { KlageinstansDokument } from '~src/types/dokument/KlageinstansDokument';
+import { DokumentUtsendingsinfo, KlageinstansDokument } from '~src/types/dokument/KlageinstansDokument';
 
 import apiClient, { ApiClientResult } from './apiClient';
 
@@ -17,6 +17,16 @@ export async function hentDokumenter(arg: {
 export async function hentEksterneDokumenter(arg: { sakId: string }): Promise<ApiClientResult<KlageinstansDokument[]>> {
     return apiClient({
         url: `/dokumenter/eksterne?sakId=${arg.sakId}`,
+        method: 'GET',
+    });
+}
+
+export async function hentAdresseForDokument(arg: {
+    dokumentId: string;
+    journalpostId: string;
+}): Promise<ApiClientResult<DokumentUtsendingsinfo>> {
+    return apiClient({
+        url: `/dokumenter/intern/${arg.dokumentId}/${arg.journalpostId}`,
         method: 'GET',
     });
 }
