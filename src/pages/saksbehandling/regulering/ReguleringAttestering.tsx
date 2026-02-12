@@ -1,12 +1,12 @@
 import { useNavigate } from 'react-router-dom';
-import * as reguleringApi from '~src/api/reguleringApi.ts';
-import AttesteringsForm from '~src/components/forms/attesteringForm/AttesteringsForm.tsx';
-import * as sakSlice from '~src/features/saksoversikt/sak.slice.ts';
-import { useApiCall } from '~src/lib/hooks.ts';
-import * as Routes from '~src/lib/routes.ts';
+import * as reguleringApi from '~src/api/reguleringApi';
+import AttesteringsForm from '~src/components/forms/attesteringForm/AttesteringsForm';
+import * as sakSlice from '~src/features/saksoversikt/sak.slice';
+import { useApiCall } from '~src/lib/hooks';
+import * as Routes from '~src/lib/routes';
 import styles from '~src/pages/saksbehandling/regulering/manuellRegulering.module.less';
-import { useAppDispatch } from '~src/redux/Store.ts';
-import { Regulering, UnderkjennelseGrunnRegulering } from '~src/types/Regulering.ts';
+import { useAppDispatch } from '~src/redux/Store';
+import { Regulering, UnderkjennelseGrunnRegulering } from '~src/types/Regulering';
 
 interface Props {
     regulering: Regulering;
@@ -49,7 +49,7 @@ export const ReguleringAttestering = (props: Props) => {
                 behandlingsId={regulering.id}
                 redigerbartBrev={false}
                 sakId={regulering.sakId}
-                behandlingstype={'TILBAKEKREVING'}
+                behandlingstype={'REGULERING'}
                 iverksett={{
                     fn: submitGodkjennAttestering,
                     status: godkjennAttesteringStatus,

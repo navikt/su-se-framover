@@ -1,6 +1,6 @@
 import { UnderkjennelseGrunn, UnderkjennelseGrunnBehandling } from '~src/types/Behandling';
 import { UnderkjennelseGrunnTilbakekreving } from '~src/types/ManuellTilbakekrevingsbehandling';
-import { UnderkjennelseGrunnRegulering } from '~src/types/Regulering.ts';
+import { UnderkjennelseGrunnRegulering } from '~src/types/Regulering';
 
 export const underkjennelsesGrunnTextMapper: { [key in UnderkjennelseGrunn]: string } = {
     [UnderkjennelseGrunnBehandling.ANDRE_FORHOLD]: 'Andre forhold',

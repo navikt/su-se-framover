@@ -21,7 +21,7 @@ import { Nullable } from '~src/lib/types';
 import yup from '~src/lib/validering';
 import { UnderkjennelseGrunn, UnderkjennelseGrunnBehandling } from '~src/types/Behandling';
 import { UnderkjennelseGrunnTilbakekreving } from '~src/types/ManuellTilbakekrevingsbehandling';
-import { UnderkjennelseGrunnRegulering } from '~src/types/Regulering.ts';
+import { UnderkjennelseGrunnRegulering } from '~src/types/Regulering';
 import styles from './attesteringsForm.module.less';
 import messages from './attesteringsForm-nb';
 import UnderkjennelsesForm from './UnderkjennelsesForm';

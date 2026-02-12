@@ -19,7 +19,7 @@ import { useApiCall, useAsyncActionCreator } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
 import * as Routes from '~src/lib/routes';
 import { Nullable } from '~src/lib/types';
-import { ReguleringAttestering } from '~src/pages/saksbehandling/regulering/ReguleringAttestering.tsx';
+import { ReguleringAttestering } from '~src/pages/saksbehandling/regulering/ReguleringAttestering';
 import { måReguleresManuelt } from '~src/types/Fradrag';
 import { Uføregrunnlag } from '~src/types/grunnlagsdataOgVilkårsvurderinger/uføre/Uføregrunnlag';
 import {
