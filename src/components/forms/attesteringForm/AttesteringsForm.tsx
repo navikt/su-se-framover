@@ -3,6 +3,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { Alert, Button, Loader, Radio, RadioGroup } from '@navikt/ds-react';
 import { useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
+import * as tilbakekrevingsApi from 'src/api/tilbakekrevingApi';
 import { FritekstTyper, hentFritekst, redigerFritekst } from '~src/api/fritekstApi.ts';
 import { ReferanseType } from '~src/api/mottakerClient.ts';
 import * as PdfApi from '~src/api/pdfApi.ts';
@@ -117,6 +118,11 @@ export const AttesteringsForm = (props: Props) => {
                     return PdfApi.fetchBrevutkastForSøknadsbehandling(args);
                 case 'KLAGE':
                     return PdfApi.hentBrevutkastForKlage({ sakId: args.sakId, klageId: args.behandlingId });
+                case 'TILBAKEKREVING':
+                    return tilbakekrevingsApi.forhåndsvisVedtaksbrevTilbakekrevingsbehandling({
+                        sakId: args.sakId,
+                        behandlingId: args.behandlingId,
+                    });
                 default:
                     return Promise.resolve({ status: 'ok' as const, data: new Blob(), statusCode: 204 });
             }
@@ -130,9 +136,11 @@ export const AttesteringsForm = (props: Props) => {
     const fritekstType =
         behandlingstype === 'REVURDERING'
             ? FritekstTyper.VEDTAKSBREV_REVURDERING
-            : behandlingstype === 'SØKNAD'
-              ? FritekstTyper.VEDTAKSBREV_SØKNADSBEHANDLING
-              : null;
+            : behandlingstype === 'TILBAKEKREVING'
+              ? FritekstTyper.VEDTAKSBREV_TILBAKEKREVING
+              : behandlingstype === 'SØKNAD'
+                ? FritekstTyper.VEDTAKSBREV_SØKNADSBEHANDLING
+                : null;
 
     useEffect(() => {
         if (!props.behandlingsId || !props.redigerbartBrev || !fritekstType) {
