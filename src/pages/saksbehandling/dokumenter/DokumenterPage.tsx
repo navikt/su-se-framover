@@ -32,7 +32,13 @@ import { pipe } from '~src/lib/fp';
 import { useApiCall, useAsyncActionCreator } from '~src/lib/hooks';
 import { navigateToSakIntroWithMessage, saksoversiktValgtSak } from '~src/lib/routes';
 import { Dokument, DokumentIdType } from '~src/types/dokument/Dokument';
-import { DokumentUtsendingsinfo, KlageinstansDokument, Utsendingsinfo } from '~src/types/dokument/KlageinstansDokument';
+import {
+    DokumentUtsendingsinfo,
+    JournalpostDokumentInfo,
+    Utsendingsinfo,
+    VarselSendt,
+    VarselType,
+} from '~src/types/dokument/JournalpostDokumentInfo.ts';
 import * as DateUtils from '~src/utils/date/dateUtils';
 import { getBlob, getPdfBlob } from '~src/utils/dokumentUtils';
 import DokumentHeader from './DokumentHeader';
@@ -61,8 +67,74 @@ const openPdfInNewTab = (blob: Blob) => {
     newWindow.addEventListener('load', revoke, { once: true });
 };
 
-const getUtsendingsinfoTekst = (utsendingsinfo: Utsendingsinfo | null) =>
-    utsendingsinfo?.fysiskpostSendt?.trim() || utsendingsinfo?.digitalpostSendt?.trim() || null;
+const formatVarselType = (type: VarselType): string => {
+    switch (type) {
+        case VarselType.Epost:
+            return 'E-post';
+        case VarselType.Sms:
+            return 'SMS';
+        default:
+            return 'Ukjent';
+    }
+};
+
+const formatVarselTidspunkt = (varslingstidspunkt: string | null): string | null => {
+    if (!varslingstidspunkt) {
+        return null;
+    }
+
+    const dato = new Date(varslingstidspunkt);
+    if (Number.isNaN(dato.getTime())) {
+        return varslingstidspunkt;
+    }
+
+    return DateUtils.formatDateTime(dato);
+};
+
+const formatVarsel = (varsel: VarselSendt): string => {
+    const deler = [`${formatVarselType(varsel.type)}: ${varsel.adresse}`];
+    const tidspunkt = formatVarselTidspunkt(varsel.varslingstidspunkt);
+
+    if (tidspunkt) {
+        deler.push(`varslet ${tidspunkt}`);
+    }
+
+    if (varsel.passert40TimerSidenVarsling != null) {
+        deler.push(
+            varsel.passert40TimerSidenVarsling
+                ? 'over 40 timer siden varsling (beregnet indikator)'
+                : 'under 40 timer siden varsling (beregnet indikator)',
+        );
+    }
+
+    return `- ${deler.join(', ')}`;
+};
+
+const getUtsendingsinfoTekst = (utsendingsinfo: Utsendingsinfo | null) => {
+    if (!utsendingsinfo) {
+        return null;
+    }
+
+    const linjer: string[] = [];
+    const fysiskpost = utsendingsinfo.fysiskpostSendt?.trim() || null;
+
+    if (fysiskpost) {
+        linjer.push('Fysisk post sendt til:');
+        linjer.push(fysiskpost);
+    }
+
+    if (utsendingsinfo.digitalpostSendt) {
+        linjer.push('Digital post sendt');
+    }
+
+    const varsler = utsendingsinfo.varselSendt ?? [];
+    if (varsler.length > 0) {
+        linjer.push('Varsel sendt:');
+        linjer.push(...varsler.map(formatVarsel));
+    }
+
+    return linjer.length > 0 ? linjer.join('\n') : null;
+};
 
 const DokumenterPage = () => {
     const props = useOutletContext<SaksoversiktContext>();
@@ -190,7 +262,7 @@ const DokumentPanel = (props: { sakId: string; dokument: Dokument }) => {
     const handleAdresseKlikk = () => {
         const åpenStatus = !adresseApen;
         setAdresseApen(åpenStatus);
-        if (åpenStatus && journalpostId && (!adresseDokument || !utsendingsinfoTekst)) {
+        if (åpenStatus && journalpostId && !adresseDokument) {
             hentAdresse({ dokumentId: props.dokument.id, journalpostId }, (dokument) => setAdresseDokument(dokument));
         }
     };
@@ -242,7 +314,7 @@ const DokumentPanel = (props: { sakId: string; dokument: Dokument }) => {
                     <Accordion className={styles.eksterntDokumentAccordion} size="small">
                         <Accordion.Item open={adresseApen}>
                             <Accordion.Header type="button" onClick={handleAdresseKlikk}>
-                                Adresse
+                                Utsendingsinfo
                             </Accordion.Header>
                             <Accordion.Content>
                                 {!journalpostId ? (
@@ -256,7 +328,7 @@ const DokumentPanel = (props: { sakId: string; dokument: Dokument }) => {
                                         {utsendingsinfoTekst}
                                     </BodyShort>
                                 ) : adresseDokument ? (
-                                    <BodyShort>Ingen adresse funnet</BodyShort>
+                                    <BodyShort>Ingen utsendingsinfo funnet</BodyShort>
                                 ) : null}
                             </Accordion.Content>
                         </Accordion.Item>
@@ -271,14 +343,14 @@ const DokumentPanel = (props: { sakId: string; dokument: Dokument }) => {
     );
 };
 
-const EksterntDokumentPanel = (props: { dokument: KlageinstansDokument }) => {
+const EksterntDokumentPanel = (props: { dokument: JournalpostDokumentInfo }) => {
     const tittel = props.dokument.dokumentTittel ?? props.dokument.journalpostTittel ?? 'Uten tittel';
     const datoOpprettet = props.dokument.datoOpprettet
         ? DateUtils.formatDate(props.dokument.datoOpprettet)
         : 'Ukjent dato';
     const utsendingsinfoTekst = getUtsendingsinfoTekst(props.dokument.utsendingsinfo);
 
-    const handleDokumentClick = (dokument: KlageinstansDokument) => {
+    const handleDokumentClick = (dokument: JournalpostDokumentInfo) => {
         openPdfInNewTab(getPdfBlob(dokument.pdfBase64));
     };
 
@@ -298,14 +370,14 @@ const EksterntDokumentPanel = (props: { dokument: KlageinstansDokument }) => {
                 </HStack>
                 <Accordion className={styles.eksterntDokumentAccordion} size="small">
                     <Accordion.Item>
-                        <Accordion.Header>Adresse</Accordion.Header>
+                        <Accordion.Header>Utsendingsinfo</Accordion.Header>
                         <Accordion.Content>
                             {utsendingsinfoTekst ? (
                                 <BodyShort as="div" className={styles.preWrap}>
                                     {utsendingsinfoTekst}
                                 </BodyShort>
                             ) : (
-                                <BodyShort>Vi har ikke noen adresse</BodyShort>
+                                <BodyShort>Vi har ikke utsendingsinfo</BodyShort>
                             )}
                         </Accordion.Content>
                     </Accordion.Item>

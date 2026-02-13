@@ -18,11 +18,11 @@ const formatDateOptions: FormatDateOptions = {
     day: '2-digit',
 };
 
-export const formatDateTime = (time: string) => {
+export const formatDateTime = (time: string | Date) => {
     return `${formatDate(time)} ${intl.formatTime(time)}`;
 };
 
-export const formatDate = (date: string) => intl.formatDate(date, formatDateOptions);
+export const formatDate = (date: string | Date) => intl.formatDate(date, formatDateOptions);
 
 export const formatMonthYear = (date: string | Date) =>
     intl.formatDate(date, {
