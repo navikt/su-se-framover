@@ -19,6 +19,7 @@ import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useNavigate, useOutletContext } from 'react-router-dom';
 
+import { ApiError } from '~src/api/apiClient';
 import { distribuerDokument, hentAdresseForDokument, hentEksterneDokumenter } from '~src/api/dokumentApi';
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
 import DokumentDistribusjonForm from '~src/components/forms/dokument/distribusjon/DokumentDistribusjonForm';
@@ -64,6 +65,19 @@ const openPdfInNewTab = (blob: Blob) => {
 const getUtsendingsinfoTekst = (utsendingsinfo: Utsendingsinfo | null) =>
     utsendingsinfo?.fysiskpostSendt?.trim() || utsendingsinfo?.digitalpostSendt?.trim() || null;
 
+const HentDokumenterFeil = (props: { error: ApiError; onRetry: () => void; retryLabel: string }) => (
+    <VStack gap="3">
+        <ApiErrorAlert error={props.error}>
+            <BodyShort>Korrelasjonsid: {props.error.correlationId}</BodyShort>
+        </ApiErrorAlert>
+        <div>
+            <Button type="button" size="small" variant="secondary" onClick={props.onRetry}>
+                {props.retryLabel}
+            </Button>
+        </div>
+    </VStack>
+);
+
 const DokumenterPage = () => {
     const props = useOutletContext<SaksoversiktContext>();
     const navigate = useNavigate();
@@ -99,12 +113,14 @@ const DokumenterPage = () => {
 
 export const VisDokumenter = (props: { id: string; idType: DokumentIdType; ingenBrevTekst?: string }) => {
     const [dokumenterState, fetchDokumenter] = useAsyncActionCreator(sakSlice.hentDokumenter);
-
-    useEffect(() => {
+    const hentDokumenter = () =>
         fetchDokumenter({
             id: props.id,
             idType: props.idType,
         });
+
+    useEffect(() => {
+        hentDokumenter();
     }, [props.id, props.idType]);
 
     return pipe(
@@ -115,7 +131,7 @@ export const VisDokumenter = (props: { id: string; idType: DokumentIdType; ingen
                     <Loader size="large" title="Henter brev..." />
                 </div>
             ),
-            (err) => <ApiErrorAlert error={err} />,
+            (err) => <HentDokumenterFeil error={err} onRetry={hentDokumenter} retryLabel="Prøv å hente brev igjen" />,
             (dokumenter) =>
                 dokumenter.length === 0 ? (
                     <Alert variant="info">{props.ingenBrevTekst ?? 'Fant ingen brev'}</Alert>
@@ -136,9 +152,10 @@ export const VisDokumenter = (props: { id: string; idType: DokumentIdType; ingen
 
 const VisEksterneDokumenter = (props: { sakId: string }) => {
     const [dokumenterState, fetchDokumenter] = useApiCall(hentEksterneDokumenter);
+    const hentEksterneDokumenterPåNytt = () => fetchDokumenter({ sakId: props.sakId });
 
     useEffect(() => {
-        fetchDokumenter({ sakId: props.sakId });
+        hentEksterneDokumenterPåNytt();
     }, [props.sakId]);
 
     return pipe(
@@ -149,7 +166,13 @@ const VisEksterneDokumenter = (props: { sakId: string }) => {
                     <Loader size="large" title="Henter eksterne dokumenter..." />
                 </div>
             ),
-            (err) => <ApiErrorAlert error={err} />,
+            (err) => (
+                <HentDokumenterFeil
+                    error={err}
+                    onRetry={hentEksterneDokumenterPåNytt}
+                    retryLabel="Prøv å hente eksterne dokumenter igjen"
+                />
+            ),
             (dokumenter) => {
                 if (dokumenter.length === 0) {
                     return <Alert variant="info">Fant ingen eksterne dokumenter for klage</Alert>;

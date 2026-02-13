@@ -45,6 +45,7 @@ export const server = {
     host: envVar({ name: 'HOST', defaultValue: 'localhost' }),
     port: Number.parseInt(envVar({ name: 'PORT', defaultValue: '5678' })),
     suSeBakoverUrl: envVar({ name: 'SU_SE_BAKOVER_URL', defaultValue: 'http://localhost:8080' }),
+    proxyTimeoutMs: Number.parseInt(envVar({ name: 'PROXY_TIMEOUT_MS', defaultValue: '15000' })),
 
     frontendDir: envVar({ name: 'FRONTEND_DIR', defaultValue: path.join(__dirname, 'frontend') }),
 
