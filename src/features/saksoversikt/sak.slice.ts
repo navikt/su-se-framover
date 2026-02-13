@@ -489,8 +489,6 @@ const oppdaterBehandlingISak = (
             return oppdaterSøknadsbehandlingISak(sak, v as Søknadsbehandling);
         case Behandlingstype.Revurdering:
             return oppdaterRevurderingISak(sak, (v as RevurderingOgFeilmeldinger).revurdering);
-        /*case Behandlingstype.Tilbakekreving:
-            return oppdaterTilbakekrevingPåSak(sak, v as unknown as ManuellTilbakekrevingsbehandling);*/
     }
 };
 
