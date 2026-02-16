@@ -336,7 +336,7 @@ const DokumentPanel = (props: { sakId: string; dokument: Dokument }) => {
                                 {!journalpostId ? (
                                     <BodyShort>Journalpost-id mangler</BodyShort>
                                 ) : RemoteData.isPending(adresseStatus) ? (
-                                    <Loader size="small" title="Henter adresse..." />
+                                    <Loader size="small" title="Henter utsendingsinfo..." />
                                 ) : RemoteData.isFailure(adresseStatus) ? (
                                     <ApiErrorAlert error={adresseStatus.error} />
                                 ) : utsendingsinfoTekst ? (
