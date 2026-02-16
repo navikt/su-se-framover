@@ -2,7 +2,7 @@ import * as RemoteData from '@devexperts/remote-data-ts';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Radio, RadioGroup } from '@navikt/ds-react';
 import { useEffect, useRef } from 'react';
-import { Controller, UseFormTrigger, useForm } from 'react-hook-form';
+import { Controller, UseFormTrigger, useForm, useWatch } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import { FritekstTyper, hentFritekst } from '~src/api/fritekstApi.ts';
 import { forhåndsvisVedtaksbrevTilbakekrevingsbehandling } from '~src/api/tilbakekrevingApi';
@@ -105,9 +105,18 @@ const BrevForTilbakekreving = (props: {
         );
     };
 
-    const watch = form.watch();
+    const skalSendeBrev = useWatch({
+        control: form.control,
+        name: 'skalSendeBrev',
+    });
+    const fritekst =
+        useWatch({
+            control: form.control,
+            name: 'fritekst',
+        }) ?? '';
+
     useEffect(() => {
-        if (!watch.skalSendeBrev) return;
+        if (!skalSendeBrev) return;
         const referanseId = props.tilbakekreving.id;
         if (!referanseId) return;
 
@@ -117,10 +126,12 @@ const BrevForTilbakekreving = (props: {
             type: FritekstTyper.VEDTAKSBREV_TILBAKEKREVING,
         }).then((res) => {
             if (res.status === 'ok' && res.data) {
-                form.setValue('fritekst', res.data.fritekst ?? '');
+                form.resetField('fritekst', { defaultValue: res.data.fritekst ?? '' });
+                return;
             }
+            form.setError('fritekst', { message: 'Kunne ikke hente fritekst' });
         });
-    }, [watch.skalSendeBrev, props.tilbakekreving.id, props.sakId]);
+    }, [skalSendeBrev, props.tilbakekreving.id, props.sakId]);
     return (
         <ToKolonner tittel={formatMessage('brevForTilbakekreving.tittel')}>
             {{
@@ -145,26 +156,32 @@ const BrevForTilbakekreving = (props: {
                             )}
                         />
                         <div className={styles.textareaContainer}>
-                            {form.watch('skalSendeBrev') && (
+                            {skalSendeBrev && (
                                 <TextareaWithAutosave
                                     textarea={{
                                         name: 'fritekst',
                                         label: formatMessage('brevForTilbakekreving.fritekst.label'),
                                         control: form.control,
-                                        value: form.watch('fritekst') ?? '',
+                                        value: fritekst,
                                         description: [formatMessage('brevForTilbakekreving.fritekst.description')],
                                     }}
                                     save={{
                                         handleSave: () => {
-                                            if (form.getValues('skalSendeBrev')) {
-                                                handleBrevtekstSave(
-                                                    {
-                                                        skalSendeBrev: form.getValues('skalSendeBrev'),
-                                                        fritekst: form.getValues('fritekst')!,
-                                                    },
-                                                    () => void 0,
-                                                );
-                                            }
+                                            if (!skalSendeBrev) return;
+
+                                            const { isDirty } = form.getFieldState('fritekst');
+                                            if (!isDirty) return;
+                                            handleBrevtekstSave(
+                                                {
+                                                    skalSendeBrev,
+                                                    fritekst: form.getValues('fritekst'),
+                                                },
+                                                () => {
+                                                    form.resetField('fritekst', {
+                                                        defaultValue: form.getValues('fritekst'),
+                                                    });
+                                                },
+                                            );
                                         },
                                         status: saveBrevtekstStatus,
                                     }}
