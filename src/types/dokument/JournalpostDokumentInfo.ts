@@ -1,6 +1,6 @@
 import { Nullable } from '~src/lib/types';
 
-export interface KlageinstansDokument {
+export interface JournalpostDokumentInfo {
     journalpostId: string;
     journalpostTittel: Nullable<string>;
     datoOpprettet: Nullable<string>;
@@ -15,7 +15,28 @@ export interface KlageinstansDokument {
 
 export interface Utsendingsinfo {
     fysiskpostSendt: Nullable<string>;
-    digitalpostSendt: Nullable<string>;
+    digitalpostSendt: boolean;
+    varselSendt: VarselSendt[];
+    prioritertKanal: PrioritertKanal;
+}
+
+export interface VarselSendt {
+    type: VarselType;
+    adresse: string;
+    varslingstidspunkt: Nullable<string>;
+    passert40TimerSidenVarsling: Nullable<boolean>;
+}
+
+export enum VarselType {
+    Epost = 'EPOST',
+    Sms = 'SMS',
+    Ukjent = 'UKJENT',
+}
+
+export enum PrioritertKanal {
+    Fysiskpost = 'FYSISKPOST',
+    Digitalpost = 'DIGITALPOST',
+    Varsel = 'VARSEL',
 }
 
 export interface DokumentUtsendingsinfo {
