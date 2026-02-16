@@ -13,6 +13,11 @@ import {
 } from '~src/components/forms/vilkårOgGrunnlagForms/fradrag/FradragFormUtils';
 import OppsummeringAvBeregningOgSimulering from '~src/components/oppsummering/oppsummeringAvBeregningOgsimulering/OppsummeringAvBeregningOgSimulering';
 import { OppsummeringPar } from '~src/components/oppsummering/oppsummeringpar/OppsummeringPar';
+import Oppsummeringspanel, {
+    Oppsummeringsfarge,
+    Oppsummeringsikon,
+} from '~src/components/oppsummering/oppsummeringspanel/Oppsummeringspanel.tsx';
+import UnderkjenteAttesteringer from '~src/components/underkjenteAttesteringer/UnderkjenteAttesteringer.tsx';
 import { SaksoversiktContext } from '~src/context/SaksoversiktContext';
 import * as sakSlice from '~src/features/saksoversikt/sak.slice';
 import { useApiCall, useAsyncActionCreator } from '~src/lib/hooks';
@@ -253,6 +258,8 @@ const ManuellRegulering = () => {
                                     />
                                 )}
                             </form>
+
+                            <ReguleringUnderkjent regulering={regulering} />
 
                             {RemoteData.isFailure(tilAttesteringStatus) && (
                                 <ApiErrorAlert error={tilAttesteringStatus.error} />
@@ -548,6 +555,21 @@ const ÅrsakForManuellRegulering = (props: { årsaker: ÅrsakForManuell[] }) => 
         </Alert>
     ) : (
         <></>
+    );
+};
+
+const ReguleringUnderkjent = ({ regulering }: { regulering: Regulering }) => {
+    if (regulering.attesteringer.filter((att) => att.underkjennelse != null).length < 1) {
+        return null;
+    }
+    return (
+        <Oppsummeringspanel
+            ikon={Oppsummeringsikon.Liste}
+            farge={Oppsummeringsfarge.Lilla}
+            tittel={'Oppsummering regulering'}
+        >
+            <UnderkjenteAttesteringer attesteringer={regulering.attesteringer} />
+        </Oppsummeringspanel>
     );
 };
 
