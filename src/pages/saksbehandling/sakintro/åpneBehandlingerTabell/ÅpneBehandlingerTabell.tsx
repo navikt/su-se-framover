@@ -510,7 +510,7 @@ const ReguleringKnapper = (props: { sakId: string; r: Regulering }) => {
 
     if (underAttestering) {
         if (!user.isAttestant || user.navIdent === props.r.saksbehandler) {
-            return <></>;
+            return null;
         }
     }
 
