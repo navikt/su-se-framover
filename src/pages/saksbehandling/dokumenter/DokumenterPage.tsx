@@ -92,10 +92,6 @@ const formatVarselTidspunkt = (varslingstidspunkt: string | null): string | null
 };
 
 const formatVarselMottaker = (varsel: VarselSendt): string => {
-    return `- ${formatVarselType(varsel.type)}: ${varsel.adresse}`;
-};
-
-const formatVarselStatus = (varsel: VarselSendt): string | null => {
     const tidspunkt = formatVarselTidspunkt(varsel.varslingstidspunkt);
     const deler: string[] = [];
 
@@ -106,16 +102,16 @@ const formatVarselStatus = (varsel: VarselSendt): string | null => {
     if (varsel.passert40TimerSidenVarsling != null) {
         deler.push(
             varsel.passert40TimerSidenVarsling
-                ? 'over 40 timer siden varsling, om bruker har åpnet denne kommer det ingen mer utsendingsinfo'
-                : 'under 40 timer siden varsling, fysisk post blir sendt om bruker ikke åpner varselet innen 40 timer',
+                ? 'over 40 timer siden varsling (indikasjon)'
+                : 'under 40 timer siden varsling (indikasjon)',
         );
     }
 
     if (deler.length === 0) {
-        return null;
+        return `- ${formatVarselType(varsel.type)}: ${varsel.adresse}`;
     }
 
-    return deler.join(', ');
+    return `- ${formatVarselType(varsel.type)}: ${varsel.adresse}, ${deler.join(', ')}`;
 };
 
 const getUtsendingsinfoTekst = (utsendingsinfo: Utsendingsinfo | null) => {
@@ -138,29 +134,19 @@ const getUtsendingsinfoTekst = (utsendingsinfo: Utsendingsinfo | null) => {
         linjer.push('Digital post sendt (egen kanal, uavhengig av fysisk post).');
     }
 
-    const varsler = utsendingsinfo.varselSendt ?? [];
+    const varsler = utsendingsinfo.varselSendt;
     if (varsler.length > 0) {
         if (linjer.length > 0) {
             linjer.push('');
         }
         const harSms = varsler.some((varsel) => varsel.type === VarselType.Sms);
-        const harEpost = varsler.some((varsel) => varsel.type === VarselType.Epost);
-        if (harSms && harEpost) {
-            linjer.push('Varsel sendt til SMS og e-post.');
-        } else if (harSms) {
+        if (harSms) {
             linjer.push('Varsel sendt til SMS.');
-        } else if (harEpost) {
-            linjer.push('Varsel sendt til e-post.');
         } else {
-            linjer.push('Varsel sendt.');
+            linjer.push('Varsel sendt til e-post.');
         }
 
         linjer.push(...varsler.map(formatVarselMottaker));
-
-        const varselStatus = varsler.map(formatVarselStatus).filter((status): status is string => status !== null);
-        if (varselStatus.length > 0) {
-            linjer.push(varselStatus.join(' | '));
-        }
     }
 
     return linjer.length > 0 ? linjer.join('\n') : null;
