@@ -38,7 +38,7 @@ import {
     Utsendingsinfo,
     VarselSendt,
     VarselType,
-} from '~src/types/dokument/JournalpostDokumentInfo.ts';
+} from '~src/types/dokument/JournalpostDokumentInfo';
 import * as DateUtils from '~src/utils/date/dateUtils';
 import { getBlob, getPdfBlob } from '~src/utils/dokumentUtils';
 import DokumentHeader from './DokumentHeader';

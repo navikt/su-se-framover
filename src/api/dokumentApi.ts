@@ -1,6 +1,6 @@
 import { DistribuerDokumentRequest } from '~src/pages/drift/components/dokument/DokumentDistribusjonUtils';
 import { Dokument, DokumentIdType } from '~src/types/dokument/Dokument';
-import { DokumentUtsendingsinfo, JournalpostDokumentInfo } from '~src/types/dokument/JournalpostDokumentInfo.ts';
+import { DokumentUtsendingsinfo, JournalpostDokumentInfo } from '~src/types/dokument/JournalpostDokumentInfo';
 
 import apiClient, { ApiClientResult } from './apiClient';
 
