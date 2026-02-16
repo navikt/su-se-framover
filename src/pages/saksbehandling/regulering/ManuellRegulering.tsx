@@ -141,7 +141,19 @@ const ManuellRegulering = () => {
     if (RemoteData.isPending(manuellReguleringStatus)) {
         return <Loader />;
     }
-    if (RemoteData.isSuccess(manuellReguleringStatus) && regulering !== null) {
+    if (!RemoteData.isSuccess(manuellReguleringStatus) || regulering === null) {
+        return (
+            <div className={styles.feil}>
+                {RemoteData.isFailure(manuellReguleringStatus) && (
+                    <ApiErrorAlert error={manuellReguleringStatus.error} />
+                )}
+                <Alert variant="error">{formatMessage('fantIkkeRegulering')}</Alert>
+                <Button onClick={navigateBack} variant="secondary" type="button">
+                    {formatMessage('knapper.tilbake')}
+                </Button>
+            </div>
+        );
+    } else {
         const { uføre, fradrag } = manuellReguleringStatus.value.gjeldendeVedtaksdata;
         const uføregrunnlag = uføre?.vurderinger.map((v) => v?.grunnlag).filter(filtrerRegulerbarIEU) ?? [];
         const harRegulerbarIEU = uføregrunnlag.some((v) => v.forventetInntekt > 0);
@@ -264,18 +276,6 @@ const ManuellRegulering = () => {
                     </div>
                     <SupplementOversikt supplement={regulering.supplement} />
                 </main>
-            </div>
-        );
-    } else {
-        return (
-            <div className={styles.feil}>
-                {RemoteData.isFailure(manuellReguleringStatus) && (
-                    <ApiErrorAlert error={manuellReguleringStatus.error} />
-                )}
-                <Alert variant="error">{formatMessage('fantIkkeRegulering')}</Alert>
-                <Button onClick={navigateBack} variant="secondary" type="button">
-                    {formatMessage('knapper.tilbake')}
-                </Button>
             </div>
         );
     }
