@@ -106,7 +106,7 @@ const ManuellRegulering = () => {
         }
         return ![Reguleringsstatus.OPPRETTET, Reguleringsstatus.BEREGNET].includes(regulering.reguleringsstatus);
     };
-    const underAttestering = () => regulering?.reguleringsstatus === Reguleringsstatus.ATTESTERING;
+    const underAttestering = regulering?.reguleringsstatus === Reguleringsstatus.ATTESTERING;
 
     const submitBeregning = (values: BeregnReguleringForm) => {
         if (regulering != null && reguleringId) {
@@ -233,7 +233,7 @@ const ManuellRegulering = () => {
                                     )}
                                 </div>
 
-                                {!underAttestering() && (
+                                {!underAttestering && (
                                     <Button
                                         className={styles.regulering}
                                         variant="secondary"
@@ -257,7 +257,7 @@ const ManuellRegulering = () => {
                             {RemoteData.isFailure(tilAttesteringStatus) && (
                                 <ApiErrorAlert error={tilAttesteringStatus.error} />
                             )}
-                            {!underAttestering() && (
+                            {!underAttestering && (
                                 <div className={styles.knapper}>
                                     <Button onClick={navigateBack} variant="secondary" type="button">
                                         {formatMessage('knapper.tilbake')}
@@ -271,7 +271,7 @@ const ManuellRegulering = () => {
                                     </Button>
                                 </div>
                             )}
-                            {underAttestering() && <ReguleringAttestering regulering={regulering} />}
+                            {underAttestering && <ReguleringAttestering regulering={regulering} />}
                         </div>
                     </div>
                     <SupplementOversikt supplement={regulering.supplement} />
