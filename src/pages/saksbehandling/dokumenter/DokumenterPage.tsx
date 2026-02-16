@@ -107,7 +107,7 @@ const formatVarselStatus = (varsel: VarselSendt): string | null => {
         deler.push(
             varsel.passert40TimerSidenVarsling
                 ? 'over 40 timer siden varsling, om bruker har åpnet denne kommer det ingen mer utsendingsinfo'
-                : 'under 40 timer siden varsling, fysisk post kan komme med adresse om bruker ikke åpner varselet innen 40 timer',
+                : 'under 40 timer siden varsling, fysisk post blir sendt om bruker ikke åpner varselet innen 40 timer',
         );
     }
 
