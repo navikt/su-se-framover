@@ -94,7 +94,6 @@ export default {
     'datacell.info.knapp.avsluttBehandling': 'Avslutt behandling',
     'datacell.info.knapp.Fortsett': 'Fortsett',
     'datacell.info.knapp.avbryt': 'Avbryt',
-    'datacell.info.knapp.regulering.start': 'Start regulering',
     'dataCell.info.knapp.regulering.modal.tittel': 'Er du sikker på at du ønsker å lukke reguleringen?',
     'dataCell.info.knapp.attestering.modal.tittel': 'Er du sikker på at du ønsker å returnere behandlingen?',
 

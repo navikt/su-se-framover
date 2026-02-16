@@ -140,11 +140,39 @@ export async function beregnRegulering({
     });
 }
 
-export async function regulerManuelt({ reguleringId }: { reguleringId: string }): Promise<ApiClientResult<Regulering>> {
+export async function tilAttestering({ reguleringId }: { reguleringId: string }): Promise<ApiClientResult<Regulering>> {
     return apiClient({
-        url: `reguleringer/manuell/${reguleringId}`,
+        url: `reguleringer/manuell/${reguleringId}/attestering`,
         method: 'POST',
         body: {},
+    });
+}
+
+export async function godkjennAttestering({
+    reguleringId,
+}: {
+    reguleringId: string;
+}): Promise<ApiClientResult<Regulering>> {
+    return apiClient({
+        url: `reguleringer/manuell/${reguleringId}/attestering/godkjenn`,
+        method: 'POST',
+        body: {},
+    });
+}
+
+export async function underkjennAttestering({
+    reguleringId,
+    kommentar,
+}: {
+    reguleringId: string;
+    kommentar: string;
+}): Promise<ApiClientResult<Regulering>> {
+    return apiClient({
+        url: `reguleringer/manuell/${reguleringId}/attestering/underkjenn`,
+        method: 'POST',
+        body: {
+            kommentar: kommentar,
+        },
     });
 }
 

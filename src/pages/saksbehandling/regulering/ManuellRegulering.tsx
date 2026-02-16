@@ -19,6 +19,7 @@ import { useApiCall, useAsyncActionCreator } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
 import * as Routes from '~src/lib/routes';
 import { Nullable } from '~src/lib/types';
+import { ReguleringAttestering } from '~src/pages/saksbehandling/regulering/ReguleringAttestering';
 import { måReguleresManuelt } from '~src/types/Fradrag';
 import { Uføregrunnlag } from '~src/types/grunnlagsdataOgVilkårsvurderinger/uføre/Uføregrunnlag';
 import {
@@ -31,6 +32,7 @@ import {
     FinnesFlerePerioderAvFradrag,
     FradragErUtenlandsinntekt,
     Regulering,
+    Reguleringsstatus,
     Reguleringssupplement,
     SupplementFor,
     SupplementHarFlereVedtaksperioderForFradrag,
@@ -53,7 +55,7 @@ const ManuellRegulering = () => {
     const props = useOutletContext<SaksoversiktContext>();
     const [regulering, setRegulering] = useState<Regulering | null>(null);
     const [manuellReguleringStatus, hentManuellRegulering] = useApiCall(reguleringApi.hentManuellRegulering);
-    const [regulerStatus, reguler] = useApiCall(reguleringApi.regulerManuelt);
+    const [tilAttesteringStatus, tilAttestering] = useApiCall(reguleringApi.tilAttestering);
     const [beregnStatus, beregn] = useApiCall(reguleringApi.beregnRegulering);
 
     const navigate = useNavigate();
@@ -96,7 +98,15 @@ const ManuellRegulering = () => {
                 });
             });
         }
-    }, [reguleringId, hentManuellRegulering, form]);
+    }, [reguleringId]);
+
+    const readOnly = () => {
+        if (regulering === null) {
+            return true;
+        }
+        return ![Reguleringsstatus.OPPRETTET, Reguleringsstatus.BEREGNET].includes(regulering.reguleringsstatus);
+    };
+    const underAttestering = regulering?.reguleringsstatus === Reguleringsstatus.ATTESTERING;
 
     const submitBeregning = (values: BeregnReguleringForm) => {
         if (regulering != null && reguleringId) {
@@ -116,28 +126,34 @@ const ManuellRegulering = () => {
         }
     };
 
-    const ferdigstillEllerTilAttestering = (reguleringId: string) => {
-        // TODO skal legges til bryter
-        const skalAttestere = false;
-        if (skalAttestere) {
-            // TODO
-            tilSakoversikt();
-        } else {
-            reguler(
-                {
-                    reguleringId: reguleringId,
-                },
-                () => {
-                    tilSakoversikt();
-                },
-            );
+    const ferdigstillEllerTilAttestering = () => {
+        if (regulering == null) {
+            return;
         }
+        tilAttestering(
+            {
+                reguleringId: regulering.id,
+            },
+            () => tilSakoversikt(),
+        );
     };
 
     if (RemoteData.isPending(manuellReguleringStatus)) {
         return <Loader />;
     }
-    if (RemoteData.isSuccess(manuellReguleringStatus) && regulering !== null) {
+    if (!RemoteData.isSuccess(manuellReguleringStatus) || regulering === null) {
+        return (
+            <div className={styles.feil}>
+                {RemoteData.isFailure(manuellReguleringStatus) && (
+                    <ApiErrorAlert error={manuellReguleringStatus.error} />
+                )}
+                <Alert variant="error">{formatMessage('fantIkkeRegulering')}</Alert>
+                <Button onClick={navigateBack} variant="secondary" type="button">
+                    {formatMessage('knapper.tilbake')}
+                </Button>
+            </div>
+        );
+    } else {
         const { uføre, fradrag } = manuellReguleringStatus.value.gjeldendeVedtaksdata;
         const uføregrunnlag = uføre?.vurderinger.map((v) => v?.grunnlag).filter(filtrerRegulerbarIEU) ?? [];
         const harRegulerbarIEU = uføregrunnlag.some((v) => v.forventetInntekt > 0);
@@ -179,6 +195,7 @@ const ManuellRegulering = () => {
                                                         name={`uføre.${index}.forventetInntekt`}
                                                         render={({ field }) => (
                                                             <TextField
+                                                                disabled={readOnly()}
                                                                 value={field.value.toString()}
                                                                 size="medium"
                                                                 onChange={field.onChange}
@@ -209,20 +226,23 @@ const ManuellRegulering = () => {
                                                 tilOgMed: parseIsoDateOnly(regulering.periode.tilOgMed),
                                             }}
                                             harEPS={false}
+                                            readonly={readOnly()}
                                         />
                                     ) : (
                                         <p>{formatMessage('ingen.fradrag')}.</p>
                                     )}
                                 </div>
 
-                                <Button
-                                    className={styles.regulering}
-                                    variant="secondary"
-                                    type="submit"
-                                    loading={RemoteData.isPending(beregnStatus)}
-                                >
-                                    Beregn og simuler
-                                </Button>
+                                {!underAttestering && (
+                                    <Button
+                                        className={styles.regulering}
+                                        variant="secondary"
+                                        type="submit"
+                                        loading={RemoteData.isPending(beregnStatus)}
+                                    >
+                                        Beregn og simuler
+                                    </Button>
+                                )}
 
                                 {RemoteData.isFailure(beregnStatus) && <ApiErrorAlert error={beregnStatus.error} />}
                                 {regulering.beregning && (
@@ -234,35 +254,28 @@ const ManuellRegulering = () => {
                                 )}
                             </form>
 
-                            {RemoteData.isFailure(regulerStatus) && <ApiErrorAlert error={regulerStatus.error} />}
-                            <div className={styles.knapper}>
-                                <Button onClick={navigateBack} variant="secondary" type="button">
-                                    {formatMessage('knapper.tilbake')}
-                                </Button>
-                                <Button
-                                    disabled={!regulering.beregning}
-                                    onClick={() => ferdigstillEllerTilAttestering(regulering.id)}
-                                    loading={RemoteData.isPending(regulerStatus)}
-                                >
-                                    {formatMessage('knapper.send')}
-                                </Button>
-                            </div>
+                            {RemoteData.isFailure(tilAttesteringStatus) && (
+                                <ApiErrorAlert error={tilAttesteringStatus.error} />
+                            )}
+                            {!underAttestering && (
+                                <div className={styles.knapper}>
+                                    <Button onClick={navigateBack} variant="secondary" type="button">
+                                        {formatMessage('knapper.tilbake')}
+                                    </Button>
+                                    <Button
+                                        disabled={!regulering.beregning}
+                                        onClick={ferdigstillEllerTilAttestering}
+                                        loading={RemoteData.isPending(tilAttesteringStatus)}
+                                    >
+                                        Til attestering
+                                    </Button>
+                                </div>
+                            )}
+                            {underAttestering && <ReguleringAttestering regulering={regulering} />}
                         </div>
                     </div>
                     <SupplementOversikt supplement={regulering.supplement} />
                 </main>
-            </div>
-        );
-    } else {
-        return (
-            <div className={styles.feil}>
-                {RemoteData.isFailure(manuellReguleringStatus) && (
-                    <ApiErrorAlert error={manuellReguleringStatus.error} />
-                )}
-                <Alert variant="error">{formatMessage('fantIkkeRegulering')}</Alert>
-                <Button onClick={navigateBack} variant="secondary" type="button">
-                    {formatMessage('knapper.tilbake')}
-                </Button>
             </div>
         );
     }

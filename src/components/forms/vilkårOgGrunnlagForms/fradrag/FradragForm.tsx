@@ -30,6 +30,7 @@ interface Props<T extends FieldValues> {
     setValue: UseFormSetValue<T>;
     harEPS: boolean;
     beregningsDato: Nullable<NullablePeriode>;
+    readonly: boolean;
 }
 
 const FradragForm = <T extends FieldValues>(props: Props<T>) => {
@@ -62,6 +63,7 @@ const FradragForm = <T extends FieldValues>(props: Props<T>) => {
                                 <div className={styles.fradragTypeOgBelopContainer}>
                                     <div className={styles.fradragTypeOgBelopInputs}>
                                         <Controller
+                                            disabled={props.readonly}
                                             control={props.control}
                                             name={`${partialFradragNavn}.kategori` as Path<T>}
                                             render={({ field, fieldState }) => (
@@ -91,6 +93,7 @@ const FradragForm = <T extends FieldValues>(props: Props<T>) => {
                                             )}
                                         />
                                         <Controller
+                                            disabled={props.readonly}
                                             control={props.control}
                                             name={`${partialFradragNavn}.beløp` as Path<T>}
                                             render={({ field, fieldState }) => (
@@ -110,6 +113,7 @@ const FradragForm = <T extends FieldValues>(props: Props<T>) => {
                                 {watchedFradrag?.kategori === VelgbareFradragskategorier.Annet && (
                                     <div className={styles.spesifiserFradragsTypeContainer}>
                                         <Controller
+                                            disabled={props.readonly}
                                             control={props.control}
                                             name={`${partialFradragNavn}.spesifisertkategori` as Path<T>}
                                             render={({ field, fieldState }) => (
@@ -126,6 +130,7 @@ const FradragForm = <T extends FieldValues>(props: Props<T>) => {
                                 <div className={styles.checkboxContainer}>
                                     {(props.harEPS || watchedFradrag?.tilhørerEPS) && (
                                         <Controller
+                                            disabled={props.readonly}
                                             control={props.control}
                                             name={`${partialFradragNavn}.tilhørerEPS` as Path<T>}
                                             render={({ field }) => (
@@ -141,6 +146,7 @@ const FradragForm = <T extends FieldValues>(props: Props<T>) => {
                                         />
                                     )}
                                     <Controller
+                                        disabled={props.readonly}
                                         control={props.control}
                                         name={`${partialFradragNavn}.fraUtland` as Path<T>}
                                         render={({ field }) => (
@@ -150,6 +156,7 @@ const FradragForm = <T extends FieldValues>(props: Props<T>) => {
                                         )}
                                     />
                                     <Controller
+                                        disabled={props.readonly}
                                         control={props.control}
                                         name={`${partialFradragNavn}.visDelerAvPeriode` as Path<T>}
                                         render={({ field }) => (
@@ -169,10 +176,12 @@ const FradragForm = <T extends FieldValues>(props: Props<T>) => {
                                         controller={props.control}
                                         name={`${partialFradragNavn}.utenlandskInntekt`}
                                         setValue={props.setValue}
+                                        readonly={props.readonly}
                                     />
                                 )}
                                 {watchedFradrag?.visDelerAvPeriode && (
                                     <Controller
+                                        disabled={props.readonly}
                                         control={props.control}
                                         name={`${partialFradragNavn}.periode` as Path<T>}
                                         render={({ field }) => (
@@ -209,6 +218,7 @@ interface InntektFraUtlandProps<T extends FieldValues> {
     name: `fradrag.${number}.utenlandskInntekt`;
     controller: Control<T>;
     setValue: UseFormSetValue<T>;
+    readonly: boolean;
 }
 
 export const InntektFraUtland = <T extends FieldValues>(props: InntektFraUtlandProps<T>) => {
@@ -234,6 +244,7 @@ export const InntektFraUtland = <T extends FieldValues>(props: InntektFraUtlandP
     return (
         <div className={styles.utlandOgPeriodeContainer}>
             <Controller
+                disabled={props.readonly}
                 control={props.controller}
                 name={`${props.name}.beløpIUtenlandskValuta` as Path<T>}
                 render={({ field, fieldState }) => (

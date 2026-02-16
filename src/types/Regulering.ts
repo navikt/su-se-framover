@@ -28,6 +28,8 @@ export interface Regulering {
 
 export enum Reguleringsstatus {
     OPPRETTET = 'OPPRETTET',
+    BEREGNET = 'BEREGNET',
+    ATTESTERING = 'ATTESTERING',
     IVERKSATT = 'IVERKSATT',
     AVSLUTTET = 'AVSLUTTET',
 }
@@ -173,4 +175,8 @@ export interface Eksterndata {
 export interface ManuellRegulering {
     gjeldendeVedtaksdata: GrunnlagsdataOgVilkårsvurderinger;
     regulering: Regulering;
+}
+
+export enum UnderkjennelseGrunnRegulering {
+    REGULERING_ER_FEIL = 'REGULERING_ER_FEIL',
 }

@@ -35,7 +35,7 @@ import { useI18n } from '~src/lib/i18n';
 import * as Routes from '~src/lib/routes';
 import { Klage } from '~src/types/Klage';
 import { ManuellTilbakekrevingsbehandling } from '~src/types/ManuellTilbakekrevingsbehandling';
-import { Regulering, Reguleringstype } from '~src/types/Regulering';
+import { Regulering, Reguleringsstatus, Reguleringstype } from '~src/types/Regulering';
 import { Revurdering } from '~src/types/Revurdering';
 import { Vilkårtype } from '~src/types/Vilkårsvurdering';
 import { erKlageTilAttestering, hentSisteVurderteSteg } from '~src/utils/klage/klageUtils';
@@ -502,8 +502,17 @@ const RevurderingKnapper = (props: { sakId: string; r: Revurdering }) => {
 
 const ReguleringKnapper = (props: { sakId: string; r: Regulering }) => {
     const { formatMessage } = useI18n({ messages });
+    const user = useUserContext();
     const [avsluttReguleringStatus, avsluttRegulering] = useApiCall(reguleringApi.avsluttRegulering);
     const ref = useRef<HTMLDialogElement>(null);
+
+    const underAttestering = props.r.reguleringsstatus === Reguleringsstatus.ATTESTERING;
+
+    if (underAttestering) {
+        if (!user.isAttestant || user.navIdent === props.r.saksbehandler) {
+            return null;
+        }
+    }
 
     return (
         <div>
@@ -520,7 +529,7 @@ const ReguleringKnapper = (props: { sakId: string; r: Regulering }) => {
                             reguleringId: props.r.id,
                         })}
                     >
-                        {formatMessage('datacell.info.knapp.regulering.start')}
+                        {underAttestering ? 'Attester' : 'Start regulering'}
                     </LinkAsButton>
                 </div>
             )}

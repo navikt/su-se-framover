@@ -135,6 +135,7 @@ const EndringAvFradrag = (props: RevurderingStegProps) => {
                                         fraOgMed: new Date(props.revurdering.periode.fraOgMed),
                                         tilOgMed: new Date(props.revurdering.periode.tilOgMed),
                                     }}
+                                    readonly={false}
                                 />
                             </div>
                             <Feiloppsummering
