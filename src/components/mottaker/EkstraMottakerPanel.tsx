@@ -66,7 +66,7 @@ export const EkstraMottakerPanel = (props: Props) => {
         };
 
         void hentEkstraMottaker();
-    }, [formatMessage, manglerReferanseId, props.referanseId, props.referanseType, props.brevtype, props.sakId]);
+    }, [props.referanseId, props.referanseType, props.brevtype]);
 
     if (manglerReferanseId) {
         return (

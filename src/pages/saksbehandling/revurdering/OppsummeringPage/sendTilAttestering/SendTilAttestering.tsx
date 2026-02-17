@@ -200,9 +200,8 @@ const SendTilAttestering = (props: {
             setSkalLeggeTilMottaker(false);
             setMottakerFetchError(toMottakerAlert(res.error, formatMessage('feilmelding.kanIkkeHenteMottaker')));
         };
-
         sjekkMottaker();
-    }, [formatMessage, mottakerBrevtype, props.revurdering.id, props.sakId]);
+    }, [props.revurdering.id, props.sakId]);
 
     return (
         <ToKolonner tittel={'Vedtaksbrev'} width="40/60">
