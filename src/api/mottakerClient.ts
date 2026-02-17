@@ -1,6 +1,7 @@
 import apiClient, { ApiClientResult } from './apiClient';
 
-export type ReferanseType = 'SØKNAD' | 'VEDTAK' | 'REVURDERING' | 'KLAGE';
+export type ReferanseType = 'SØKNAD' | 'REVURDERING' | 'KLAGE' | 'TILBAKEKREVING';
+export type Brevtype = 'VEDTAKSBREV' | 'FORHANDSVARSEL';
 
 export interface LagreMottakerRequest {
     navn: string;
@@ -13,9 +14,9 @@ export interface LagreMottakerRequest {
         postnummer: string;
         poststed: string;
     };
-    sakId: string;
     referanseType: ReferanseType;
     referanseId: string;
+    brevtype: Brevtype;
 }
 
 export interface OppdaterMottakerRequest extends LagreMottakerRequest {
@@ -25,6 +26,7 @@ export interface OppdaterMottakerRequest extends LagreMottakerRequest {
 export interface MottakerIdentifikator {
     referanseType: ReferanseType;
     referanseId: string;
+    brevtype: Brevtype;
 }
 
 export interface MottakerResponse {
@@ -42,6 +44,7 @@ export interface MottakerResponse {
     sakId: string;
     referanseType: ReferanseType;
     referanseId: string;
+    brevtype: Brevtype;
 }
 
 /**
@@ -51,9 +54,10 @@ export async function hentMottaker(
     sakId: string,
     referanseType: ReferanseType,
     referanseId: string,
+    brevtype: Brevtype,
 ): Promise<ApiClientResult<MottakerResponse | null>> {
     return apiClient({
-        url: `/mottaker/${sakId}/${referanseType}/${referanseId}`,
+        url: `/mottaker/${sakId}/${referanseType}/${referanseId}?brevtype=${brevtype}`,
         method: 'GET',
     });
 }

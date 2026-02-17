@@ -3,6 +3,7 @@ import { Alert, BodyShort, Box, Button, Heading, HStack, Label, Loader, TextFiel
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import {
+    Brevtype,
     hentMottaker,
     LagreMottakerRequest,
     lagreMottaker,
@@ -12,12 +13,14 @@ import {
     ReferanseType,
     slettMottaker,
 } from '~src/api/mottakerClient.ts';
+import { toMottakerAlert } from '~src/components/mottaker/mottakerUtils';
 import styles from './Mottaker.module.less';
 
 interface MottakerFormProps {
     sakId: string;
     referanseId: string;
     referanseType: ReferanseType;
+    brevtype: Brevtype;
     onClose?: () => void;
 }
 
@@ -26,7 +29,7 @@ type FeedbackVariant = 'success' | 'error' | 'info' | 'warning';
 type Feedback = { text: string; variant: FeedbackVariant };
 type ActionState = 'idle' | 'loading' | 'success' | 'error';
 
-export function MottakerForm({ sakId, referanseId, referanseType, onClose }: MottakerFormProps) {
+export function MottakerForm({ sakId, referanseId, referanseType, brevtype, onClose }: MottakerFormProps) {
     const emptyFormValues = useMemo<FormValues>(
         () => ({
             navn: '',
@@ -39,11 +42,11 @@ export function MottakerForm({ sakId, referanseId, referanseType, onClose }: Mot
                 postnummer: '',
                 poststed: '',
             },
-            sakId,
             referanseType,
             referanseId,
+            brevtype,
         }),
-        [referanseId, referanseType, sakId],
+        [brevtype, referanseId, referanseType, sakId],
     );
 
     const { register, handleSubmit, reset, formState, setError, clearErrors, watch } = useForm<FormValues>({
@@ -83,9 +86,9 @@ export function MottakerForm({ sakId, referanseId, referanseType, onClose }: Mot
                 postnummer: mottaker.adresse?.postnummer ?? '',
                 poststed: mottaker.adresse?.poststed ?? '',
             },
-            sakId,
             referanseType,
             referanseId,
+            brevtype,
         });
     };
 
@@ -110,7 +113,7 @@ export function MottakerForm({ sakId, referanseId, referanseType, onClose }: Mot
             setSaveState('idle');
             setDeleteState('idle');
 
-            const res = await hentMottaker(sakId, referanseType, referanseId);
+            const res = await hentMottaker(sakId, referanseType, referanseId, brevtype);
 
             if (res.status === 'ok') {
                 if (res.data) {
@@ -122,9 +125,10 @@ export function MottakerForm({ sakId, referanseId, referanseType, onClose }: Mot
             } else if (res.error.statusCode === 404) {
                 resetTilTomtSkjema({ text: 'Ingen mottaker funnet – du kan opprette ny.', variant: 'info' });
             } else {
+                const alert = toMottakerAlert(res.error, 'Kunne ikke hente mottaker');
                 resetTilTomtSkjema({
-                    text: res.error.body?.message ?? 'Kunne ikke hente mottaker',
-                    variant: 'error',
+                    text: alert.text,
+                    variant: alert.variant,
                 });
             }
 
@@ -132,7 +136,7 @@ export function MottakerForm({ sakId, referanseId, referanseType, onClose }: Mot
         };
 
         hentOgFyll();
-    }, [sakId, referanseId, referanseType, reset, emptyFormValues]);
+    }, [sakId, referanseId, referanseType, brevtype, reset, emptyFormValues]);
 
     const onSubmit = async (data: FormValues) => {
         setFeedback(null);
@@ -162,9 +166,9 @@ export function MottakerForm({ sakId, referanseId, referanseType, onClose }: Mot
                 postnummer: data.adresse.postnummer.trim(),
                 poststed: data.adresse.poststed.trim(),
             },
-            sakId,
             referanseId,
             referanseType,
+            brevtype,
         };
 
         setSaveState('loading');
@@ -186,7 +190,8 @@ export function MottakerForm({ sakId, referanseId, referanseType, onClose }: Mot
                 clearErrors();
                 setFeedback({ text: 'Mottaker oppdatert!', variant: 'success' });
             } else {
-                setFeedback({ text: res.error.body?.message ?? 'Kunne ikke oppdatere mottaker', variant: 'error' });
+                const alert = toMottakerAlert(res.error, 'Kunne ikke oppdatere mottaker');
+                setFeedback({ text: alert.text, variant: alert.variant });
                 setSaveState('error');
             }
             return;
@@ -197,13 +202,14 @@ export function MottakerForm({ sakId, referanseId, referanseType, onClose }: Mot
             setSaveState('success');
             setFeedback({ text: 'Mottaker opprettet!', variant: 'success' });
             setLoading(true);
-            const hentRes = await hentMottaker(sakId, referanseType, referanseId);
+            const hentRes = await hentMottaker(sakId, referanseType, referanseId, brevtype);
             if (hentRes.status === 'ok' && hentRes.data) {
                 fyllSkjema(hentRes.data);
             }
             setLoading(false);
         } else {
-            setFeedback({ text: res.error.body?.message ?? 'Kunne ikke opprette mottaker', variant: 'error' });
+            const alert = toMottakerAlert(res.error, 'Kunne ikke opprette mottaker');
+            setFeedback({ text: alert.text, variant: alert.variant });
             setSaveState('error');
         }
     };
@@ -212,7 +218,7 @@ export function MottakerForm({ sakId, referanseId, referanseType, onClose }: Mot
         setFeedback(null);
         setDeleteState('loading');
 
-        const identifikator: MottakerIdentifikator = { referanseType, referanseId };
+        const identifikator: MottakerIdentifikator = { referanseType, referanseId, brevtype };
         const res = await slettMottaker(sakId, identifikator);
 
         if (res.status === 'ok') {
@@ -221,7 +227,8 @@ export function MottakerForm({ sakId, referanseId, referanseType, onClose }: Mot
             resetTilTomtSkjema({ text: 'Mottaker slettet!', variant: 'success' });
             clearErrors();
         } else {
-            setFeedback({ text: res.error.body?.message ?? 'Kunne ikke slette mottaker', variant: 'error' });
+            const alert = toMottakerAlert(res.error, 'Kunne ikke slette mottaker');
+            setFeedback({ text: alert.text, variant: alert.variant });
             setDeleteState('error');
         }
     };
@@ -249,7 +256,7 @@ export function MottakerForm({ sakId, referanseId, referanseType, onClose }: Mot
                     <div>
                         <Label size="small">Referanse</Label>
                         <BodyShort>
-                            {referanseType} / {referanseId}
+                            {referanseType} / {referanseId} / {brevtype}
                         </BodyShort>
                     </div>
                 </HStack>

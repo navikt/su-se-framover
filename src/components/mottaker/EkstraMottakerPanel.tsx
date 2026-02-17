@@ -1,6 +1,7 @@
 import { Alert } from '@navikt/ds-react';
 import { useEffect, useState } from 'react';
-import { hentMottaker, MottakerResponse, ReferanseType } from '~src/api/mottakerClient.ts';
+import { Brevtype, hentMottaker, MottakerResponse, ReferanseType } from '~src/api/mottakerClient.ts';
+import { MottakerAlert, toMottakerAlert } from '~src/components/mottaker/mottakerUtils';
 import { OppsummeringPar } from '~src/components/oppsummering/oppsummeringpar/OppsummeringPar';
 import Oppsummeringspanel, {
     Oppsummeringsfarge,
@@ -27,13 +28,14 @@ interface Props {
     sakId: string;
     referanseId: string;
     referanseType: ReferanseType;
+    brevtype: Brevtype;
     tittel?: string;
 }
 
 export const EkstraMottakerPanel = (props: Props) => {
     const { formatMessage } = useI18n({ messages });
     const [mottaker, setMottaker] = useState<MottakerResponse | null>(null);
-    const [feil, setFeil] = useState<string | null>(null);
+    const [feil, setFeil] = useState<MottakerAlert | null>(null);
     const manglerReferanseId = !props.referanseId;
 
     useEffect(() => {
@@ -47,7 +49,7 @@ export const EkstraMottakerPanel = (props: Props) => {
         setFeil(null);
 
         const hentEkstraMottaker = async () => {
-            const res = await hentMottaker(props.sakId, props.referanseType, props.referanseId);
+            const res = await hentMottaker(props.sakId, props.referanseType, props.referanseId, props.brevtype);
 
             if (res.status === 'ok') {
                 setMottaker(res.data ?? null);
@@ -60,11 +62,11 @@ export const EkstraMottakerPanel = (props: Props) => {
             }
 
             setMottaker(null);
-            setFeil(res.error.body?.message ?? formatMessage('feilmelding.kanIkkeHenteMottaker'));
+            setFeil(toMottakerAlert(res.error, formatMessage('feilmelding.kanIkkeHenteMottaker')));
         };
 
         void hentEkstraMottaker();
-    }, [formatMessage, manglerReferanseId, props.referanseId, props.referanseType, props.sakId]);
+    }, [formatMessage, manglerReferanseId, props.referanseId, props.referanseType, props.brevtype, props.sakId]);
 
     if (manglerReferanseId) {
         return (
@@ -88,7 +90,7 @@ export const EkstraMottakerPanel = (props: Props) => {
             farge={Oppsummeringsfarge.Grønn}
             tittel={props.tittel ?? formatMessage('ekstramottaker.tittel')}
         >
-            {feil && <Alert variant="error">{feil}</Alert>}
+            {feil && <Alert variant={feil.variant}>{feil.text}</Alert>}
             {mottaker && (
                 <div className={styles.container}>
                     <OppsummeringPar
