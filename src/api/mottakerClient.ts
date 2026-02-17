@@ -57,10 +57,8 @@ export async function hentMottaker(
     referanseId: string,
     brevtype: Brevtype,
 ): Promise<ApiClientResult<MottakerResponse | null>> {
-    const query = new URLSearchParams({ brevtype });
-
     return apiClient({
-        url: `/mottaker/${sakId}/${referanseType}/${referanseId}?${query.toString()}`,
+        url: `/mottaker/${sakId}/${referanseType}/${referanseId}?brevtype=${brevtype}`,
         method: 'GET',
     });
 }

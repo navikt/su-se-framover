@@ -4,7 +4,6 @@ import { Alert, Button, Loader, Radio, RadioGroup } from '@navikt/ds-react';
 import { useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { FritekstTyper, hentFritekst, redigerFritekst } from '~src/api/fritekstApi.ts';
-import { Brevtype, ReferanseType } from '~src/api/mottakerClient.ts';
 import * as PdfApi from '~src/api/pdfApi.ts';
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
 import TextareaWithAutosave from '~src/components/inputs/textareaWithAutosave/TextareaWithAutosave.tsx';
@@ -78,6 +77,7 @@ interface Props {
         status: ApiResult<unknown>;
         underkjennelsesgrunner: UnderkjennelseGrunn[];
     };
+    ekstraMottakerReferanseType?: 'SØKNAD' | 'REVURDERING';
     radioTexts?: {
         bekreftText?: string;
         underkjennText?: string;
@@ -154,18 +154,7 @@ export const AttesteringsForm = (props: Props) => {
         });
     }, [fritekstType, props.behandlingsId, props.redigerbartBrev, props.sakId, setValue]);
 
-    const ekstraMottakerReferanse: { referanseType: ReferanseType; brevtype: Brevtype } | null = (() => {
-        switch (behandlingstype) {
-            case 'SØKNAD':
-            case 'REVURDERING':
-            case 'KLAGE':
-                return { referanseType: behandlingstype, brevtype: 'VEDTAKSBREV' };
-            case 'TILBAKEKREVING':
-                return { referanseType: 'TILBAKEKREVING', brevtype: 'FORHANDSVARSEL' };
-            case 'REGULERING':
-                return null;
-        }
-    })();
+    const ekstraMottakerReferanseType = props.ekstraMottakerReferanseType;
 
     return (
         <div className={styles.redigerContainer}>
@@ -294,12 +283,12 @@ export const AttesteringsForm = (props: Props) => {
                     </div>
                 </Oppsummeringspanel>
             )}
-            {ekstraMottakerReferanse && (
+            {ekstraMottakerReferanseType && (
                 <EkstraMottakerPanel
                     sakId={props.sakId}
                     referanseId={props.behandlingsId}
-                    referanseType={ekstraMottakerReferanse.referanseType}
-                    brevtype={ekstraMottakerReferanse.brevtype}
+                    referanseType={ekstraMottakerReferanseType}
+                    brevtype={'VEDTAKSBREV'}
                 />
             )}
         </div>

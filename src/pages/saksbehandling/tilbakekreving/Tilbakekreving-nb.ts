@@ -33,10 +33,6 @@ export default {
     'forhåndsvarsleTilbakekreving.navigering.fortsettSenere': 'Fortsett senere',
     'forhåndsvarsleTilbakekreving.tidligereSendtForhåndsvarsel.tittel': 'Tidligere sendte forhåndsvarsler',
     'forhåndsvarsleTilbakekreving.tidligereSendtForhåndsvarsel.knapp.seForhåndsvarsel': 'Se forhåndsvarsel',
-    'knapp.leggtilmottaker': 'Legg til mottaker',
-    'knapp.lukkmottaker': 'Lukk mottaker',
-    'knapp.vismottaker': 'Vis mottaker',
-    'feilmelding.kanIkkeHenteMottaker': 'Kan ikke hente mottaker',
 
     'brevForTilbakekreving.tittel': 'Vedtaksbrev',
     'brevForTilbakekreving.skalSendeBrev': 'Skal det sendes vedtaksbrev?',

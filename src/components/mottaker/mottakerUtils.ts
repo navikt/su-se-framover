@@ -9,7 +9,7 @@ export interface MottakerAlert {
 
 export const toMottakerAlert = (error: ApiError, fallback: string): MottakerAlert => {
     const text = error.body?.message?.trim() || fallback;
-    if (error.statusCode === 400 || error.statusCode === 409 || error.statusCode === 422) {
+    if (error.statusCode === 400) {
         return { text, variant: 'warning' };
     }
 
