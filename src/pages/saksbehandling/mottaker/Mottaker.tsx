@@ -136,7 +136,7 @@ export function MottakerForm({ sakId, referanseId, referanseType, brevtype, onCl
         };
 
         hentOgFyll();
-    }, [sakId, referanseId, referanseType, brevtype, reset, emptyFormValues]);
+    }, [referanseId, referanseType, brevtype]);
 
     const onSubmit = async (data: FormValues) => {
         setFeedback(null);
