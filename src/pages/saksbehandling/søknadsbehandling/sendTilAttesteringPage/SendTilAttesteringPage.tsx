@@ -47,7 +47,6 @@ const SendTilAttesteringPage = () => {
     const [skalLeggeTilMottaker, setSkalLeggeTilMottaker] = useState(false);
     const [mottakerFinnes, setMottakerFinnes] = useState<boolean | null>(null);
     const [mottakerFetchError, setMottakerFetchError] = useState<MottakerAlert | null>(null);
-    const mottakerBrevtype: Brevtype = 'VEDTAKSBREV';
 
     const [sendTilAttesteringStatus, sendTilAttestering] = useAsyncActionCreator(
         SøknadsbehandlingActions.sendTilAttestering,
@@ -136,7 +135,7 @@ const SendTilAttesteringPage = () => {
                 setMottakerFetchError(null);
             };
 
-            const res = await hentMottaker(props.sak.id, 'SØKNAD', behandling.id, mottakerBrevtype);
+            const res = await hentMottaker(props.sak.id, 'SØKNAD', behandling.id, 'VEDTAKSBREV');
 
             if (res.status === 'ok') {
                 if (res.data) {
@@ -158,7 +157,7 @@ const SendTilAttesteringPage = () => {
         };
 
         sjekkMottaker();
-    }, [behandling, formatMessage, mottakerBrevtype, props.sak.id]);
+    }, [behandling, props.sak.id]);
 
     if (!behandling) {
         return <Alert variant="error">{formatMessage('feilmelding.fantIkkeBehandlingsId')}</Alert>;
@@ -237,7 +236,7 @@ const SendTilAttesteringPage = () => {
                             sakId={props.sak.id}
                             referanseId={behandling.id}
                             referanseType={'SØKNAD'}
-                            brevtype={mottakerBrevtype}
+                            brevtype={'VEDTAKSBREV'}
                             onClose={() => setSkalLeggeTilMottaker(false)}
                         />
                     )}
