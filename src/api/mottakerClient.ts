@@ -14,7 +14,6 @@ export interface LagreMottakerRequest {
         postnummer: string;
         poststed: string;
     };
-    sakId: string;
     referanseType: ReferanseType;
     referanseId: string;
     brevtype: Brevtype;
