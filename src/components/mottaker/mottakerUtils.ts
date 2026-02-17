@@ -8,7 +8,8 @@ export interface MottakerAlert {
 }
 
 export const toMottakerAlert = (error: ApiError, fallback: string): MottakerAlert => {
-    const text = error.body?.message?.trim() || fallback;
+    const message = error.body?.message;
+    const text = message ? message.trim() || fallback : fallback;
     if (error.statusCode === 400) {
         return { text, variant: 'warning' };
     }

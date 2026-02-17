@@ -168,26 +168,31 @@ const SendTilAttestering = (props: {
             setMottakerFinnes(null);
             setMottakerFetchError(null);
 
+            const setMottakerFunnet = () => {
+                setMottakerFinnes(true);
+                setSkalLeggeTilMottaker(true);
+                setMottakerFetchError(null);
+            };
+
+            const setMottakerIkkeFunnet = () => {
+                setMottakerFinnes(false);
+                setSkalLeggeTilMottaker(false);
+                setMottakerFetchError(null);
+            };
+
             const res = await hentMottaker(props.sakId, 'REVURDERING', props.revurdering.id, mottakerBrevtype);
 
             if (res.status === 'ok') {
                 if (res.data) {
-                    setMottakerFinnes(true);
-                    setSkalLeggeTilMottaker(true);
-                    setMottakerFetchError(null);
-                    return;
+                    setMottakerFunnet();
+                } else {
+                    setMottakerIkkeFunnet();
                 }
-
-                setMottakerFinnes(false);
-                setSkalLeggeTilMottaker(false);
-                setMottakerFetchError(null);
                 return;
             }
 
             if (res.error.statusCode === 404) {
-                setMottakerFinnes(false);
-                setSkalLeggeTilMottaker(false);
-                setMottakerFetchError(null);
+                setMottakerIkkeFunnet();
                 return;
             }
 
