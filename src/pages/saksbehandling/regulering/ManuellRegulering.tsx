@@ -16,8 +16,8 @@ import { OppsummeringPar } from '~src/components/oppsummering/oppsummeringpar/Op
 import Oppsummeringspanel, {
     Oppsummeringsfarge,
     Oppsummeringsikon,
-} from '~src/components/oppsummering/oppsummeringspanel/Oppsummeringspanel.tsx';
-import UnderkjenteAttesteringer from '~src/components/underkjenteAttesteringer/UnderkjenteAttesteringer.tsx';
+} from '~src/components/oppsummering/oppsummeringspanel/Oppsummeringspanel';
+import UnderkjenteAttesteringer from '~src/components/underkjenteAttesteringer/UnderkjenteAttesteringer';
 import { SaksoversiktContext } from '~src/context/SaksoversiktContext';
 import * as sakSlice from '~src/features/saksoversikt/sak.slice';
 import { useApiCall, useAsyncActionCreator } from '~src/lib/hooks';
