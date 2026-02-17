@@ -1,4 +1,5 @@
 import { Nullable } from '~src/lib/types';
+import { Attestering } from '~src/types/Behandling';
 import { Beregning } from './Beregning';
 import { Fradragskategori, FradragTilhører } from './Fradrag';
 import { GrunnlagsdataOgVilkårsvurderinger } from './grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
@@ -24,6 +25,7 @@ export interface Regulering {
     supplement: Reguleringssupplement;
     sakstype: Sakstype;
     reguleringsstatus: Reguleringsstatus;
+    attesteringer: Attestering[];
 }
 
 export enum Reguleringsstatus {
