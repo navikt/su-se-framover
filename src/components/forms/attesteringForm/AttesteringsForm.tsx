@@ -77,7 +77,6 @@ interface Props {
         status: ApiResult<unknown>;
         underkjennelsesgrunner: UnderkjennelseGrunn[];
     };
-    ekstraMottakerReferanseType?: 'SØKNAD' | 'REVURDERING';
     radioTexts?: {
         bekreftText?: string;
         underkjennText?: string;
@@ -154,7 +153,10 @@ export const AttesteringsForm = (props: Props) => {
         });
     }, [fritekstType, props.behandlingsId, props.redigerbartBrev, props.sakId, setValue]);
 
-    const ekstraMottakerReferanseType = props.ekstraMottakerReferanseType;
+    const ekstraMottakerReferanseType =
+        props.redigerbartBrev && (behandlingstype === 'SØKNAD' || behandlingstype === 'REVURDERING')
+            ? behandlingstype
+            : null;
 
     return (
         <div className={styles.redigerContainer}>
