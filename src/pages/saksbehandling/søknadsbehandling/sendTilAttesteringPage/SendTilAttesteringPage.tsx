@@ -4,11 +4,12 @@ import { useEffect, useMemo, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useNavigate, useOutletContext } from 'react-router-dom';
 import { FritekstTyper, hentFritekst, redigerFritekst } from '~src/api/fritekstApi.ts';
-import { hentMottaker } from '~src/api/mottakerClient.ts';
+import { Brevtype, hentMottaker } from '~src/api/mottakerClient.ts';
 import * as PdfApi from '~src/api/pdfApi';
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
 import TextareaWithAutosave from '~src/components/inputs/textareaWithAutosave/TextareaWithAutosave.tsx';
 import LinkAsButton from '~src/components/linkAsButton/LinkAsButton';
+import { MottakerAlert, toMottakerAlert } from '~src/components/mottaker/mottakerUtils';
 import OppsummeringAvSøknadsbehandling from '~src/components/oppsummering/søknadsbehandlingoppsummering/OppsummeringAvSøknadsbehandling';
 import { SaksoversiktContext } from '~src/context/SaksoversiktContext';
 import { useSøknadsbehandlingDraftContextFor } from '~src/context/søknadsbehandlingDraftContext';
@@ -45,7 +46,8 @@ const SendTilAttesteringPage = () => {
     const [lagreFritekstStatus, lagreFritekst] = useApiCall(redigerFritekst);
     const [skalLeggeTilMottaker, setSkalLeggeTilMottaker] = useState(false);
     const [mottakerFinnes, setMottakerFinnes] = useState<boolean | null>(null);
-    const [mottakerFetchError, setMottakerFetchError] = useState<string | null>(null);
+    const [mottakerFetchError, setMottakerFetchError] = useState<MottakerAlert | null>(null);
+    const mottakerBrevtype: Brevtype = 'VEDTAKSBREV';
 
     const [sendTilAttesteringStatus, sendTilAttestering] = useAsyncActionCreator(
         SøknadsbehandlingActions.sendTilAttestering,
@@ -121,25 +123,36 @@ const SendTilAttesteringPage = () => {
         const sjekkMottaker = async () => {
             setMottakerFinnes(null);
             setMottakerFetchError(null);
-            const res = await hentMottaker(props.sak.id, 'SØKNAD', behandling.id);
+            const res = await hentMottaker(props.sak.id, 'SØKNAD', behandling.id, mottakerBrevtype);
 
-            if (res.status === 'ok' && res.data) {
-                setMottakerFinnes(true);
-                setSkalLeggeTilMottaker(true);
-                setMottakerFetchError(null);
-            } else if (res.status === 'error' && res.error.statusCode === 404) {
+            if (res.status === 'ok') {
+                if (res.data) {
+                    setMottakerFinnes(true);
+                    setSkalLeggeTilMottaker(true);
+                    setMottakerFetchError(null);
+                    return;
+                }
+
                 setMottakerFinnes(false);
                 setSkalLeggeTilMottaker(false);
                 setMottakerFetchError(null);
-            } else {
-                setMottakerFinnes(false);
-                setSkalLeggeTilMottaker(false);
-                setMottakerFetchError(formatMessage('feilmelding.kanIkkeHenteMottaker'));
+                return;
             }
+
+            if (res.error.statusCode === 404) {
+                setMottakerFinnes(false);
+                setSkalLeggeTilMottaker(false);
+                setMottakerFetchError(null);
+                return;
+            }
+
+            setMottakerFinnes(false);
+            setSkalLeggeTilMottaker(false);
+            setMottakerFetchError(toMottakerAlert(res.error, formatMessage('feilmelding.kanIkkeHenteMottaker')));
         };
 
         sjekkMottaker();
-    }, [behandling, props.sak.id]);
+    }, [behandling, formatMessage, mottakerBrevtype, props.sak.id]);
 
     if (!behandling) {
         return <Alert variant="error">{formatMessage('feilmelding.fantIkkeBehandlingsId')}</Alert>;
@@ -195,8 +208,8 @@ const SendTilAttesteringPage = () => {
                 </div>
                 <div>
                     {mottakerFetchError && (
-                        <Alert variant="error" size="small">
-                            {mottakerFetchError}
+                        <Alert variant={mottakerFetchError.variant} size="small">
+                            {mottakerFetchError.text}
                         </Alert>
                     )}
                     <Button
@@ -218,6 +231,7 @@ const SendTilAttesteringPage = () => {
                             sakId={props.sak.id}
                             referanseId={behandling.id}
                             referanseType={'SØKNAD'}
+                            brevtype={mottakerBrevtype}
                             onClose={() => setSkalLeggeTilMottaker(false)}
                         />
                     )}

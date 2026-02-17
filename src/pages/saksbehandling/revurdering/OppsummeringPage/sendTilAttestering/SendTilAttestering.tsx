@@ -1,14 +1,15 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Alert, Button, Loader, Radio, RadioGroup, Textarea } from '@navikt/ds-react';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import { FritekstTyper, hentFritekst, redigerFritekst } from '~src/api/fritekstApi.ts';
-import { hentMottaker } from '~src/api/mottakerClient.ts';
+import { Brevtype, hentMottaker } from '~src/api/mottakerClient.ts';
 import * as pdfApi from '~src/api/pdfApi';
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
 import TextareaWithAutosave from '~src/components/inputs/textareaWithAutosave/TextareaWithAutosave';
+import { MottakerAlert, toMottakerAlert } from '~src/components/mottaker/mottakerUtils';
 import OppsummeringAvInformasjonsrevurdering from '~src/components/oppsummering/oppsummeringAvRevurdering/informasjonsrevurdering/OppsummeringAvInformasjonsrevurdering';
 import ToKolonner from '~src/components/toKolonner/ToKolonner';
 import * as RevurderingActions from '~src/features/revurdering/revurderingActions';
@@ -82,8 +83,8 @@ const SendTilAttestering = (props: {
     const [lagreFritekstStatus, lagreFritekst] = useApiCall(redigerFritekst);
     const [skalLeggeTilMottaker, setSkalLeggeTilMottaker] = useState(false);
     const [mottakerFinnes, setMottakerFinnes] = useState<boolean | null>(null);
-    const [mottakerFetchError, setMottakerFetchError] = useState<string | null>(null);
-    const mottakerErrorTekst = useMemo(() => formatMessage('feilmelding.kanIkkeHenteMottaker'), [formatMessage]);
+    const [mottakerFetchError, setMottakerFetchError] = useState<MottakerAlert | null>(null);
+    const mottakerBrevtype: Brevtype = 'VEDTAKSBREV';
 
     const [seBrevStatus, seBrev] = useBrevForhåndsvisning(pdfApi.fetchBrevutkastForRevurdering);
     const [sendTilAttesteringStatus, sendtilAttestering] = useAsyncActionCreator(
@@ -167,25 +168,36 @@ const SendTilAttestering = (props: {
             setMottakerFinnes(null);
             setMottakerFetchError(null);
 
-            const res = await hentMottaker(props.sakId, 'REVURDERING', props.revurdering.id);
+            const res = await hentMottaker(props.sakId, 'REVURDERING', props.revurdering.id, mottakerBrevtype);
 
-            if (res.status === 'ok' && res.data) {
-                setMottakerFinnes(true);
-                setSkalLeggeTilMottaker(true);
-                setMottakerFetchError(null);
-            } else if (res.status === 'error' && res.error.statusCode === 404) {
+            if (res.status === 'ok') {
+                if (res.data) {
+                    setMottakerFinnes(true);
+                    setSkalLeggeTilMottaker(true);
+                    setMottakerFetchError(null);
+                    return;
+                }
+
                 setMottakerFinnes(false);
                 setSkalLeggeTilMottaker(false);
                 setMottakerFetchError(null);
-            } else {
-                setMottakerFinnes(false);
-                setSkalLeggeTilMottaker(false);
-                setMottakerFetchError(mottakerErrorTekst);
+                return;
             }
+
+            if (res.error.statusCode === 404) {
+                setMottakerFinnes(false);
+                setSkalLeggeTilMottaker(false);
+                setMottakerFetchError(null);
+                return;
+            }
+
+            setMottakerFinnes(false);
+            setSkalLeggeTilMottaker(false);
+            setMottakerFetchError(toMottakerAlert(res.error, formatMessage('feilmelding.kanIkkeHenteMottaker')));
         };
 
         sjekkMottaker();
-    }, [mottakerErrorTekst, props.revurdering.id, props.sakId]);
+    }, [formatMessage, mottakerBrevtype, props.revurdering.id, props.sakId]);
 
     return (
         <ToKolonner tittel={'Vedtaksbrev'} width="40/60">
@@ -266,8 +278,8 @@ const SendTilAttestering = (props: {
                                 {watch.valg === Valg.SEND && (
                                     <div className={styles.mottakerSection}>
                                         {mottakerFetchError && (
-                                            <Alert variant="error" size="small">
-                                                {mottakerFetchError}
+                                            <Alert variant={mottakerFetchError.variant} size="small">
+                                                {mottakerFetchError.text}
                                             </Alert>
                                         )}
                                         <Button
@@ -292,6 +304,7 @@ const SendTilAttestering = (props: {
                                                 sakId={props.sakId}
                                                 referanseId={props.revurdering.id}
                                                 referanseType={'REVURDERING'}
+                                                brevtype={mottakerBrevtype}
                                                 onClose={() => setSkalLeggeTilMottaker(false)}
                                             />
                                         )}

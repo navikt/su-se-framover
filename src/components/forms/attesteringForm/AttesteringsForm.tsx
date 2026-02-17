@@ -4,7 +4,7 @@ import { Alert, Button, Loader, Radio, RadioGroup } from '@navikt/ds-react';
 import { useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { FritekstTyper, hentFritekst, redigerFritekst } from '~src/api/fritekstApi.ts';
-import { ReferanseType } from '~src/api/mottakerClient.ts';
+import { Brevtype, ReferanseType } from '~src/api/mottakerClient.ts';
 import * as PdfApi from '~src/api/pdfApi.ts';
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
 import TextareaWithAutosave from '~src/components/inputs/textareaWithAutosave/TextareaWithAutosave.tsx';
@@ -154,8 +154,18 @@ export const AttesteringsForm = (props: Props) => {
         });
     }, [fritekstType, props.behandlingsId, props.redigerbartBrev, props.sakId, setValue]);
 
-    const ekstraMottakerReferanseType: ReferanseType | null =
-        behandlingstype === 'TILBAKEKREVING' || behandlingstype === 'REGULERING' ? null : behandlingstype;
+    const ekstraMottakerReferanse: { referanseType: ReferanseType; brevtype: Brevtype } | null = (() => {
+        switch (behandlingstype) {
+            case 'SØKNAD':
+            case 'REVURDERING':
+            case 'KLAGE':
+                return { referanseType: behandlingstype, brevtype: 'VEDTAKSBREV' };
+            case 'TILBAKEKREVING':
+                return { referanseType: 'TILBAKEKREVING', brevtype: 'FORHANDSVARSEL' };
+            case 'REGULERING':
+                return null;
+        }
+    })();
 
     return (
         <div className={styles.redigerContainer}>
@@ -284,11 +294,12 @@ export const AttesteringsForm = (props: Props) => {
                     </div>
                 </Oppsummeringspanel>
             )}
-            {ekstraMottakerReferanseType && (
+            {ekstraMottakerReferanse && (
                 <EkstraMottakerPanel
                     sakId={props.sakId}
                     referanseId={props.behandlingsId}
-                    referanseType={ekstraMottakerReferanseType}
+                    referanseType={ekstraMottakerReferanse.referanseType}
+                    brevtype={ekstraMottakerReferanse.brevtype}
                 />
             )}
         </div>

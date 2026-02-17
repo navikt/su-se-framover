@@ -1,14 +1,16 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Button, Heading, Radio, RadioGroup } from '@navikt/ds-react';
-import { useEffect } from 'react';
+import { Alert, Button, Heading, Loader, Radio, RadioGroup } from '@navikt/ds-react';
+import { useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 
 import { FritekstTyper, hentFritekst, redigerFritekst } from '~src/api/fritekstApi.ts';
+import { Brevtype, hentMottaker } from '~src/api/mottakerClient.ts';
 import { forhåndsvisForhåndsvarsel, visUtsendtForhåndsvarsel } from '~src/api/tilbakekrevingApi';
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
 import TextareaWithAutosave from '~src/components/inputs/textareaWithAutosave/TextareaWithAutosave.tsx';
+import { MottakerAlert, toMottakerAlert } from '~src/components/mottaker/mottakerUtils';
 import Navigasjonsknapper from '~src/components/navigasjonsknapper/Navigasjonsknapper';
 import Feiloppsummering from '~src/components/oppsummering/feiloppsummering/Feiloppsummering';
 import OppsummeringAvKravgrunnlag from '~src/components/oppsummering/kravgrunnlag/OppsummeringAvKravgrunnlag';
@@ -19,6 +21,7 @@ import { useI18n } from '~src/lib/i18n';
 import * as Routes from '~src/lib/routes';
 import { Nullable } from '~src/lib/types.ts';
 import { hookFormErrorsTilFeiloppsummering } from '~src/lib/validering';
+import { MottakerForm } from '~src/pages/saksbehandling/mottaker/Mottaker.tsx';
 import {
     ForhåndsvarselsInfo,
     ManuellTilbakekrevingsbehandling,
@@ -46,6 +49,10 @@ const ForhåndsvarsleTilbakekreving = (props: {
     const [lagreForhåndsvarselStatus, lagreForhåndsvarsel] = useAsyncActionCreator(
         TilbakekrevingActions.sendForhåndsvarsel,
     );
+    const [skalLeggeTilMottaker, setSkalLeggeTilMottaker] = useState(false);
+    const [mottakerFinnes, setMottakerFinnes] = useState<boolean | null>(null);
+    const [mottakerFetchError, setMottakerFetchError] = useState<MottakerAlert | null>(null);
+    const mottakerBrevtype: Brevtype = 'FORHANDSVARSEL';
 
     const form = useForm<ForhåndsvarsleTilbakekrevingFormData>({
         defaultValues: {
@@ -69,6 +76,46 @@ const ForhåndsvarsleTilbakekreving = (props: {
             }
         });
     }, []);
+
+    useEffect(() => {
+        if (!props.tilbakekreving.id) {
+            return;
+        }
+
+        const sjekkMottaker = async () => {
+            setMottakerFinnes(null);
+            setMottakerFetchError(null);
+
+            const res = await hentMottaker(props.sakId, 'TILBAKEKREVING', props.tilbakekreving.id, mottakerBrevtype);
+
+            if (res.status === 'ok') {
+                if (res.data) {
+                    setMottakerFinnes(true);
+                    setSkalLeggeTilMottaker(true);
+                    setMottakerFetchError(null);
+                    return;
+                }
+
+                setMottakerFinnes(false);
+                setSkalLeggeTilMottaker(false);
+                setMottakerFetchError(null);
+                return;
+            }
+
+            if (res.error.statusCode === 404) {
+                setMottakerFinnes(false);
+                setSkalLeggeTilMottaker(false);
+                setMottakerFetchError(null);
+                return;
+            }
+
+            setMottakerFinnes(false);
+            setSkalLeggeTilMottaker(false);
+            setMottakerFetchError(toMottakerAlert(res.error, formatMessage('feilmelding.kanIkkeHenteMottaker')));
+        };
+
+        void sjekkMottaker();
+    }, [formatMessage, mottakerBrevtype, props.sakId, props.tilbakekreving.id]);
 
     const handleSubmit = (data: ForhåndsvarsleTilbakekrevingFormData) => {
         if (!data.skalForhåndsvarsle) {
@@ -134,38 +181,67 @@ const ForhåndsvarsleTilbakekreving = (props: {
                         />
 
                         {form.watch('skalForhåndsvarsle') && (
-                            <TextareaWithAutosave
-                                textarea={{
-                                    name: 'fritekst',
-                                    label: formatMessage('forhåndsvarsleTilbakekreving.fritekst.label'),
-                                    control: form.control,
-                                    value: form.watch('fritekst') ?? '',
-                                    description: [formatMessage('brevForTilbakekreving.fritekst.description')],
-                                }}
-                                save={{
-                                    handleSave: () => {
-                                        if (form.getValues('skalForhåndsvarsle')) {
-                                            handleRedigertForhåndsvarsel(
-                                                {
-                                                    fritekst: form.getValues('fritekst')!,
-                                                },
-                                                () => void 0,
-                                            );
-                                        }
-                                    },
-                                    status: redigertForhåndsvarselStatus,
-                                }}
-                                brev={{
-                                    handleSeBrev: () =>
-                                        forhåndsvis({
-                                            sakId: props.sakId,
-                                            behandlingId: props.tilbakekreving.id,
-                                            saksversjon: props.saksversjon,
-                                            brevtekst: form.getValues('fritekst'),
-                                        }),
-                                    status: forhåndsvisStatus,
-                                }}
-                            />
+                            <>
+                                <TextareaWithAutosave
+                                    textarea={{
+                                        name: 'fritekst',
+                                        label: formatMessage('forhåndsvarsleTilbakekreving.fritekst.label'),
+                                        control: form.control,
+                                        value: form.watch('fritekst') ?? '',
+                                        description: [formatMessage('brevForTilbakekreving.fritekst.description')],
+                                    }}
+                                    save={{
+                                        handleSave: () => {
+                                            if (form.getValues('skalForhåndsvarsle')) {
+                                                handleRedigertForhåndsvarsel(
+                                                    {
+                                                        fritekst: form.getValues('fritekst')!,
+                                                    },
+                                                    () => void 0,
+                                                );
+                                            }
+                                        },
+                                        status: redigertForhåndsvarselStatus,
+                                    }}
+                                    brev={{
+                                        handleSeBrev: () =>
+                                            forhåndsvis({
+                                                sakId: props.sakId,
+                                                behandlingId: props.tilbakekreving.id,
+                                                saksversjon: props.saksversjon,
+                                                brevtekst: form.getValues('fritekst'),
+                                            }),
+                                        status: forhåndsvisStatus,
+                                    }}
+                                />
+                                {mottakerFetchError && (
+                                    <Alert variant={mottakerFetchError.variant} size="small">
+                                        {mottakerFetchError.text}
+                                    </Alert>
+                                )}
+                                <Button
+                                    variant="secondary"
+                                    type="button"
+                                    onClick={() => setSkalLeggeTilMottaker((prev) => !prev)}
+                                    size="small"
+                                    disabled={mottakerFinnes === null}
+                                >
+                                    {skalLeggeTilMottaker
+                                        ? formatMessage('knapp.lukkmottaker')
+                                        : mottakerFinnes
+                                          ? formatMessage('knapp.vismottaker')
+                                          : formatMessage('knapp.leggtilmottaker')}
+                                    {mottakerFinnes === null && <Loader size="small" />}
+                                </Button>
+                                {skalLeggeTilMottaker && (
+                                    <MottakerForm
+                                        sakId={props.sakId}
+                                        referanseId={props.tilbakekreving.id}
+                                        referanseType={'TILBAKEKREVING'}
+                                        brevtype={mottakerBrevtype}
+                                    />
+                                )}
+                            </>
                         )}
 
                         <div>
