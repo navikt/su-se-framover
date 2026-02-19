@@ -145,6 +145,7 @@ const DryRunPanel = () => {
     const [supplementValue, setSupplementValue] = useState<Nullable<string | File>>(null);
 
     const [nyGrunnbeløp, setNyGrunnbeløp] = useState<boolean>(false);
+    const [lagreManuelle, setLagreManuelle] = useState<boolean>(false);
     const [virkningstidspunkt, setVirkningstidspunkt] = useState<Nullable<Date>>(null);
     const [ikrafttredelse, setIkrafttredelse] = useState<Nullable<Date>>(null);
     const [gverdiDryRun, setGVerdiDryRun] = useState<Nullable<number>>(null);
@@ -163,6 +164,7 @@ const DryRunPanel = () => {
                         omregningsfaktor: omregningsfaktor,
                     },
                     supplement: supplementValue,
+                    lagreManuelle: lagreManuelle,
                 });
             } else {
                 console.log('du må fylle ut alle feltene før du kan kjøre dry-run');
@@ -173,6 +175,7 @@ const DryRunPanel = () => {
                 gjeldendeSatsFraOgMed: toIsoDateOnlyString(gjeldendeSatsFra!),
                 nyttGrunnbeløp: null,
                 supplement: supplementValue,
+                lagreManuelle: lagreManuelle,
             });
         }
     };
@@ -222,6 +225,16 @@ const DryRunPanel = () => {
                             />
                         </div>
                     )}
+
+                    <div className={styles.lagreManuelle}>
+                        <Checkbox onChange={() => setLagreManuelle(!lagreManuelle)} checked={lagreManuelle}>
+                            Lagre manuelle behandlinger (gjelder ikke prod)
+                        </Checkbox>
+                        <HelpText>
+                            Grunnbeløp som legges til her vil brukes for å trigge opprettelse av manuelle reguleringer.
+                            Under behandlingen av disse reguleringene vil grunnbeløp som ligger i systemet benyttes.
+                        </HelpText>
+                    </div>
                 </div>
                 <ReguleringsSupplement onSupplementChange={setSupplementValue} />
 

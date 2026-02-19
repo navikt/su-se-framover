@@ -41,6 +41,7 @@ export async function dryRunRegulering(args: {
         grunnbeløp: string;
         omregningsfaktor: string;
     }>;
+    lagreManuelle: boolean;
 }) {
     const url = `/reguleringer/automatisk/dry`;
     const method = 'POST';
@@ -51,6 +52,7 @@ export async function dryRunRegulering(args: {
             formData.append('startDatoRegulering', args.startDatoRegulering);
             formData.append('gjeldendeSatsFra', args.gjeldendeSatsFraOgMed);
             formData.append('file', args.supplement);
+            formData.append('lagreManuelle', args.lagreManuelle.toString());
             return apiClient({ url: url, method: method, body: formData });
         } else {
             return apiClient({
@@ -61,6 +63,7 @@ export async function dryRunRegulering(args: {
                     gjeldendeSatsFra: args.gjeldendeSatsFraOgMed,
                     dryRunGrunnbeløp: null,
                     supplement: args.supplement,
+                    lagreManuelle: args.lagreManuelle,
                 },
             });
         }
@@ -78,7 +81,7 @@ export async function dryRunRegulering(args: {
             }
             formData.append('grunnbeløp', args.nyttGrunnbeløp.grunnbeløp);
             formData.append('omregningsfaktor', args.nyttGrunnbeløp.omregningsfaktor);
-
+            formData.append('lagreManuelle', args.lagreManuelle.toString());
             return apiClient({ url: url, method: method, body: formData });
         } else {
             return apiClient({
@@ -94,6 +97,7 @@ export async function dryRunRegulering(args: {
                         omregningsfaktor: args.nyttGrunnbeløp.omregningsfaktor,
                         csv: args.supplement,
                     },
+                    lagreManuelle: args.lagreManuelle,
                 },
             });
         }
