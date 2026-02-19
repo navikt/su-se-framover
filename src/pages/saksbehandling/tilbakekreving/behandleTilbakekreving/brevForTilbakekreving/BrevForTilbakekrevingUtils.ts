@@ -3,13 +3,13 @@ import yup from '~src/lib/validering';
 
 export interface BrevForTilbakekrevingFormData {
     skalSendeBrev: boolean;
-    brevtekst: Nullable<string>;
+    fritekst: Nullable<string>;
     notat: string;
 }
 
 export const brevForTilbakekrevingSchema = yup.object<BrevForTilbakekrevingFormData>({
     skalSendeBrev: yup.boolean().required(),
-    brevtekst: yup
+    fritekst: yup
         .string()
         .when('skalSendeBrev', {
             is: true,

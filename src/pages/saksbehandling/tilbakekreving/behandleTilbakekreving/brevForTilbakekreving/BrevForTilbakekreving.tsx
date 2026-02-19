@@ -2,9 +2,9 @@ import * as RemoteData from '@devexperts/remote-data-ts';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Radio, RadioGroup } from '@navikt/ds-react';
 import { useEffect, useRef } from 'react';
-import { Controller, UseFormTrigger, useForm } from 'react-hook-form';
+import { Controller, UseFormTrigger, useForm, useWatch } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
-
+import { FritekstTyper, hentFritekst } from '~src/api/fritekstApi.ts';
 import { forhåndsvisVedtaksbrevTilbakekrevingsbehandling } from '~src/api/tilbakekrevingApi';
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
 import TextareaWithAutosave from '~src/components/inputs/textareaWithAutosave/TextareaWithAutosave';
@@ -22,13 +22,11 @@ import * as routes from '~src/lib/routes';
 import { Nullable } from '~src/lib/types';
 import { hookFormErrorsTilFeiloppsummering } from '~src/lib/validering';
 import { ManuellTilbakekrevingsbehandling, TilbakekrevingSteg } from '~src/types/ManuellTilbakekrevingsbehandling';
-
 import messages from '../../Tilbakekreving-nb';
-
 import styles from './BrevForTilbakekreving.module.less';
 import { BrevForTilbakekrevingFormData, brevForTilbakekrevingSchema } from './BrevForTilbakekrevingUtils';
 
-type HandleBrevtekstSave = { skalSendeBrev: boolean; brevtekst: Nullable<string> };
+type HandleBrevtekstSave = { skalSendeBrev: boolean; fritekst: Nullable<string> };
 type HandleNotatSave = { notat: Nullable<string> };
 
 const BrevForTilbakekreving = (props: {
@@ -47,7 +45,7 @@ const BrevForTilbakekreving = (props: {
         resolver: yupResolver(brevForTilbakekrevingSchema),
         defaultValues: {
             skalSendeBrev: props.tilbakekreving.fritekst !== null,
-            brevtekst: props.tilbakekreving.fritekst,
+            fritekst: props.tilbakekreving.fritekst,
             notat: props.tilbakekreving.notat ?? '',
         },
     });
@@ -74,7 +72,7 @@ const BrevForTilbakekreving = (props: {
                 sakId: props.sakId,
                 saksversjon: saksversjonRef.current,
                 behandlingId: props.tilbakekreving.id,
-                brevtekst: data.skalSendeBrev ? data.brevtekst : null,
+                brevtekst: data.skalSendeBrev ? data.fritekst : null,
             },
             onSuccess,
         );
@@ -107,6 +105,33 @@ const BrevForTilbakekreving = (props: {
         );
     };
 
+    const skalSendeBrev = useWatch({
+        control: form.control,
+        name: 'skalSendeBrev',
+    });
+    const fritekst =
+        useWatch({
+            control: form.control,
+            name: 'fritekst',
+        }) ?? '';
+
+    useEffect(() => {
+        if (!skalSendeBrev) return;
+        const referanseId = props.tilbakekreving.id;
+        if (!referanseId) return;
+
+        hentFritekst({
+            referanseId,
+            sakId: props.sakId,
+            type: FritekstTyper.VEDTAKSBREV_TILBAKEKREVING,
+        }).then((res) => {
+            if (res.status === 'ok' && res.data) {
+                form.resetField('fritekst', { defaultValue: res.data.fritekst ?? '' });
+                return;
+            }
+            form.setError('fritekst', { message: 'Kunne ikke hente fritekst' });
+        });
+    }, [skalSendeBrev, props.tilbakekreving.id, props.sakId]);
     return (
         <ToKolonner tittel={formatMessage('brevForTilbakekreving.tittel')}>
             {{
@@ -131,26 +156,32 @@ const BrevForTilbakekreving = (props: {
                             )}
                         />
                         <div className={styles.textareaContainer}>
-                            {form.watch('skalSendeBrev') && (
+                            {skalSendeBrev && (
                                 <TextareaWithAutosave
                                     textarea={{
-                                        name: 'brevtekst',
+                                        name: 'fritekst',
                                         label: formatMessage('brevForTilbakekreving.fritekst.label'),
                                         control: form.control,
-                                        value: form.watch('brevtekst') ?? '',
+                                        value: fritekst,
                                         description: [formatMessage('brevForTilbakekreving.fritekst.description')],
                                     }}
                                     save={{
                                         handleSave: () => {
-                                            if (form.getValues('skalSendeBrev')) {
-                                                handleBrevtekstSave(
-                                                    {
-                                                        skalSendeBrev: form.getValues('skalSendeBrev'),
-                                                        brevtekst: form.getValues('brevtekst')!,
-                                                    },
-                                                    () => void 0,
-                                                );
-                                            }
+                                            if (!skalSendeBrev) return;
+
+                                            const { isDirty } = form.getFieldState('fritekst');
+                                            if (!isDirty) return;
+                                            handleBrevtekstSave(
+                                                {
+                                                    skalSendeBrev,
+                                                    fritekst: form.getValues('fritekst'),
+                                                },
+                                                () => {
+                                                    form.resetField('fritekst', {
+                                                        defaultValue: form.getValues('fritekst'),
+                                                    });
+                                                },
+                                            );
                                         },
                                         status: saveBrevtekstStatus,
                                     }}

@@ -1,5 +1,4 @@
 import { useNavigate } from 'react-router-dom';
-
 import AttesteringsForm from '~src/components/forms/attesteringForm/AttesteringsForm';
 import OppsummeringAvTilbakekrevingsbehandling from '~src/components/oppsummering/oppsummeringAvTilbakekrevingsbehandling/OppsummeringAvTilbakekrevingsbehandling';
 import { iverksettTilbakekreving, underkjennTilbakekreving } from '~src/features/TilbakekrevingActions';
@@ -11,9 +10,7 @@ import {
     ManuellTilbakekrevingsbehandling,
     UnderkjennelseGrunnTilbakekreving,
 } from '~src/types/ManuellTilbakekrevingsbehandling';
-
 import messages from '../Attestering-nb';
-
 import styles from './AttesterTilbakekreving.module.less';
 
 const AttesterTilbakekreving = (props: { behandling: ManuellTilbakekrevingsbehandling; saksversjon: number }) => {
@@ -57,7 +54,7 @@ const AttesterTilbakekreving = (props: { behandling: ManuellTilbakekrevingsbehan
         <div className={styles.mainContentContainer}>
             <AttesteringsForm
                 behandlingsId={props.behandling.id}
-                redigerbartBrev={false}
+                redigerbartBrev={true}
                 sakId={props.behandling.sakId}
                 behandlingstype="TILBAKEKREVING"
                 iverksett={{ fn: iverksettCallback, status: iverksettStatus }}

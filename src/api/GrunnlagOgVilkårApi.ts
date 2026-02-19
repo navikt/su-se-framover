@@ -14,7 +14,6 @@ import { UførevilkårRequest } from '~src/types/grunnlagsdataOgVilkårsvurderin
 import { UtenlandsoppholdRequest } from '~src/types/grunnlagsdataOgVilkårsvurderinger/utenlandsopphold/Utenlandsopphold';
 import { InformasjonsRevurdering, OpprettetRevurdering } from '~src/types/Revurdering';
 import { Søknadsbehandling } from '~src/types/Søknadsbehandling';
-
 import apiClient, { ErrorMessage } from './apiClient';
 
 export enum Behandlingstype {
