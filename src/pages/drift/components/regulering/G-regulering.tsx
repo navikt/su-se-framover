@@ -231,7 +231,7 @@ const DryRunPanel = () => {
                             Lagre manuelle behandlinger (gjelder ikke prod)
                         </Checkbox>
                         <HelpText>
-                            Grunnbeløp som legges til her vil brukes for å trigge opprettelse av manuelle regulering.
+                            Grunnbeløp som legges til her vil brukes for å trigge opprettelse av manuelle reguleringer.
                             Under behandlingen av disse reguleringene vil grunnbeløp som ligger i systemet benyttes.
                         </HelpText>
                     </div>
