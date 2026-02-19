@@ -135,7 +135,7 @@ const SendTilAttesteringPage = () => {
                 setMottakerFetchError(null);
             };
 
-            const res = await hentMottaker(props.sak.id, 'SØKNAD', behandling.id, 'VEDTAKSBREV');
+            const res = await hentMottaker(props.sak.id, 'SØKNAD', behandling.id, 'VEDTAK');
 
             if (res.status === 'ok') {
                 if (res.data) {
@@ -236,7 +236,7 @@ const SendTilAttesteringPage = () => {
                             sakId={props.sak.id}
                             referanseId={behandling.id}
                             referanseType={'SØKNAD'}
-                            brevtype={'VEDTAKSBREV'}
+                            brevtype={'VEDTAK'}
                             onClose={() => setSkalLeggeTilMottaker(false)}
                         />
                     )}

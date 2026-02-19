@@ -1,11 +1,13 @@
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Radio, RadioGroup } from '@navikt/ds-react';
-import { useEffect } from 'react';
+import { Alert, Button, Loader, Radio, RadioGroup } from '@navikt/ds-react';
+import { useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 
+import { Brevtype, hentMottaker } from '~src/api/mottakerClient.ts';
 import * as PdfApi from '~src/api/pdfApi';
 import { BrevInput } from '~src/components/inputs/brevInput/BrevInput';
+import { MottakerAlert, toMottakerAlert } from '~src/components/mottaker/mottakerUtils';
 import OppsummeringAvInformasjonsrevurdering from '~src/components/oppsummering/oppsummeringAvRevurdering/informasjonsrevurdering/OppsummeringAvInformasjonsrevurdering';
 import ToKolonner from '~src/components/toKolonner/ToKolonner';
 import * as RevurderingActions from '~src/features/revurdering/revurderingActions';
@@ -15,6 +17,7 @@ import * as Routes from '~src/lib/routes';
 import { Nullable } from '~src/lib/types';
 import yup from '~src/lib/validering';
 import { VisDokumenter } from '~src/pages/saksbehandling/dokumenter/DokumenterPage';
+import { MottakerForm } from '~src/pages/saksbehandling/mottaker/Mottaker.tsx';
 import { FormWrapper } from '~src/pages/saksbehandling/søknadsbehandling/FormWrapper';
 import { DokumentIdType } from '~src/types/dokument/Dokument';
 import { GrunnlagsdataOgVilkårsvurderinger } from '~src/types/grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
@@ -49,6 +52,10 @@ const ForhåndsvarselForm = (props: {
 }) => {
     const navigate = useNavigate();
     const { formatMessage } = useI18n({ messages });
+    const [skalLeggeTilMottaker, setSkalLeggeTilMottaker] = useState(false);
+    const [mottakerFinnes, setMottakerFinnes] = useState<boolean | null>(null);
+    const [mottakerFetchError, setMottakerFetchError] = useState<MottakerAlert | null>(null);
+    const mottakerBrevtype: Brevtype = 'FORHANDSVARSEL';
 
     const form = useForm<ForhåndsvarselFormData>({
         defaultValues: { oppretterNyttForhåndsvarsel: false, fritekst: null },
@@ -59,7 +66,56 @@ const ForhåndsvarselForm = (props: {
 
     useEffect(() => {
         form.clearErrors('fritekst');
+        if (!oppretterNyttForhåndsvarsel) {
+            setSkalLeggeTilMottaker(false);
+        }
     }, [oppretterNyttForhåndsvarsel]);
+
+    useEffect(() => {
+        if (!props.revurdering.id || !oppretterNyttForhåndsvarsel) {
+            return;
+        }
+
+        const sjekkMottaker = async () => {
+            setMottakerFinnes(null);
+            setMottakerFetchError(null);
+
+            const setMottakerFunnet = () => {
+                setMottakerFinnes(true);
+                setSkalLeggeTilMottaker(true);
+                setMottakerFetchError(null);
+            };
+
+            const setMottakerIkkeFunnet = () => {
+                setMottakerFinnes(false);
+                setSkalLeggeTilMottaker(false);
+                setMottakerFetchError(null);
+            };
+
+            const res = await hentMottaker(props.sakId, 'REVURDERING', props.revurdering.id, mottakerBrevtype);
+
+            if (res.status === 'ok') {
+                if (res.data) {
+                    setMottakerFunnet();
+                } else {
+                    setMottakerIkkeFunnet();
+                }
+                return;
+            }
+
+            if (res.error.statusCode === 404) {
+                setMottakerIkkeFunnet();
+                return;
+            }
+
+            setMottakerFinnes(false);
+            setSkalLeggeTilMottaker(false);
+            setMottakerFetchError(
+                toMottakerAlert(res.error, formatMessage('forhåndsvarsel.feilmelding.kanIkkeHenteMottaker')),
+            );
+        };
+        sjekkMottaker();
+    }, [oppretterNyttForhåndsvarsel, props.revurdering.id, props.sakId]);
 
     const [lagreForhåndsvarselStatus, lagreForhåndsvarsel] = useAsyncActionCreator(
         RevurderingActions.lagreForhåndsvarsel,
@@ -141,6 +197,41 @@ const ForhåndsvarselForm = (props: {
                                         />
                                     )}
                                 />
+                            )}
+                            {watch.oppretterNyttForhåndsvarsel && (
+                                <div className={styles.mottakerSection}>
+                                    {mottakerFetchError && (
+                                        <Alert variant={mottakerFetchError.variant} size="small">
+                                            {mottakerFetchError.text}
+                                        </Alert>
+                                    )}
+                                    <Button
+                                        variant="secondary"
+                                        className={styles.mottakerToggle}
+                                        type="button"
+                                        onClick={() => setSkalLeggeTilMottaker((prev) => !prev)}
+                                        size="small"
+                                        disabled={mottakerFinnes === null}
+                                    >
+                                        {skalLeggeTilMottaker
+                                            ? formatMessage('forhåndsvarsel.knapp.lukkMottaker')
+                                            : mottakerFinnes
+                                              ? formatMessage('forhåndsvarsel.knapp.visMottaker')
+                                              : formatMessage('forhåndsvarsel.knapp.leggTilMottaker')}
+                                        {mottakerFinnes === null && (
+                                            <Loader size="small" className={styles.buttonSpinner} />
+                                        )}
+                                    </Button>
+                                    {skalLeggeTilMottaker && (
+                                        <MottakerForm
+                                            sakId={props.sakId}
+                                            referanseId={props.revurdering.id}
+                                            referanseType={'REVURDERING'}
+                                            brevtype={mottakerBrevtype}
+                                            onClose={() => setSkalLeggeTilMottaker(false)}
+                                        />
+                                    )}
+                                </div>
                             )}
 
                             <VisDokumenter

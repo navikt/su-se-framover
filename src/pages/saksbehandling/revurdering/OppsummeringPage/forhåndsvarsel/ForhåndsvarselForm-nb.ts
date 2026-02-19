@@ -8,4 +8,8 @@ export default {
     'forhåndsvarsel.skalSende.nei': 'Nei',
     'forhåndsvarsel.fritekst.label': 'Fritekst til forhåndsvarsel',
     'forhåndsvarsel.dokumenterAlert.ingenForhåndsvarsel': 'Ingen sendte forhåndsvarsel',
+    'forhåndsvarsel.knapp.leggTilMottaker': 'Legg til mottaker',
+    'forhåndsvarsel.knapp.lukkMottaker': 'Lukk mottaker',
+    'forhåndsvarsel.knapp.visMottaker': 'Vis mottaker',
+    'forhåndsvarsel.feilmelding.kanIkkeHenteMottaker': 'Kan ikke hente mottaker',
 };
