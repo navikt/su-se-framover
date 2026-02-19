@@ -104,7 +104,7 @@ const FradragForm = <T extends FieldValues>(props: Props<T>) => {
                                                     inputTekst="NOK"
                                                     onChange={field.onChange}
                                                     feil={fieldState.error?.message}
-                                                    disabled={watchedFradrag?.fraUtland}
+                                                    disabled={props.readonly || watchedFradrag?.fraUtland}
                                                 />
                                             )}
                                         />
@@ -201,15 +201,17 @@ const FradragForm = <T extends FieldValues>(props: Props<T>) => {
                     );
                 })}
             </ul>
-            <div>
-                {/* Ts klager på at vi ikke returnerer en full objekt av typen T, selv om vi bare ønsker at komponentet skal håndtere FradragFormData. */}
-                {/* @ts-ignore */}
-                <Button variant="secondary" type="button" size="small" onClick={() => append(nyFradrag())}>
-                    {fields.length === 0
-                        ? formatMessage('knapp.fradrag.leggtil')
-                        : formatMessage('knapp.fradrag.leggtil.annet')}
-                </Button>
-            </div>
+            {!props.readonly && (
+                <div>
+                    {/* Ts klager på at vi ikke returnerer en full objekt av typen T, selv om vi bare ønsker at komponentet skal håndtere FradragFormData. */}
+                    {/* @ts-ignore */}
+                    <Button variant="secondary" type="button" size="small" onClick={() => append(nyFradrag())}>
+                        {fields.length === 0
+                            ? formatMessage('knapp.fradrag.leggtil')
+                            : formatMessage('knapp.fradrag.leggtil.annet')}
+                    </Button>
+                </div>
+            )}
         </div>
     );
 };
