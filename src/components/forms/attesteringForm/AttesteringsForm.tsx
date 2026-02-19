@@ -290,7 +290,7 @@ export const AttesteringsForm = (props: Props) => {
                     sakId={props.sakId}
                     referanseId={props.behandlingsId}
                     referanseType={ekstraMottakerReferanseType}
-                    brevtype={'VEDTAKSBREV'}
+                    brevtype={'VEDTAK'}
                 />
             )}
         </div>

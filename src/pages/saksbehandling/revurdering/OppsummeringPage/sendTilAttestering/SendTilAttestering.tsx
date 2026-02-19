@@ -84,7 +84,7 @@ const SendTilAttestering = (props: {
     const [skalLeggeTilMottaker, setSkalLeggeTilMottaker] = useState(false);
     const [mottakerFinnes, setMottakerFinnes] = useState<boolean | null>(null);
     const [mottakerFetchError, setMottakerFetchError] = useState<MottakerAlert | null>(null);
-    const mottakerBrevtype: Brevtype = 'VEDTAKSBREV';
+    const mottakerBrevtype: Brevtype = 'VEDTAK';
 
     const [seBrevStatus, seBrev] = useBrevForhåndsvisning(pdfApi.fetchBrevutkastForRevurdering);
     const [sendTilAttesteringStatus, sendtilAttestering] = useAsyncActionCreator(
