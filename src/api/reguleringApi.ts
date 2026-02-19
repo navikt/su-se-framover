@@ -52,6 +52,7 @@ export async function dryRunRegulering(args: {
             formData.append('startDatoRegulering', args.startDatoRegulering);
             formData.append('gjeldendeSatsFra', args.gjeldendeSatsFraOgMed);
             formData.append('file', args.supplement);
+            formData.append('lagreManuelle', args.lagreManuelle.toString());
             return apiClient({ url: url, method: method, body: formData });
         } else {
             return apiClient({
