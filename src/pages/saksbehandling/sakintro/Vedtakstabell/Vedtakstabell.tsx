@@ -28,7 +28,7 @@ import { erOmgjøring, Revurdering } from '~src/types/Revurdering.ts';
 import { Søknadsbehandling } from '~src/types/Søknadsbehandling.ts';
 import { Vedtak, VedtakType, VedtakTypeMedOmgjøring } from '~src/types/Vedtak';
 import { formatDateTime } from '~src/utils/date/dateUtils';
-import { getBlob } from '~src/utils/dokumentUtils';
+import { openDokumentInNewTab } from '~src/utils/dokumentUtils';
 import { formatPeriode } from '~src/utils/periode/periodeUtils';
 import {
     erDokumentGenerertEllerSenere,
@@ -308,10 +308,12 @@ const Vedtakstabell = (props: {
                                                                         ? DokumentIdType.Klage
                                                                         : DokumentIdType.Vedtak,
                                                                 },
-                                                                (dokumenter) =>
-                                                                    window.open(
-                                                                        URL.createObjectURL(getBlob(dokumenter[0])),
-                                                                    ),
+                                                                (dokumenter) => {
+                                                                    const [dokument] = dokumenter;
+                                                                    if (dokument) {
+                                                                        openDokumentInNewTab(dokument);
+                                                                    }
+                                                                },
                                                             );
                                                         }
                                                     }}

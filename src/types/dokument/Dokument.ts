@@ -5,7 +5,8 @@ export interface Dokument {
     journalpostId: Nullable<string>;
     tittel: string;
     opprettet: string;
-    dokument: string;
+    pdfUrl?: string;
+    dokument?: string;
     journalført: boolean;
     brevErBestilt: boolean;
 }

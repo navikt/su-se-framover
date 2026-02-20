@@ -26,7 +26,7 @@ import { Søknadsbehandling } from '~src/types/Søknadsbehandling';
 import { Vedtak } from '~src/types/Vedtak';
 import { erBehandlingRevurdering, erBehandlingSøknadsbehandling } from '~src/utils/behandling/BehandlingUtils';
 import { formatDateTime } from '~src/utils/date/dateUtils';
-import { getBlob } from '~src/utils/dokumentUtils';
+import { openDokumentInNewTab } from '~src/utils/dokumentUtils';
 import { formatPeriode } from '~src/utils/periode/periodeUtils';
 import { erInformasjonsRevurdering } from '~src/utils/revurdering/revurderingUtils';
 import {
@@ -140,9 +140,12 @@ const OppsummeringAvVedtak = (props: { vedtakId?: string; vedtak?: Vedtak }) => 
                                               window.open(URL.createObjectURL(res));
                                           },
                                       )
-                                    : hentDokumenter({ id: vedtak.id, idType: DokumentIdType.Vedtak }, (dokumenter) =>
-                                          window.open(URL.createObjectURL(getBlob(dokumenter[0]))),
-                                      )
+                                    : hentDokumenter({ id: vedtak.id, idType: DokumentIdType.Vedtak }, (dokumenter) => {
+                                          const [dokument] = dokumenter;
+                                          if (dokument) {
+                                              openDokumentInNewTab(dokument);
+                                          }
+                                      })
                             }
                         >
                             {formatMessage('knapp.seBrev')}

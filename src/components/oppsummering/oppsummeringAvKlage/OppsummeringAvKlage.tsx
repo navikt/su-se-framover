@@ -18,7 +18,7 @@ import { DokumentIdType } from '~src/types/dokument/Dokument';
 import { Klage, utfallTilVisning } from '~src/types/Klage';
 import { Vedtak } from '~src/types/Vedtak';
 import * as DateUtils from '~src/utils/date/dateUtils';
-import { getBlob } from '~src/utils/dokumentUtils';
+import { openDokumentInNewTab } from '~src/utils/dokumentUtils';
 import {
     erKlageDelvisomgjortEgenVedtaksinstans,
     erKlageOmgjort,
@@ -81,7 +81,12 @@ const OppsummeringAvKlage = (props: { klage: Klage; klagensVedtak: Vedtak }) => 
                                     onClick={() =>
                                         hentDokumenter(
                                             { id: props.klage.id, idType: DokumentIdType.Klage },
-                                            (dokumenter) => window.open(URL.createObjectURL(getBlob(dokumenter[0]))),
+                                            (dokumenter) => {
+                                                const [dokument] = dokumenter;
+                                                if (dokument) {
+                                                    openDokumentInNewTab(dokument);
+                                                }
+                                            },
                                         )
                                     }
                                 >

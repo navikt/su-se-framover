@@ -27,7 +27,7 @@ import * as Routes from '~src/lib/routes';
 import { DokumentIdType } from '~src/types/dokument/Dokument';
 import { KlageStatus } from '~src/types/Klage';
 import { formatDateTime } from '~src/utils/date/dateUtils';
-import { getBlob } from '~src/utils/dokumentUtils';
+import { openDokumentInNewTab } from '~src/utils/dokumentUtils';
 import { erKlageOmgjortFerdigstilt } from '~src/utils/klage/klageUtils';
 import {
     erDokumentGenerertEllerSenere,
@@ -186,10 +186,12 @@ const AvsluttedeBehandlingerTabell = (props: { tabellBehandlinger: TabellBehandl
                                                                 id: behandling.søknad.id,
                                                                 idType: DokumentIdType.Søknad,
                                                             },
-                                                            (dokumenter) =>
-                                                                window.open(
-                                                                    URL.createObjectURL(getBlob(dokumenter[0])),
-                                                                ),
+                                                            (dokumenter) => {
+                                                                const [dokument] = dokumenter;
+                                                                if (dokument) {
+                                                                    openDokumentInNewTab(dokument);
+                                                                }
+                                                            },
                                                         );
                                                     }}
                                                 >
