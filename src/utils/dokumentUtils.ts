@@ -18,12 +18,6 @@ export const getDokumentPdfUrl = (dokument: Pick<Dokument, 'id'>) =>
 
 export const openPdfBlobInNewTab = (blob: Blob) => {
     const url = URL.createObjectURL(blob);
-    const newWindow = window.open(url, '_blank', OPEN_IN_NEW_TAB_FEATURES);
-    if (!newWindow) {
-        URL.revokeObjectURL(url);
-        return;
-    }
-
     let revoked = false;
     const revoke = () => {
         if (revoked) return;
@@ -33,7 +27,10 @@ export const openPdfBlobInNewTab = (blob: Blob) => {
     };
 
     const fallbackTimeoutId = window.setTimeout(revoke, REVOKE_FALLBACK_MS);
-    newWindow.addEventListener('load', revoke, { once: true });
+    const newWindow = window.open(url, '_blank', OPEN_IN_NEW_TAB_FEATURES);
+    if (newWindow) {
+        newWindow.addEventListener('load', revoke, { once: true });
+    }
 };
 
 export const openDokumentInNewTab = (dokument: Dokument) => {

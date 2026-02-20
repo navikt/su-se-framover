@@ -41,8 +41,9 @@ export default async function expressStart() {
                         : Array.isArray(contentType)
                           ? contentType.some((value) => value.includes('application/pdf'))
                           : false;
+                const isDokumentPdfPath = /\/dokumenter\/[^/]+\/pdf$/.test(req.path);
 
-                if (isPdfByContentType || req.path.includes('/pdf')) {
+                if (isPdfByContentType || isDokumentPdfPath) {
                     return false;
                 }
 
