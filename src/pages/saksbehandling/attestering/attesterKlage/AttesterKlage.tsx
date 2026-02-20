@@ -1,6 +1,6 @@
 import { Alert } from '@navikt/ds-react';
 import { Link, useNavigate } from 'react-router-dom';
-
+import { Brevtype } from '~src/api/mottakerClient.ts';
 import AttesteringsForm from '~src/components/forms/attesteringForm/AttesteringsForm';
 import OppsummeringAvKlage from '~src/components/oppsummering/oppsummeringAvKlage/OppsummeringAvKlage';
 import * as klageActions from '~src/features/klage/klageActions';
@@ -28,6 +28,7 @@ const AttesterKlage = (props: { sakId: string; klage: Klage; klagensVedtak: Vedt
     const [oversendStatus, oversend] = useAsyncActionCreator(klageActions.oversend);
     const [avvisStatus, avvis] = useAsyncActionCreator(klageActions.iverksattAvvist);
     const [underkjennStatus, underkjenn] = useAsyncActionCreator(klageActions.underkjenn);
+    const ekstraMottakerBrevtype: Brevtype = erKlageTilAttesteringAvvist(props.klage) ? 'VEDTAK' : 'KLAGE';
 
     if (!erKlageTilAttestering(props.klage)) {
         return (
@@ -121,6 +122,7 @@ const AttesterKlage = (props: { sakId: string; klage: Klage; klagensVedtak: Vedt
                               ? formatMessage('radio.godkjennAvvisning')
                               : undefined,
                 }}
+                ekstraMottakerBrevtype={ekstraMottakerBrevtype}
             />
             <OppsummeringAvKlage klage={props.klage} klagensVedtak={props.klagensVedtak} />
         </div>

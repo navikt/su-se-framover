@@ -1,7 +1,7 @@
 import apiClient, { ApiClientResult } from './apiClient';
 
 export type ReferanseType = 'SØKNAD' | 'REVURDERING' | 'KLAGE' | 'TILBAKEKREVING';
-export type MottakerBrevtype = 'VEDTAK' | 'FORHANDSVARSEL';
+export type MottakerBrevtype = 'VEDTAK' | 'FORHANDSVARSEL' | 'KLAGE';
 export type Brevtype = MottakerBrevtype;
 
 export interface LagreMottakerRequest {
