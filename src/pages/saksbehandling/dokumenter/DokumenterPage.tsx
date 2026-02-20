@@ -40,32 +40,9 @@ import {
     VarselType,
 } from '~src/types/dokument/JournalpostDokumentInfo';
 import * as DateUtils from '~src/utils/date/dateUtils';
-import { getBlob, getPdfBlob } from '~src/utils/dokumentUtils';
+import { getDokumentPdfUrl, getPdfBlob, openPdfBlobInNewTab } from '~src/utils/dokumentUtils';
 import DokumentHeader from './DokumentHeader';
 import styles from './dokumenterPage.module.less';
-
-const REVOKE_FALLBACK_MS = 5_000;
-
-const openPdfInNewTab = (blob: Blob) => {
-    const url = URL.createObjectURL(blob);
-    const newWindow = window.open(url, '_blank', 'noopener,noreferrer');
-    if (!newWindow) {
-        URL.revokeObjectURL(url);
-        return;
-    }
-
-    let revoked = false;
-    const revoke = () => {
-        if (revoked) return;
-        revoked = true;
-        URL.revokeObjectURL(url);
-        window.clearTimeout(fallbackTimeoutId);
-    };
-
-    const fallbackTimeoutId = window.setTimeout(revoke, REVOKE_FALLBACK_MS);
-
-    newWindow.addEventListener('load', revoke, { once: true });
-};
 
 const formatVarselType = (type: VarselType): string => {
     switch (type) {
@@ -283,10 +260,6 @@ const DokumentPanel = (props: { sakId: string; dokument: Dokument }) => {
         }
     };
 
-    const handleDokumentClick = (dokument: Dokument) => {
-        openPdfInNewTab(getBlob(dokument));
-    };
-
     return (
         <Box background="surface-default" padding="6" borderWidth="1" borderRadius="medium" shadow="small">
             <VStack gap="2">
@@ -295,7 +268,13 @@ const DokumentPanel = (props: { sakId: string; dokument: Dokument }) => {
                         <FileTextIcon className={styles.dokumentikon} />
                         <VStack gap="1">
                             <Heading size="medium">
-                                <Link onClick={() => handleDokumentClick(props.dokument)}>{props.dokument.tittel}</Link>
+                                <Link
+                                    href={getDokumentPdfUrl(props.dokument)}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                >
+                                    {props.dokument.tittel}
+                                </Link>
                             </Heading>
                             <BodyShort className={styles.linkPanelBeskrivelse}>
                                 {DateUtils.formatDateTime(props.dokument.opprettet)}
@@ -367,7 +346,7 @@ const EksterntDokumentPanel = (props: { dokument: JournalpostDokumentInfo }) => 
     const utsendingsinfoTekst = getUtsendingsinfoTekst(props.dokument.utsendingsinfo);
 
     const handleDokumentClick = (dokument: JournalpostDokumentInfo) => {
-        openPdfInNewTab(getPdfBlob(dokument.pdfBase64));
+        openPdfBlobInNewTab(getPdfBlob(dokument.pdfBase64));
     };
 
     return (

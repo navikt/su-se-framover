@@ -31,7 +31,25 @@ export default async function expressStart() {
         }),
     );
 
-    app.use(compression());
+    app.use(
+        compression({
+            filter: (req, res) => {
+                const contentType = res.getHeader('Content-Type');
+                const isPdfByContentType =
+                    typeof contentType === 'string'
+                        ? contentType.includes('application/pdf')
+                        : Array.isArray(contentType)
+                          ? contentType.some((value) => value.includes('application/pdf'))
+                          : false;
+
+                if (isPdfByContentType) {
+                    return false;
+                }
+
+                return compression.filter(req, res);
+            },
+        }),
+    );
     const authClient = await AuthUtils.getOpenIdClient(Config.auth.discoverUrl);
     await setupAuth(app, authClient);
 
