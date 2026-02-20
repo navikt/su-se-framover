@@ -287,17 +287,11 @@ const VurderingAvKlage = (props: { sakId: string; klage: Klage }) => {
             return;
         }
 
-        let erKansellert = false;
-
         const sjekkMottaker = async () => {
             setMottakerFinnes(null);
             setMottakerFetchError(null);
 
             const res = await hentMottaker(props.sakId, 'KLAGE', props.klage.id, mottakerBrevtype);
-            if (erKansellert) {
-                return;
-            }
-
             if (res.status === 'ok') {
                 if (res.data) {
                     setMottakerFinnes(true);
@@ -321,10 +315,6 @@ const VurderingAvKlage = (props: { sakId: string; klage: Klage }) => {
         };
 
         void sjekkMottaker();
-
-        return () => {
-            erKansellert = true;
-        };
     }, [formatMessage, ikkeMedhold, props.klage.id, props.sakId]);
 
     const iGyldigTilstandForÅVurdere = (k: Klage) =>

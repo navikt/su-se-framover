@@ -84,16 +84,11 @@ const AvvistKlage = (props: { sakId: string; klage: Klage }) => {
             return;
         }
 
-        let erKansellert = false;
-
         const sjekkMottaker = async () => {
             setMottakerFinnes(null);
             setMottakerFetchError(null);
 
             const res = await hentMottaker(props.sakId, 'KLAGE', props.klage.id, mottakerBrevtype);
-            if (erKansellert) {
-                return;
-            }
 
             if (res.status === 'ok') {
                 if (res.data) {
@@ -118,10 +113,6 @@ const AvvistKlage = (props: { sakId: string; klage: Klage }) => {
         };
 
         void sjekkMottaker();
-
-        return () => {
-            erKansellert = true;
-        };
     }, [formatMessage, props.klage.id, props.sakId]);
 
     const iGyldigStatusForÅAvvise = (k: Klage) =>
