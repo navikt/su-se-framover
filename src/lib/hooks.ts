@@ -3,7 +3,8 @@ import { AsyncThunk } from '@reduxjs/toolkit';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 
-import { ApiClientResult, ApiError } from '~src/api/apiClient';
+import { ApiClientResult, ApiError, ErrorCode } from '~src/api/apiClient';
+import { ApiErrorCode } from '~src/components/apiErrorAlert/apiErrorCode';
 import { useAppDispatch } from '~src/redux/Store';
 
 import { SuccessNotificationState } from './routes';
@@ -26,6 +27,16 @@ export const useNotificationFromLocation = () => {
 };
 
 export type ApiResult<U> = RemoteData.RemoteData<ApiError, U>;
+
+const ukjentApiError = (message: string): ApiError => ({
+    statusCode: ErrorCode.Unknown,
+    correlationId: '',
+    body: {
+        code: ApiErrorCode.UKJENT_FEIL,
+        message,
+    },
+});
+
 export function useAsyncActionCreator<Params, Returned>(
     actionCreator: AsyncThunk<Returned, Params, { rejectValue: ApiError }>,
 ): [
@@ -58,9 +69,9 @@ export function useAsyncActionCreator<Params, Returned>(
                     await onSuccess?.(action.payload);
                     return 'ok';
                 } else {
-                    //vi forventer vel alltid en payload?
-                    setApiResult(RemoteData.failure(action.payload!));
-                    await onFailure?.(action.payload!);
+                    const rejectedError = action.payload ?? ukjentApiError('Thunk feilet uten spesifikk payload');
+                    setApiResult(RemoteData.failure(rejectedError));
+                    await onFailure?.(rejectedError);
                     return 'error';
                 }
             }
@@ -85,16 +96,17 @@ export function useApiCall<T, U>(
         async (args: T, onSuccess?: (result: U) => void) => {
             if (!RemoteData.isPending(apiResult)) {
                 setApiResult(RemoteData.pending);
-
-                const res = await fn(args).then(
-                    (res) => res,
-                    (res) => res,
-                );
-                if (res.status === 'ok') {
-                    setApiResult(RemoteData.success(res.data));
-                    onSuccess?.(res.data);
-                } else {
-                    setApiResult(RemoteData.failure(res.error));
+                try {
+                    const res = await fn(args);
+                    if (res.status === 'ok') {
+                        setApiResult(RemoteData.success(res.data));
+                        onSuccess?.(res.data);
+                    } else {
+                        setApiResult(RemoteData.failure(res.error ?? ukjentApiError('Tom feilrespons fra API')));
+                    }
+                } catch (err) {
+                    const message = err instanceof Error ? err.message : String(err);
+                    setApiResult(RemoteData.failure(ukjentApiError(`Uventet feil i useApiCall: ${message}`)));
                 }
             }
         },
