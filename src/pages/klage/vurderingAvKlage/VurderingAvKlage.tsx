@@ -17,12 +17,15 @@ import {
 import { struct } from 'fp-ts/Eq';
 import * as A from 'fp-ts/lib/Array';
 import * as S from 'fp-ts/string';
+import { useEffect, useState } from 'react';
 import { Control, Controller, useForm } from 'react-hook-form';
 import { Link, useNavigate } from 'react-router-dom';
 
+import { Brevtype, hentMottaker } from '~src/api/mottakerClient.ts';
 import * as pdfApi from '~src/api/pdfApi';
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
 import LinkAsButton from '~src/components/linkAsButton/LinkAsButton';
+import { MottakerAlert, toMottakerAlert } from '~src/components/mottaker/mottakerUtils';
 import ToKolonner from '~src/components/toKolonner/ToKolonner';
 import * as klageActions from '~src/features/klage/klageActions';
 import { useAsyncActionCreator, useBrevForhåndsvisning } from '~src/lib/hooks';
@@ -30,6 +33,7 @@ import { useI18n } from '~src/lib/i18n';
 import * as Routes from '~src/lib/routes';
 import { eqNullable, Nullable } from '~src/lib/types';
 import yup from '~src/lib/validering';
+import { MottakerForm } from '~src/pages/saksbehandling/mottaker/Mottaker.tsx';
 import { KabalVedtakHjemmel, Klage, KlageStatus, KlageSteg, KlageVurderingType } from '~src/types/Klage';
 import { OmgjøringsGrunn } from '~src/types/Revurdering';
 import { erKlageVurdert, erKlageVurdertBekreftet } from '~src/utils/klage/klageUtils';
@@ -134,6 +138,10 @@ const VurderingAvKlage = (props: { sakId: string; klage: Klage }) => {
     );
     const [bekreftVurderingerStatus, bekreftVurderinger] = useAsyncActionCreator(klageActions.bekreftVurderinger);
     const [brevStatus, hentBrev] = useBrevForhåndsvisning(pdfApi.hentBrevutkastForKlage);
+    const [skalLeggeTilMottaker, setSkalLeggeTilMottaker] = useState(false);
+    const [mottakerFinnes, setMottakerFinnes] = useState<boolean | null>(null);
+    const [mottakerFetchError, setMottakerFetchError] = useState<MottakerAlert | null>(null);
+    const mottakerBrevtype: Brevtype = 'KLAGE';
 
     const hjelpetekstLink =
         'https://navno.sharepoint.com/sites/fag-og-ytelser-pensjon-supplerende-stonad/SitePages/Midlertidig-rutine-for-klagebehandling---supplerende-st%C3%B8nad-til-uf%C3%B8re-flyktninger.aspx?OR=Teams-HL&CT=1645705340996&sourceId=&params=%7B%22AppName%22%3A%22Teams-Desktop%22%2C%22AppVersion%22%3A%2228%2F22010300411%22%7D';
@@ -266,6 +274,59 @@ const VurderingAvKlage = (props: { sakId: string; klage: Klage }) => {
         });
     };
 
+    const klageVurderingTypeWatch = watch('klageVurderingType');
+    const ikkeMedhold =
+        klageVurderingTypeWatch === KlageVurderingType.OPPRETTHOLD ||
+        klageVurderingTypeWatch === KlageVurderingType.DELVIS_OMGJØRING_KA;
+
+    useEffect(() => {
+        if (!ikkeMedhold || !props.klage.id) {
+            setSkalLeggeTilMottaker(false);
+            setMottakerFinnes(false);
+            setMottakerFetchError(null);
+            return;
+        }
+
+        let erKansellert = false;
+
+        const sjekkMottaker = async () => {
+            setMottakerFinnes(null);
+            setMottakerFetchError(null);
+
+            const res = await hentMottaker(props.sakId, 'KLAGE', props.klage.id, mottakerBrevtype);
+            if (erKansellert) {
+                return;
+            }
+
+            if (res.status === 'ok') {
+                if (res.data) {
+                    setMottakerFinnes(true);
+                    setSkalLeggeTilMottaker(true);
+                } else {
+                    setMottakerFinnes(false);
+                    setSkalLeggeTilMottaker(false);
+                }
+                return;
+            }
+
+            if (res.error.statusCode === 404) {
+                setMottakerFinnes(false);
+                setSkalLeggeTilMottaker(false);
+                return;
+            }
+
+            setMottakerFinnes(false);
+            setSkalLeggeTilMottaker(false);
+            setMottakerFetchError(toMottakerAlert(res.error, formatMessage('feilmelding.kanIkkeHenteMottaker')));
+        };
+
+        void sjekkMottaker();
+
+        return () => {
+            erKansellert = true;
+        };
+    }, [formatMessage, ikkeMedhold, props.klage.id, props.sakId]);
+
     const iGyldigTilstandForÅVurdere = (k: Klage) =>
         k.status === KlageStatus.VILKÅRSVURDERT_BEKREFTET_TIL_VURDERING || erKlageVurdert(k);
 
@@ -285,10 +346,7 @@ const VurderingAvKlage = (props: { sakId: string; klage: Klage }) => {
             </div>
         );
     }
-    const klageVurderingTypeWatch = watch('klageVurderingType');
-    const ikkeMedhold =
-        klageVurderingTypeWatch === KlageVurderingType.OPPRETTHOLD ||
-        klageVurderingTypeWatch === KlageVurderingType.DELVIS_OMGJØRING_KA;
+
     return (
         <ToKolonner tittel={formatMessage('page.tittel')}>
             {{
@@ -367,6 +425,39 @@ const VurderingAvKlage = (props: { sakId: string; klage: Klage }) => {
                                         {formatMessage('knapp.seBrev')}
                                     </Button>
                                     {RemoteData.isFailure(brevStatus) && <ApiErrorAlert error={brevStatus.error} />}
+                                </div>
+                                <div className={styles.mottakerSection}>
+                                    {mottakerFetchError && (
+                                        <Alert variant={mottakerFetchError.variant} size="small">
+                                            {mottakerFetchError.text}
+                                        </Alert>
+                                    )}
+                                    <Button
+                                        variant="secondary"
+                                        className={styles.mottakerToggle}
+                                        type="button"
+                                        onClick={() => setSkalLeggeTilMottaker((prev) => !prev)}
+                                        size="small"
+                                        disabled={mottakerFinnes === null}
+                                    >
+                                        {skalLeggeTilMottaker
+                                            ? formatMessage('knapp.lukkmottaker')
+                                            : mottakerFinnes
+                                              ? formatMessage('knapp.vismottaker')
+                                              : formatMessage('knapp.leggtilmottaker')}
+                                        {mottakerFinnes === null && (
+                                            <Loader size="small" className={styles.buttonSpinner} />
+                                        )}
+                                    </Button>
+                                    {skalLeggeTilMottaker && (
+                                        <MottakerForm
+                                            sakId={props.sakId}
+                                            referanseId={props.klage.id}
+                                            referanseType={'KLAGE'}
+                                            brevtype={mottakerBrevtype}
+                                            onClose={() => setSkalLeggeTilMottaker(false)}
+                                        />
+                                    )}
                                 </div>
                             </>
                         )}

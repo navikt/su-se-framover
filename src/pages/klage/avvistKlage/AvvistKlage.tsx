@@ -1,18 +1,22 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Alert, BodyShort, Button, HelpText, Label, Loader, Textarea } from '@navikt/ds-react';
+import { useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { Link, useNavigate } from 'react-router-dom';
 
+import { Brevtype, hentMottaker } from '~src/api/mottakerClient.ts';
 import * as pdfApi from '~src/api/pdfApi';
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
 import LinkAsButton from '~src/components/linkAsButton/LinkAsButton';
+import { MottakerAlert, toMottakerAlert } from '~src/components/mottaker/mottakerUtils';
 import ToKolonner from '~src/components/toKolonner/ToKolonner';
 import * as klageActions from '~src/features/klage/klageActions';
 import { useAsyncActionCreator, useBrevForhåndsvisning } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
 import * as Routes from '~src/lib/routes';
 import yup from '~src/lib/validering';
+import { MottakerForm } from '~src/pages/saksbehandling/mottaker/Mottaker.tsx';
 import { Klage, KlageStatus, KlageSteg } from '~src/types/Klage';
 import { erKlageAvvist } from '~src/utils/klage/klageUtils';
 
@@ -35,6 +39,10 @@ const AvvistKlage = (props: { sakId: string; klage: Klage }) => {
     const [lagreFritekstStatus, lagreFritekst] = useAsyncActionCreator(klageActions.lagreAvvistFritekst);
     const [sendTilAttesteringStatus, sendTilAttestering] = useAsyncActionCreator(klageActions.sendTilAttestering);
     const [brevStatus, hentBrev] = useBrevForhåndsvisning(pdfApi.hentBrevutkastForKlage);
+    const [skalLeggeTilMottaker, setSkalLeggeTilMottaker] = useState(false);
+    const [mottakerFinnes, setMottakerFinnes] = useState<boolean | null>(null);
+    const [mottakerFetchError, setMottakerFetchError] = useState<MottakerAlert | null>(null);
+    const mottakerBrevtype: Brevtype = 'VEDTAK';
 
     const { handleSubmit, control, getValues } = useForm<AvvistKlageFormData>({
         resolver: yupResolver(schema),
@@ -70,6 +78,51 @@ const AvvistKlage = (props: { sakId: string; klage: Klage }) => {
             });
         });
     };
+
+    useEffect(() => {
+        if (!props.klage.id) {
+            return;
+        }
+
+        let erKansellert = false;
+
+        const sjekkMottaker = async () => {
+            setMottakerFinnes(null);
+            setMottakerFetchError(null);
+
+            const res = await hentMottaker(props.sakId, 'KLAGE', props.klage.id, mottakerBrevtype);
+            if (erKansellert) {
+                return;
+            }
+
+            if (res.status === 'ok') {
+                if (res.data) {
+                    setMottakerFinnes(true);
+                    setSkalLeggeTilMottaker(true);
+                } else {
+                    setMottakerFinnes(false);
+                    setSkalLeggeTilMottaker(false);
+                }
+                return;
+            }
+
+            if (res.error.statusCode === 404) {
+                setMottakerFinnes(false);
+                setSkalLeggeTilMottaker(false);
+                return;
+            }
+
+            setMottakerFinnes(false);
+            setSkalLeggeTilMottaker(false);
+            setMottakerFetchError(toMottakerAlert(res.error, formatMessage('feilmelding.kanIkkeHenteMottaker')));
+        };
+
+        void sjekkMottaker();
+
+        return () => {
+            erKansellert = true;
+        };
+    }, [formatMessage, props.klage.id, props.sakId]);
 
     const iGyldigStatusForÅAvvise = (k: Klage) =>
         k.status === KlageStatus.VILKÅRSVURDERT_BEKREFTET_AVVIST || erKlageAvvist(k);
@@ -131,6 +184,37 @@ const AvvistKlage = (props: { sakId: string; klage: Klage }) => {
                                 {formatMessage('knapp.seBrev')}
                             </Button>
                             {RemoteData.isFailure(brevStatus) && <ApiErrorAlert error={brevStatus.error} />}
+                        </div>
+                        <div className={styles.mottakerSection}>
+                            {mottakerFetchError && (
+                                <Alert variant={mottakerFetchError.variant} size="small">
+                                    {mottakerFetchError.text}
+                                </Alert>
+                            )}
+                            <Button
+                                variant="secondary"
+                                className={styles.mottakerToggle}
+                                type="button"
+                                onClick={() => setSkalLeggeTilMottaker((prev) => !prev)}
+                                size="small"
+                                disabled={mottakerFinnes === null}
+                            >
+                                {skalLeggeTilMottaker
+                                    ? formatMessage('knapp.lukkmottaker')
+                                    : mottakerFinnes
+                                      ? formatMessage('knapp.vismottaker')
+                                      : formatMessage('knapp.leggtilmottaker')}
+                                {mottakerFinnes === null && <Loader size="small" className={styles.buttonSpinner} />}
+                            </Button>
+                            {skalLeggeTilMottaker && (
+                                <MottakerForm
+                                    sakId={props.sakId}
+                                    referanseId={props.klage.id}
+                                    referanseType={'KLAGE'}
+                                    brevtype={mottakerBrevtype}
+                                    onClose={() => setSkalLeggeTilMottaker(false)}
+                                />
+                            )}
                         </div>
                         <div className={styles.knapperContainer}>
                             <Button
