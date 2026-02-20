@@ -13,22 +13,8 @@ export function getPdfBlob(base64: string) {
     return new Blob([bytes], { type: 'application/pdf' });
 }
 
-const ensureApiPrefixedUrl = (path: string) => {
-    if (path.startsWith('http://') || path.startsWith('https://')) {
-        return path;
-    }
-    if (path.startsWith(API_PREFIX)) {
-        return path;
-    }
-    return `${API_PREFIX}${path.startsWith('/') ? '' : '/'}${path}`;
-};
-
-export const getDokumentPdfUrl = (dokument: Pick<Dokument, 'id' | 'pdfUrl'>) => {
-    if (dokument.pdfUrl) {
-        return ensureApiPrefixedUrl(dokument.pdfUrl);
-    }
-    return `${API_PREFIX}/dokumenter/${encodeURIComponent(dokument.id)}/pdf`;
-};
+export const getDokumentPdfUrl = (dokument: Pick<Dokument, 'id'>) =>
+    `${API_PREFIX}/dokumenter/${encodeURIComponent(dokument.id)}/pdf`;
 
 export const openPdfBlobInNewTab = (blob: Blob) => {
     const url = URL.createObjectURL(blob);
@@ -51,9 +37,5 @@ export const openPdfBlobInNewTab = (blob: Blob) => {
 };
 
 export const openDokumentInNewTab = (dokument: Dokument) => {
-    if (dokument.dokument) {
-        openPdfBlobInNewTab(getPdfBlob(dokument.dokument));
-        return;
-    }
     window.open(getDokumentPdfUrl(dokument), '_blank', OPEN_IN_NEW_TAB_FEATURES);
 };
