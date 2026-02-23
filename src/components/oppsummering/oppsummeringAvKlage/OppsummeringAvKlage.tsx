@@ -115,16 +115,18 @@ const OppsummeringAvKlage = (props: { klage: Klage; klagensVedtak: Vedtak }) => 
                         )}
                     </>
                 )}
-                {skalViseEkstraMottaker && (
+                <UnderkjenteAttesteringer attesteringer={props.klage.attesteringer} />
+            </Oppsummeringspanel>
+            {skalViseEkstraMottaker && (
+                <div className={styles.ekstraMottakerContainer}>
                     <EkstraMottakerPanel
                         sakId={props.klage.sakid}
                         referanseId={props.klage.id}
                         referanseType={'KLAGE'}
                         brevtype={mottakerBrevtype}
                     />
-                )}
-                <UnderkjenteAttesteringer attesteringer={props.klage.attesteringer} />
-            </Oppsummeringspanel>
+                </div>
+            )}
         </div>
     );
 };
