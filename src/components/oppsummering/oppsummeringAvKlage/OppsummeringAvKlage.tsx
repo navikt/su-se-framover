@@ -1,9 +1,10 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { BodyShort, Button, Heading, VStack } from '@navikt/ds-react';
-
 import * as DokumentApi from '~src/api/dokumentApi';
+import { Brevtype } from '~src/api/mottakerClient.ts';
 import * as pdfApi from '~src/api/pdfApi';
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
+import EkstraMottakerPanel from '~src/components/mottaker/EkstraMottakerPanel';
 import { FormkravInfo } from '~src/components/oppsummering/oppsummeringAvKlage/FormkravInfo';
 import { KlageInfo } from '~src/components/oppsummering/oppsummeringAvKlage/KlageInfo';
 import { VurderInfo } from '~src/components/oppsummering/oppsummeringAvKlage/VurderInfo';
@@ -21,8 +22,10 @@ import * as DateUtils from '~src/utils/date/dateUtils';
 import { openDokumentInNewTab } from '~src/utils/dokumentUtils';
 import {
     erKlageDelvisomgjortEgenVedtaksinstans,
+    erKlageINoenFormForAvvist,
     erKlageOmgjort,
     erKlageOversendtUtfylt,
+    erKlageTilAttestering,
 } from '~src/utils/klage/klageUtils';
 import styles from './oppsummeringAvKlage.module.less';
 import oppsummeringMessages from './oppsummeringAvKlage-nb';
@@ -35,6 +38,8 @@ const OppsummeringAvKlage = (props: { klage: Klage; klagensVedtak: Vedtak }) => 
 
     const skalBehandlesIEgenVedtaksinstans =
         erKlageOmgjort(props.klage) || erKlageDelvisomgjortEgenVedtaksinstans(props.klage);
+    const mottakerBrevtype: Brevtype = erKlageINoenFormForAvvist(props.klage) ? 'VEDTAK' : 'KLAGE';
+    const skalViseEkstraMottaker = !erKlageTilAttestering(props.klage) && !skalBehandlesIEgenVedtaksinstans;
 
     return (
         <div>
@@ -109,6 +114,14 @@ const OppsummeringAvKlage = (props: { klage: Klage; klagensVedtak: Vedtak }) => 
                             </div>
                         )}
                     </>
+                )}
+                {skalViseEkstraMottaker && (
+                    <EkstraMottakerPanel
+                        sakId={props.klage.sakid}
+                        referanseId={props.klage.id}
+                        referanseType={'KLAGE'}
+                        brevtype={mottakerBrevtype}
+                    />
                 )}
                 <UnderkjenteAttesteringer attesteringer={props.klage.attesteringer} />
             </Oppsummeringspanel>
