@@ -1,9 +1,10 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import { Alert, BodyShort, Label, Loader } from '@navikt/ds-react';
+import { Alert, BodyShort, Heading, Label, Loader } from '@navikt/ds-react';
 import { useEffect } from 'react';
 
 import { hentNøkkeltall } from '~src/api/nøkkeltallApi';
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
+import KontrollsamtaleDriftOversikt from '~src/components/kontrollsamtaleDriftOversikt/KontrollsamtaleDriftOversikt';
 import { pipe } from '~src/lib/fp';
 import { useApiCall } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
@@ -102,6 +103,10 @@ const Nøkkeltall = () => {
                                 verdi={`${nøkkelTallForUføre.løpendeSaker + nøkkelTallForAlder.løpendeSaker} (${nøkkelTallForUføre.løpendeSaker}, ${nøkkelTallForAlder.løpendeSaker})`}
                             />
                         </ul>
+                        <div className={styles.kontrollsamtaler}>
+                            <Heading size="small">Kontrollsamtaler</Heading>
+                            <KontrollsamtaleDriftOversikt />
+                        </div>
                     </div>
                 );
             },
