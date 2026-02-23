@@ -164,11 +164,9 @@ export const AttesteringsForm = (props: Props) => {
     }, [fritekstType, props.behandlingsId, props.redigerbartBrev, props.sakId, setValue]);
 
     const ekstraMottakerReferanseType =
-        behandlingstype === 'KLAGE'
+        props.redigerbartBrev && (behandlingstype === 'SØKNAD' || behandlingstype === 'REVURDERING')
             ? behandlingstype
-            : props.redigerbartBrev && (behandlingstype === 'SØKNAD' || behandlingstype === 'REVURDERING')
-              ? behandlingstype
-              : null;
+            : null;
 
     return (
         <div className={styles.redigerContainer}>
