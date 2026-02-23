@@ -28,7 +28,7 @@ const AttesterKlage = (props: { sakId: string; klage: Klage; klagensVedtak: Vedt
     const [oversendStatus, oversend] = useAsyncActionCreator(klageActions.oversend);
     const [avvisStatus, avvis] = useAsyncActionCreator(klageActions.iverksattAvvist);
     const [underkjennStatus, underkjenn] = useAsyncActionCreator(klageActions.underkjenn);
-    const ekstraMottakerBrevtype: Brevtype = erKlageTilAttesteringAvvist(props.klage) ? 'VEDTAK' : 'KLAGE';
+    const ekstraMottakerBrevtype: Brevtype = erKlageTilAttesteringAvvist(props.klage) ? 'VEDTAK' : 'OVERSENDELSE_KA';
 
     if (!erKlageTilAttestering(props.klage)) {
         return (

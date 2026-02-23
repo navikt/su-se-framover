@@ -141,7 +141,7 @@ const VurderingAvKlage = (props: { sakId: string; klage: Klage }) => {
     const [skalLeggeTilMottaker, setSkalLeggeTilMottaker] = useState(false);
     const [mottakerFinnes, setMottakerFinnes] = useState<boolean | null>(null);
     const [mottakerFetchError, setMottakerFetchError] = useState<MottakerAlert | null>(null);
-    const mottakerBrevtype: Brevtype = 'KLAGE';
+    const mottakerBrevtype: Brevtype = 'OVERSENDELSE_KA';
 
     const hjelpetekstLink =
         'https://navno.sharepoint.com/sites/fag-og-ytelser-pensjon-supplerende-stonad/SitePages/Midlertidig-rutine-for-klagebehandling---supplerende-st%C3%B8nad-til-uf%C3%B8re-flyktninger.aspx?OR=Teams-HL&CT=1645705340996&sourceId=&params=%7B%22AppName%22%3A%22Teams-Desktop%22%2C%22AppVersion%22%3A%2228%2F22010300411%22%7D';

@@ -38,7 +38,7 @@ const OppsummeringAvKlage = (props: { klage: Klage; klagensVedtak: Vedtak }) => 
 
     const skalBehandlesIEgenVedtaksinstans =
         erKlageOmgjort(props.klage) || erKlageDelvisomgjortEgenVedtaksinstans(props.klage);
-    const mottakerBrevtype: Brevtype = erKlageINoenFormForAvvist(props.klage) ? 'VEDTAK' : 'KLAGE';
+    const mottakerBrevtype: Brevtype = erKlageINoenFormForAvvist(props.klage) ? 'VEDTAK' : 'OVERSENDELSE_KA';
     const skalViseEkstraMottaker = !erKlageTilAttestering(props.klage) && !skalBehandlesIEgenVedtaksinstans;
 
     return (
