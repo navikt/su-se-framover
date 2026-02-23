@@ -25,7 +25,6 @@ import {
     erKlageINoenFormForAvvist,
     erKlageOmgjort,
     erKlageOversendtUtfylt,
-    erKlageTilAttestering,
 } from '~src/utils/klage/klageUtils';
 import styles from './oppsummeringAvKlage.module.less';
 import oppsummeringMessages from './oppsummeringAvKlage-nb';
@@ -39,7 +38,7 @@ const OppsummeringAvKlage = (props: { klage: Klage; klagensVedtak: Vedtak }) => 
     const skalBehandlesIEgenVedtaksinstans =
         erKlageOmgjort(props.klage) || erKlageDelvisomgjortEgenVedtaksinstans(props.klage);
     const mottakerBrevtype: Brevtype = erKlageINoenFormForAvvist(props.klage) ? 'VEDTAK' : 'OVERSENDELSE_KA';
-    const skalViseEkstraMottaker = !erKlageTilAttestering(props.klage) && !skalBehandlesIEgenVedtaksinstans;
+    const skalViseEkstraMottaker = !skalBehandlesIEgenVedtaksinstans;
 
     return (
         <div>
