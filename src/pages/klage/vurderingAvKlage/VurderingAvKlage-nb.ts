@@ -51,6 +51,9 @@ export default {
     'form.fritekst.hjelpeTekst': 'Se rutine på Navet',
 
     'knapp.seBrev': 'Se brev',
+    'knapp.leggtilmottaker': 'Legg til mottaker',
+    'knapp.lukkmottaker': 'Lukk mottaker',
+    'knapp.vismottaker': 'Vis mottaker',
     'knapp.lagre': 'Lagre og fortsett senere',
     'knapp.bekreftOgFortsett': 'Bekreft',
     'knapp.tilbake': 'Tilbake',
@@ -61,4 +64,5 @@ export default {
     'begrunnelse.description': 'Skriv din begrunnelse her',
 
     'feil.ikkeRiktigTilstandForÅVurdere': 'Klagen er ikke i riktig tilstand for å vurdere',
+    'feilmelding.kanIkkeHenteMottaker': 'Kan ikke hente mottaker',
 };

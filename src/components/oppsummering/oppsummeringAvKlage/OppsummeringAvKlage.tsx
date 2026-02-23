@@ -1,9 +1,10 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { BodyShort, Button, Heading, VStack } from '@navikt/ds-react';
-
 import * as DokumentApi from '~src/api/dokumentApi';
+import { Brevtype } from '~src/api/mottakerClient.ts';
 import * as pdfApi from '~src/api/pdfApi';
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
+import EkstraMottakerPanel from '~src/components/mottaker/EkstraMottakerPanel';
 import { FormkravInfo } from '~src/components/oppsummering/oppsummeringAvKlage/FormkravInfo';
 import { KlageInfo } from '~src/components/oppsummering/oppsummeringAvKlage/KlageInfo';
 import { VurderInfo } from '~src/components/oppsummering/oppsummeringAvKlage/VurderInfo';
@@ -21,6 +22,7 @@ import * as DateUtils from '~src/utils/date/dateUtils';
 import { openDokumentInNewTab } from '~src/utils/dokumentUtils';
 import {
     erKlageDelvisomgjortEgenVedtaksinstans,
+    erKlageINoenFormForAvvist,
     erKlageOmgjort,
     erKlageOversendtUtfylt,
 } from '~src/utils/klage/klageUtils';
@@ -35,6 +37,8 @@ const OppsummeringAvKlage = (props: { klage: Klage; klagensVedtak: Vedtak }) => 
 
     const skalBehandlesIEgenVedtaksinstans =
         erKlageOmgjort(props.klage) || erKlageDelvisomgjortEgenVedtaksinstans(props.klage);
+    const mottakerBrevtype: Brevtype = erKlageINoenFormForAvvist(props.klage) ? 'VEDTAK' : 'OVERSENDELSE_KA';
+    const skalViseEkstraMottaker = !skalBehandlesIEgenVedtaksinstans;
 
     return (
         <div>
@@ -112,6 +116,16 @@ const OppsummeringAvKlage = (props: { klage: Klage; klagensVedtak: Vedtak }) => 
                 )}
                 <UnderkjenteAttesteringer attesteringer={props.klage.attesteringer} />
             </Oppsummeringspanel>
+            {skalViseEkstraMottaker && (
+                <div className={styles.ekstraMottakerContainer}>
+                    <EkstraMottakerPanel
+                        sakId={props.klage.sakid}
+                        referanseId={props.klage.id}
+                        referanseType={'KLAGE'}
+                        brevtype={mottakerBrevtype}
+                    />
+                </div>
+            )}
         </div>
     );
 };

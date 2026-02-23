@@ -1,8 +1,8 @@
 import { Dokument } from '~src/types/dokument/Dokument';
 
-const API_PREFIX = '/api';
 const OPEN_IN_NEW_TAB_FEATURES = 'noopener,noreferrer';
 const REVOKE_FALLBACK_MS = 5_000;
+const DOKUMENT_API_PREFIX = '/api';
 
 export function getPdfBlob(base64: string) {
     const binary_string = window.atob(base64);
@@ -14,7 +14,7 @@ export function getPdfBlob(base64: string) {
 }
 
 export const getDokumentPdfUrl = (dokument: Pick<Dokument, 'id'>) =>
-    `${API_PREFIX}/dokumenter/${encodeURIComponent(dokument.id)}/pdf`;
+    `${DOKUMENT_API_PREFIX}/dokumenter/${encodeURIComponent(dokument.id)}/pdf`;
 
 export const openPdfBlobInNewTab = (blob: Blob) => {
     const url = URL.createObjectURL(blob);
