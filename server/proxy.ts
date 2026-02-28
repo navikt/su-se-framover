@@ -12,6 +12,7 @@ export default function setup(authClient: OpenIdClient.Client) {
     const proxy = (log: Logger, accessToken?: string) =>
         expressHttpProxy(Config.server.suSeBakoverUrl, {
             parseReqBody: false,
+            timeout: Config.server.proxyTimeoutMs,
             proxyReqOptDecorator: async (options) => {
                 if (!accessToken) {
                     return options;
@@ -26,10 +27,23 @@ export default function setup(authClient: OpenIdClient.Client) {
                 return options;
             },
             proxyErrorHandler: (err, res, next) => {
-                if (err && err.code === 'ECONNREFUSED') {
+                const proxyError = err as Error & { code?: string };
+
+                if (proxyError.code === 'ECONNREFUSED') {
                     log.error('proxyErrorHandler: Got ECONNREFUSED from su-se-bakover');
                     return res.status(503).send({ message: 'Could not contact su-se-bakover' });
                 }
+                if (proxyError.code === 'ECONNRESET' || proxyError.code === 'ETIMEDOUT') {
+                    log.error(
+                        { err: proxyError, code: proxyError.code, timeoutMs: Config.server.proxyTimeoutMs },
+                        'proxyErrorHandler: Timeout when calling su-se-bakover',
+                    );
+                    return res.status(504).send({ message: 'Timeout when contacting su-se-bakover' });
+                }
+                log.error(
+                    { err: proxyError, code: proxyError.code },
+                    'proxyErrorHandler: Request to su-se-bakover failed',
+                );
                 next(err);
             },
         });
