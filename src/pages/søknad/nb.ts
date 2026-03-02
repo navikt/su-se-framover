@@ -56,4 +56,5 @@ export default {
         ' <strong>Obs!</strong> Har du ikke tilgang til Gosys, må du kontakte nærmeste leder for å få tilgang.' +
         ' Søknad skal ikke brukes til å gi informasjon om kontrollsamtaler.',
     ...steg,
+    'forste.side.info': 'Førsteside som skal brukes: ',
 };
