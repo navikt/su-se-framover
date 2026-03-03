@@ -1,12 +1,11 @@
 import { BodyLong, BodyShort, Button, GuidePanel, Heading, Ingress, Link, Modal, Panel } from '@navikt/ds-react';
 import { useRef, useState } from 'react';
-
+import forsteSideBildet from '~src/assets/images/forsteSide.png';
 import LinkAsButton from '~src/components/linkAsButton/LinkAsButton';
 import { useUserContext } from '~src/context/userContext';
 import { useI18n } from '~src/lib/i18n';
 import * as Routes from '~src/lib/routes';
 import { Rolle } from '~src/types/LoggedInUser';
-
 import messages from './nb';
 import styles from './søknadsvelger.module.less';
 
@@ -105,6 +104,14 @@ const Søknadsvelger = () => {
                                                 strong: (text) => <strong>{text}</strong>,
                                             })}
                                         </BodyShort>
+                                        <div className={styles.forsteSide}>
+                                            <BodyShort>{formatMessage('forste.side.info')}</BodyShort>
+                                            <img
+                                                src={forsteSideBildet}
+                                                alt="Førsteside som skal brukes"
+                                                className={styles.bilde}
+                                            />
+                                        </div>
                                         <div style={{ marginTop: '1rem', textAlign: 'right' }}>
                                             <Button variant="secondary" type="button" onClick={() => setOpen(false)}>
                                                 Lukk
