@@ -1,15 +1,17 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Alert, BodyLong, Heading } from '@navikt/ds-react';
-import { useRef } from 'react';
-import { useForm } from 'react-hook-form';
+import { useRef, useState } from 'react';
+import { Path, useForm } from 'react-hook-form';
 import { useNavigate, useOutletContext } from 'react-router-dom';
 
+import { ApiError } from '~src/api/apiClient';
 import Feiloppsummering from '~src/components/oppsummering/feiloppsummering/Feiloppsummering';
 import { useUserContext } from '~src/context/userContext';
 import * as innsendingSlice from '~src/features/søknad/innsending.slice';
 import { SøknadState } from '~src/features/søknad/søknad.slice';
 import { DelerBoligMed } from '~src/features/søknad/types';
+import { focusAfterTimeout } from '~src/lib/formUtils';
 import { useI18n } from '~src/lib/i18n';
 import yup, { hookFormErrorsTilFeiloppsummering } from '~src/lib/validering';
 import { SøknadContext } from '~src/pages/søknad';
@@ -32,6 +34,7 @@ import { Søknadstype } from '~src/types/Søknadinnhold';
 
 import Bunnknapper from '../../bunnknapper/Bunnknapper';
 import sharedStyles from '../../steg-shared.module.less';
+import { FrontendValideringsfeil, hentSøknadsinnholdValideringsfeil } from './backendValidationUtils';
 import styles from './oppsummering.module.less';
 import messages from './oppsummering-nb';
 import Søknadoppsummering from './Søknadoppsummering/Søknadoppsummering';
@@ -44,6 +47,7 @@ const Oppsummering = (props: { forrigeUrl: string; nesteUrl: string; avbrytUrl: 
     const { formatMessage } = useI18n({ messages: { ...messages, ...sharedI18n } });
     const dispatch = useAppDispatch();
     const feiloppsummeringref = useRef<HTMLDivElement>(null);
+    const [innsendingsvalideringsfeil, setInnsendingsvalideringsfeil] = useState<FrontendValideringsfeil[]>([]);
 
     const alderssøknadsschema = yup.object({
         ...alderspensjonSchema.fields,
@@ -84,8 +88,36 @@ const Oppsummering = (props: { forrigeUrl: string; nesteUrl: string; avbrytUrl: 
         resolver: yupResolver(søknadschema),
     });
 
+    const håndterBackendValideringsfeil = (error: ApiError | undefined): boolean => {
+        if (!error) return false;
+
+        const valideringsfeil = hentSøknadsinnholdValideringsfeil(error, sakstype);
+        if (!valideringsfeil) return false;
+
+        setInnsendingsvalideringsfeil(valideringsfeil);
+        form.clearErrors();
+
+        valideringsfeil.forEach((feil) => {
+            if (!feil.field) return;
+
+            form.setError(feil.field as Path<SøknadState>, {
+                type: 'server',
+                message: feil.message,
+            });
+        });
+
+        const førsteFeilMedFelt = valideringsfeil.find((feil) => !!feil.field)?.field;
+        if (førsteFeilMedFelt) {
+            form.setFocus(førsteFeilMedFelt as Path<SøknadState>);
+        }
+        focusAfterTimeout(feiloppsummeringref)();
+
+        return true;
+    };
+
     const handleSubmit = async (values: SøknadState) => {
         if (RemoteData.isSuccess(innsending)) return;
+        setInnsendingsvalideringsfeil([]);
 
         if (sakstype === Sakstype.Uføre) {
             const res = await dispatch(
@@ -96,7 +128,13 @@ const Oppsummering = (props: { forrigeUrl: string; nesteUrl: string; avbrytUrl: 
             );
             if (innsendingSlice.sendUføresøknad.fulfilled.match(res)) {
                 navigate(props.nesteUrl);
+                return;
             }
+
+            if (innsendingSlice.sendUføresøknad.rejected.match(res)) {
+                håndterBackendValideringsfeil(res.payload);
+            }
+            return;
         }
 
         if (sakstype === Sakstype.Alder) {
@@ -108,9 +146,16 @@ const Oppsummering = (props: { forrigeUrl: string; nesteUrl: string; avbrytUrl: 
             );
             if (innsendingSlice.sendAldersøknad.fulfilled.match(res)) {
                 navigate(props.nesteUrl);
+                return;
+            }
+
+            if (innsendingSlice.sendAldersøknad.rejected.match(res)) {
+                håndterBackendValideringsfeil(res.payload);
             }
         }
     };
+
+    const feiloppsummeringFeil = hookFormErrorsTilFeiloppsummering(form.formState.errors);
 
     return (
         <div className={sharedStyles.container}>
@@ -124,7 +169,20 @@ const Oppsummering = (props: { forrigeUrl: string; nesteUrl: string; avbrytUrl: 
                     <BodyLong>{formatMessage('meldFraOmEndringer.tekst')}</BodyLong>
                 </Alert>
 
-                {RemoteData.isFailure(innsending) && (
+                {innsendingsvalideringsfeil.length > 0 && (
+                    <Alert className={styles.feilmelding} variant="error">
+                        <Heading level="3" size="small" spacing>
+                            {formatMessage('feilmelding.innsendingFeilet')}
+                        </Heading>
+                        <ul className={styles.valideringsfeilListe}>
+                            {innsendingsvalideringsfeil.map((feil, index) => (
+                                <li key={`${feil.field ?? 'global'}-${index}`}>{feil.message}</li>
+                            ))}
+                        </ul>
+                    </Alert>
+                )}
+
+                {innsendingsvalideringsfeil.length === 0 && RemoteData.isFailure(innsending) && (
                     <Alert className={styles.feilmelding} variant="error">
                         {formatMessage('feilmelding.innsendingFeilet')}
                     </Alert>
@@ -133,8 +191,8 @@ const Oppsummering = (props: { forrigeUrl: string; nesteUrl: string; avbrytUrl: 
                 <Feiloppsummering
                     className={sharedStyles.marginBottom}
                     tittel={formatMessage('feiloppsummering.title')}
-                    hidden={hookFormErrorsTilFeiloppsummering(form.formState.errors).length === 0}
-                    feil={hookFormErrorsTilFeiloppsummering(form.formState.errors)}
+                    hidden={feiloppsummeringFeil.length === 0}
+                    feil={feiloppsummeringFeil}
                     ref={feiloppsummeringref}
                 />
 
