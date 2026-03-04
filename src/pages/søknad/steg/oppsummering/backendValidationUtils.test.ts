@@ -1,7 +1,6 @@
 import { ApiError } from '~src/api/apiClient';
-import { Sakstype } from '~src/types/Sak';
 
-import { hentSøknadsinnholdValideringsfeil, mapBackendFieldPathToFrontendFieldPath } from './backendValidationUtils';
+import { hentSøknadsinnholdValideringsfeil } from './backendValidationUtils';
 
 const lagApiError = (body: unknown): ApiError => ({
     statusCode: 400,
@@ -16,7 +15,6 @@ describe('hentSøknadsinnholdValideringsfeil', () => {
                 code: 'ugyldig_input',
                 message: 'Ugyldig input',
             }),
-            Sakstype.Alder,
         );
 
         expect(res).toBeNull();
@@ -28,7 +26,6 @@ describe('hentSøknadsinnholdValideringsfeil', () => {
                 code: 'ugyldig_soknadsinnhold_input',
                 message: 'Ugyldig input i innsending',
             }),
-            Sakstype.Alder,
         );
 
         expect(res).toEqual([
@@ -39,68 +36,90 @@ describe('hentSøknadsinnholdValideringsfeil', () => {
         ]);
     });
 
-    it('mapper backend feltsti til frontend feltnavn', () => {
+    it('viser listeelement med løpenummer når felt er i array', () => {
         const res = hentSøknadsinnholdValideringsfeil(
             lagApiError({
                 code: 'ugyldig_soknadsinnhold_input',
-                message: 'Ugyldig input',
                 errors: [
                     {
                         code: 'ugyldig_soknadsinnhold_input',
-                        message: 'Ugyldig input i felt formue.kjøretøy[0].kjøretøyDeEier: mangler verdi',
                         felt: 'formue.kjøretøy[0].kjøretøyDeEier',
+                        begrunnelse: 'mangler verdi',
                     },
                 ],
             }),
-            Sakstype.Alder,
         );
 
         expect(res).toEqual([
             {
                 code: 'ugyldig_soknadsinnhold_input',
-                message: 'Ugyldig input i felt formue.kjøretøy[0].kjøretøyDeEier: mangler verdi',
-                field: 'formue.kjøretøy.0.kjøretøyDeEier',
+                message: 'formue > kjøretøy 1 > kjøretøyDeEier: mangler verdi',
             },
         ]);
     });
 
-    it('utleder feltsti fra message dersom felt ikke er eksplisitt satt', () => {
+    it('beholder rå feltsti når felt ikke er i array', () => {
         const res = hentSøknadsinnholdValideringsfeil(
             lagApiError({
                 code: 'ugyldig_soknadsinnhold_input',
                 errors: [
                     {
                         code: 'ugyldig_soknadsinnhold_input',
-                        message: 'Ugyldig input i felt inntektOgPensjon.pensjon[1].ordning: må fylles ut',
+                        felt: 'inntektOgPensjon.andreYtelserINav',
+                        begrunnelse: 'inneholder kontrolltegn',
                     },
                 ],
             }),
-            Sakstype.Alder,
         );
 
         expect(res).toEqual([
             {
                 code: 'ugyldig_soknadsinnhold_input',
-                message: 'Ugyldig input i felt inntektOgPensjon.pensjon[1].ordning: må fylles ut',
-                field: 'inntekt.pensjonsInntekt.1.ordning',
+                message: 'inntektOgPensjon > andreYtelserINav: inneholder kontrolltegn',
             },
         ]);
     });
-});
 
-describe('mapBackendFieldPathToFrontendFieldPath', () => {
-    it('mapper oppholdstillatelse til flyktningstatus for uføresøknad', () => {
-        const res = mapBackendFieldPathToFrontendFieldPath(
-            'oppholdstillatelse.statsborgerskapAndreLandFritekst',
-            Sakstype.Uføre,
+    it('bruker top-level code når en error-rad mangler code', () => {
+        const res = hentSøknadsinnholdValideringsfeil(
+            lagApiError({
+                code: 'ugyldig_soknadsinnhold_input',
+                errors: [
+                    {
+                        felt: 'inntektOgPensjon.andreYtelserINav',
+                        begrunnelse: 'inneholder kontrolltegn',
+                    },
+                ],
+            }),
         );
 
-        expect(res).toBe('flyktningstatus.statsborgerskapAndreLandFritekst');
+        expect(res).toEqual([
+            {
+                code: 'ugyldig_soknadsinnhold_input',
+                message: 'inntektOgPensjon > andreYtelserINav: inneholder kontrolltegn',
+            },
+        ]);
     });
 
-    it('mapper flyktningsstatus.registrertFlyktning til flyktningstatus.erFlyktning', () => {
-        const res = mapBackendFieldPathToFrontendFieldPath('flyktningsstatus.registrertFlyktning', Sakstype.Uføre);
+    it('faller tilbake til top-level message når errors finnes men ikke har felt/begrunnelse', () => {
+        const res = hentSøknadsinnholdValideringsfeil(
+            lagApiError({
+                code: 'ugyldig_soknadsinnhold_input',
+                message: 'Ugyldig søknadsinnhold',
+                errors: [
+                    {
+                        code: 'ugyldig_soknadsinnhold_input',
+                        felt: 'inntektOgPensjon.pensjon[1].ordning',
+                    },
+                ],
+            }),
+        );
 
-        expect(res).toBe('flyktningstatus.erFlyktning');
+        expect(res).toEqual([
+            {
+                code: 'ugyldig_soknadsinnhold_input',
+                message: 'Ugyldig søknadsinnhold',
+            },
+        ]);
     });
 });

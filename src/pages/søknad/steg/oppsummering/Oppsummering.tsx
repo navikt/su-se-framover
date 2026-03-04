@@ -2,7 +2,7 @@ import * as RemoteData from '@devexperts/remote-data-ts';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Alert, BodyLong, Heading } from '@navikt/ds-react';
 import { useRef, useState } from 'react';
-import { Path, useForm } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import { useNavigate, useOutletContext } from 'react-router-dom';
 
 import { ApiError } from '~src/api/apiClient';
@@ -91,25 +91,10 @@ const Oppsummering = (props: { forrigeUrl: string; nesteUrl: string; avbrytUrl: 
     const håndterBackendValideringsfeil = (error: ApiError | undefined): boolean => {
         if (!error) return false;
 
-        const valideringsfeil = hentSøknadsinnholdValideringsfeil(error, sakstype);
+        const valideringsfeil = hentSøknadsinnholdValideringsfeil(error);
         if (!valideringsfeil) return false;
 
         setInnsendingsvalideringsfeil(valideringsfeil);
-        form.clearErrors();
-
-        valideringsfeil.forEach((feil) => {
-            if (!feil.field) return;
-
-            form.setError(feil.field as Path<SøknadState>, {
-                type: 'server',
-                message: feil.message,
-            });
-        });
-
-        const førsteFeilMedFelt = valideringsfeil.find((feil) => !!feil.field)?.field;
-        if (førsteFeilMedFelt) {
-            form.setFocus(førsteFeilMedFelt as Path<SøknadState>);
-        }
         focusAfterTimeout(feiloppsummeringref)();
 
         return true;
@@ -176,7 +161,7 @@ const Oppsummering = (props: { forrigeUrl: string; nesteUrl: string; avbrytUrl: 
                         </Heading>
                         <ul className={styles.valideringsfeilListe}>
                             {innsendingsvalideringsfeil.map((feil, index) => (
-                                <li key={`${feil.field ?? 'global'}-${index}`}>{feil.message}</li>
+                                <li key={`${feil.code}-${index}`}>{feil.message}</li>
                             ))}
                         </ul>
                     </Alert>
