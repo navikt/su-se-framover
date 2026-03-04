@@ -34,7 +34,12 @@ import { Søknadstype } from '~src/types/Søknadinnhold';
 
 import Bunnknapper from '../../bunnknapper/Bunnknapper';
 import sharedStyles from '../../steg-shared.module.less';
-import { FrontendValideringsfeil, hentSøknadsinnholdValideringsfeil } from './backendValidationUtils';
+import {
+    applyBackendErrorsToRHF,
+    FrontendValideringsfeil,
+    hentBackendSøknadsinnholdValideringsfeil,
+    hentSøknadsinnholdValideringsfeil,
+} from './backendValidationUtils';
 import styles from './oppsummering.module.less';
 import messages from './oppsummering-nb';
 import Søknadoppsummering from './Søknadoppsummering/Søknadoppsummering';
@@ -91,10 +96,15 @@ const Oppsummering = (props: { forrigeUrl: string; nesteUrl: string; avbrytUrl: 
     const håndterBackendValideringsfeil = (error: ApiError | undefined): boolean => {
         if (!error) return false;
 
-        const valideringsfeil = hentSøknadsinnholdValideringsfeil(error);
-        if (!valideringsfeil) return false;
+        const backendValideringsfeil = hentBackendSøknadsinnholdValideringsfeil(error);
+        if (!backendValideringsfeil) return false;
 
+        const valideringsfeil = hentSøknadsinnholdValideringsfeil(error) ?? [];
         setInnsendingsvalideringsfeil(valideringsfeil);
+
+        if (backendValideringsfeil.errors.length > 0) {
+            applyBackendErrorsToRHF(backendValideringsfeil.errors, form.setError);
+        }
         focusAfterTimeout(feiloppsummeringref)();
 
         return true;
@@ -103,6 +113,7 @@ const Oppsummering = (props: { forrigeUrl: string; nesteUrl: string; avbrytUrl: 
     const handleSubmit = async (values: SøknadState) => {
         if (RemoteData.isSuccess(innsending)) return;
         setInnsendingsvalideringsfeil([]);
+        form.clearErrors();
 
         if (sakstype === Sakstype.Uføre) {
             const res = await dispatch(

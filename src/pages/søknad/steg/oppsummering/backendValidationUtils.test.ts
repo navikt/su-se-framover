@@ -1,6 +1,10 @@
 import { ApiError } from '~src/api/apiClient';
 
-import { hentSøknadsinnholdValideringsfeil } from './backendValidationUtils';
+import {
+    applyBackendErrorsToRHF,
+    hentBackendSøknadsinnholdValideringsfeil,
+    hentSøknadsinnholdValideringsfeil,
+} from './backendValidationUtils';
 
 const lagApiError = (body: unknown): ApiError => ({
     statusCode: 400,
@@ -36,14 +40,14 @@ describe('hentSøknadsinnholdValideringsfeil', () => {
         ]);
     });
 
-    it('viser listeelement med løpenummer når felt er i array', () => {
+    it('viser felt og begrunnelse direkte når felt er i array', () => {
         const res = hentSøknadsinnholdValideringsfeil(
             lagApiError({
                 code: 'ugyldig_soknadsinnhold_input',
                 errors: [
                     {
                         code: 'ugyldig_soknadsinnhold_input',
-                        felt: 'formue.kjøretøy[0].kjøretøyDeEier',
+                        felt: 'formue.kjøretøy.0.kjøretøyDeEier',
                         begrunnelse: 'mangler verdi',
                     },
                 ],
@@ -53,7 +57,7 @@ describe('hentSøknadsinnholdValideringsfeil', () => {
         expect(res).toEqual([
             {
                 code: 'ugyldig_soknadsinnhold_input',
-                message: 'formue > kjøretøy 1 > kjøretøyDeEier: mangler verdi',
+                message: 'formue.kjøretøy.0.kjøretøyDeEier: mangler verdi',
             },
         ]);
     });
@@ -65,7 +69,7 @@ describe('hentSøknadsinnholdValideringsfeil', () => {
                 errors: [
                     {
                         code: 'ugyldig_soknadsinnhold_input',
-                        felt: 'inntektOgPensjon.andreYtelserINav',
+                        felt: 'inntekt.andreYtelserINav',
                         begrunnelse: 'inneholder kontrolltegn',
                     },
                 ],
@@ -75,7 +79,7 @@ describe('hentSøknadsinnholdValideringsfeil', () => {
         expect(res).toEqual([
             {
                 code: 'ugyldig_soknadsinnhold_input',
-                message: 'inntektOgPensjon > andreYtelserINav: inneholder kontrolltegn',
+                message: 'inntekt.andreYtelserINav: inneholder kontrolltegn',
             },
         ]);
     });
@@ -86,7 +90,7 @@ describe('hentSøknadsinnholdValideringsfeil', () => {
                 code: 'ugyldig_soknadsinnhold_input',
                 errors: [
                     {
-                        felt: 'inntektOgPensjon.andreYtelserINav',
+                        felt: 'inntekt.andreYtelserINav',
                         begrunnelse: 'inneholder kontrolltegn',
                     },
                 ],
@@ -96,30 +100,57 @@ describe('hentSøknadsinnholdValideringsfeil', () => {
         expect(res).toEqual([
             {
                 code: 'ugyldig_soknadsinnhold_input',
-                message: 'inntektOgPensjon > andreYtelserINav: inneholder kontrolltegn',
+                message: 'inntekt.andreYtelserINav: inneholder kontrolltegn',
             },
         ]);
     });
+});
 
-    it('faller tilbake til top-level message når errors finnes men ikke har felt/begrunnelse', () => {
-        const res = hentSøknadsinnholdValideringsfeil(
+describe('hentBackendSøknadsinnholdValideringsfeil', () => {
+    it('returnerer raw backend-feil når kontrakten matcher', () => {
+        const res = hentBackendSøknadsinnholdValideringsfeil(
             lagApiError({
                 code: 'ugyldig_soknadsinnhold_input',
                 message: 'Ugyldig søknadsinnhold',
                 errors: [
                     {
-                        code: 'ugyldig_soknadsinnhold_input',
-                        felt: 'inntektOgPensjon.pensjon[1].ordning',
+                        felt: 'inntekt.andreYtelserINav',
+                        begrunnelse: 'inneholder kontrolltegn',
                     },
                 ],
             }),
         );
 
-        expect(res).toEqual([
-            {
-                code: 'ugyldig_soknadsinnhold_input',
-                message: 'Ugyldig søknadsinnhold',
-            },
-        ]);
+        expect(res).toEqual({
+            code: 'ugyldig_soknadsinnhold_input',
+            message: 'Ugyldig søknadsinnhold',
+            errors: [
+                {
+                    felt: 'inntekt.andreYtelserINav',
+                    begrunnelse: 'inneholder kontrolltegn',
+                },
+            ],
+        });
+    });
+});
+
+describe('applyBackendErrorsToRHF', () => {
+    it('mapper DTO-feltsti til RHF-feltsti før setError', () => {
+        const setError = jest.fn();
+
+        applyBackendErrorsToRHF(
+            [
+                {
+                    felt: 'inntektOgPensjon.pensjon.0.ordning',
+                    begrunnelse: 'må være et tall',
+                },
+            ],
+            setError as never,
+        );
+
+        expect(setError).toHaveBeenCalledWith('inntekt.pensjonsInntekt.0.ordning', {
+            type: 'server',
+            message: 'må være et tall',
+        });
     });
 });
