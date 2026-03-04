@@ -166,7 +166,7 @@ const OppsummeringAvGrunnlagsperioderBasic = (props: { grunnlagsperiode: Grunnla
     const { formatMessage } = useI18n({ messages });
     return (
         <div>
-            <hr></hr>
+            <hr />
             <Heading size="small">{formatMessage('kravgrunnlag.grunnlagsperiode.tittel')}</Heading>
 
             <ul>
