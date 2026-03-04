@@ -301,7 +301,6 @@ const OppsummeringAvGrunnlagsPerioderAccordion = (props: {
     const { formatMessage } = useI18n({ messages });
     return (
         <div>
-            hei
             <Heading size={props.kompakt ? 'xsmall' : 'small'}>
                 {formatMessage('kravgrunnlag.grunnlagsperiode.tittel')}
             </Heading>
