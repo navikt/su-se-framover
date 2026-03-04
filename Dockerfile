@@ -1,4 +1,4 @@
-FROM node:25.7.0-alpine
+FROM node:25.6.1-alpine
 
 ENV NODE_ENV production
 ENV PORT 8080
@@ -14,4 +14,3 @@ WORKDIR /app/server
 EXPOSE ${PORT}
 
 CMD ["index.js"]
-
