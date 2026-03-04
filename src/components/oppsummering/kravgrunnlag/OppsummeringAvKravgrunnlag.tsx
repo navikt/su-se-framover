@@ -166,6 +166,7 @@ const OppsummeringAvGrunnlagsperioderBasic = (props: { grunnlagsperiode: Grunnla
     const { formatMessage } = useI18n({ messages });
     return (
         <div>
+            <hr></hr>
             <Heading size="small">{formatMessage('kravgrunnlag.grunnlagsperiode.tittel')}</Heading>
 
             <ul>
@@ -189,7 +190,6 @@ const OppsummeringAvGrunnlagsperioderBasic = (props: { grunnlagsperiode: Grunnla
                                     retning="vertikal"
                                 />
                             </div>
-                            <hr></hr>
                         </div>
 
                         <OppsummeringPar
@@ -301,10 +301,10 @@ const OppsummeringAvGrunnlagsPerioderAccordion = (props: {
     const { formatMessage } = useI18n({ messages });
     return (
         <div>
+            hei
             <Heading size={props.kompakt ? 'xsmall' : 'small'}>
                 {formatMessage('kravgrunnlag.grunnlagsperiode.tittel')}
             </Heading>
-
             <Accordion
                 variant="neutral"
                 headingSize={props.kompakt ? 'xsmall' : undefined}
