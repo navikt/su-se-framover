@@ -1,4 +1,5 @@
 import { ApiError } from '~src/api/apiClient';
+import { Sakstype } from '~src/types/Sak';
 
 import {
     applyBackendErrorsToRHF,
@@ -135,22 +136,68 @@ describe('hentBackendSøknadsinnholdValideringsfeil', () => {
 });
 
 describe('applyBackendErrorsToRHF', () => {
-    it('mapper DTO-feltsti til RHF-feltsti før setError', () => {
+    it.each([
+        ['inntektOgPensjon.pensjon.0.ordning', Sakstype.Alder, 'inntekt.pensjonsInntekt.0.ordning'],
+        ['ektefelle.inntektOgPensjon.pensjon.0.beløp', Sakstype.Alder, 'ektefelle.inntekt.pensjonsInntekt.0.beløp'],
+        ['boforhold.borOgOppholderSegINorge', Sakstype.Alder, 'boOgOpphold.borOgOppholderSegINorge'],
+        ['boforhold.innlagtPåInstitusjon.datoForInnleggelse', Sakstype.Alder, 'boOgOpphold.datoForInnleggelse'],
+        ['forNav.harFullmektigEllerVerge', Sakstype.Alder, 'forVeileder.harFullmektigEllerVerge'],
+        ['oppholdstillatelseAlder.eøsborger', Sakstype.Alder, 'oppholdstillatelse.eøsborger'],
+        ['harSøktAlderspensjon.harSøktAlderspensjon', Sakstype.Alder, 'harSøktAlderspensjon'],
+        ['oppholdstillatelse.statsborgerskapAndreLand', Sakstype.Uføre, 'flyktningstatus.statsborgerskapAndreLand'],
+        ['flyktningsstatus.registrertFlyktning', Sakstype.Uføre, 'flyktningstatus.erFlyktning'],
+        ['uførevedtak.harUførevedtak', Sakstype.Uføre, 'harUførevedtak'],
+        ['formue.kjøretøy.0.verdiPåKjøretøy', Sakstype.Alder, 'formue.kjøretøy.0.verdiPåKjøretøy'],
+    ])('mapper %s (sakstype: %s) -> %s', (felt, sakstype, expectedField) => {
         const setError = jest.fn();
 
         applyBackendErrorsToRHF(
             [
                 {
-                    felt: 'inntektOgPensjon.pensjon.0.ordning',
+                    felt,
                     begrunnelse: 'må være et tall',
                 },
             ],
             setError as never,
+            sakstype,
         );
+
+        expect(setError).toHaveBeenCalledWith(expectedField, {
+            type: 'server',
+            message: 'må være et tall',
+        });
+    });
+});
+
+describe('submit-feil flyt', () => {
+    it('lager oppsummeringsfeil og setter RHF-feil på mappet feltsti', () => {
+        const apiError = lagApiError({
+            code: 'ugyldig_soknadsinnhold_input',
+            errors: [
+                {
+                    felt: 'inntektOgPensjon.pensjon.0.ordning',
+                    begrunnelse: 'må fylles ut',
+                },
+            ],
+        });
+        const setError = jest.fn();
+
+        const summaryErrors = hentSøknadsinnholdValideringsfeil(apiError);
+        const backendErrors = hentBackendSøknadsinnholdValideringsfeil(apiError);
+        expect(backendErrors).not.toBeNull();
+
+        applyBackendErrorsToRHF(backendErrors!.errors, setError as never, Sakstype.Alder);
+
+        expect(summaryErrors).toEqual([
+            {
+                code: 'ugyldig_soknadsinnhold_input',
+                message: 'inntektOgPensjon.pensjon.0.ordning: må fylles ut',
+            },
+        ]);
 
         expect(setError).toHaveBeenCalledWith('inntekt.pensjonsInntekt.0.ordning', {
             type: 'server',
-            message: 'må være et tall',
+            message: 'må fylles ut',
         });
     });
 });

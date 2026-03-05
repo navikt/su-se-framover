@@ -103,7 +103,7 @@ const Oppsummering = (props: { forrigeUrl: string; nesteUrl: string; avbrytUrl: 
         setInnsendingsvalideringsfeil(valideringsfeil);
 
         if (backendValideringsfeil.errors.length > 0) {
-            applyBackendErrorsToRHF(backendValideringsfeil.errors, form.setError);
+            applyBackendErrorsToRHF(backendValideringsfeil.errors, form.setError, sakstype);
         }
         focusAfterTimeout(feiloppsummeringref)();
 

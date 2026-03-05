@@ -1,6 +1,7 @@
 import { FieldValues, UseFormSetError } from 'react-hook-form';
 
 import { ApiError } from '~src/api/apiClient';
+import { Sakstype } from '~src/types/Sak';
 
 const UGYLDIG_SØKNADSINNHOLD_INPUT_CODE = 'ugyldig_soknadsinnhold_input';
 
@@ -63,16 +64,17 @@ export function hentSøknadsinnholdValideringsfeil(error: ApiError): FrontendVal
 export function applyBackendErrorsToRHF<TFieldValues extends FieldValues>(
     errors: BackendValideringsfeil[],
     setError: UseFormSetError<TFieldValues>,
+    sakstype: Sakstype,
 ) {
     for (const errorItem of errors) {
-        setError(dtoToRhfFieldPath(errorItem.felt) as never, {
+        setError(dtoToRhfFieldPath(errorItem.felt, sakstype) as never, {
             type: 'server',
             message: errorItem.begrunnelse,
         });
     }
 }
 
-function dtoToRhfFieldPath(path: string): string {
+function dtoToRhfFieldPath(path: string, sakstype: Sakstype): string {
     let mappedPath = path;
 
     if (mappedPath.startsWith('ektefelle.inntektOgPensjon.')) {
@@ -83,10 +85,33 @@ function dtoToRhfFieldPath(path: string): string {
         mappedPath = mappedPath.replace('boforhold.', 'boOgOpphold.');
     } else if (mappedPath.startsWith('forNav.')) {
         mappedPath = mappedPath.replace('forNav.', 'forVeileder.');
+    } else if (mappedPath.startsWith('oppholdstillatelseAlder.')) {
+        mappedPath = mappedPath.replace('oppholdstillatelseAlder.', 'oppholdstillatelse.');
+    } else if (mappedPath.startsWith('flyktningsstatus.')) {
+        mappedPath = mappedPath.replace('flyktningsstatus.', 'flyktningstatus.');
     }
 
-    return mappedPath
+    if (sakstype === Sakstype.Uføre && mappedPath.startsWith('oppholdstillatelse.')) {
+        mappedPath = mappedPath.replace('oppholdstillatelse.', 'flyktningstatus.');
+    }
+
+    mappedPath = mappedPath
         .split('.')
         .map((segment) => (segment === 'pensjon' ? 'pensjonsInntekt' : segment))
         .join('.');
+
+    if (mappedPath === 'flyktningstatus.registrertFlyktning') {
+        return 'flyktningstatus.erFlyktning';
+    }
+    if (mappedPath === 'uførevedtak.harUførevedtak') {
+        return 'harUførevedtak';
+    }
+    if (mappedPath === 'harSøktAlderspensjon.harSøktAlderspensjon') {
+        return 'harSøktAlderspensjon';
+    }
+    if (mappedPath.startsWith('boOgOpphold.innlagtPåInstitusjon.')) {
+        return mappedPath.replace('boOgOpphold.innlagtPåInstitusjon.', 'boOgOpphold.');
+    }
+
+    return mappedPath;
 }
