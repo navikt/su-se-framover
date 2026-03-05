@@ -11,7 +11,6 @@ import { useUserContext } from '~src/context/userContext';
 import * as innsendingSlice from '~src/features/søknad/innsending.slice';
 import { SøknadState } from '~src/features/søknad/søknad.slice';
 import { DelerBoligMed } from '~src/features/søknad/types';
-import { focusAfterTimeout } from '~src/lib/formUtils';
 import { useI18n } from '~src/lib/i18n';
 import yup, { hookFormErrorsTilFeiloppsummering } from '~src/lib/validering';
 import { SøknadContext } from '~src/pages/søknad';
@@ -35,7 +34,6 @@ import { Søknadstype } from '~src/types/Søknadinnhold';
 import Bunnknapper from '../../bunnknapper/Bunnknapper';
 import sharedStyles from '../../steg-shared.module.less';
 import {
-    applyBackendErrorsToRHF,
     FrontendValideringsfeil,
     hentBackendSøknadsinnholdValideringsfeil,
     hentSøknadsinnholdValideringsfeil,
@@ -102,11 +100,6 @@ const Oppsummering = (props: { forrigeUrl: string; nesteUrl: string; avbrytUrl: 
         const valideringsfeil = hentSøknadsinnholdValideringsfeil(error) ?? [];
         setInnsendingsvalideringsfeil(valideringsfeil);
 
-        if (backendValideringsfeil.errors.length > 0) {
-            applyBackendErrorsToRHF(backendValideringsfeil.errors, form.setError, sakstype);
-        }
-        focusAfterTimeout(feiloppsummeringref)();
-
         return true;
     };
 
@@ -151,8 +144,6 @@ const Oppsummering = (props: { forrigeUrl: string; nesteUrl: string; avbrytUrl: 
         }
     };
 
-    const feiloppsummeringFeil = hookFormErrorsTilFeiloppsummering(form.formState.errors);
-
     return (
         <div className={sharedStyles.container}>
             <form onSubmit={form.handleSubmit(handleSubmit)}>
@@ -166,16 +157,17 @@ const Oppsummering = (props: { forrigeUrl: string; nesteUrl: string; avbrytUrl: 
                 </Alert>
 
                 {innsendingsvalideringsfeil.length > 0 && (
-                    <Alert className={styles.feilmelding} variant="error">
-                        <Heading level="3" size="small" spacing>
-                            {formatMessage('feilmelding.innsendingFeilet')}
-                        </Heading>
-                        <ul className={styles.valideringsfeilListe}>
-                            {innsendingsvalideringsfeil.map((feil, index) => (
-                                <li key={`${feil.code}-${index}`}>{feil.message}</li>
-                            ))}
-                        </ul>
-                    </Alert>
+                    <>
+                        <Feiloppsummering
+                            tittel={formatMessage('feilmelding.innsendingFeilet')}
+                            feil={innsendingsvalideringsfeil.map((ifeil) => {
+                                return {
+                                    skjemaelementId: ifeil.feltSti,
+                                    feilmelding: `${ifeil.feltSti}: ${ifeil.begrunnelse}`,
+                                };
+                            })}
+                        />
+                    </>
                 )}
 
                 {innsendingsvalideringsfeil.length === 0 && RemoteData.isFailure(innsending) && (
@@ -187,8 +179,8 @@ const Oppsummering = (props: { forrigeUrl: string; nesteUrl: string; avbrytUrl: 
                 <Feiloppsummering
                     className={sharedStyles.marginBottom}
                     tittel={formatMessage('feiloppsummering.title')}
-                    hidden={feiloppsummeringFeil.length === 0}
-                    feil={feiloppsummeringFeil}
+                    hidden={hookFormErrorsTilFeiloppsummering(form.formState.errors).length === 0}
+                    feil={hookFormErrorsTilFeiloppsummering(form.formState.errors)}
                     ref={feiloppsummeringref}
                 />
 

@@ -158,10 +158,7 @@ const EndringAvFradrag = (props: RevurderingStegProps) => {
                                         : { url: props.forrigeUrl }
                                 }
                                 fortsettSenere={{
-                                    onClick: () =>
-                                        void form.handleSubmit((values) =>
-                                            save(values, () => navigate(props.avsluttUrl)),
-                                        )(),
+                                    onClick: () => save(form.getValues(), () => navigate(props.avsluttUrl)),
                                 }}
                             />
                         </div>
