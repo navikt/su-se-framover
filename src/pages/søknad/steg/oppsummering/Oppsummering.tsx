@@ -1,10 +1,11 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Alert, BodyLong, Heading } from '@navikt/ds-react';
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useNavigate, useOutletContext } from 'react-router-dom';
 
+import { ApiError } from '~src/api/apiClient';
 import Feiloppsummering from '~src/components/oppsummering/feiloppsummering/Feiloppsummering';
 import { useUserContext } from '~src/context/userContext';
 import * as innsendingSlice from '~src/features/søknad/innsending.slice';
@@ -32,6 +33,11 @@ import { Søknadstype } from '~src/types/Søknadinnhold';
 
 import Bunnknapper from '../../bunnknapper/Bunnknapper';
 import sharedStyles from '../../steg-shared.module.less';
+import {
+    FrontendValideringsfeil,
+    hentBackendSøknadsinnholdValideringsfeil,
+    hentSøknadsinnholdValideringsfeil,
+} from './backendValidationUtils';
 import styles from './oppsummering.module.less';
 import messages from './oppsummering-nb';
 import Søknadoppsummering from './Søknadoppsummering/Søknadoppsummering';
@@ -44,6 +50,7 @@ const Oppsummering = (props: { forrigeUrl: string; nesteUrl: string; avbrytUrl: 
     const { formatMessage } = useI18n({ messages: { ...messages, ...sharedI18n } });
     const dispatch = useAppDispatch();
     const feiloppsummeringref = useRef<HTMLDivElement>(null);
+    const [innsendingsvalideringsfeil, setInnsendingsvalideringsfeil] = useState<FrontendValideringsfeil[]>([]);
 
     const alderssøknadsschema = yup.object({
         ...alderspensjonSchema.fields,
@@ -84,8 +91,22 @@ const Oppsummering = (props: { forrigeUrl: string; nesteUrl: string; avbrytUrl: 
         resolver: yupResolver(søknadschema),
     });
 
+    const håndterBackendValideringsfeil = (error: ApiError | undefined): boolean => {
+        if (!error) return false;
+
+        const backendValideringsfeil = hentBackendSøknadsinnholdValideringsfeil(error);
+        if (!backendValideringsfeil) return false;
+
+        const valideringsfeil = hentSøknadsinnholdValideringsfeil(error) ?? [];
+        setInnsendingsvalideringsfeil(valideringsfeil);
+
+        return true;
+    };
+
     const handleSubmit = async (values: SøknadState) => {
         if (RemoteData.isSuccess(innsending)) return;
+        setInnsendingsvalideringsfeil([]);
+        form.clearErrors();
 
         if (sakstype === Sakstype.Uføre) {
             const res = await dispatch(
@@ -96,7 +117,13 @@ const Oppsummering = (props: { forrigeUrl: string; nesteUrl: string; avbrytUrl: 
             );
             if (innsendingSlice.sendUføresøknad.fulfilled.match(res)) {
                 navigate(props.nesteUrl);
+                return;
             }
+
+            if (innsendingSlice.sendUføresøknad.rejected.match(res)) {
+                håndterBackendValideringsfeil(res.payload);
+            }
+            return;
         }
 
         if (sakstype === Sakstype.Alder) {
@@ -108,6 +135,11 @@ const Oppsummering = (props: { forrigeUrl: string; nesteUrl: string; avbrytUrl: 
             );
             if (innsendingSlice.sendAldersøknad.fulfilled.match(res)) {
                 navigate(props.nesteUrl);
+                return;
+            }
+
+            if (innsendingSlice.sendAldersøknad.rejected.match(res)) {
+                håndterBackendValideringsfeil(res.payload);
             }
         }
     };
@@ -124,7 +156,21 @@ const Oppsummering = (props: { forrigeUrl: string; nesteUrl: string; avbrytUrl: 
                     <BodyLong>{formatMessage('meldFraOmEndringer.tekst')}</BodyLong>
                 </Alert>
 
-                {RemoteData.isFailure(innsending) && (
+                {innsendingsvalideringsfeil.length > 0 && (
+                    <>
+                        <Feiloppsummering
+                            tittel={formatMessage('feilmelding.innsendingFeilet')}
+                            feil={innsendingsvalideringsfeil.map((ifeil) => {
+                                return {
+                                    skjemaelementId: ifeil.feltSti,
+                                    feilmelding: `${ifeil.feltSti}: ${ifeil.begrunnelse}`,
+                                };
+                            })}
+                        />
+                    </>
+                )}
+
+                {innsendingsvalideringsfeil.length === 0 && RemoteData.isFailure(innsending) && (
                     <Alert className={styles.feilmelding} variant="error">
                         {formatMessage('feilmelding.innsendingFeilet')}
                     </Alert>

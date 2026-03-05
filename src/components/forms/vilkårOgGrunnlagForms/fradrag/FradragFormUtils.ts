@@ -76,6 +76,22 @@ export const fradragTilFradragFormData = (
     };
 };
 
+const parseRequiredInteger = (value: Nullable<string>, fieldName: string): number => {
+    const parsed = Number.parseInt(value ?? '', 10);
+    if (Number.isNaN(parsed)) {
+        throw new Error(`Ugyldig verdi for ${fieldName}.`);
+    }
+    return parsed;
+};
+
+const parseRequiredDecimal = (value: Nullable<string>, fieldName: string): number => {
+    const parsed = Number.parseFloat(value ?? '');
+    if (Number.isNaN(parsed)) {
+        throw new Error(`Ugyldig verdi for ${fieldName}.`);
+    }
+    return parsed;
+};
+
 export const fradragFormdataTilFradrag = (f: FradragFormData, defaultPeriode: Periode<Date>): Fradrag => ({
     periode:
         f.periode?.fraOgMed && f.periode.tilOgMed
@@ -88,13 +104,16 @@ export const fradragFormdataTilFradrag = (f: FradragFormData, defaultPeriode: Pe
                   tilOgMed: DateFns.formatISO(defaultPeriode.tilOgMed, { representation: 'date' }),
               },
 
-    beløp: parseInt(f.beløp!, 10),
+    beløp: parseRequiredInteger(f.beløp, 'fradrag.beløp'),
     type: f.kategori!,
     utenlandskInntekt: f.fraUtland
         ? {
-              beløpIUtenlandskValuta: parseInt(f.utenlandskInntekt.beløpIUtenlandskValuta),
+              beløpIUtenlandskValuta: parseRequiredInteger(
+                  f.utenlandskInntekt.beløpIUtenlandskValuta,
+                  'fradrag.utenlandskInntekt.beløpIUtenlandskValuta',
+              ),
               valuta: f.utenlandskInntekt.valuta,
-              kurs: Number.parseFloat(f.utenlandskInntekt.kurs),
+              kurs: parseRequiredDecimal(f.utenlandskInntekt.kurs, 'fradrag.utenlandskInntekt.kurs'),
           }
         : null,
     tilhører: f.tilhørerEPS ? FradragTilhører.EPS : FradragTilhører.Bruker,
