@@ -87,17 +87,15 @@ const FradragForm = <T extends FieldValues>(props: Props<T>) => {
                                                     value={field.value ?? ''}
                                                     error={fieldState.error?.message}
                                                     onChange={(event) => {
-                                                        const nestekategori = event.target.value as Fradragskategori;
-                                                        field.onChange(nestekategori);
-                                                        if (!skalViseFraUtland(nestekategori)) {
-                                                            props.setValue(
-                                                                `${partialFradragNavn}.fraUtland` as Path<T>,
-                                                                false as PathValue<
-                                                                    T,
-                                                                    typeof partialFradragNavn & 'fraUtland'
-                                                                >,
-                                                            );
-                                                        }
+                                                        const valgtKategori = event.target.value as Fradragskategori;
+                                                        field.onChange(valgtKategori);
+                                                        props.setValue(
+                                                            `${partialFradragNavn}.fraUtland` as Path<T>,
+                                                            false as PathValue<
+                                                                T,
+                                                                typeof partialFradragNavn & 'fraUtland'
+                                                            >,
+                                                        );
                                                     }}
                                                 >
                                                     <option value="">{formatMessage('fradrag.type.emptyLabel')}</option>
@@ -172,24 +170,22 @@ const FradragForm = <T extends FieldValues>(props: Props<T>) => {
                                             )}
                                         />
                                     )}
-                                    <>
-                                        {visFraUtland && (
-                                            <Controller
-                                                disabled={props.readonly}
-                                                control={props.control}
-                                                name={`${partialFradragNavn}.fraUtland` as Path<T>}
-                                                render={({ field }) => (
-                                                    <Checkbox
-                                                        checked={!!field.value}
-                                                        className={styles.checkbox}
-                                                        {...field}
-                                                    >
-                                                        {formatMessage('fradrag.checkbox.fraUtland')}
-                                                    </Checkbox>
-                                                )}
-                                            />
-                                        )}
-                                    </>
+                                    {visFraUtland && (
+                                        <Controller
+                                            disabled={props.readonly}
+                                            control={props.control}
+                                            name={`${partialFradragNavn}.fraUtland` as Path<T>}
+                                            render={({ field }) => (
+                                                <Checkbox
+                                                    checked={!!field.value}
+                                                    className={styles.checkbox}
+                                                    {...field}
+                                                >
+                                                    {formatMessage('fradrag.checkbox.fraUtland')}
+                                                </Checkbox>
+                                            )}
+                                        />
+                                    )}
                                     <Controller
                                         disabled={props.readonly}
                                         control={props.control}
