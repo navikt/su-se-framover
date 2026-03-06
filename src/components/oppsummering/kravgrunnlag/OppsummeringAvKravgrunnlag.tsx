@@ -166,10 +166,11 @@ const OppsummeringAvGrunnlagsperioderBasic = (props: { grunnlagsperiode: Grunnla
     const { formatMessage } = useI18n({ messages });
     return (
         <div>
+            <hr />
             <Heading size="small">{formatMessage('kravgrunnlag.grunnlagsperiode.tittel')}</Heading>
 
             <ul>
-                {props.grunnlagsperiode.map((periode) => (
+                {props.grunnlagsperiode.map((periode, index) => (
                     <li
                         key={`${periode.periode.fraOgMed}-${periode.periode.tilOgMed}`}
                         className={styles.grunnlagsbeløpContainer}
@@ -189,7 +190,6 @@ const OppsummeringAvGrunnlagsperioderBasic = (props: { grunnlagsperiode: Grunnla
                                     retning="vertikal"
                                 />
                             </div>
-                            <hr></hr>
                         </div>
 
                         <OppsummeringPar
@@ -225,6 +225,7 @@ const OppsummeringAvGrunnlagsperioderBasic = (props: { grunnlagsperiode: Grunnla
                             verdi={periode.nettoFeilutbetaling}
                             retning="vertikal"
                         />
+                        {index < props.grunnlagsperiode.length - 1 && <hr className={styles.linje} />}
                     </li>
                 ))}
             </ul>
@@ -304,13 +305,12 @@ const OppsummeringAvGrunnlagsPerioderAccordion = (props: {
             <Heading size={props.kompakt ? 'xsmall' : 'small'}>
                 {formatMessage('kravgrunnlag.grunnlagsperiode.tittel')}
             </Heading>
-
             <Accordion
                 variant="neutral"
                 headingSize={props.kompakt ? 'xsmall' : undefined}
                 size={props.kompakt ? 'small' : undefined}
             >
-                {props.grunnlagsperiode.map((periode) => (
+                {props.grunnlagsperiode.map((periode, index) => (
                     <AccordionItem key={`${periode.periode.fraOgMed}-${periode.periode.tilOgMed}`}>
                         <Accordion.Header>
                             {`${formatMonthYear(periode.periode.fraOgMed)} - ${formatMonthYear(
@@ -367,6 +367,7 @@ const OppsummeringAvGrunnlagsPerioderAccordion = (props: {
                                 retning="vertikal"
                                 textSomSmall={props.kompakt}
                             />
+                            {index < props.grunnlagsperiode.length - 1 && <hr className={styles.linje} />}
                         </Accordion.Content>
                     </AccordionItem>
                 ))}
