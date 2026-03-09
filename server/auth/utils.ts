@@ -7,6 +7,7 @@ import { logger } from '../logger.js';
 import { TokenSets } from '../typings/express/express.js';
 
 export const tokenSetSelfId = 'self';
+const TOKEN_REFRESH_MARGIN_SECONDS = 60;
 
 function getTokenSetById(tokenSets: TokenSets, id: string): TokenSet | null {
     if (!(id in tokenSets)) {
@@ -20,28 +21,32 @@ function getTokenSetById(tokenSets: TokenSets, id: string): TokenSet | null {
     return new OpenIdClient.TokenSet(tokenSets[id]);
 }
 
+function expiringSoon(tokenSet: TokenSet): boolean {
+    return tokenSet.expired() || (typeof tokenSet.expires_in === 'number' && tokenSet.expires_in <= TOKEN_REFRESH_MARGIN_SECONDS);
+}
+
 export async function getOrRefreshOnBehalfOfToken(
     authClient: OpenIdClient.Client,
     tokenSets: TokenSets,
     log: Logger,
 ): Promise<TokenSet> {
-    const selfToken = getTokenSetById(tokenSets, tokenSetSelfId);
-    if (!selfToken) {
+    const accessToken = getTokenSetById(tokenSets, tokenSetSelfId);
+    if (!accessToken) {
         throw Error(
-            'getOrRefreshOnBehalfOfToken: Missing self-token in tokenSets. This should have been set by the middleware.',
+            'getOrRefreshAccessTokenIfExpired: Missing self-token in tokenSets. This should have been set by the middleware.',
         );
     }
     const onBehalfOfToken = getTokenSetById(tokenSets, Config.auth.suSeBakoverUri);
     if (!onBehalfOfToken) {
-        log.debug('getOrRefreshOnBehalfOfToken: creating missing on-behalf-of token.');
-        const token = await getOrRefreshSelfTokenIfExpired(authClient, selfToken, tokenSets, log);
+        log.debug('getOrRefreshAccessTokenIfExpired: creating missing on-behalf-of token.');
+        const token = await getOrRefreshAccessTokenIfExpired(authClient, accessToken, tokenSets, log);
         const newOnBehalfOftoken = await requestOnBehalfOfToken(authClient, token);
         tokenSets[Config.auth.suSeBakoverUri] = newOnBehalfOftoken;
         return newOnBehalfOftoken;
     }
-    if (onBehalfOfToken.expired()) {
-        log.debug('getOrRefreshOnBehalfOfToken: on-behalf-of token has expired, requesting new using refresh_token.');
-        const token = await getOrRefreshSelfTokenIfExpired(authClient, selfToken, tokenSets, log);
+    if (expiringSoon(onBehalfOfToken)) {
+        log.debug('getOrRefreshAccessTokenIfExpired: on-behalf-of token is expiring soon, requesting new using refresh_token.');
+        const token = await getOrRefreshAccessTokenIfExpired(authClient, accessToken, tokenSets, log);
         const refreshedOnBehalfOfToken = await requestOnBehalfOfToken(authClient, token);
         tokenSets[Config.auth.suSeBakoverUri] = refreshedOnBehalfOfToken;
         return refreshedOnBehalfOfToken;
@@ -49,21 +54,21 @@ export async function getOrRefreshOnBehalfOfToken(
     return tokenSets[Config.auth.suSeBakoverUri];
 }
 
-async function getOrRefreshSelfTokenIfExpired(
+async function getOrRefreshAccessTokenIfExpired(
     authClient: OpenIdClient.Client,
-    selfToken: TokenSet,
+    accessToken: TokenSet,
     tokenSets: TokenSets,
     log: Logger,
 ): Promise<TokenSet> {
-    if (selfToken.expired()) {
-        // Denne vil ikke bli kalt initielt, men først når OBO/self-token har expired
-        log.debug('getOrRefreshOnBehalfOfToken: self token has expired, requesting new using refresh_token.');
+    if (expiringSoon(accessToken)) {
+        // Denne vil ikke bli kalt initielt, men først når OBO/self-token må fornyes
+        log.debug('getOrRefreshOnBehalfOfToken: self token is expiring soon, requesting new using refresh_token.');
         const clientAssertionPayload = { aud: authClient.issuer.metadata['token_endpoint'] };
-        const refreshedSelfToken = await authClient.refresh(selfToken, { clientAssertionPayload });
-        tokenSets[tokenSetSelfId] = refreshedSelfToken;
-        return refreshedSelfToken;
+        const nyttAccessToken = await authClient.refresh(accessToken, { clientAssertionPayload });
+        tokenSets[tokenSetSelfId] = nyttAccessToken;
+        return nyttAccessToken;
     }
-    return selfToken;
+    return accessToken;
 }
 
 async function requestOnBehalfOfToken(authClient: OpenIdClient.Client, tokenSet: TokenSet): Promise<TokenSet> {
