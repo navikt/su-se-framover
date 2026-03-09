@@ -33,25 +33,25 @@ export async function getOrRefreshOnBehalfOfToken(
     tokenSets: TokenSets,
     log: Logger,
 ): Promise<TokenSet> {
-    const accessToken = getTokenSetById(tokenSets, tokenSetSelfId);
-    if (!accessToken) {
+    const tokenSet = getTokenSetById(tokenSets, tokenSetSelfId);
+    if (!tokenSet) {
         throw Error(
-            'getOrRefreshAccessTokenIfExpired: Missing self-token in tokenSets. This should have been set by the middleware.',
+            'getOrRefreshAccessTokenIfSoonExpired: Missing self-token in tokenSets. This should have been set by the middleware.',
         );
     }
     const onBehalfOfToken = getTokenSetById(tokenSets, Config.auth.suSeBakoverUri);
     if (!onBehalfOfToken) {
-        log.debug('getOrRefreshAccessTokenIfExpired: creating missing on-behalf-of token.');
-        const token = await getOrRefreshAccessTokenIfExpired(authClient, accessToken, tokenSets, log);
+        log.debug('getOrRefreshAccessTokenIfSoonExpired: creating missing on-behalf-of token.');
+        const token = await getOrRefreshAccessTokenIfSoonExpired(authClient, tokenSet, tokenSets, log);
         const newOnBehalfOftoken = await requestOnBehalfOfToken(authClient, token);
         tokenSets[Config.auth.suSeBakoverUri] = newOnBehalfOftoken;
         return newOnBehalfOftoken;
     }
     if (expiringSoon(onBehalfOfToken)) {
         log.debug(
-            'getOrRefreshAccessTokenIfExpired: on-behalf-of token is expiring soon, requesting new using refresh_token.',
+            'getOrRefreshAccessTokenIfSoonExpired: on-behalf-of token is expiring soon, requesting new using refresh_token.',
         );
-        const token = await getOrRefreshAccessTokenIfExpired(authClient, accessToken, tokenSets, log);
+        const token = await getOrRefreshAccessTokenIfSoonExpired(authClient, tokenSet, tokenSets, log);
         const refreshedOnBehalfOfToken = await requestOnBehalfOfToken(authClient, token);
         tokenSets[Config.auth.suSeBakoverUri] = refreshedOnBehalfOfToken;
         return refreshedOnBehalfOfToken;
@@ -59,21 +59,21 @@ export async function getOrRefreshOnBehalfOfToken(
     return tokenSets[Config.auth.suSeBakoverUri];
 }
 
-async function getOrRefreshAccessTokenIfExpired(
+async function getOrRefreshAccessTokenIfSoonExpired(
     authClient: OpenIdClient.Client,
-    accessToken: TokenSet,
+    tokenSet: TokenSet,
     tokenSets: TokenSets,
     log: Logger,
 ): Promise<TokenSet> {
-    if (expiringSoon(accessToken)) {
+    if (expiringSoon(tokenSet)) {
         // Denne vil ikke bli kalt initielt, men først når OBO/self-token må fornyes
         log.debug('getOrRefreshOnBehalfOfToken: self token is expiring soon, requesting new using refresh_token.');
         const clientAssertionPayload = { aud: authClient.issuer.metadata['token_endpoint'] };
-        const nyttAccessToken = await authClient.refresh(accessToken, { clientAssertionPayload });
-        tokenSets[tokenSetSelfId] = nyttAccessToken;
-        return nyttAccessToken;
+        const nyttTokenSet = await authClient.refresh(tokenSet, { clientAssertionPayload });
+        tokenSets[tokenSetSelfId] = nyttTokenSet;
+        return nyttTokenSet;
     }
-    return accessToken;
+    return tokenSet;
 }
 
 async function requestOnBehalfOfToken(authClient: OpenIdClient.Client, tokenSet: TokenSet): Promise<TokenSet> {
