@@ -6,6 +6,7 @@ import { Logger } from 'pino';
 import * as AuthUtils from './auth/utils.js';
 import * as Config from './config.js';
 
+//AADSTS500133(Assertion isn't within its valid time range) -> https://learn.microsoft.com/en-us/entra/identity-platform/reference-error-codes
 function isTokenRefreshOrOboError(error: unknown): boolean {
     if (!error || typeof error !== 'object') {
         return false;
