@@ -6,6 +6,20 @@ import { Logger } from 'pino';
 import * as AuthUtils from './auth/utils.js';
 import * as Config from './config.js';
 
+function isTokenRefreshOrOboError(error: unknown): boolean {
+    if (!error || typeof error !== 'object') {
+        return false;
+    }
+
+    const openIdError = error as { error?: string; error_description?: string; message?: string };
+
+    return (
+        openIdError.error === 'invalid_grant' ||
+        openIdError.error_description?.includes('AADSTS500133') === true ||
+        openIdError.message?.includes('AADSTS500133') === true
+    );
+}
+
 export default function setup(authClient: OpenIdClient.Client) {
     const router = express.Router();
 
@@ -53,7 +67,15 @@ export default function setup(authClient: OpenIdClient.Client) {
                 return proxy(req.log, onBehalfOfToken.access_token)(req, res, next);
             })
             .catch((error) => {
-                req.log.error('Failed to renew token(s). Original error: %s', error);
+                if (isTokenRefreshOrOboError(error)) {
+                    req.log.warn({ error }, 'Failed to refresh token(s) or request OBO token, returning 401.');
+                    res.status(401)
+                        .header('WWW-Authenticate', 'OAuth realm=su-se-framover, charset="UTF-8"')
+                        .send('Not authenticated');
+                    return;
+                }
+
+                req.log.error({ error }, 'Failed to renew token(s).');
                 res.status(500).send('Failed to fetch/refresh access tokens on behalf of user');
             });
     });

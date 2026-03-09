@@ -22,7 +22,10 @@ function getTokenSetById(tokenSets: TokenSets, id: string): TokenSet | null {
 }
 
 function expiringSoon(tokenSet: TokenSet): boolean {
-    return tokenSet.expired() || (typeof tokenSet.expires_in === 'number' && tokenSet.expires_in <= TOKEN_REFRESH_MARGIN_SECONDS);
+    return (
+        tokenSet.expired() ||
+        (typeof tokenSet.expires_in === 'number' && tokenSet.expires_in <= TOKEN_REFRESH_MARGIN_SECONDS)
+    );
 }
 
 export async function getOrRefreshOnBehalfOfToken(
@@ -45,7 +48,9 @@ export async function getOrRefreshOnBehalfOfToken(
         return newOnBehalfOftoken;
     }
     if (expiringSoon(onBehalfOfToken)) {
-        log.debug('getOrRefreshAccessTokenIfExpired: on-behalf-of token is expiring soon, requesting new using refresh_token.');
+        log.debug(
+            'getOrRefreshAccessTokenIfExpired: on-behalf-of token is expiring soon, requesting new using refresh_token.',
+        );
         const token = await getOrRefreshAccessTokenIfExpired(authClient, accessToken, tokenSets, log);
         const refreshedOnBehalfOfToken = await requestOnBehalfOfToken(authClient, token);
         tokenSets[Config.auth.suSeBakoverUri] = refreshedOnBehalfOfToken;
