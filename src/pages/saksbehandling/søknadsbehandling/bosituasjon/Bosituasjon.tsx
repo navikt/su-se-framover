@@ -20,24 +20,24 @@ import { lagreBosituasjongrunnlag } from '~src/features/grunnlagsdataOgVilkårsv
 import { ApiResult, useAsyncActionCreator } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
 import { Person } from '~src/types/Person';
+import { Sakstype } from '~src/types/Sak.ts';
 import {
     EksisterendeVedtaksinformasjonTidligerePeriodeResponse,
     Søknadsbehandling,
 } from '~src/types/Søknadsbehandling';
 import { Vilkårtype } from '~src/types/Vilkårsvurdering';
 import { lagDatePeriodeAvStringPeriode } from '~src/utils/periode/periodeUtils';
-
 import EksisterendeVedtaksinformasjon from '../EksisterendeVedtaksinformasjon';
 import sharedI18n from '../sharedI18n-nb';
 import sharedStyles from '../sharedStyles.module.less';
 import { VilkårsvurderingBaseProps } from '../types';
-
 import messages from './Bosituasjon-nb';
 
 const Bosituasjon = (
     props: VilkårsvurderingBaseProps & {
         søker: Person;
         tidligerePeriodeData: ApiResult<EksisterendeVedtaksinformasjonTidligerePeriodeResponse>;
+        sakstype: Sakstype;
     },
 ) => {
     const navigate = useNavigate();

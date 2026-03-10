@@ -117,6 +117,7 @@ const ShowSteg = (props: {
                             ? Uføresteg.FlyktningstatusOppholdstillatelse
                             : Alderssteg.Oppholdstillatelse,
                     )}
+                    sakstype={props.sakstype}
                     nesteUrl={stegUrl(Fellessteg.DinFormue)}
                     avbrytUrl={avbrytUrl}
                 />

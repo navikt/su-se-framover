@@ -17,13 +17,13 @@ import { lagreFormuegrunnlag } from '~src/features/grunnlagsdataOgVilkårsvurder
 import { useAsyncActionCreator } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
 import { InformasjonsRevurdering, RevurderingStegProps } from '~src/types/Revurdering';
+import { Sakstype } from '~src/types/Sak.ts';
 import { lagDatePeriodeAvStringPeriode } from '~src/utils/periode/periodeUtils';
-
 import RevurderingsperiodeHeader from '../revurderingsperiodeheader/RevurderingsperiodeHeader';
 import styles from './formue.module.less';
 import messages from './formue-nb';
 
-const Formue = (props: RevurderingStegProps) => {
+const Formue = (props: RevurderingStegProps & { sakstype: Sakstype }) => {
     const navigate = useNavigate();
     const { formatMessage } = useI18n({ messages });
     const [lagreFormuegrunnlagStatus, lagreFormuegrunnlagAction] = useAsyncActionCreator(lagreFormuegrunnlag);

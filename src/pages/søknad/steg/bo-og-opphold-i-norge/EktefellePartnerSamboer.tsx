@@ -9,13 +9,14 @@ import { EPSFormData } from '~src/features/søknad/types';
 import { useI18n } from '~src/lib/i18n';
 import { keyOf, Nullable } from '~src/lib/types';
 import { Person } from '~src/types/Person';
-
+import { Sakstype } from '~src/types/Sak.ts';
 import messages from './bo-og-opphold-i-norge-nb';
 import styles from './ektefelle-partner-samboer.module.less';
 
 interface Props {
     id: string;
     onChange: (eps: EPSFormData) => void;
+    sakstype: Sakstype;
     value: Nullable<EPSFormData>;
     feil?: FieldErrors<EPSFormData>;
 }
@@ -50,6 +51,7 @@ const EktefellePartnerSamboer = (props: Props) => {
                         setEps(null);
                     }
                 }}
+                sakstype={props.sakstype}
             />
 
             <div className={styles.ufør}>

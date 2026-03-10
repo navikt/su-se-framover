@@ -161,6 +161,7 @@ const RevurderingSeksjonerWrapper = (props: {
                     />
                     {props.seksjonOgSteg.seksjon === RevurderingSeksjoner.GrunnlagOgVilkår && (
                         <GrunnlagOgVilkårSteg
+                            sakstype={props.sakstype}
                             seksjonOgSteg={props.seksjonOgSteg}
                             seksjoner={seksjoner}
                             sakId={props.sakId}
@@ -225,6 +226,7 @@ const FramdriftsIndikatorRevurdering = (props: {
 
 const GrunnlagOgVilkårSteg = (props: {
     seksjonOgSteg: { seksjon: RevurderingSeksjoner; steg: RevurderingSteg };
+    sakstype: Sakstype;
     seksjoner: Seksjon[];
     sakId: string;
     informasjonsRevurdering: InformasjonsRevurdering;
@@ -301,7 +303,9 @@ const GrunnlagOgVilkårSteg = (props: {
             {props.seksjonOgSteg.steg === RevurderingGrunnlagOgVilkårSteg.FastOpphold && (
                 <FastOppholdPage {...stegProps} />
             )}
-            {props.seksjonOgSteg.steg === RevurderingGrunnlagOgVilkårSteg.Formue && <Formue {...stegProps} />}
+            {props.seksjonOgSteg.steg === RevurderingGrunnlagOgVilkårSteg.Formue && (
+                <Formue {...stegProps} sakstype={props.sakstype} />
+            )}
             {props.seksjonOgSteg.steg === RevurderingGrunnlagOgVilkårSteg.Utenlandsopphold && (
                 <UtenlandsoppholdPage {...stegProps} />
             )}
@@ -318,7 +322,7 @@ const GrunnlagOgVilkårSteg = (props: {
                 <Institusjonsopphold {...stegProps} />
             )}
             {props.seksjonOgSteg.steg === RevurderingGrunnlagOgVilkårSteg.Bosituasjon && (
-                <BosituasjonPage {...stegProps} søker={søker} />
+                <BosituasjonPage {...stegProps} søker={søker} sakstype={props.sakstype} />
             )}
             {props.seksjonOgSteg.steg === RevurderingGrunnlagOgVilkårSteg.EndringAvFradrag && (
                 <EndringAvFradrag {...stegProps} />

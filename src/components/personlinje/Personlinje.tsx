@@ -67,7 +67,11 @@ const Personlinje = (props: { søker: Person; sakInfo: { sakId: string; saksnumm
                 {props.søker.sivilstand ? (
                     <span className={styles.sivilstandAndSeperator}>
                         <Separator />
-                        <Sivilstand sakId={props.sakInfo.sakId} sivilstand={props.søker.sivilstand} />
+                        <Sivilstand
+                            sakId={props.sakInfo.sakId}
+                            sivilstand={props.søker.sivilstand}
+                            sakstype={props.sakInfo.sakstype}
+                        />
                     </span>
                 ) : (
                     <EpsSakLinkUtenSivilstand sakId={props.sakInfo.sakId} />
@@ -140,7 +144,7 @@ const EpsSakLinkUtenSivilstand = (props: { sakId: string }) => {
     );
 };
 
-const Sivilstand = (props: { sakId: string; sivilstand: ISivilstand }) => {
+const Sivilstand = (props: { sakId: string; sivilstand: ISivilstand; sakstype: Sakstype }) => {
     const { formatMessage } = useI18n({ messages });
 
     const { insert } = useToast();
@@ -149,7 +153,7 @@ const Sivilstand = (props: { sakId: string; sivilstand: ISivilstand }) => {
 
     useEffect(() => {
         if (props.sivilstand.relatertVedSivilstand) {
-            hentPerson(props.sivilstand.relatertVedSivilstand);
+            hentPerson({ fnr: props.sivilstand.relatertVedSivilstand, sakstype: props.sakstype });
         }
     }, []);
 

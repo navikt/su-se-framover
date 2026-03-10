@@ -25,10 +25,10 @@ import { ApiResult, useAsyncActionCreator } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
 import { VilkårsvurderingBaseProps } from '~src/pages/saksbehandling/søknadsbehandling/types';
 import { Person } from '~src/types/Person';
+import { Sakstype } from '~src/types/Sak.ts';
 import { EksisterendeVedtaksinformasjonTidligerePeriodeResponse } from '~src/types/Søknadsbehandling';
 import { Vilkårtype } from '~src/types/Vilkårsvurdering';
 import { lagDatePeriodeAvStringPeriode } from '~src/utils/periode/periodeUtils';
-
 import EksisterendeVedtaksinformasjon from '../EksisterendeVedtaksinformasjon';
 import sharedI18n from '../sharedI18n-nb';
 import styles from './Formue.module.less';
@@ -38,6 +38,7 @@ const Formue = (
     props: VilkårsvurderingBaseProps & {
         søker: Person;
         tidligerePeriodeData: ApiResult<EksisterendeVedtaksinformasjonTidligerePeriodeResponse>;
+        sakstype: Sakstype;
     },
 ) => {
     const { formatMessage } = useI18n({ messages: { ...sharedI18n, ...messages } });

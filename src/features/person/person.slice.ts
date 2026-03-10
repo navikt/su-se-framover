@@ -6,10 +6,10 @@ import * as personApi from '~src/api/personApi';
 import { handleAsyncThunk, simpleRejectedActionToRemoteData } from '~src/redux/utils';
 import { Person } from '~src/types/Person';
 
-export const fetchPerson = createAsyncThunk<Person, { fnr: string }, { rejectValue: ApiError }>(
+export const fetchPerson = createAsyncThunk<Person, { fnr: string; sakstype: string }, { rejectValue: ApiError }>(
     'person/fetch',
-    async ({ fnr }, thunkApi) => {
-        const res = await personApi.fetchPerson(fnr);
+    async ({ fnr, sakstype }, thunkApi) => {
+        const res = await personApi.fetchPerson({ fnr, sakstype });
 
         if (res.status === 'ok') {
             return res.data;

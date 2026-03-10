@@ -33,7 +33,7 @@ const Saksoversikt = () => {
     useEffect(() => {
         if (RemoteData.isSuccess(sak)) {
             if (RemoteData.isInitial(søker)) {
-                dispatch(personSlice.fetchPerson({ fnr: sak.value.fnr }));
+                dispatch(personSlice.fetchPerson({ sakstype: sak.value.sakstype, fnr: sak.value.fnr }));
             } else if (RemoteData.isSuccess(søker) && !urlParams.sakId) {
                 navigate(routes.saksoversiktValgtSak.createURL({ sakId: sak.value.id }));
             }

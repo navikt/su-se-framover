@@ -18,17 +18,17 @@ import * as Routes from '~src/lib/routes';
 import { FormWrapper } from '~src/pages/saksbehandling/søknadsbehandling/FormWrapper';
 import { useAppDispatch } from '~src/redux/Store';
 import { Person } from '~src/types/Person';
+import { Sakstype } from '~src/types/Sak.ts';
 import { showName } from '~src/utils/person/personUtils';
-
 import messages from '../VilkårOgGrunnlagForms-nb';
 import { VilkårFormProps } from '../VilkårOgGrunnlagFormUtils';
-
 import styles from './BosituasjonForm.module.less';
 import { BosituasjonGrunnlagFormData, nyBosituasjon } from './BosituasjonFormUtils';
 
 interface Props extends VilkårFormProps<BosituasjonGrunnlagFormData> {
     begrensTilEnPeriode?: boolean;
     skalIkkeKunneVelgePeriode?: boolean;
+    sakstype: Sakstype;
     søker: Person;
     children?: ReactNode;
 }
@@ -80,6 +80,7 @@ const BosituasjonForm = (props: Props) => {
                                             name={`${nameAndIdx}.epsFnr`}
                                             render={({ field, fieldState }) => (
                                                 <FnrInput
+                                                    sakstype={props.sakstype}
                                                     label={formatMessage('bosituasjon.epsFnr')}
                                                     inputId="epsFnr"
                                                     name={`${nameAndIdx}.epsFnr`}

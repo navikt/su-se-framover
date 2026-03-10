@@ -18,8 +18,8 @@ import {
     bosituasjonPåDato,
 } from '~src/types/grunnlagsdataOgVilkårsvurderinger/bosituasjon/Bosituasjongrunnlag';
 import { Formuegrenser } from '~src/types/grunnlagsdataOgVilkårsvurderinger/formue/Formuevilkår';
+import { Sakstype } from '~src/types/Sak.ts';
 import { toStringDateOrNull } from '~src/utils/date/dateUtils';
-
 import messages from '../VilkårOgGrunnlagForms-nb';
 import { VilkårFormProps } from '../VilkårOgGrunnlagFormUtils';
 import {
@@ -38,6 +38,7 @@ interface Props extends VilkårFormProps<FormueVilkårFormData> {
     skalIkkeKunneVelgePeriode?: boolean;
     formuegrenser: Formuegrenser[];
     bosituasjonsgrunnlag: Bosituasjon[];
+    sakstype: Sakstype;
 }
 
 const FormueForm = (props: Props) => {
@@ -56,6 +57,7 @@ const FormueForm = (props: Props) => {
                     getChild={(nameAndIdx: `formue.${number}`) => (
                         <>
                             <FormueGrunnlagsperiode
+                                sakstype={props.sakstype}
                                 nameAndIdx={nameAndIdx}
                                 bosituasjonsgrunnlag={props.bosituasjonsgrunnlag}
                                 control={props.form.control}
@@ -114,6 +116,7 @@ const FormueGrunnlagsperiode = (props: {
     triggerValidation: UseFormTrigger<FormueVilkårFormData>;
     setEpsValues: (epsValues: FormuegrunnlagVerdierFormData) => void;
     setEpsFnr: (epsFnr: string) => void;
+    sakstype: Sakstype;
 }) => {
     const { formatMessage } = useI18n({ messages });
     const watch = useWatch({ control: props.control, name: props.nameAndIdx });
@@ -130,7 +133,7 @@ const FormueGrunnlagsperiode = (props: {
 
     useEffect(() => {
         if (bosituasjon?.fnr?.length === 11) {
-            hentEPS(bosituasjon.fnr, (eps) => {
+            hentEPS({ fnr: bosituasjon.fnr, sakstype: props.sakstype }, (eps) => {
                 props.setEpsValues(watch.epsFormue ?? lagTomFormuegrunnlagVerdier());
                 props.setEpsFnr(eps.fnr);
             });

@@ -19,15 +19,14 @@ import { useAsyncActionCreator } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
 import { Person } from '~src/types/Person';
 import { InformasjonsRevurdering, RevurderingStegProps } from '~src/types/Revurdering';
+import { Sakstype } from '~src/types/Sak.ts';
 import { lagDatePeriodeAvStringPeriode } from '~src/utils/periode/periodeUtils';
-
 import sharedMessages from '../revurdering-nb';
 import RevurderingsperiodeHeader from '../revurderingsperiodeheader/RevurderingsperiodeHeader';
 import UtfallSomIkkeStøttes from '../utfallSomIkkeStøttes/UtfallSomIkkeStøttes';
-
 import messages from './bosituasjonForm-nb';
 
-const BosituasjonPage = (props: RevurderingStegProps & { søker: Person }) => {
+const BosituasjonPage = (props: RevurderingStegProps & { søker: Person } & { sakstype: Sakstype }) => {
     const navigate = useNavigate();
     const [status, lagre] = useAsyncActionCreator(lagreBosituasjongrunnlag);
     const { formatMessage } = useI18n({ messages: { ...messages, ...sharedMessages } });
