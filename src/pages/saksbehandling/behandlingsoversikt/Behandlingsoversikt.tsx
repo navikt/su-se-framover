@@ -50,14 +50,14 @@ const Behandlingsoversikt = () => {
                     }}
                     onFetchBySaksnummer={(saksnummer) => {
                         fetchSak({ saksnummer }, (res) => {
-                            fetchPerson({ fnr: res.fnr }, () => {
+                            fetchPerson({ fnr: res.fnr, sakstype: res.sakstype }, () => {
                                 navigate(Routes.saksoversiktValgtSak.createURL({ sakId: res.id }));
                             });
                         });
                     }}
                     onFetchBySakId={(sakId) => {
                         fetchSak({ sakId }, (res) => {
-                            fetchPerson({ fnr: res.fnr }, () => {
+                            fetchPerson({ fnr: res.fnr, sakstype: res.sakstype }, () => {
                                 navigate(Routes.saksoversiktValgtSak.createURL({ sakId: res.id }));
                             });
                         });

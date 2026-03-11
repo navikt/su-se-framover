@@ -304,7 +304,7 @@ const Inngang = () => {
     );
 
     const handleSøk = async (fnr: string): Promise<void> => {
-        hentPerson({ fnr });
+        hentPerson({ fnr, sakstype });
         hentSakinfo(fnr);
     };
     return (

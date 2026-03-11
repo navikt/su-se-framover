@@ -17,9 +17,9 @@ import { hookFormErrorsTilFeiloppsummering } from '~src/lib/validering';
 import { FormData, schema } from '~src/pages/søknad/steg/bo-og-opphold-i-norge/validering';
 import { useAppDispatch, useAppSelector } from '~src/redux/Store';
 import { Adresse, IngenAdresseGrunn } from '~src/types/Person';
+import { Sakstype } from '~src/types/Sak.ts';
 import { toDateOrNull, toIsoDateOnlyString } from '~src/utils/date/dateUtils';
 import { formatAdresse } from '~src/utils/format/formatUtils';
-
 import Bunnknapper from '../../bunnknapper/Bunnknapper';
 import sharedStyles from '../../steg-shared.module.less';
 import sharedI18n from '../steg-shared-i18n';
@@ -27,7 +27,7 @@ import styles from './bo-og-opphold-i-norge.module.less';
 import messages from './bo-og-opphold-i-norge-nb';
 import EktefellePartnerSamboer from './EktefellePartnerSamboer';
 
-const BoOgOppholdINorge = (props: { forrigeUrl: string; nesteUrl: string; avbrytUrl: string }) => {
+const BoOgOppholdINorge = (props: { forrigeUrl: string; nesteUrl: string; avbrytUrl: string; sakstype: Sakstype }) => {
     const { søker, soknad } = useAppSelector((s) => ({
         søker: s.personopplysninger.søker,
         soknad: s.soknad,
@@ -217,6 +217,7 @@ const BoOgOppholdINorge = (props: { forrigeUrl: string; nesteUrl: string; avbryt
                         name={'ektefellePartnerSamboer'}
                         render={({ field }) => (
                             <EktefellePartnerSamboer
+                                sakstype={props.sakstype}
                                 id="ektefellePartnerSamboer"
                                 {...field}
                                 feil={form.formState.errors.ektefellePartnerSamboer as FieldErrors<EPSFormData>}

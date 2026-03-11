@@ -10,6 +10,7 @@ import { ApiResult, useApiCall } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
 import { Nullable } from '~src/lib/types';
 import { Person } from '~src/types/Person';
+import { Sakstype } from '~src/types/Sak.ts';
 import styles from './FnrInput.module.less';
 import messages from './FnrInput-nb';
 
@@ -18,11 +19,13 @@ interface FnrInputProps {
     inputId: string;
     name?: string;
     fnr: Nullable<string>;
+    sakstype: Sakstype;
     onFnrChange: (fnr: string) => void;
     feil?: string;
     getHentetPerson?: (person: Nullable<Person>) => void;
     getPersonStatus?: (res: ApiResult<Person>) => void;
 }
+
 export const FnrInput = (props: FnrInputProps) => {
     const { formatMessage } = useI18n({ messages });
 
@@ -30,7 +33,7 @@ export const FnrInput = (props: FnrInputProps) => {
 
     useEffect(() => {
         if (props.fnr?.length === 11) {
-            hentPerson(props.fnr);
+            hentPerson({ fnr: props.fnr, sakstype: props.sakstype });
         }
     }, [props.fnr]);
 

@@ -178,6 +178,7 @@ const Vilkår = () => {
                     )}
                     {vilkar === Vilkårtype.Bosituasjon && (
                         <Bosituasjon
+                            sakstype={props.sak.sakstype}
                             behandling={behandling}
                             forrigeUrl={vilkårUrl(Vilkårtype.OppholdIUtlandet)}
                             nesteUrl={vilkårUrl(Vilkårtype.Formue)}
@@ -196,6 +197,7 @@ const Vilkår = () => {
                             avsluttUrl={avsluttUrl}
                             sakId={sakId}
                             tidligerePeriodeData={hentGjeldendeVedtaksdataForTidligerePeriodeStatus}
+                            sakstype={props.sak.sakstype}
                         />
                     )}
                     {vilkar === Vilkårtype.PersonligOppmøte && (
