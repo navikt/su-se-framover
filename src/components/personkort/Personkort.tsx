@@ -9,8 +9,6 @@ import { PersonAdvarsel } from '../personadvarsel/PersonAdvarsel';
 
 import styles from './personkort.module.less';
 
-//TODO: tekstfil :thinkies:
-
 export const Personkort = (props: { person: Person; variant?: 'normal' | 'wide' }) => {
     return (
         <div className={classNames(styles.personkortContainer, styles[`variant-${props.variant ?? 'normal'}`])}>
