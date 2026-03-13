@@ -10,7 +10,6 @@ export interface Person {
         nummer: string;
     };
     adresse: Nullable<Adresse[]>;
-    statsborgerskap: Nullable<string>;
     adressebeskyttelse: Nullable<Adressebeskyttelse>;
     skjermet: Nullable<boolean>;
     sivilstand: Nullable<Sivilstand>;
