@@ -305,7 +305,7 @@ const Inngang = () => {
 
     const handleSøk = async (fnr: string): Promise<void> => {
         hentPerson({ fnr, sakstype });
-        hentSakinfo(fnr);
+        hentSakinfo({ fnr, sakstype });
     };
     return (
         <div className={styles.pageContainer}>

@@ -7,7 +7,7 @@ import {
     RegistrerteUtenlandsopphold,
     RegistrerUtenlandsoppholdRequest,
 } from '~src/types/RegistrertUtenlandsopphold';
-import { AlleredeGjeldendeSakForBruker, Sak } from '~src/types/Sak';
+import { AlleredeGjeldendeSakForBruker, Sak, Sakstype } from '~src/types/Sak';
 
 import apiClient, { ApiClientResult } from './apiClient';
 
@@ -43,8 +43,23 @@ export async function hentFerdigeBehandlinger(): Promise<ApiClientResult<Behandl
     return apiClient({ url: `/saker/behandlinger/ferdige`, method: 'GET' });
 }
 
-export async function hentBegrensetSakinfo(fnr: string): Promise<ApiClientResult<AlleredeGjeldendeSakForBruker>> {
-    return apiClient({ url: `/saker/info/${fnr}`, method: 'GET' });
+type HentBegrensetSakinfoRequest = {
+    fnr: string;
+    sakstype: Sakstype;
+};
+
+export async function hentBegrensetSakinfo({
+    fnr,
+    sakstype,
+}: HentBegrensetSakinfoRequest): Promise<ApiClientResult<AlleredeGjeldendeSakForBruker>> {
+    return apiClient({
+        url: `/saker/info`,
+        method: 'POST',
+        body: {
+            fnr,
+            sakstype,
+        },
+    });
 }
 
 export async function registrerUtenlandsopphold(
