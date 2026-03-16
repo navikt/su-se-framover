@@ -1,0 +1,23 @@
+name: Release Drafter
+
+on:
+    push:
+        branches:
+            - master
+
+permissions: {}
+
+jobs:
+    update-release-draft:
+        name: Generate/update draft release
+        runs-on: ubuntu-latest
+        permissions:
+            contents: write
+            pull-requests: read
+        steps:
+            - uses: release-drafter/release-drafter@v6.1.0
+              with:
+                  config-name: release-drafter.yml
+                  disable-autolabeler: true
+              env:
+                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -94,19 +94,3 @@ jobs:
                   CLUSTER: prod-gcp
                   RESOURCE: .nais/prod-gcp.yaml
                   VAR: image=${{ needs.build-push-docker-image.outputs.image }}
-
-    generate-draft-release:
-        if: (github.ref == 'refs/heads/master')
-        name: Generate/update draft release
-        runs-on: ubuntu-latest
-        permissions:
-            contents: 'write' # needed to create/edit releases
-            pull-requests: 'write' # needed to add labels to pull requests
-        steps:
-            # Drafts your next Release notes as Pull Requests are merged into "master"
-            - uses: release-drafter/release-drafter@v6
-              #with:
-              # (Optional) specify config name to use, relative to .github/. Default: release-drafter.yml
-              # config-name: my-config.yml
-              env:
-                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
