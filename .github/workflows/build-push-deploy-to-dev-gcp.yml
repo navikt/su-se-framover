@@ -2,8 +2,8 @@ name: build-push-deploy-to-gcp.yml
 
 on:
     push:
-        branches:
-            - '**'
+        branches-ignore:
+            - 'gh-readonly-queue/**'
     workflow_dispatch:
       inputs:
         deploy_prod:
