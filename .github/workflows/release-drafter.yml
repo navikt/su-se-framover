@@ -4,6 +4,9 @@ on:
     push:
         branches:
             - master
+    release:
+        types:
+            - published
 
 permissions: {}
 
@@ -15,9 +18,16 @@ jobs:
             contents: write
             pull-requests: read
         steps:
-            - uses: release-drafter/release-drafter@v6.1.0
+            - id: drafter
+              uses: release-drafter/release-drafter@v6.4.0
               with:
                   config-name: release-drafter.yml
                   disable-autolabeler: true
+                  commitish: master
               env:
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+            - name: Log drafted release
+              run: |
+                  echo "Draft tag: ${{ steps.drafter.outputs.tag_name }}"
+                  echo "Draft name: ${{ steps.drafter.outputs.name }}"
+                  echo "Draft url: ${{ steps.drafter.outputs.html_url }}"
