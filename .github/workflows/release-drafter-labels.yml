@@ -16,7 +16,7 @@ jobs:
         runs-on: ubuntu-latest
         steps:
             - name: Apply labels from branch name
-              uses: release-drafter/release-drafter@v6.1.0
+              uses: release-drafter/release-drafter@v6.4.0
               with:
                   disable-releaser: true
               env:
