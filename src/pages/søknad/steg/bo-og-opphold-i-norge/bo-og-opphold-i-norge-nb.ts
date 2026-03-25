@@ -1,5 +1,7 @@
 export default {
     'institusjonsopphold.legend': 'Institusjonsopphold',
+    'institusjonsopphold.hjelpetekst':
+        'Dersom bruker har flere institusjonsopphold kan veileder registrere siste institusjonsopphold i søknaden. Husk å sjekk at alle institusjonsopphold er registrert i INST2, dersom det mangler institusjonsopphold vennligst registrer dem i INST2.',
     'bosituasjon.legend': 'Bosituasjon',
 
     'ektefelleEllerSamboer.feil.felteneMåFyllesUt': 'Feltene må fylles ut',
