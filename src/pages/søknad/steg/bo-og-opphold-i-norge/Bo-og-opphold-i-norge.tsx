@@ -1,6 +1,6 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Alert, Checkbox, Radio, RadioGroup } from '@navikt/ds-react';
+import { Accordion, Alert, Checkbox, Radio, RadioGroup } from '@navikt/ds-react';
 import { useRef } from 'react';
 import { Controller, FieldErrors, useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
@@ -85,6 +85,14 @@ const BoOgOppholdINorge = (props: { forrigeUrl: string; nesteUrl: string; avbryt
 
                 {form.watch('innlagtPåInstitusjon') && (
                     <div>
+                        <Accordion>
+                            <Accordion.Item>
+                                <Accordion.Header>Informasjon om registrering</Accordion.Header>
+                                <Accordion.Content>
+                                    {formatMessage('institusjonsopphold.hjelpetekst')}
+                                </Accordion.Content>
+                            </Accordion.Item>
+                        </Accordion>
                         <div className={styles.datoForInnleggelseContainer}>
                             <Controller
                                 control={form.control}
