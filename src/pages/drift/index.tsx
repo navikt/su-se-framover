@@ -21,6 +21,7 @@ import StønadStatistikk from '~src/pages/drift/components/StønadStatistikk.tsx
 import Nøkkeltall from '~src/pages/saksbehandling/behandlingsoversikt/nøkkeltall/Nøkkeltall';
 import { toIsoDateOnlyString } from '~src/utils/date/dateUtils';
 import DokumentDistribusjon from './components/dokument/DokumentDistribusjon';
+import Fradragssjekk from './components/fradragssjekk/Fradragssjekk';
 import Personhendelser from './components/personhendelser/Personhendelser';
 import ResendStatistikk from './components/ResendStatistikk.tsx';
 import Gregulering from './components/regulering/G-regulering';
@@ -220,6 +221,7 @@ const Drift = () => {
                         </Modal.Body>
                     </Modal>
                     <Gregulering />
+                    <Fradragssjekk />
                     <Personhendelser />
                     <Stønadsmottakere />
                     <DokumentDistribusjon />
