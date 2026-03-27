@@ -1,6 +1,6 @@
-import type { UmamiData } from '../types/umami';
-
-export const loggUmamiEvent = (eventName: string, data: UmamiData) => {
+export const loggUmamiEvent = (eventName: string, data: object) => {
     if (typeof window === 'undefined') return;
-    window.umami?.track(eventName, data);
+
+    const umamiWindow = window as unknown as { umami?: { track: (eventName: string, data: object) => void } };
+    umamiWindow.umami?.track(eventName, data);
 };
