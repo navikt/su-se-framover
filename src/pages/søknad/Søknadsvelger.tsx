@@ -6,6 +6,7 @@ import { useUserContext } from '~src/context/userContext';
 import { useI18n } from '~src/lib/i18n';
 import * as Routes from '~src/lib/routes';
 import { Rolle } from '~src/types/LoggedInUser';
+import { loggUmamiEvent } from '~src/utils/umami.ts';
 import messages from './nb';
 import styles from './søknadsvelger.module.less';
 
@@ -80,7 +81,14 @@ const Søknadsvelger = () => {
                                 {formatMessage('velg-kontrollsamtale-tittel')}
                             </Heading>
                             <Ingress>{formatMessage('kontrollsamtale-beskrivelse')}</Ingress>
-                            <Button variant="secondary" type="button" onClick={() => setOpen(true)}>
+                            <Button
+                                variant="secondary"
+                                type="button"
+                                onClick={() => {
+                                    loggUmamiEvent('kontrollsamtale-lenke-klikket', {});
+                                    setOpen(true);
+                                }}
+                            >
                                 {formatMessage('kontrollsamtale-lenke')}
                             </Button>
                             <Modal ref={ref} aria-label="Kontrollsamtale" open={open} onClose={() => setOpen(false)}>
