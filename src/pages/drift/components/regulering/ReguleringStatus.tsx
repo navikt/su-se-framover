@@ -1,8 +1,31 @@
+import * as RemoteData from '@devexperts/remote-data-ts';
 import { Heading } from '@navikt/ds-react';
+import { useEffect, useState } from 'react';
+import { hentReguleringsstatusUtestående } from '~src/api/reguleringApi.ts';
+import { useApiCall } from '~src/lib/hooks.ts';
+import { ReguleringStatusUtestående } from '~src/types/Regulering.ts';
 import { Sakstype } from '~src/types/Sak.ts';
 
 const ReguleringStatus = () => {
-    const data = mockReguleringStatus();
+    const [reguleringsstatusUteståendeStatus, reguleringsstatusUteståendeRequest] = useApiCall(
+        hentReguleringsstatusUtestående,
+    );
+    const [reguleringStatusUtestående, setReguleringStatus] = useState<ReguleringStatusUtestående | null>(null);
+
+    useEffect(() => {
+        reguleringsstatusUteståendeRequest({}, (data: ReguleringStatusUtestående) => {
+            console.log(data);
+            setReguleringStatus(data);
+        });
+    }, []);
+
+    if (RemoteData.isFailure(reguleringsstatusUteståendeStatus)) {
+        return <div>Noe gikk galt..</div>;
+    }
+
+    if (reguleringStatusUtestående == null || RemoteData.isPending(reguleringsstatusUteståendeStatus)) {
+        return <div>Loading...</div>;
+    }
 
     return (
         <div>
@@ -12,21 +35,23 @@ const ReguleringStatus = () => {
                 <Heading size={'xsmall'}>Siste grunnbeløp og satser</Heading>
                 <dl style={{ display: 'grid', gridTemplateColumns: 'auto 1fr', gap: '0 0.5rem' }}>
                     <dt style={{ fontWeight: 'bold' }}>Grunnbeløp</dt>
-                    <dd>{data.sisteGrunnbeløpOgSatser.grunnbeløp}</dd>
+                    <dd>{reguleringStatusUtestående.sisteGrunnbeløpOgSatser.grunnbeløp}</dd>
                     <dt style={{ fontWeight: 'bold' }}>Garantipensjon ordinær</dt>
-                    <dd>{data.sisteGrunnbeløpOgSatser.garantipensjonOrdinær}</dd>
+                    <dd>{reguleringStatusUtestående.sisteGrunnbeløpOgSatser.garantipensjonOrdinær}</dd>
                     <dt style={{ fontWeight: 'bold' }}>Garantipensjon høy</dt>
-                    <dd>{data.sisteGrunnbeløpOgSatser.garantipensjonHøy}</dd>
+                    <dd>{reguleringStatusUtestående.sisteGrunnbeløpOgSatser.garantipensjonHøy}</dd>
                 </dl>
             </section>
 
             <section style={{ marginTop: '2rem' }}>
                 <Heading size={'xsmall'}>Saker med utebetaling i mai</Heading>
-                <p>{data.sakerMedUtebetalingIMai}</p>
+                <p>{reguleringStatusUtestående.sakerMedUtebetalingIMai}</p>
             </section>
 
             <section style={{ marginTop: '2rem' }}>
-                <Heading size={'xsmall'}>Saker med gammelt grunnbeløp ({data.sakerMedGammelG.length})</Heading>
+                <Heading size={'xsmall'}>
+                    Saker med gammelt grunnbeløp ({reguleringStatusUtestående.sakerMedGammelG.length})
+                </Heading>
                 <table style={{ width: '100%' }}>
                     <thead>
                         <tr>
@@ -38,7 +63,7 @@ const ReguleringStatus = () => {
                         </tr>
                     </thead>
                     <tbody>
-                        {data.sakerMedGammelG.map((sak) => (
+                        {reguleringStatusUtestående.sakerMedGammelG.map((sak) => (
                             <tr key={sak.saksnummer}>
                                 <td>{sak.saksnummer}</td>
                                 <td>{sak.type}</td>
@@ -56,27 +81,7 @@ const ReguleringStatus = () => {
 
 export default ReguleringStatus;
 
-interface ReguleringStatus {
-    sisteGrunnbeløpOgSatser: SisteGrunnbeløpOgSatser;
-    sakerMedUtebetalingIMai: number;
-    sakerMedGammelG: SakMedGammeltGrunnbeløp[];
-}
-
-interface SakMedGammeltGrunnbeløp {
-    saksnummer: number;
-    type: Sakstype;
-    benyttetGrunnbeløp: number | null; // Kun uføre
-    benyttetSatskategori: string;
-    benyttetSats: number;
-}
-
-interface SisteGrunnbeløpOgSatser {
-    grunnbeløp: number;
-    garantipensjonOrdinær: number;
-    garantipensjonHøy: number;
-}
-
-export const mockReguleringStatus = (): ReguleringStatus => ({
+export const mockReguleringStatus = (): ReguleringStatusUtestående => ({
     sisteGrunnbeløpOgSatser: {
         grunnbeløp: 118620,
         garantipensjonOrdinær: 187080,
