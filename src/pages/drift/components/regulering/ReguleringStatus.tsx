@@ -4,7 +4,6 @@ import { useEffect, useState } from 'react';
 import { hentReguleringsstatusUtestående } from '~src/api/reguleringApi.ts';
 import { useApiCall } from '~src/lib/hooks.ts';
 import { ReguleringStatusUtestående } from '~src/types/Regulering.ts';
-import { Sakstype } from '~src/types/Sak.ts';
 
 const ReguleringStatus = () => {
     const [reguleringsstatusUteståendeStatus, reguleringsstatusUteståendeRequest] = useApiCall(
@@ -80,49 +79,3 @@ const ReguleringStatus = () => {
 };
 
 export default ReguleringStatus;
-
-export const mockReguleringStatus = (): ReguleringStatusUtestående => ({
-    sisteGrunnbeløpOgSatser: {
-        grunnbeløp: 118620,
-        garantipensjonOrdinær: 187080,
-        garantipensjonHøy: 193590,
-    },
-    sakerMedUtebetalingIMai: 100,
-    sakerMedGammelG: [
-        {
-            saksnummer: 1,
-            type: Sakstype.Uføre,
-            benyttetGrunnbeløp: 106399,
-            benyttetSatskategori: 'ordinær',
-            benyttetSats: 2.48,
-        },
-        {
-            saksnummer: 2,
-            type: Sakstype.Alder,
-            benyttetGrunnbeløp: null,
-            benyttetSatskategori: 'høy',
-            benyttetSats: 2.91,
-        },
-        {
-            saksnummer: 3,
-            type: Sakstype.Uføre,
-            benyttetGrunnbeløp: 111477,
-            benyttetSatskategori: 'ordinær',
-            benyttetSats: 2.48,
-        },
-        {
-            saksnummer: 4,
-            type: Sakstype.Alder,
-            benyttetGrunnbeløp: null,
-            benyttetSatskategori: 'ordinær',
-            benyttetSats: 2.48,
-        },
-        {
-            saksnummer: 5,
-            type: Sakstype.Uføre,
-            benyttetGrunnbeløp: 99858,
-            benyttetSatskategori: 'høy',
-            benyttetSats: 2.91,
-        },
-    ],
-});
