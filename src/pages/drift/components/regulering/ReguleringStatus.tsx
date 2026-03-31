@@ -13,7 +13,6 @@ const ReguleringStatus = () => {
 
     useEffect(() => {
         reguleringsstatusUteståendeRequest({}, (data: ReguleringStatusUtestående) => {
-            console.log(data);
             setReguleringStatus(data);
         });
     }, []);
