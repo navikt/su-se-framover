@@ -36,6 +36,8 @@ const Behandlingsoversikt = () => {
     const [, fetchPerson] = useAsyncActionCreator(personSlice.fetchPerson);
     const { formatMessage } = useI18n({ messages });
 
+    const lagretTab = (localStorage.getItem('saksoversiktTab') as Tab | null) ?? Tab.ÅPNE_BEHANDLINGER;
+
     return (
         <div className={styles.saksoversiktForside}>
             <div className={styles.personsøk}>
@@ -69,25 +71,38 @@ const Behandlingsoversikt = () => {
                 )}
             </div>
 
-            <Tabs defaultValue={Tab.ÅPNE_BEHANDLINGER}>
+            <Tabs defaultValue={lagretTab}>
                 <Tabs.List>
                     <Tabs.Tab
                         value={Tab.ÅPNE_BEHANDLINGER}
                         label={formatMessage('åpneBehandlinger')}
                         icon={<FileIcon />}
+                        onClick={() => localStorage.setItem('saksoversiktTab', Tab.ÅPNE_BEHANDLINGER)}
                     />
                     <Tabs.Tab
                         value={Tab.FERDIGE_BEHANDLINGER}
                         label={formatMessage('ferdigeBehandlinger')}
                         icon={<FileCheckmarkIcon />}
+                        onClick={() => localStorage.setItem('saksoversiktTab', Tab.FERDIGE_BEHANDLINGER)}
                     />
-                    <Tabs.Tab value={Tab.NØKKELTALL} label={formatMessage('nøkkeltall')} icon={<NumberListIcon />} />
+                    <Tabs.Tab
+                        value={Tab.NØKKELTALL}
+                        label={formatMessage('nøkkeltall')}
+                        icon={<NumberListIcon />}
+                        onClick={() => localStorage.setItem('saksoversiktTab', Tab.NØKKELTALL)}
+                    />
                     <Tabs.Tab
                         value={Tab.REGULERING}
                         label={formatMessage('regulering')}
                         icon={<CurrencyExchangeIcon />}
+                        onClick={() => localStorage.setItem('saksoversiktTab', Tab.REGULERING)}
                     />
-                    <Tabs.Tab value={Tab.SKATT} label={formatMessage('skatt')} icon={<TableIcon />} />
+                    <Tabs.Tab
+                        value={Tab.SKATT}
+                        label={formatMessage('skatt')}
+                        icon={<TableIcon />}
+                        onClick={() => localStorage.setItem('saksoversiktTab', Tab.SKATT)}
+                    />
                 </Tabs.List>
                 <div className={styles.panelContainer}>
                     <Tabs.Panel value={Tab.ÅPNE_BEHANDLINGER}>

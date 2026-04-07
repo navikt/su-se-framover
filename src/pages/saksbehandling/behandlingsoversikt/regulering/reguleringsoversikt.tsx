@@ -47,7 +47,22 @@ const Reguleringsoversikt = () => {
         hentReguleringerOgMerknader({});
     }, []);
 
-    const [fradragsfilterList, setfradragsFilter] = useState<Set<Fradragskategori>>(new Set());
+    const [fradragsfilterList, setfradragsFilter] = useState<Set<Fradragskategori>>(() => {
+        const lagret = localStorage.getItem('reguleringFradragsfilter');
+
+        if (!lagret) {
+            return new Set();
+        }
+        try {
+            return new Set(JSON.parse(lagret) as Fradragskategori[]);
+        } catch {
+            return new Set();
+        }
+    });
+
+    useEffect(() => {
+        localStorage.setItem('reguleringFradragsfilter', JSON.stringify(Array.from(fradragsfilterList)));
+    }, [fradragsfilterList]);
 
     if (RemoteData.isFailure(reguleringerOgMerknader)) {
         return <ApiErrorAlert error={reguleringerOgMerknader.error} />;
@@ -188,6 +203,7 @@ const Reguleringsoversikt = () => {
                             {hentFradragskategorierSortertAlfabetisk().map((value) => (
                                 <Checkbox
                                     key={value}
+                                    checked={fradragsfilterList.has(value as Fradragskategori)}
                                     onChange={(e) => {
                                         const valgtFradrag = value as Fradragskategori;
                                         const funnet = fradragsfilterList.has(valgtFradrag);
