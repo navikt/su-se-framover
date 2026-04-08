@@ -41,7 +41,7 @@ export const FerdigeBehandlinger = () => {
     const tilOgMed = useState<Nullable<Date>>(null);
     const fraOgMed = useState<Nullable<Date>>(null);
 
-    const [type, setType] = useState<BehandlingssammendragTypeFilter>({
+    const defaultTypeFilter: BehandlingssammendragTypeFilter = {
         [BehandlingssammendragType.SØKNADSBEHANDLING]: false,
         [BehandlingssammendragType.REVURDERING]: false,
         [BehandlingssammendragType.KLAGE]: false,
@@ -50,9 +50,10 @@ export const FerdigeBehandlinger = () => {
         [BehandlingssammendragType.KRAVGRUNNLAG]: false,
         [BehandlingssammendragType.OMGJØRING]: false,
         [BehandlingssammendragType.REVURDERING_OMGJØRING]: false,
-    });
+    };
+    const ferdige_behandlinger_type = 'ferdigeBehandlingerType';
 
-    const [resultat, setResultat] = useState<BehandlingssammendragResultatFilter>({
+    const defaultResultatFilter: BehandlingssammendragResultatFilter = {
         [BehandlingssammendragStatus.OPPHØR]: false,
         [BehandlingssammendragStatus.AVSLAG]: false,
         [BehandlingssammendragStatus.INNVILGET]: false,
@@ -62,12 +63,44 @@ export const FerdigeBehandlinger = () => {
         [BehandlingssammendragStatus.IVERKSATT]: false,
         [BehandlingssammendragStatus.AVBRUTT]: false,
         [BehandlingssammendragStatus.AVSLUTTET]: false,
-    });
+    };
+    const ferdige_behandlinger_resultat = 'ferdigeBehandlingerResultat';
 
-    const [sakstypevalg, setSakstype] = useState<Sakstypefilter>({
+    const defaultSaktypeFilter: Sakstypefilter = {
         [Sakstype.Uføre]: false,
         [Sakstype.Alder]: false,
+    };
+    const ferdige_behandlinger_sakType = 'ferdige_behandlinger_sakType';
+
+    const [type, setType] = useState<BehandlingssammendragTypeFilter>(() => {
+        const lagret = localStorage.getItem(ferdige_behandlinger_type);
+        return lagret ? JSON.parse(lagret) : defaultTypeFilter;
     });
+
+    const [resultat, setResultat] = useState<BehandlingssammendragResultatFilter>(() => {
+        const lagret = localStorage.getItem(ferdige_behandlinger_resultat);
+        return lagret ? JSON.parse(lagret) : defaultResultatFilter;
+    });
+
+    const [sakstypevalg, setSakstype] = useState<Sakstypefilter>(() => {
+        const lagret = localStorage.getItem(ferdige_behandlinger_sakType);
+        return lagret ? JSON.parse(lagret) : defaultSaktypeFilter;
+    });
+
+    const oppdaterTypeFilter = (typeFilter: BehandlingssammendragTypeFilter) => {
+        setType(typeFilter);
+        localStorage.setItem(ferdige_behandlinger_type, JSON.stringify(typeFilter));
+    };
+
+    const oppdaterResultatFilter = (resultatFilter: BehandlingssammendragResultatFilter) => {
+        setResultat(resultatFilter);
+        localStorage.setItem(ferdige_behandlinger_resultat, JSON.stringify(resultatFilter));
+    };
+
+    const oppdaterSakstypeFilter = (sakstypeFilter: Sakstypefilter) => {
+        setSakstype(sakstypeFilter);
+        localStorage.setItem(ferdige_behandlinger_sakType, JSON.stringify(sakstypeFilter));
+    };
 
     //TODO: dette kan legges i redux evt struktureres annerledes så vi slipper å filtreringslogikken her.
     const filtrerBehandlingssammendrag = (
@@ -107,18 +140,23 @@ export const FerdigeBehandlinger = () => {
                 tilOgMedState={tilOgMed}
                 fraOgMedState={fraOgMed}
                 oppdaterResultat={(key, verdi) => {
-                    setResultat({
+                    oppdaterResultatFilter({
                         ...resultat,
                         [key]: verdi,
                     });
                 }}
                 oppdaterType={(key, verdi) => {
-                    setType({
+                    oppdaterTypeFilter({
                         ...type,
                         [key]: verdi,
                     });
                 }}
-                oppdaterSakstype={(key, verdi) => setSakstype({ ...sakstypevalg, [key]: verdi })}
+                oppdaterSakstype={(key, verdi) => {
+                    oppdaterSakstypeFilter({
+                        ...sakstypevalg,
+                        [key]: verdi,
+                    });
+                }}
                 saktypeFilter={sakstypevalg}
             />
             {pipe(
