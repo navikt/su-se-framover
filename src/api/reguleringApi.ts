@@ -1,7 +1,12 @@
 import { Nullable } from '~src/lib/types';
 import { Fradrag } from '~src/types/Fradrag';
 import { Uføregrunnlag } from '~src/types/grunnlagsdataOgVilkårsvurderinger/uføre/Uføregrunnlag';
-import { ManuellRegulering, Regulering, ReguleringOversiktsstatus } from '~src/types/Regulering';
+import {
+    ManuellRegulering,
+    Regulering,
+    ReguleringOversiktsstatus,
+    ReguleringStatusUtestående,
+} from '~src/types/Regulering';
 
 import apiClient, { ApiClientResult } from './apiClient';
 
@@ -107,6 +112,13 @@ export async function dryRunRegulering(args: {
 export async function hentReguleringsstatus(): Promise<ApiClientResult<ReguleringOversiktsstatus[]>> {
     return apiClient({
         url: `/reguleringer/status`,
+        method: 'GET',
+    });
+}
+
+export async function hentReguleringsstatusUtestående(): Promise<ApiClientResult<ReguleringStatusUtestående>> {
+    return apiClient({
+        url: `/reguleringer/status-regulering-utestaende`,
         method: 'GET',
     });
 }

@@ -23,8 +23,8 @@ import { pipe } from '~src/lib/fp';
 import { useApiCall } from '~src/lib/hooks';
 import { Nullable } from '~src/lib/types';
 import { toIsoDateOnlyString, toIsoMonthOrNull, toStringDateOrNull } from '~src/utils/date/dateUtils';
-
 import styles from './G-regulering.module.less';
+import ReguleringStatus from './ReguleringStatus';
 
 const Gregulering = () => {
     const [visReguleringModal, setVisReguleringModal] = useState(false);
@@ -85,12 +85,16 @@ const GReguleringsModal = (props: { visModal: boolean; onClose: () => void }) =>
                         <Tabs.Tab value="dry-run" label="Dry-run" />
                         <Tabs.Tab value="regulering" label="Regulering" />
                         <Tabs.Tab value="supplement" label="Reguleringsupplement" />
+                        <Tabs.Tab value="status" label="Status" />
                     </Tabs.List>
                     <ReguleringPanel />
                     <DryRunPanel />
 
                     <Tabs.Panel value="supplement" className={styles.tabPanel}>
                         <ReguleringsSupplementStandAlone />
+                    </Tabs.Panel>
+                    <Tabs.Panel value="status" className={styles.tabPanel}>
+                        <ReguleringStatus />
                     </Tabs.Panel>
                 </Tabs>
             </Modal.Body>

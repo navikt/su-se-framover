@@ -182,3 +182,23 @@ export interface ManuellRegulering {
 export enum UnderkjennelseGrunnRegulering {
     REGULERING_ER_FEIL = 'REGULERING_ER_FEIL',
 }
+
+export interface ReguleringStatusUtestående {
+    sisteGrunnbeløpOgSatser: SisteGrunnbeløpOgSatser;
+    sakerMedUtebetalingIMai: number;
+    sakerMedGammelG: SakMedGammeltGrunnbeløp[];
+}
+
+export interface SakMedGammeltGrunnbeløp {
+    saksnummer: number;
+    type: Sakstype;
+    benyttetGrunnbeløp: number | null; // Kun uføre
+    benyttetSatskategori: string;
+    benyttetSats: number;
+}
+
+export interface SisteGrunnbeløpOgSatser {
+    grunnbeløp: number;
+    garantipensjonOrdinær: number;
+    garantipensjonHøy: number;
+}
