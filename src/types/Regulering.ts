@@ -184,6 +184,7 @@ export enum UnderkjennelseGrunnRegulering {
 }
 
 export interface ReguleringStatusUtestående {
+    aar: number;
     sisteGrunnbeløpOgSatser: SisteGrunnbeløpOgSatser;
     sakerMedUtebetalingIMai: number;
     sakerMedGammelG: SakMedGammeltGrunnbeløp[];
