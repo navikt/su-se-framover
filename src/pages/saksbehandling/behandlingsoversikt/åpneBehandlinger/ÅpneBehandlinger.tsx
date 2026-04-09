@@ -34,6 +34,10 @@ export const ÅpneBehandlinger = () => {
         hentÅpneBehandlinger();
     }, []);
 
+    const åpne_behandlinger_status = 'åpne_behandlinger_status';
+    const åpne_behandlinger_type = 'åpne_behandlinger_type';
+    const åpne_behandlinger_sakType = 'åpne_behandlinger_sakType';
+
     const defaultStatusFilter: BehandlingssammendragStatusFilter = {
         [BehandlingssammendragStatus.NY_SØKNAD]: false,
         [BehandlingssammendragStatus.UNDER_BEHANDLING]: false,
@@ -41,7 +45,6 @@ export const ÅpneBehandlinger = () => {
         [BehandlingssammendragStatus.UNDERKJENT]: false,
         [BehandlingssammendragStatus.ÅPEN]: false,
     };
-    const åpne_behandlinger_status = 'åpneBehandlingerStatus';
 
     const defaultTypeFilter: BehandlingssammendragTypeFilter = {
         [BehandlingssammendragType.OMGJØRING]: false,
@@ -53,13 +56,11 @@ export const ÅpneBehandlinger = () => {
         [BehandlingssammendragType.KRAVGRUNNLAG]: false,
         [BehandlingssammendragType.REVURDERING_OMGJØRING]: false,
     };
-    const åpne_behandlinger_type = 'åpneBehandlingerType';
 
     const defaultSaktypeFilter: Sakstypefilter = {
         [Sakstype.Uføre]: false,
         [Sakstype.Alder]: false,
     };
-    const åpne_behandlinger_sakType = 'åpne_behandlinger_sakType';
 
     const [type, setType] = useState<BehandlingssammendragTypeFilter>(() => {
         const lagret = localStorage.getItem(åpne_behandlinger_type);

@@ -41,6 +41,10 @@ export const FerdigeBehandlinger = () => {
     const tilOgMed = useState<Nullable<Date>>(null);
     const fraOgMed = useState<Nullable<Date>>(null);
 
+    const ferdige_behandlinger_type = 'ferdige_behandlinger_type';
+    const ferdige_behandlinger_sakType = 'ferdige_behandlinger_sakType';
+    const ferdige_behandlinger_resultat = 'ferdige_behandlinger_resultat';
+
     const defaultTypeFilter: BehandlingssammendragTypeFilter = {
         [BehandlingssammendragType.SØKNADSBEHANDLING]: false,
         [BehandlingssammendragType.REVURDERING]: false,
@@ -51,7 +55,6 @@ export const FerdigeBehandlinger = () => {
         [BehandlingssammendragType.OMGJØRING]: false,
         [BehandlingssammendragType.REVURDERING_OMGJØRING]: false,
     };
-    const ferdige_behandlinger_type = 'ferdigeBehandlingerType';
 
     const defaultResultatFilter: BehandlingssammendragResultatFilter = {
         [BehandlingssammendragStatus.OPPHØR]: false,
@@ -64,13 +67,11 @@ export const FerdigeBehandlinger = () => {
         [BehandlingssammendragStatus.AVBRUTT]: false,
         [BehandlingssammendragStatus.AVSLUTTET]: false,
     };
-    const ferdige_behandlinger_resultat = 'ferdigeBehandlingerResultat';
 
     const defaultSaktypeFilter: Sakstypefilter = {
         [Sakstype.Uføre]: false,
         [Sakstype.Alder]: false,
     };
-    const ferdige_behandlinger_sakType = 'ferdige_behandlinger_sakType';
 
     const [type, setType] = useState<BehandlingssammendragTypeFilter>(() => {
         const lagret = localStorage.getItem(ferdige_behandlinger_type);
