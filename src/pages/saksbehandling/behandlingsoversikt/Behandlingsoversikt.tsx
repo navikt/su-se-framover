@@ -36,7 +36,10 @@ const Behandlingsoversikt = () => {
     const [, fetchPerson] = useAsyncActionCreator(personSlice.fetchPerson);
     const { formatMessage } = useI18n({ messages });
 
-    const lagretTab = (localStorage.getItem('saksoversiktTab') as Tab | null) ?? Tab.ÅPNE_BEHANDLINGER;
+    const lagretTabFraLocalStorage = localStorage.getItem('saksoversiktTab');
+    const lagretTab = Object.values(Tab).includes(lagretTabFraLocalStorage as Tab)
+        ? (lagretTabFraLocalStorage as Tab)
+        : Tab.ÅPNE_BEHANDLINGER;
 
     return (
         <div className={styles.saksoversiktForside}>
