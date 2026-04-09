@@ -1,79 +1,91 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import { Heading } from '@navikt/ds-react';
-import { useEffect, useState } from 'react';
+import { Heading, Loader, Table } from '@navikt/ds-react';
+import { useEffect } from 'react';
 import { hentReguleringsstatusUtestående } from '~src/api/reguleringApi.ts';
+import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert.tsx';
 import { useApiCall } from '~src/lib/hooks.ts';
-import { ReguleringStatusUtestående } from '~src/types/Regulering.ts';
 
 const ReguleringStatus = () => {
-    const [reguleringsstatusUteståendeStatus, reguleringsstatusUteståendeRequest] = useApiCall(
+    const [reguleringsstatusUtestående, reguleringsstatusUteståendeRequest] = useApiCall(
         hentReguleringsstatusUtestående,
     );
-    const [reguleringStatusUtestående, setReguleringStatus] = useState<ReguleringStatusUtestående | null>(null);
 
     useEffect(() => {
-        reguleringsstatusUteståendeRequest({}, (data: ReguleringStatusUtestående) => {
-            setReguleringStatus(data);
-        });
+        reguleringsstatusUteståendeRequest({});
     }, []);
 
-    if (RemoteData.isFailure(reguleringsstatusUteståendeStatus)) {
-        return <div>Noe gikk galt..</div>;
-    }
-
-    if (reguleringStatusUtestående == null || RemoteData.isPending(reguleringsstatusUteståendeStatus)) {
-        return <div>Loading...</div>;
-    }
-
     return (
-        <div>
-            <Heading size={'medium'}>Regulering status</Heading>
+        <>
+            {RemoteData.isFailure(reguleringsstatusUtestående) && (
+                <ApiErrorAlert error={reguleringsstatusUtestående.error} />
+            )}
+            {RemoteData.isPending(reguleringsstatusUtestående) && <Loader />}
+            {RemoteData.isSuccess(reguleringsstatusUtestående) && (
+                <div>
+                    <Heading size={'medium'}>Regulering status</Heading>
 
-            <section style={{ marginTop: '2rem' }}>
-                <Heading size={'xsmall'}>Siste grunnbeløp og satser</Heading>
-                <dl style={{ display: 'grid', gridTemplateColumns: 'auto 1fr', gap: '0 0.5rem' }}>
-                    <dt style={{ fontWeight: 'bold' }}>Grunnbeløp</dt>
-                    <dd>{reguleringStatusUtestående.sisteGrunnbeløpOgSatser.grunnbeløp}</dd>
-                    <dt style={{ fontWeight: 'bold' }}>Garantipensjon ordinær</dt>
-                    <dd>{reguleringStatusUtestående.sisteGrunnbeløpOgSatser.garantipensjonOrdinær}</dd>
-                    <dt style={{ fontWeight: 'bold' }}>Garantipensjon høy</dt>
-                    <dd>{reguleringStatusUtestående.sisteGrunnbeløpOgSatser.garantipensjonHøy}</dd>
-                </dl>
-            </section>
+                    <section style={{ marginTop: '2rem' }}>
+                        <Heading size={'small'}>Siste grunnbeløp og satser</Heading>
+                        <Table>
+                            <Table.Body>
+                                <Table.Row>
+                                    <Table.HeaderCell scope="row">Grunnbeløp</Table.HeaderCell>
+                                    <Table.DataCell>
+                                        {reguleringsstatusUtestående.value.sisteGrunnbeløpOgSatser.grunnbeløp}
+                                    </Table.DataCell>
+                                </Table.Row>
+                                <Table.Row>
+                                    <Table.HeaderCell scope="row">Garantipensjon ordinær</Table.HeaderCell>
+                                    <Table.DataCell>
+                                        {
+                                            reguleringsstatusUtestående.value.sisteGrunnbeløpOgSatser
+                                                .garantipensjonOrdinær
+                                        }
+                                    </Table.DataCell>
+                                </Table.Row>
+                                <Table.Row>
+                                    <Table.HeaderCell scope="row">Garantipensjon høy</Table.HeaderCell>
+                                    <Table.DataCell>
+                                        {reguleringsstatusUtestående.value.sisteGrunnbeløpOgSatser.garantipensjonHøy}
+                                    </Table.DataCell>
+                                </Table.Row>
+                            </Table.Body>
+                        </Table>
+                    </section>
 
-            <section style={{ marginTop: '2rem' }}>
-                <Heading size={'xsmall'}>Saker med utebetaling i mai</Heading>
-                <p>{reguleringStatusUtestående.sakerMedUtebetalingIMai}</p>
-            </section>
-
-            <section style={{ marginTop: '2rem' }}>
-                <Heading size={'xsmall'}>
-                    Saker med gammelt grunnbeløp ({reguleringStatusUtestående.sakerMedGammelG.length})
-                </Heading>
-                <table style={{ width: '100%' }}>
-                    <thead>
-                        <tr>
-                            <th style={{ textAlign: 'left', fontWeight: 'bold' }}>Saksnummer</th>
-                            <th style={{ textAlign: 'left', fontWeight: 'bold' }}>Type</th>
-                            <th style={{ textAlign: 'left', fontWeight: 'bold' }}>Benyttet grunnbeløp</th>
-                            <th style={{ textAlign: 'left', fontWeight: 'bold' }}>Sats</th>
-                            <th style={{ textAlign: 'left', fontWeight: 'bold' }}>Satskategori</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {reguleringStatusUtestående.sakerMedGammelG.map((sak) => (
-                            <tr key={sak.saksnummer}>
-                                <td>{sak.saksnummer}</td>
-                                <td>{sak.type}</td>
-                                <td>{sak.benyttetGrunnbeløp ?? '—'}</td>
-                                <td>{sak.benyttetSats}</td>
-                                <td>{sak.benyttetSatskategori}</td>
-                            </tr>
-                        ))}
-                    </tbody>
-                </table>
-            </section>
-        </div>
+                    <section style={{ marginTop: '2rem' }}>
+                        <Heading size={'small'}>
+                            Saker med utebetaling i mai ({reguleringsstatusUtestående.value.sakerMedUtebetalingIMai})
+                        </Heading>
+                        <Heading size={'small'}>
+                            Saker med gammelt grunnbeløp ({reguleringsstatusUtestående.value.sakerMedGammelG.length})
+                        </Heading>
+                        <Table>
+                            <Table.Header>
+                                <Table.Row>
+                                    <Table.HeaderCell>Saksnummer</Table.HeaderCell>
+                                    <Table.HeaderCell>Type</Table.HeaderCell>
+                                    <Table.HeaderCell>Benyttet grunnbeløp</Table.HeaderCell>
+                                    <Table.HeaderCell>Sats</Table.HeaderCell>
+                                    <Table.HeaderCell>Satskategori</Table.HeaderCell>
+                                </Table.Row>
+                            </Table.Header>
+                            <Table.Body>
+                                {reguleringsstatusUtestående.value.sakerMedGammelG.map((sak) => (
+                                    <Table.Row key={sak.saksnummer}>
+                                        <Table.DataCell>{sak.saksnummer}</Table.DataCell>
+                                        <Table.DataCell>{sak.type}</Table.DataCell>
+                                        <Table.DataCell>{sak.benyttetGrunnbeløp ?? '—'}</Table.DataCell>
+                                        <Table.DataCell>{sak.benyttetSats}</Table.DataCell>
+                                        <Table.DataCell>{sak.benyttetSatskategori}</Table.DataCell>
+                                    </Table.Row>
+                                ))}
+                            </Table.Body>
+                        </Table>
+                    </section>
+                </div>
+            )}
+        </>
     );
 };
 
