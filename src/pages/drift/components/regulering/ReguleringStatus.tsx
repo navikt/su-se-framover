@@ -22,7 +22,7 @@ const ReguleringStatus = () => {
             {RemoteData.isPending(reguleringsstatusUtestående) && <Loader />}
             {RemoteData.isSuccess(reguleringsstatusUtestående) && (
                 <div>
-                    <Heading size={'medium'}>Regulering status</Heading>
+                    <Heading size={'medium'}>Regulering status {reguleringsstatusUtestående.value.aar}</Heading>
 
                     <section style={{ marginTop: '2rem' }}>
                         <Heading size={'small'}>Siste grunnbeløp og satser</Heading>
