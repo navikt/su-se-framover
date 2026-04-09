@@ -47,7 +47,15 @@ const Reguleringsoversikt = () => {
         hentReguleringerOgMerknader({});
     }, []);
 
-    const [fradragsfilterList, setfradragsFilter] = useState<Set<Fradragskategori>>(new Set());
+    const [fradragsfilterList, setfradragsFilter] = useState<Set<Fradragskategori>>(() => {
+        const lagret = localStorage.getItem('reguleringFradragsfilter');
+        return new Set(lagret ? JSON.parse(lagret) : []);
+    });
+
+    const oppdaterFradragsfilter = (fradragskategori: Set<Fradragskategori>) => {
+        setfradragsFilter(fradragskategori);
+        localStorage.setItem('reguleringFradragsfilter', JSON.stringify(Array.from(fradragskategori)));
+    };
 
     if (RemoteData.isFailure(reguleringerOgMerknader)) {
         return <ApiErrorAlert error={reguleringerOgMerknader.error} />;
@@ -188,26 +196,16 @@ const Reguleringsoversikt = () => {
                             {hentFradragskategorierSortertAlfabetisk().map((value) => (
                                 <Checkbox
                                     key={value}
+                                    checked={fradragsfilterList.has(value as Fradragskategori)}
                                     onChange={(e) => {
                                         const valgtFradrag = value as Fradragskategori;
-                                        const funnet = fradragsfilterList.has(valgtFradrag);
-                                        if (funnet) {
-                                            if (!e.target.checked) {
-                                                setfradragsFilter((prev) => {
-                                                    const updated = new Set(prev);
-                                                    updated.delete(valgtFradrag);
-                                                    return updated;
-                                                });
-                                            }
+                                        const oppdatert = new Set(fradragsfilterList);
+                                        if (e.target.checked) {
+                                            oppdatert.add(valgtFradrag);
                                         } else {
-                                            if (e.target.checked) {
-                                                setfradragsFilter((prev) => {
-                                                    const updated = new Set(prev);
-                                                    updated.add(valgtFradrag);
-                                                    return updated;
-                                                });
-                                            }
+                                            oppdatert.delete(valgtFradrag);
                                         }
+                                        oppdaterFradragsfilter(oppdatert);
                                     }}
                                 >
                                     {formatMessage(value as Fradragskategori)}

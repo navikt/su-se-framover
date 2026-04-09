@@ -34,7 +34,19 @@ export const ÅpneBehandlinger = () => {
         hentÅpneBehandlinger();
     }, []);
 
-    const [type, setType] = useState<BehandlingssammendragTypeFilter>({
+    const åpne_behandlinger_status = 'åpne_behandlinger_status';
+    const åpne_behandlinger_type = 'åpne_behandlinger_type';
+    const åpne_behandlinger_sakType = 'åpne_behandlinger_sakType';
+
+    const defaultStatusFilter: BehandlingssammendragStatusFilter = {
+        [BehandlingssammendragStatus.NY_SØKNAD]: false,
+        [BehandlingssammendragStatus.UNDER_BEHANDLING]: false,
+        [BehandlingssammendragStatus.TIL_ATTESTERING]: false,
+        [BehandlingssammendragStatus.UNDERKJENT]: false,
+        [BehandlingssammendragStatus.ÅPEN]: false,
+    };
+
+    const defaultTypeFilter: BehandlingssammendragTypeFilter = {
         [BehandlingssammendragType.OMGJØRING]: false,
         [BehandlingssammendragType.SØKNADSBEHANDLING]: false,
         [BehandlingssammendragType.REVURDERING]: false,
@@ -43,20 +55,42 @@ export const ÅpneBehandlinger = () => {
         [BehandlingssammendragType.TILBAKEKREVING]: false,
         [BehandlingssammendragType.KRAVGRUNNLAG]: false,
         [BehandlingssammendragType.REVURDERING_OMGJØRING]: false,
-    });
+    };
 
-    const [status, setStatus] = useState<BehandlingssammendragStatusFilter>({
-        [BehandlingssammendragStatus.NY_SØKNAD]: false,
-        [BehandlingssammendragStatus.UNDER_BEHANDLING]: false,
-        [BehandlingssammendragStatus.TIL_ATTESTERING]: false,
-        [BehandlingssammendragStatus.UNDERKJENT]: false,
-        [BehandlingssammendragStatus.ÅPEN]: false,
-    });
-
-    const [sakstypevalg, setSakstype] = useState<Sakstypefilter>({
+    const defaultSaktypeFilter: Sakstypefilter = {
         [Sakstype.Uføre]: false,
         [Sakstype.Alder]: false,
+    };
+
+    const [type, setType] = useState<BehandlingssammendragTypeFilter>(() => {
+        const lagret = localStorage.getItem(åpne_behandlinger_type);
+        return lagret ? JSON.parse(lagret) : defaultTypeFilter;
     });
+
+    const [status, setStatus] = useState<BehandlingssammendragStatusFilter>(() => {
+        const lagret = localStorage.getItem(åpne_behandlinger_status);
+        return lagret ? JSON.parse(lagret) : defaultStatusFilter;
+    });
+
+    const [sakstypevalg, setSakstype] = useState<Sakstypefilter>(() => {
+        const lagret = localStorage.getItem(åpne_behandlinger_sakType);
+        return lagret ? JSON.parse(lagret) : defaultSaktypeFilter;
+    });
+
+    const oppdaterStatusFilter = (statusFilter: BehandlingssammendragStatusFilter) => {
+        setStatus(statusFilter);
+        localStorage.setItem(åpne_behandlinger_status, JSON.stringify(statusFilter));
+    };
+
+    const oppdaterTypeFilter = (typeFilter: BehandlingssammendragTypeFilter) => {
+        setType(typeFilter);
+        localStorage.setItem(åpne_behandlinger_type, JSON.stringify(typeFilter));
+    };
+
+    const oppdaterSakstypeFilter = (sakstypeFilter: Sakstypefilter) => {
+        setSakstype(sakstypeFilter);
+        localStorage.setItem(åpne_behandlinger_sakType, JSON.stringify(sakstypeFilter));
+    };
 
     //TODO: dette kan legges i redux evt struktureres annerledes så vi slipper å filtreringslogikken her.
     const filterBehandlingssammendrag = (
@@ -85,9 +119,9 @@ export const ÅpneBehandlinger = () => {
             <Filter
                 type={type}
                 status={status}
-                oppdaterStatus={(key, verdi) => setStatus({ ...status, [key]: verdi })}
-                oppdaterType={(key, verdi) => setType({ ...type, [key]: verdi })}
-                oppdaterSakstype={(key, verdi) => setSakstype({ ...sakstypevalg, [key]: verdi })}
+                oppdaterStatus={(key, verdi) => oppdaterStatusFilter({ ...status, [key]: verdi })}
+                oppdaterType={(key, verdi) => oppdaterTypeFilter({ ...type, [key]: verdi })}
+                oppdaterSakstype={(key, verdi) => oppdaterSakstypeFilter({ ...sakstypevalg, [key]: verdi })}
                 saktypeFilter={sakstypevalg}
             />
 
