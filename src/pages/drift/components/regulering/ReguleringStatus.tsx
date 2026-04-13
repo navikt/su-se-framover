@@ -16,7 +16,7 @@ const ReguleringStatus = () => {
     return (
         <>
             <div style={{ display: 'flex', gap: '1rem', alignItems: 'end' }}>
-                <Select label="Ar" value={selectedAar} onChange={(event) => setSelectedAar(event.target.value)}>
+                <Select label="År" value={selectedAar} onChange={(event) => setSelectedAar(event.target.value)}>
                     <option value={currentYear.toString()}>{currentYear}</option>
                     <option value={previousYear.toString()}>{previousYear}</option>
                 </Select>
