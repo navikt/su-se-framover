@@ -11,16 +11,16 @@ const ReguleringStatus = () => {
     );
     const currentYear = new Date().getFullYear();
     const previousYear = currentYear - 1;
-    const [selectedAar, setSelectedAar] = useState<string>(currentYear.toString());
+    const [valgtÅr, setValgtÅr] = useState<string>(currentYear.toString());
 
     return (
         <>
             <div style={{ display: 'flex', gap: '1rem', alignItems: 'end' }}>
-                <Select label="År" value={selectedAar} onChange={(event) => setSelectedAar(event.target.value)}>
+                <Select label="År" value={valgtÅr} onChange={(event) => setValgtÅr(event.target.value)}>
                     <option value={currentYear.toString()}>{currentYear}</option>
                     <option value={previousYear.toString()}>{previousYear}</option>
                 </Select>
-                <Button onClick={() => reguleringsstatusUteståendeRequest({ aar: Number(selectedAar) })}>
+                <Button onClick={() => reguleringsstatusUteståendeRequest({ år: Number(valgtÅr) })}>
                     Hent utestående reguleringer
                 </Button>
             </div>
