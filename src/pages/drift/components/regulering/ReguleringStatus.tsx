@@ -1,6 +1,6 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import { Heading, Loader, Table } from '@navikt/ds-react';
-import { useEffect } from 'react';
+import { Button, Heading, Loader, Select, Table } from '@navikt/ds-react';
+import { useState } from 'react';
 import { hentReguleringsstatusUtestående } from '~src/api/reguleringApi.ts';
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert.tsx';
 import { useApiCall } from '~src/lib/hooks.ts';
@@ -9,13 +9,21 @@ const ReguleringStatus = () => {
     const [reguleringsstatusUtestående, reguleringsstatusUteståendeRequest] = useApiCall(
         hentReguleringsstatusUtestående,
     );
-
-    useEffect(() => {
-        reguleringsstatusUteståendeRequest({});
-    }, []);
+    const currentYear = new Date().getFullYear();
+    const previousYear = currentYear - 1;
+    const [valgtÅr, setValgtÅr] = useState<string>(currentYear.toString());
 
     return (
         <>
+            <div style={{ display: 'flex', gap: '1rem', alignItems: 'end' }}>
+                <Select label="År" value={valgtÅr} onChange={(event) => setValgtÅr(event.target.value)}>
+                    <option value={currentYear.toString()}>{currentYear}</option>
+                    <option value={previousYear.toString()}>{previousYear}</option>
+                </Select>
+                <Button onClick={() => reguleringsstatusUteståendeRequest({ år: Number(valgtÅr) })}>
+                    Hent utestående reguleringer
+                </Button>
+            </div>
             {RemoteData.isFailure(reguleringsstatusUtestående) && (
                 <ApiErrorAlert error={reguleringsstatusUtestående.error} />
             )}

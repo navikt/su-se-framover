@@ -116,9 +116,13 @@ export async function hentReguleringsstatus(): Promise<ApiClientResult<Regulerin
     });
 }
 
-export async function hentReguleringsstatusUtestående(): Promise<ApiClientResult<ReguleringStatusUtestående>> {
+export async function hentReguleringsstatusUtestående(args: {
+    år: number;
+}): Promise<ApiClientResult<ReguleringStatusUtestående>> {
+    const query = new URLSearchParams({ aar: args.år.toString() });
+
     return apiClient({
-        url: `/reguleringer/status-regulering-utestaende`,
+        url: `/reguleringer/status-regulering-utestaende?${query.toString()}`,
         method: 'GET',
     });
 }
