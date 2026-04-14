@@ -231,3 +231,16 @@ export async function dryRunPersonhendelser(args: {
         body: formData,
     });
 }
+
+export async function kjørFradragssjekk(args: { maaned: string; dryRun: boolean }): Promise<ApiClientResult<void>> {
+    return apiClient({
+        url: `/drift/fradragssjekk/kjor`,
+        method: 'POST',
+        body: {
+            maaned: args.maaned,
+            dryRun: args.dryRun,
+        },
+        request: { headers: new Headers({ Accept: 'application/json' }) },
+        bodyTransformer: async () => undefined,
+    });
+}
