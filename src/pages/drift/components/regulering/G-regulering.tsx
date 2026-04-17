@@ -154,6 +154,8 @@ const DryRunPanel = () => {
     const [ikrafttredelse, setIkrafttredelse] = useState<Nullable<Date>>(null);
     const [gverdiDryRun, setGVerdiDryRun] = useState<Nullable<number>>(null);
     const [omregningsfaktor, setOmregningsfaktor] = useState<Nullable<string>>(null);
+    const [maksAntallSaker, setMaksAntallSaker] = useState<Nullable<number>>(null);
+    const [kunSakstype, setKunSakstype] = useState<Nullable<string>>(null);
 
     const handleSubmit = () => {
         if (nyGrunnbeløp) {
@@ -169,6 +171,8 @@ const DryRunPanel = () => {
                     },
                     supplement: supplementValue,
                     lagreManuelle: lagreManuelle,
+                    kunSakstype: kunSakstype,
+                    maksAntallSaker: maksAntallSaker,
                 });
             } else {
                 console.log('du må fylle ut alle feltene før du kan kjøre dry-run');
@@ -180,6 +184,8 @@ const DryRunPanel = () => {
                 nyttGrunnbeløp: null,
                 supplement: supplementValue,
                 lagreManuelle: lagreManuelle,
+                kunSakstype: kunSakstype,
+                maksAntallSaker: maksAntallSaker,
             });
         }
     };
@@ -241,6 +247,24 @@ const DryRunPanel = () => {
                     </div>
                 </div>
                 <ReguleringsSupplement onSupplementChange={setSupplementValue} />
+
+                <TextField
+                    label="Maks antall saker"
+                    type="number"
+                    onChange={(v) => {
+                        const val = v.target.value;
+                        setMaksAntallSaker(val ? Number(val) : null);
+                    }}
+                />
+                <RadioGroup
+                    legend="Kun sakstype"
+                    value={kunSakstype ?? ''}
+                    onChange={(val) => setKunSakstype(val || null)}
+                >
+                    <Radio value="">Alle</Radio>
+                    <Radio value="alder">Alder</Radio>
+                    <Radio value="uføre">Uføre</Radio>
+                </RadioGroup>
 
                 <Button onClick={handleSubmit} loading={RemoteData.isPending(dryRunStatus)}>
                     Start dry-run regulering
