@@ -22,6 +22,7 @@ import { DatePicker, MonthPicker } from '~src/components/inputs/datePicker/DateP
 import { pipe } from '~src/lib/fp';
 import { useApiCall } from '~src/lib/hooks';
 import { Nullable } from '~src/lib/types';
+import { Sakstype } from '~src/types/Sak.ts';
 import { toIsoDateOnlyString, toIsoMonthOrNull, toStringDateOrNull } from '~src/utils/date/dateUtils';
 import styles from './G-regulering.module.less';
 import ReguleringStatus from './ReguleringStatus';
@@ -155,7 +156,7 @@ const DryRunPanel = () => {
     const [gverdiDryRun, setGVerdiDryRun] = useState<Nullable<number>>(null);
     const [omregningsfaktor, setOmregningsfaktor] = useState<Nullable<string>>(null);
     const [maksAntallSaker, setMaksAntallSaker] = useState<Nullable<number>>(null);
-    const [kunSakstype, setKunSakstype] = useState<Nullable<string>>(null);
+    const [kunSakstype, setKunSakstype] = useState<Nullable<Sakstype>>(null);
 
     const handleSubmit = () => {
         if (nyGrunnbeløp) {
@@ -251,15 +252,19 @@ const DryRunPanel = () => {
                 <TextField
                     label="Maks antall saker"
                     type="number"
-                    onChange={(v) => {
-                        const val = v.target.value;
-                        setMaksAntallSaker(val ? Number(val) : null);
+                    onChange={(val) => {
+                        const parsedValue = val ? Number(val.target.value) : null;
+                        setMaksAntallSaker(
+                            parsedValue !== null && Number.isFinite(parsedValue) && parsedValue > 0
+                                ? parsedValue
+                                : null,
+                        );
                     }}
                 />
                 <RadioGroup
                     legend="Kun sakstype"
                     value={kunSakstype ?? ''}
-                    onChange={(val) => setKunSakstype(val || null)}
+                    onChange={(val) => setKunSakstype(val === 'alder' || val === 'uføre' ? val : null)}
                 >
                     <Radio value="">Alle</Radio>
                     <Radio value="alder">Alder</Radio>

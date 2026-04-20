@@ -7,7 +7,7 @@ import {
     ReguleringOversiktsstatus,
     ReguleringStatusUtestående,
 } from '~src/types/Regulering';
-
+import { Sakstype } from '~src/types/Sak.ts';
 import apiClient, { ApiClientResult } from './apiClient';
 
 export async function startRegulering(args: { fraOgMedMåned: string; supplement: Nullable<File | string> }) {
@@ -48,7 +48,7 @@ export async function dryRunRegulering(args: {
     }>;
     lagreManuelle: boolean;
     maksAntallSaker: Nullable<number>;
-    kunSakstype: Nullable<string>;
+    kunSakstype: Nullable<Sakstype>;
 }) {
     const url = `/reguleringer/automatisk/dry`;
     const method = 'POST';
