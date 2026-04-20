@@ -7,7 +7,7 @@ import {
     ReguleringOversiktsstatus,
     ReguleringStatusUtestående,
 } from '~src/types/Regulering';
-
+import { Sakstype } from '~src/types/Sak.ts';
 import apiClient, { ApiClientResult } from './apiClient';
 
 export async function startRegulering(args: { fraOgMedMåned: string; supplement: Nullable<File | string> }) {
@@ -47,9 +47,20 @@ export async function dryRunRegulering(args: {
         omregningsfaktor: string;
     }>;
     lagreManuelle: boolean;
+    maksAntallSaker: Nullable<number>;
+    kunSakstype: Nullable<Sakstype>;
 }) {
     const url = `/reguleringer/automatisk/dry`;
     const method = 'POST';
+
+    const appendFilterParamsToFormData = (formData: FormData) => {
+        if (args.maksAntallSaker !== null) {
+            formData.append('maksAntallSaker', args.maksAntallSaker.toString());
+        }
+        if (args.kunSakstype !== null) {
+            formData.append('kunSakstype', args.kunSakstype);
+        }
+    };
 
     if (!args.nyttGrunnbeløp) {
         if (args.supplement instanceof File) {
@@ -58,6 +69,7 @@ export async function dryRunRegulering(args: {
             formData.append('gjeldendeSatsFra', args.gjeldendeSatsFraOgMed);
             formData.append('file', args.supplement);
             formData.append('lagreManuelle', args.lagreManuelle.toString());
+            appendFilterParamsToFormData(formData);
             return apiClient({ url: url, method: method, body: formData });
         } else {
             return apiClient({
@@ -69,6 +81,8 @@ export async function dryRunRegulering(args: {
                     dryRunGrunnbeløp: null,
                     supplement: args.supplement,
                     lagreManuelle: args.lagreManuelle,
+                    maksAntallSaker: args.maksAntallSaker,
+                    kunSakstype: args.kunSakstype,
                 },
             });
         }
@@ -87,6 +101,7 @@ export async function dryRunRegulering(args: {
             formData.append('grunnbeløp', args.nyttGrunnbeløp.grunnbeløp);
             formData.append('omregningsfaktor', args.nyttGrunnbeløp.omregningsfaktor);
             formData.append('lagreManuelle', args.lagreManuelle.toString());
+            appendFilterParamsToFormData(formData);
             return apiClient({ url: url, method: method, body: formData });
         } else {
             return apiClient({
@@ -103,6 +118,8 @@ export async function dryRunRegulering(args: {
                         csv: args.supplement,
                     },
                     lagreManuelle: args.lagreManuelle,
+                    maksAntallSaker: args.maksAntallSaker,
+                    kunSakstype: args.kunSakstype,
                 },
             });
         }
