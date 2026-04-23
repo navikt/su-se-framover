@@ -68,9 +68,10 @@ const Flyktning = (
         props.behandling.grunnlagsdataOgVilkårsvurderinger.uføre?.resultat === UføreResultat.VilkårIkkeOppfylt ||
         form.watch('flyktning')?.some((vurdering) => vurdering.resultat === Vilkårstatus.VilkårIkkeOppfylt);
 
-    const vedtakUrl = Routes.saksbehandlingSendTilAttestering.createURL({
+    const vedtakUrl = Routes.saksbehandlingVilkårsvurdering.createURL({
         sakId: props.sakId,
         behandlingId: props.behandling.id,
+        vilkar: Vilkårtype.Vedtaksbrev,
     });
 
     const save = (values: FlyktningVilkårFormData, onSuccess: (behandling: Søknadsbehandling) => void) => {

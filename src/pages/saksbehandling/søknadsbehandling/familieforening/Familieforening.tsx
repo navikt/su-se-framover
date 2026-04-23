@@ -18,11 +18,10 @@ import { isNotNullable } from '~src/lib/types.ts';
 import { SøknadInnholdAlder } from '~src/types/Søknadinnhold';
 import { EksisterendeVedtaksinformasjonTidligerePeriodeResponse } from '~src/types/Søknadsbehandling';
 import { Vilkårstatus } from '~src/types/Vilkår.ts';
+import { Vilkårtype } from '~src/types/Vilkårsvurdering.ts';
 import { lagDatePeriodeAvStringPeriode } from '~src/utils/periode/periodeUtils.ts';
-
 import sharedMessages from '../sharedI18n-nb';
 import { VilkårsvurderingBaseProps } from '../types';
-
 import messages from './familieforening-nb';
 
 const Familieforening = (
@@ -69,7 +68,11 @@ const Familieforening = (
     const { sakId, behandlingId } = Routes.useRouteParams<typeof Routes.saksbehandlingVilkårsvurdering>();
 
     const vilkaarStatus = form.watch('familiegjenforening');
-    const vedtakUrl = Routes.saksbehandlingSendTilAttestering.createURL({ sakId: sakId!, behandlingId: behandlingId! });
+    const vedtakUrl = Routes.saksbehandlingVilkårsvurdering.createURL({
+        sakId: sakId!,
+        behandlingId: behandlingId!,
+        vilkar: Vilkårtype.Vedtaksbrev!,
+    });
     const nesteUrl = (): string => {
         if (isNotNullable(vilkaarStatus)) {
             return vilkaarStatus[0].familiegjenforening === Vilkårstatus.VilkårOppfylt ? props.nesteUrl : vedtakUrl;

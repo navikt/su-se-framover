@@ -87,9 +87,10 @@ const LovligOppholdINorge = (
         resolver: yupResolver(lovligOppholdFormSchema),
     });
 
-    const vedtakUrl = Routes.saksbehandlingSendTilAttestering.createURL({
+    const vedtakUrl = Routes.saksbehandlingVilkårsvurdering.createURL({
         sakId: props.sakId,
         behandlingId: props.behandling.id,
+        vilkar: Vilkårtype.Vedtaksbrev,
     });
     const formWatch = form.watch();
     const lagNesteUrl = (): string => {

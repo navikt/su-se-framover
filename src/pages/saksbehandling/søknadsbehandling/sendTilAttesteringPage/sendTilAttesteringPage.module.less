@@ -4,7 +4,7 @@
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    margin: 0 0 @spacing-xxl 10vw;
+    margin: 0 0 @spacing-xxl 0vw;
     padding-top: @spacing;
 
     .vedtakSendtTilAttesteringAlertStripe {
@@ -47,3 +47,40 @@
 .visBrevKnapp {
     width: fit-content;
 }
+
+.legendWithInfo {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+
+}
+
+.infoIconWrapper {
+  position: relative;
+  display: inline-flex;
+}
+
+.infoText {
+  display: none;
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+
+  min-width: 600px;
+  max-width: 600px;
+
+  padding: 6px 8px;
+
+  background: #fff;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+
+  font-size: 15px;
+  z-index: 10;
+
+}
+
+.infoIconWrapper:hover .infoText{
+    display: block;
+}
+

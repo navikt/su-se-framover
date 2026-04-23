@@ -83,6 +83,21 @@ const SaksbehandlingFramdriftsindikator = (props: {
                     tittel: formatMessage('beregning'),
                     linjer: hentLinjerFraVilkårsinformasjon(beregningsrekkefølge),
                 },
+                {
+                    id: 'vedtaksbrev',
+                    tittel: formatMessage('vedtaksbrev'),
+                    linjer: [
+                        {
+                            id: 'søknad',
+                            label: 'Vedtaksbrev',
+                            url: vilkårUrl(Vilkårtype.Vedtaksbrev),
+                            status:
+                                props.behandling.brevvalg && props.behandling.brevvalg.valg !== 'IKKE_VALGT'
+                                    ? Linjestatus.Ok
+                                    : Linjestatus.Ingenting,
+                        },
+                    ],
+                },
             ]}
         />
     );

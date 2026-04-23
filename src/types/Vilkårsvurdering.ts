@@ -28,6 +28,7 @@ export enum VilkårtypeFelles {
     OppholdIUtlandet = 'OPPHOLD_I_UTLANDET',
     Bosituasjon = 'BOSITUASJON',
     Beregning = 'BEREGNING',
+    Vedtaksbrev = 'VEDTAKSBREV',
 }
 
 export type Vilkårtype = VilkårtypeFelles | VilkårtypeUføre | VilkårtypeAlder;

@@ -56,9 +56,10 @@ const Institusjonsopphold = (
         defaultValues: draft ?? initialValues,
         resolver: yupResolver(institusjonsoppholdFormSchema),
     });
-    const vedtakUrl = Routes.saksbehandlingSendTilAttestering.createURL({
+    const vedtakUrl = Routes.saksbehandlingVilkårsvurdering.createURL({
         sakId: props.sakId,
         behandlingId: props.behandling.id,
+        vilkar: Vilkårtype.Vedtaksbrev,
     });
     const formWatch = form.watch();
     const lagNesteUrl = (): string => {

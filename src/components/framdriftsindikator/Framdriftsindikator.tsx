@@ -24,7 +24,7 @@ export interface Linje {
     status: Linjestatus;
     label: string;
     url: string;
-    erKlikkbar: boolean;
+    erKlikkbar?: boolean;
 }
 
 export interface Seksjon {

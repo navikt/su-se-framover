@@ -19,11 +19,10 @@ import * as Routes from '~src/lib/routes.ts';
 import { PensjonsOpplysningerUtvidetSvar } from '~src/types/grunnlagsdataOgVilkårsvurderinger/alder/Aldersvilkår.ts';
 import { SøknadInnholdAlder } from '~src/types/Søknadinnhold';
 import { EksisterendeVedtaksinformasjonTidligerePeriodeResponse } from '~src/types/Søknadsbehandling';
+import { Vilkårtype } from '~src/types/Vilkårsvurdering.ts';
 import { lagDatePeriodeAvStringPeriode } from '~src/utils/periode/periodeUtils.ts';
-
 import sharedMessages from '../sharedI18n-nb';
 import { VilkårsvurderingBaseProps } from '../types';
-
 import messages from './alderspensjon-nb';
 
 const Alderspensjon = (
@@ -61,9 +60,10 @@ const Alderspensjon = (
     });
 
     const formWatch = form.watch();
-    const vedtakUrl = Routes.saksbehandlingSendTilAttestering.createURL({
+    const vedtakUrl = Routes.saksbehandlingVilkårsvurdering.createURL({
         sakId: props.sakId,
         behandlingId: props.behandling.id,
+        vilkar: Vilkårtype.Vedtaksbrev,
     });
     const lagNesteUrl = (): string => {
         return formWatch.alderspensjon.some(

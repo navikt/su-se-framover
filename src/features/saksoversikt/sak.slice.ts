@@ -200,6 +200,10 @@ export default createSlice({
             state.sak = oppdaterSøknadsbehandlingISak(state.sak, action.payload);
         });
 
+        builder.addCase(SøknadsbehandlingActions.lagreBrevvalg.fulfilled, (state, action) => {
+            state.sak = oppdaterSøknadsbehandlingISak(state.sak, action.payload);
+        });
+
         builder.addCase(SøknadsbehandlingActions.attesteringUnderkjenn.fulfilled, (state, action) => {
             state.sak = oppdaterSøknadsbehandlingISak(state.sak, action.payload);
         });
