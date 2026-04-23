@@ -1,12 +1,12 @@
 import { Nullable } from '~src/lib/types';
 import { UnderkjennelseGrunnBehandling } from '~src/types/Behandling';
-import { Valg } from '~src/types/Revurdering.ts';
 import {
     EksisterendeVedtaksinformasjonTidligerePeriodeRequest,
     EksisterendeVedtaksinformasjonTidligerePeriodeResponse,
     SkattegrunnlagSøknadsbehandlingRequest,
     Søknadsbehandling,
 } from '~src/types/Søknadsbehandling';
+import { Valg } from '~src/types/Søknadsbehandling.ts';
 import apiClient, { ApiClientResult } from './apiClient';
 
 export async function startBehandling(arg: {

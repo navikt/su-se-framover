@@ -51,8 +51,6 @@ const Vilkår = () => {
             vilkar: vilkårType,
         });
 
-    const vedtakUrl = Routes.saksbehandlingSendTilAttestering.createURL({ sakId: sakId, behandlingId: behandling.id });
-
     const saksoversiktUrl = Routes.saksoversiktValgtSak.createURL({ sakId: sakId });
 
     const avsluttUrl = Routes.saksoversiktValgtSak.createURL({ sakId: sakId });
@@ -229,7 +227,7 @@ const Vilkår = () => {
                         <SendTilAttesteringPage
                             behandling={behandling}
                             forrigeUrl={vilkårUrl(Vilkårtype.Beregning)}
-                            nesteUrl={vedtakUrl}
+                            nesteUrl={saksoversiktUrl}
                             avsluttUrl={avsluttUrl}
                             sakId={sakId}
                             tidligerePeriodeData={hentGjeldendeVedtaksdataForTidligerePeriodeStatus}
