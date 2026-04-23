@@ -25,9 +25,6 @@ const HomePage = lazy(() => import('./pages/HomePage'));
 const Saksoversikt = lazy(() => import('./pages/saksbehandling/Saksoversikt'));
 const Behandlingsoversikt = lazy(() => import('./pages/saksbehandling/behandlingsoversikt/Behandlingsoversikt'));
 const Soknad = lazy(() => import('./pages/søknad'));
-const SendTilAttesteringPage = lazy(
-    () => import('./pages/saksbehandling/søknadsbehandling/sendTilAttesteringPage/SendTilAttesteringPage'),
-);
 const VedtakEllerOversendtKlageOppsummering = lazy(
     () => import('./pages/saksbehandling/vedtak/./VedtakEllerKlageOppsummering'),
 );
@@ -106,7 +103,6 @@ const AppRoutes = () => (
                 path={routes.vedtakEllerKlageOppsummering.path}
                 element={<VedtakEllerOversendtKlageOppsummering />}
             />
-            <Route path={routes.saksbehandlingSendTilAttestering.path} element={<SendTilAttesteringPage />} />
             <Route path={routes.saksbehandlingVilkårsvurdering.path} element={<Vilkår />} />
             <Route path={routes.alleDokumenterForSak.path} element={<DokumenterPage />} />
             <Route path={routes.kontrollsamtale.path} element={<NyDatoForKontrollsamtale />} />
