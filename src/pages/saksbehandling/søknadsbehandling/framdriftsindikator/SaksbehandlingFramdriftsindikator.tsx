@@ -95,6 +95,7 @@ const SaksbehandlingFramdriftsindikator = (props: {
                                 props.behandling.brevvalg && props.behandling.brevvalg.valg !== 'IKKE_VALGT'
                                     ? Linjestatus.Ok
                                     : Linjestatus.Ingenting,
+                            erKlikkbar: false,
                         },
                     ],
                 },
