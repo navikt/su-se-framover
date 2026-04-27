@@ -30,8 +30,8 @@ import { er67EllerEldre } from '~src/utils/person/personUtils';
 import styles from './inngang.module.less';
 import nb from './inngang-nb';
 
-const finnTidligsteNyeStønadsperiode = (periode: Periode<string>): Date => {
-    return startOfMonth(addDays(new Date(periode.tilOgMed), 1));
+const tidligsteSøknadsMåned = (periode: Periode<string>): Date => {
+    return startOfMonth(subMonths(new Date(periode.tilOgMed), 1));
 };
 
 const kanStarteNySøknad = (periode: Nullable<Periode<string>>): boolean => {
@@ -90,6 +90,11 @@ const IverksattInnvilgetStønadsperiodeAlert = ({
         return null;
     }
 
+    //Skal skjule varselet siste to måneder i perioden siden det er innenfor da vi sender ut påminnelsesbrev
+    if (!isBefore(new Date(), subMonths(iverksattInnvilgetStønadsperiode.tilOgMed, 2))) {
+        return null;
+    }
+
     const typeErSammeSomTema = sakstype === type;
     return (
         <div>
@@ -101,7 +106,7 @@ const IverksattInnvilgetStønadsperiodeAlert = ({
                     løpendePeriode: `${formatDate(iverksattInnvilgetStønadsperiode.fraOgMed)} - ${formatDate(
                         iverksattInnvilgetStønadsperiode.tilOgMed,
                     )}`,
-                    tidligsteNyPeriode: formatDate(finnTidligsteNyeStønadsperiode(iverksattInnvilgetStønadsperiode)),
+                    tidligsteSøknadsMåned: formatDate(tidligsteSøknadsMåned(iverksattInnvilgetStønadsperiode)),
                     type: formatMessage(type),
                 })}
             </BodyLong>
