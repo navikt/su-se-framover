@@ -5,13 +5,11 @@ import {
     Checkbox,
     GuidePanel,
     HelpText,
-    Label,
     Loader,
     Modal,
     Radio,
     RadioGroup,
     Tabs,
-    Textarea,
     TextField,
 } from '@navikt/ds-react';
 import { useEffect, useState } from 'react';
@@ -85,15 +83,10 @@ const GReguleringsModal = (props: { visModal: boolean; onClose: () => void }) =>
                     <Tabs.List>
                         <Tabs.Tab value="dry-run" label="Dry-run" />
                         <Tabs.Tab value="regulering" label="Regulering" />
-                        <Tabs.Tab value="supplement" label="Reguleringsupplement" />
                         <Tabs.Tab value="status" label="Status" />
                     </Tabs.List>
                     <ReguleringPanel />
                     <DryRunPanel />
-
-                    <Tabs.Panel value="supplement" className={styles.tabPanel}>
-                        <ReguleringsSupplementStandAlone />
-                    </Tabs.Panel>
                     <Tabs.Panel value="status" className={styles.tabPanel}>
                         <ReguleringStatus />
                     </Tabs.Panel>
@@ -106,14 +99,10 @@ const GReguleringsModal = (props: { visModal: boolean; onClose: () => void }) =>
 const ReguleringPanel = () => {
     const [startDato, setStartDato] = useState<Nullable<Date>>(null);
     const [reguleringsstatus, reguler] = useApiCall(startRegulering);
-    const [supplementValue, setSupplementValue] = useState<Nullable<string | File>>(null);
 
     const handleSubmit = () => {
         if (startDato) {
-            reguler({
-                fraOgMedMåned: toIsoMonthOrNull(startDato)!,
-                supplement: supplementValue,
-            });
+            reguler({ fraOgMedMåned: toIsoMonthOrNull(startDato)! });
         } else {
             console.log('du må velge en startdato før du kan regulere');
         }
@@ -123,9 +112,6 @@ const ReguleringPanel = () => {
         <Tabs.Panel value="regulering" className={styles.tabPanel}>
             <div className={styles.panelInnholdContainer}>
                 <MonthPicker label="Velg reguleringsdato" value={startDato} onChange={(dato) => setStartDato(dato)} />
-
-                <ReguleringsSupplement onSupplementChange={setSupplementValue} />
-
                 <Button
                     onClick={handleSubmit}
                     loading={RemoteData.isPending(reguleringsstatus)}
@@ -147,7 +133,6 @@ const DryRunPanel = () => {
 
     const [startDatoRgulering, setStartDatoRegulering] = useState<Nullable<Date>>(null);
     const [gjeldendeSatsFra, setGjeldendeSatsFra] = useState<Nullable<Date>>(null);
-    const [supplementValue, setSupplementValue] = useState<Nullable<string | File>>(null);
 
     const [nyGrunnbeløp, setNyGrunnbeløp] = useState<boolean>(false);
     const [lagreManuelle, setLagreManuelle] = useState<boolean>(false);
@@ -170,7 +155,6 @@ const DryRunPanel = () => {
                         grunnbeløp: gverdiDryRun.toString(),
                         omregningsfaktor: omregningsfaktor,
                     },
-                    supplement: supplementValue,
                     lagreManuelle: lagreManuelle,
                     kunSakstype: kunSakstype,
                     maksAntallSaker: maksAntallSaker,
@@ -183,7 +167,6 @@ const DryRunPanel = () => {
                 startDatoRegulering: toIsoMonthOrNull(startDatoRgulering)!,
                 gjeldendeSatsFraOgMed: toIsoDateOnlyString(gjeldendeSatsFra!),
                 nyttGrunnbeløp: null,
-                supplement: supplementValue,
                 lagreManuelle: lagreManuelle,
                 kunSakstype: kunSakstype,
                 maksAntallSaker: maksAntallSaker,
@@ -247,8 +230,6 @@ const DryRunPanel = () => {
                         </HelpText>
                     </div>
                 </div>
-                <ReguleringsSupplement onSupplementChange={setSupplementValue} />
-
                 <TextField
                     label="Maks antall saker"
                     type="number"
@@ -280,105 +261,6 @@ const DryRunPanel = () => {
                 {RemoteData.isFailure(dryRunStatus) && <ApiErrorAlert error={dryRunStatus.error} />}
             </div>
         </Tabs.Panel>
-    );
-};
-
-const ReguleringsSupplement = (props: { onSupplementChange: (i: Nullable<string | File>) => void }) => {
-    const [supplement, setSupplement] = useState<Nullable<'fil' | 'text'>>(null);
-
-    return (
-        <div className={styles.supplementContainer}>
-            <RadioGroup legend="Velg supplement" description={'Supplement er ikke påkrevd ved regulering'}>
-                <Radio
-                    value={'fil'}
-                    onClick={() => {
-                        setSupplement('fil');
-                        props.onSupplementChange(null);
-                    }}
-                >
-                    Fil
-                </Radio>
-                <Radio
-                    value={'text'}
-                    onClick={() => {
-                        setSupplement('text');
-                        props.onSupplementChange(null);
-                    }}
-                >
-                    Text
-                </Radio>
-                <Radio
-                    value={'Ingen supplement'}
-                    onClick={() => {
-                        setSupplement(null);
-                        props.onSupplementChange(null);
-                    }}
-                >
-                    Ingen supplement
-                </Radio>
-            </RadioGroup>
-
-            {supplement === 'fil' && (
-                <input
-                    type="file"
-                    onChange={(e) => (e.target.files ? props.onSupplementChange(e.target.files[0]) : null)}
-                />
-            )}
-            {supplement === 'text' && (
-                <Textarea
-                    label={'CSV'}
-                    minRows={5}
-                    maxRows={10}
-                    onChange={(e) => props.onSupplementChange(e.target.value)}
-                />
-            )}
-        </div>
-    );
-};
-
-const ReguleringsSupplementStandAlone = () => {
-    const [supplement, setSupplement] = useState<Nullable<'fil' | 'text'>>(null);
-
-    const [supplementValue, setSupplementValue] = useState<Nullable<string | File>>(null);
-    const [status, sendSupplement] = useApiCall(reguleringApi.reguleringssupplement);
-
-    const onClick = () => {
-        if (!supplementValue) {
-            return;
-        }
-        sendSupplement({ innhold: supplementValue });
-    };
-
-    return (
-        <div className={styles.supplementContainer}>
-            <Label>
-                Dersom regulering er blitt kjørt, og reguleringsbehandlinger er blitt opprettet, kan du legge til et
-                supplement som kjører en del av disse behandlingenene automatisk
-            </Label>
-            <RadioGroup legend="Velg supplement">
-                <Radio value={'fil'} onClick={() => setSupplement('fil')}>
-                    Fil
-                </Radio>
-
-                <Radio value={'text'} onClick={() => setSupplement('text')}>
-                    Text
-                </Radio>
-            </RadioGroup>
-
-            {supplement === 'fil' && (
-                <input type="file" onChange={(e) => (e.target.files ? setSupplementValue(e.target.files[0]) : null)} />
-            )}
-            {supplement === 'text' && (
-                <Textarea label={'CSV'} minRows={5} maxRows={10} onChange={(e) => setSupplementValue(e.target.value)} />
-            )}
-
-            {RemoteData.isFailure(status) && <ApiErrorAlert error={status.error} />}
-            {RemoteData.isSuccess(status) && (
-                <Alert variant="success">Regulering kjører med supplement 👍🤌 sjekk logger</Alert>
-            )}
-
-            <Button onClick={onClick}>Oppdater regulering med supplement</Button>
-        </div>
     );
 };
 
