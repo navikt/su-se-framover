@@ -1,5 +1,5 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import { Alert, BodyShort, Button, Heading, Label, Loader, Modal, TextField } from '@navikt/ds-react';
+import { Alert, BodyShort, Button, Heading, Label, Loader, TextField } from '@navikt/ds-react';
 import { useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useNavigate, useOutletContext } from 'react-router-dom';
@@ -12,7 +12,6 @@ import {
     fradragTilFradragFormData,
 } from '~src/components/forms/vilkårOgGrunnlagForms/fradrag/FradragFormUtils';
 import OppsummeringAvBeregningOgSimulering from '~src/components/oppsummering/oppsummeringAvBeregningOgsimulering/OppsummeringAvBeregningOgSimulering';
-import { OppsummeringPar } from '~src/components/oppsummering/oppsummeringpar/OppsummeringPar';
 import Oppsummeringspanel, {
     Oppsummeringsfarge,
     Oppsummeringsikon,
@@ -32,14 +31,11 @@ import {
     DelvisOpphør,
     DifferanseEtterRegulering,
     DifferanseFørRegulering,
-    Eksterndata,
     FantIkkeVedtakForApril,
     FinnesFlerePerioderAvFradrag,
     FradragErUtenlandsinntekt,
     Regulering,
     Reguleringsstatus,
-    Reguleringssupplement,
-    SupplementFor,
     SupplementHarFlereVedtaksperioderForFradrag,
     SupplementInneholderIkkeFradraget,
     YtelseErMidlertidigStanset,
@@ -281,7 +277,6 @@ const ManuellRegulering = () => {
                             {underAttestering && <ReguleringAttestering regulering={regulering} />}
                         </div>
                     </div>
-                    <SupplementOversikt supplement={regulering.supplement} />
                 </main>
             </div>
         );
@@ -570,137 +565,5 @@ const ReguleringUnderkjent = ({ regulering }: { regulering: Regulering }) => {
         >
             <UnderkjenteAttesteringer attesteringer={regulering.attesteringer} />
         </Oppsummeringspanel>
-    );
-};
-
-const SupplementOversikt = (props: { supplement: Reguleringssupplement }) => {
-    return (
-        <div>
-            <Heading level="3" size="medium">
-                Data fra ekstern kilde
-            </Heading>
-            <div className={styles.supplementOversiktInnhold}>
-                {props.supplement.bruker ? (
-                    <SupplementForOversikt overskrift="Søker" supplementFor={props.supplement.bruker} />
-                ) : (
-                    <Label>Data for søker finnes ikke</Label>
-                )}
-
-                {props.supplement.eps.length > 0 ? (
-                    props.supplement.eps.map((eps) => (
-                        <SupplementForOversikt key={eps.fnr} overskrift={`EPS - ${eps.fnr}`} supplementFor={eps} />
-                    ))
-                ) : (
-                    <Label>Data for EPS finnes ikke</Label>
-                )}
-            </div>
-        </div>
-    );
-};
-
-const SupplementForOversikt = (props: { overskrift: string; supplementFor: SupplementFor }) => {
-    const [visEksternDataModal, setVisEksternDataModal] = useState(false);
-
-    return (
-        <div className={styles.supplementForOversiktContainer}>
-            <Heading level="3" size="medium">
-                {props.overskrift}
-            </Heading>
-            <ul className={styles.supplementForInnhold}>
-                {props.supplementFor.fradragsperioder.map((fradrag, index) => (
-                    <li key={`${fradrag.fradragstype} - ${index}`} className={styles.fradragsperiodeContainer}>
-                        <Heading level="4" size="small">
-                            {fradrag.fradragstype}
-                        </Heading>
-
-                        {fradrag.vedtaksperiodeEndring === null ? (
-                            'Har ikke endringsvedtak'
-                        ) : (
-                            <div>
-                                <Label>Endringsvedtak</Label>
-                                <div className={styles.vedtaksperiodeData}>
-                                    <BodyShort>
-                                        <BodyShort>
-                                            {formatPeriodeMedOptionalTilOgMed(fradrag.vedtaksperiodeEndring.periode)}:
-                                        </BodyShort>
-                                        :
-                                    </BodyShort>
-                                    <BodyShort>{fradrag.vedtaksperiodeEndring.beløp},-</BodyShort>
-                                </div>
-                            </div>
-                        )}
-
-                        <div>
-                            <Label>Reguleringsvedtak</Label>
-                            <ul>
-                                {fradrag.vedtaksperiodeRegulering.map((periode, index) => (
-                                    <li key={`${periode.periode.fraOgMed} - ${periode.periode.tilOgMed} - ${index}`}>
-                                        <div className={styles.vedtaksperiodeData}>
-                                            <BodyShort>{formatPeriodeMedOptionalTilOgMed(periode.periode)}:</BodyShort>
-                                            <BodyShort>{periode.beløp},-</BodyShort>
-                                        </div>
-                                    </li>
-                                ))}
-                            </ul>
-                        </div>
-                    </li>
-                ))}
-            </ul>
-            <Button
-                className={styles.eksterneVedtakdataButton}
-                variant="tertiary"
-                onClick={() => setVisEksternDataModal(true)}
-            >
-                Se eksterne vedtaksdata
-            </Button>
-
-            <EksternDataModal
-                visModal={visEksternDataModal}
-                onClose={() => setVisEksternDataModal(false)}
-                data={props.supplementFor.eksterneVedtaksdata}
-            />
-        </div>
-    );
-};
-
-const EksternDataModal = (props: { visModal: boolean; onClose: () => void; data: Eksterndata[] }) => {
-    return (
-        <Modal
-            className={styles.eksternDataModal}
-            open={props.visModal}
-            onClose={props.onClose}
-            header={{ heading: 'Eksterne data som SU-app har mottatt' }}
-        >
-            <Modal.Body className={styles.eksternDataModalBody}>
-                <ul>
-                    {props.data.map((data, index) => (
-                        <li key={index} className={styles.eksternDataContainer}>
-                            <OppsummeringPar label={'Fødselsnummer'} verdi={data.fnr} retning="vertikal" />
-                            <OppsummeringPar label={'Sakstype'} verdi={data.sakstype} retning="vertikal" />
-                            <OppsummeringPar label={'Vedtakstype'} verdi={data.vedtakstype} retning="vertikal" />
-                            <OppsummeringPar label={'Fra og med'} verdi={data.fraOgMed} retning="vertikal" />
-                            <OppsummeringPar label={'Til og med'} verdi={data.tilOgMed} retning="vertikal" />
-                            <OppsummeringPar label={'Brutto ytelse'} verdi={data.bruttoYtelse} retning="vertikal" />
-                            <OppsummeringPar label={'Netto ytelse'} verdi={data.nettoYtelse} retning="vertikal" />
-                            <OppsummeringPar
-                                label={'Ytelseskomponent type'}
-                                verdi={data.ytelseskomponenttype}
-                                retning="vertikal"
-                            />
-                            <OppsummeringPar
-                                label={'Brutto ytelseskomponent'}
-                                verdi={data.bruttoYtelseskomponent}
-                                retning="vertikal"
-                            />
-                            <OppsummeringPar
-                                label={'Netto ytelseskomponent'}
-                                verdi={data.nettoYtelseskomponent}
-                                retning="vertikal"
-                            />
-                        </li>
-                    ))}
-                </ul>
-            </Modal.Body>
-        </Modal>
     );
 };
