@@ -10,36 +10,21 @@ import {
 import { Sakstype } from '~src/types/Sak.ts';
 import apiClient, { ApiClientResult } from './apiClient';
 
-export async function startRegulering(args: { fraOgMedMåned: string; supplement: Nullable<File | string> }) {
+export async function startRegulering(args: { fraOgMedMåned: string }) {
     const url = `/reguleringer/automatisk`;
     const method = 'POST';
-
-    if (args.supplement instanceof File) {
-        const formData = new FormData();
-        formData.append('file', args.supplement);
-        formData.append('fraOgMedMåned', args.fraOgMedMåned);
-
-        return apiClient({
-            url: url,
-            method: method,
-            body: formData,
-        });
-    } else {
-        return apiClient({
-            url: url,
-            method: method,
-            body: {
-                fraOgMedMåned: args.fraOgMedMåned,
-                csv: args.supplement,
-            },
-        });
-    }
+    return apiClient({
+        url: url,
+        method: method,
+        body: {
+            fraOgMedMåned: args.fraOgMedMåned,
+        },
+    });
 }
 
 export async function dryRunRegulering(args: {
     startDatoRegulering: string;
     gjeldendeSatsFraOgMed: string;
-    supplement: Nullable<File | string>;
     nyttGrunnbeløp: Nullable<{
         virkningstidspunkt: string;
         ikrafttredelse: Nullable<string>;
@@ -53,76 +38,37 @@ export async function dryRunRegulering(args: {
     const url = `/reguleringer/automatisk/dry`;
     const method = 'POST';
 
-    const appendFilterParamsToFormData = (formData: FormData) => {
-        if (args.maksAntallSaker !== null) {
-            formData.append('maksAntallSaker', args.maksAntallSaker.toString());
-        }
-        if (args.kunSakstype !== null) {
-            formData.append('kunSakstype', args.kunSakstype);
-        }
-    };
-
     if (!args.nyttGrunnbeløp) {
-        if (args.supplement instanceof File) {
-            const formData = new FormData();
-            formData.append('startDatoRegulering', args.startDatoRegulering);
-            formData.append('gjeldendeSatsFra', args.gjeldendeSatsFraOgMed);
-            formData.append('file', args.supplement);
-            formData.append('lagreManuelle', args.lagreManuelle.toString());
-            appendFilterParamsToFormData(formData);
-            return apiClient({ url: url, method: method, body: formData });
-        } else {
-            return apiClient({
-                url: url,
-                method: method,
-                body: {
-                    startDatoRegulering: args.startDatoRegulering,
-                    gjeldendeSatsFra: args.gjeldendeSatsFraOgMed,
-                    dryRunGrunnbeløp: null,
-                    supplement: args.supplement,
-                    lagreManuelle: args.lagreManuelle,
-                    maksAntallSaker: args.maksAntallSaker,
-                    kunSakstype: args.kunSakstype,
-                },
-            });
-        }
+        return apiClient({
+            url: url,
+            method: method,
+            body: {
+                startDatoRegulering: args.startDatoRegulering,
+                gjeldendeSatsFra: args.gjeldendeSatsFraOgMed,
+                dryRunGrunnbeløp: null,
+                lagreManuelle: args.lagreManuelle,
+                maksAntallSaker: args.maksAntallSaker,
+                kunSakstype: args.kunSakstype,
+            },
+        });
     } else {
-        if (args.supplement instanceof File) {
-            const formData = new FormData();
-
-            formData.append('startDatoRegulering', args.startDatoRegulering);
-            formData.append('gjeldendeSatsFra', args.gjeldendeSatsFraOgMed);
-            formData.append('file', args.supplement);
-
-            formData.append('virkningstidspunkt', args.nyttGrunnbeløp.virkningstidspunkt);
-            if (args.nyttGrunnbeløp.ikrafttredelse) {
-                formData.append('ikrafttredelse', args.nyttGrunnbeløp.ikrafttredelse);
-            }
-            formData.append('grunnbeløp', args.nyttGrunnbeløp.grunnbeløp);
-            formData.append('omregningsfaktor', args.nyttGrunnbeløp.omregningsfaktor);
-            formData.append('lagreManuelle', args.lagreManuelle.toString());
-            appendFilterParamsToFormData(formData);
-            return apiClient({ url: url, method: method, body: formData });
-        } else {
-            return apiClient({
-                url: url,
-                method: method,
-                body: {
-                    startDatoRegulering: args.startDatoRegulering,
-                    gjeldendeSatsFra: args.gjeldendeSatsFraOgMed,
-                    dryRunGrunnbeløp: {
-                        virkningstidspunkt: args.nyttGrunnbeløp.virkningstidspunkt,
-                        ikrafttredelse: args.nyttGrunnbeløp.ikrafttredelse,
-                        grunnbeløp: args.nyttGrunnbeløp.grunnbeløp,
-                        omregningsfaktor: args.nyttGrunnbeløp.omregningsfaktor,
-                        csv: args.supplement,
-                    },
-                    lagreManuelle: args.lagreManuelle,
-                    maksAntallSaker: args.maksAntallSaker,
-                    kunSakstype: args.kunSakstype,
+        return apiClient({
+            url: url,
+            method: method,
+            body: {
+                startDatoRegulering: args.startDatoRegulering,
+                gjeldendeSatsFra: args.gjeldendeSatsFraOgMed,
+                dryRunGrunnbeløp: {
+                    virkningstidspunkt: args.nyttGrunnbeløp.virkningstidspunkt,
+                    ikrafttredelse: args.nyttGrunnbeløp.ikrafttredelse,
+                    grunnbeløp: args.nyttGrunnbeløp.grunnbeløp,
+                    omregningsfaktor: args.nyttGrunnbeløp.omregningsfaktor,
                 },
-            });
-        }
+                lagreManuelle: args.lagreManuelle,
+                maksAntallSaker: args.maksAntallSaker,
+                kunSakstype: args.kunSakstype,
+            },
+        });
     }
 }
 
@@ -211,29 +157,6 @@ export async function underkjennAttestering({
             kommentar: kommentar,
         },
     });
-}
-
-export async function reguleringssupplement(args: { innhold: File | string }): Promise<ApiClientResult<Regulering>> {
-    const isFile = args.innhold instanceof File;
-
-    if (isFile) {
-        const formData = new FormData();
-        formData.append('file', args.innhold!);
-
-        return apiClient({
-            url: `/reguleringer/supplement`,
-            method: 'POST',
-            body: formData,
-        });
-    } else {
-        return apiClient({
-            url: `/reguleringer/supplement`,
-            method: 'POST',
-            body: {
-                csv: args.innhold,
-            },
-        });
-    }
 }
 
 export async function hentManuellRegulering(args: {
