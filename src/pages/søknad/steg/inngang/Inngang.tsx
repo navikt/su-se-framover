@@ -1,7 +1,6 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { PaperclipIcon } from '@navikt/aksel-icons';
 import { Alert, BodyLong, Button, ConfirmationPanel, Heading, Link, Tag } from '@navikt/ds-react';
-import * as DateFns from 'date-fns';
 import { addDays, isBefore, startOfMonth, subMonths } from 'date-fns';
 import { ReactNode, useEffect, useState } from 'react';
 import { useNavigate, useOutletContext } from 'react-router-dom';
@@ -30,6 +29,10 @@ import { formatDate } from '~src/utils/date/dateUtils';
 import { er67EllerEldre } from '~src/utils/person/personUtils';
 import styles from './inngang.module.less';
 import nb from './inngang-nb';
+
+const finnTidligsteNyeStønadsperiode = (periode: Periode<string>): Date => {
+    return startOfMonth(addDays(new Date(periode.tilOgMed), 1));
+};
 
 const kanStarteNySøknad = (periode: Nullable<Periode<string>>): boolean => {
     if (!periode) {
@@ -83,7 +86,7 @@ const IverksattInnvilgetStønadsperiodeAlert = ({
 }) => {
     const { formatMessage } = useI18n({ messages: nb });
     const { sakstype } = useOutletContext<SøknadContext>();
-    if (iverksattInnvilgetStønadsperiode == null) {
+    if (iverksattInnvilgetStønadsperiode === null) {
         return null;
     }
 
@@ -98,9 +101,7 @@ const IverksattInnvilgetStønadsperiodeAlert = ({
                     løpendePeriode: `${formatDate(iverksattInnvilgetStønadsperiode.fraOgMed)} - ${formatDate(
                         iverksattInnvilgetStønadsperiode.tilOgMed,
                     )}`,
-                    tidligestNyPeriode: formatDate(
-                        DateFns.startOfMonth(new Date(iverksattInnvilgetStønadsperiode.tilOgMed)).toString(),
-                    ),
+                    tidligsteNyPeriode: formatDate(finnTidligsteNyeStønadsperiode(iverksattInnvilgetStønadsperiode)),
                     type: formatMessage(type),
                 })}
             </BodyLong>
