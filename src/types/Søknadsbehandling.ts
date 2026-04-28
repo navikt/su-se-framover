@@ -22,6 +22,7 @@ export interface Søknadsbehandling extends Behandling<SøknadsbehandlingStatus>
     eksterneGrunnlag: EksterneGrunnlag;
     omgjøringsårsak: Nullable<OmgjøringsÅrsak>;
     omgjøringsgrunn: Nullable<OmgjøringsGrunn>;
+    brevvalg: BrevvalgSøknadbehandling;
 }
 
 export interface Stønadsperiode {
@@ -68,4 +69,15 @@ export interface EksisterendeVedtaksinformasjonTidligerePeriodeRequest {
 export interface EksisterendeVedtaksinformasjonTidligerePeriodeResponse {
     periode: Periode<string>;
     grunnlagsdataOgVilkårsvurderinger: GrunnlagsdataOgVilkårsvurderinger;
+}
+
+export interface BrevvalgSøknadbehandling {
+    valg: Valg;
+    fritekst: Nullable<string>;
+}
+
+export enum Valg {
+    SEND = 'SEND',
+    IKKE_SEND = 'IKKE_SEND',
+    IKKE_VALGT = 'IKKE_VALGT',
 }

@@ -5,6 +5,7 @@ import * as behandlingApi from '~src/api/behandlingApi';
 import { Nullable } from '~src/lib/types';
 import { createApiCallAsyncThunk } from '~src/redux/utils';
 import { UnderkjennelseGrunnBehandling } from '~src/types/Behandling';
+import { Valg } from '~src/types/Revurdering.ts';
 import { SkattegrunnlagSøknadsbehandlingRequest, Søknadsbehandling } from '~src/types/Søknadsbehandling';
 
 export const startBehandling = createAsyncThunk<
@@ -91,6 +92,23 @@ export const hentNySkattegrunnlag = createAsyncThunk<
 >('behandling/skatt/ny', async (arg, thunkApi) => {
     const res = await behandlingApi.hentNySkattegrunnlag(arg);
 
+    if (res.status === 'ok') {
+        return res.data;
+    }
+    return thunkApi.rejectWithValue(res.error);
+});
+
+export const lagreBrevvalg = createAsyncThunk<
+    Søknadsbehandling,
+    {
+        sakId: string;
+        behandlingId: string;
+        valg: Valg;
+        fritekst: Nullable<string>;
+    },
+    { rejectValue: ApiError }
+>('søknadsbehandling/brevvalg', async ({ sakId, behandlingId, valg: valg }, thunkApi) => {
+    const res = await behandlingApi.lagreBrevvalg(sakId, behandlingId, valg);
     if (res.status === 'ok') {
         return res.data;
     }

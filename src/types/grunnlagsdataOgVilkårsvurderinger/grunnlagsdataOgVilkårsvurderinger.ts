@@ -28,6 +28,7 @@ export interface GrunnlagsdataOgVilkårsvurderinger {
     opplysningsplikt: Nullable<OpplysningspliktVilkår>;
     personligOppmøte: Nullable<PersonligOppmøteVilkår>;
     institusjonsopphold: Nullable<InstitusjonsoppholdVilkår>;
+    vedtaksbrev: Nullable<string>;
 }
 
 export const trimIdAndOpprettetFromList = <T>(obj: T[]) =>

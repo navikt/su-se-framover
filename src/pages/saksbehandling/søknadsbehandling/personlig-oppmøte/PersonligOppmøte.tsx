@@ -123,9 +123,10 @@ const PersonligOppmøte = (
         }
         if (res.status === SøknadsbehandlingStatus.VILKÅRSVURDERT_AVSLAG) {
             navigate(
-                Routes.saksbehandlingSendTilAttestering.createURL({
+                Routes.saksbehandlingVilkårsvurdering.createURL({
                     sakId: props.sakId,
                     behandlingId: props.behandling.id,
+                    vilkar: Vilkårtype.Vedtaksbrev,
                 }),
             );
         } else {

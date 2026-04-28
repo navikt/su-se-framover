@@ -57,6 +57,8 @@ export const vilkårTittelFormatted = (type: Vilkårtype) => {
             return 'Opphold i utlandet';
         case Vilkårtype.Beregning:
             return 'Beregning';
+        case Vilkårtype.Vedtaksbrev:
+            return 'Vedtaksbrev';
     }
 };
 

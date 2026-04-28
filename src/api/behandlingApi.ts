@@ -6,7 +6,7 @@ import {
     SkattegrunnlagSøknadsbehandlingRequest,
     Søknadsbehandling,
 } from '~src/types/Søknadsbehandling';
-
+import { Valg } from '~src/types/Søknadsbehandling.ts';
 import apiClient, { ApiClientResult } from './apiClient';
 
 export async function startBehandling(arg: {
@@ -64,7 +64,19 @@ export async function simulerBehandling(
         method: 'POST',
     });
 }
-
+export async function lagreBrevvalg(
+    sakId: string,
+    behandlingId: string,
+    valg: Valg,
+): Promise<ApiClientResult<Søknadsbehandling>> {
+    return apiClient({
+        url: `/saker/${sakId}/behandlinger/${behandlingId}/brevvalg`,
+        method: 'POST',
+        body: {
+            valg: valg,
+        },
+    });
+}
 export async function sendTilAttestering(arg: {
     sakId: string;
     behandlingId: string;

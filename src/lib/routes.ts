@@ -131,15 +131,6 @@ export const saksoversiktValgtBehandling: Route<{
     createURL: (args) => `/saksoversikt/${args.sakId}/${args.behandlingId}/${args.meny}/`,
 };
 
-export const saksbehandlingSendTilAttestering: Route<{
-    sakId: string;
-    behandlingId: string;
-}> = {
-    path: `:behandlingId/${SaksbehandlingMenyvalg.Vedtak}/`,
-    absPath: `/saksoversikt/:sakId/:behandlingId/${SaksbehandlingMenyvalg.Vedtak}/`,
-    createURL: (args) => `/saksoversikt/${args.sakId}/${args.behandlingId}/${SaksbehandlingMenyvalg.Vedtak}/`,
-};
-
 export const saksbehandlingVilkårsvurdering: Route<{
     sakId: string;
     behandlingId: string;

@@ -319,9 +319,10 @@ const SøknadOgSøknadsbehandlingKnapper = (props: {
                         size="small"
                         href={
                             kanNavigeresTilOppsummering(props.b.søknadsbehandling)
-                                ? Routes.saksbehandlingsOppsummering.createURL({
+                                ? Routes.saksbehandlingVilkårsvurdering.createURL({
                                       sakId: props.sakId,
                                       behandlingId: props.b.søknadsbehandling.id,
+                                      vilkar: Vilkårtype.Vedtaksbrev,
                                   })
                                 : Routes.saksbehandlingVilkårsvurdering.createURL({
                                       sakId: props.sakId,

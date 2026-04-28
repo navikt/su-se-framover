@@ -9,12 +9,12 @@ import * as Routes from '~src/lib/routes';
 import Alderspensjon from '~src/pages/saksbehandling/søknadsbehandling/alderspensjon/Alderspensjon';
 import Beregning from '~src/pages/saksbehandling/søknadsbehandling/beregning/Beregning';
 import Familieforening from '~src/pages/saksbehandling/søknadsbehandling/familieforening/Familieforening';
+import SendTilAttesteringPage from '~src/pages/saksbehandling/søknadsbehandling/sendTilAttesteringPage/SendTilAttesteringPage.tsx';
 import { Sakstype } from '~src/types/Sak';
 import { Vilkårtype, VilkårtypeAlder } from '~src/types/Vilkårsvurdering';
 import { erVilkårsvurderingerVurdertAvslag } from '~src/utils/SøknadsbehandlingUtils';
 import { isAldersøknad, isUføresøknad } from '~src/utils/søknad/søknadUtils';
 import { createVilkårUrl } from '~src/utils/vilkårUtils';
-
 import Bosituasjon from '../bosituasjon/Bosituasjon';
 import FastOppholdINorge from '../fast-opphold-i-norge/FastOppholdINorge';
 import Flyktning from '../flyktning/Flyktning';
@@ -26,7 +26,6 @@ import OppholdIUtlandet from '../opphold-i-utlandet/OppholdIUtlandet';
 import PersonligOppmøte from '../personlig-oppmøte/PersonligOppmøte';
 import Uførhet from '../uførhet/Uførhet';
 import Virkningstidspunkt from '../virkningstidspunkt/Virkningstidspunkt';
-
 import styles from './vilkår.module.less';
 
 const Vilkår = () => {
@@ -51,8 +50,6 @@ const Vilkår = () => {
             sakId: sakId,
             vilkar: vilkårType,
         });
-
-    const vedtakUrl = Routes.saksbehandlingSendTilAttestering.createURL({ sakId: sakId, behandlingId: behandling.id });
 
     const saksoversiktUrl = Routes.saksoversiktValgtSak.createURL({ sakId: sakId });
 
@@ -206,7 +203,7 @@ const Vilkår = () => {
                             forrigeUrl={vilkårUrl(Vilkårtype.Formue)}
                             nesteUrl={
                                 erVilkårsvurderingerVurdertAvslag(behandling)
-                                    ? vedtakUrl
+                                    ? vilkårUrl(Vilkårtype.Vedtaksbrev)
                                     : vilkårUrl(Vilkårtype.Beregning)
                             }
                             avsluttUrl={avsluttUrl}
@@ -219,10 +216,20 @@ const Vilkår = () => {
                         <Beregning
                             behandling={behandling}
                             forrigeUrl={vilkårUrl(Vilkårtype.PersonligOppmøte)}
-                            nesteUrl={vedtakUrl}
+                            nesteUrl={vilkårUrl(Vilkårtype.Vedtaksbrev)}
                             avsluttUrl={avsluttUrl}
                             sakId={sakId}
                             søker={props.søker}
+                            tidligerePeriodeData={hentGjeldendeVedtaksdataForTidligerePeriodeStatus}
+                        />
+                    )}
+                    {vilkar === Vilkårtype.Vedtaksbrev && (
+                        <SendTilAttesteringPage
+                            behandling={behandling}
+                            forrigeUrl={vilkårUrl(Vilkårtype.Beregning)}
+                            nesteUrl={saksoversiktUrl}
+                            avsluttUrl={avsluttUrl}
+                            sakId={sakId}
                             tidligerePeriodeData={hentGjeldendeVedtaksdataForTidligerePeriodeStatus}
                         />
                     )}
