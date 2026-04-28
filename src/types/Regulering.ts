@@ -22,7 +22,6 @@ export interface Regulering {
     grunnlagsdataOgVilkårsvurderinger: GrunnlagsdataOgVilkårsvurderinger;
     avsluttet: { tidspunkt: string };
     årsakForManuell: ÅrsakForManuell[];
-    supplement: Reguleringssupplement;
     sakstype: Sakstype;
     reguleringsstatus: Reguleringsstatus;
     attesteringer: Attestering[];
@@ -132,46 +131,6 @@ export interface DifferanseEtterRegulering extends ÅrsakForManuell {
 
 export interface DelvisOpphør extends ÅrsakForManuell {
     opphørsperioder: Array<Periode<string>>;
-}
-
-export interface Reguleringssupplement {
-    bruker: Nullable<SupplementFor>;
-    eps: SupplementFor[];
-}
-
-export interface SupplementFor {
-    fnr: string;
-    fradragsperioder: Fradragsperiode[];
-    eksterneVedtaksdata: Eksterndata[];
-}
-
-export interface Fradragsperiode {
-    fradragstype: Fradragskategori;
-    vedtaksperiodeEndring: Nullable<VedtaksperiodeEndring>;
-    vedtaksperiodeRegulering: VedtaksperiodeRegulering[];
-}
-
-export interface VedtaksperiodeEndring {
-    periode: PeriodeMedOptionalTilOgMed<string>;
-    beløp: string;
-}
-
-export interface VedtaksperiodeRegulering {
-    periode: PeriodeMedOptionalTilOgMed<string>;
-    beløp: string;
-}
-
-export interface Eksterndata {
-    fnr: string;
-    sakstype: string;
-    vedtakstype: string;
-    fraOgMed: string;
-    tilOgMed: Nullable<string>;
-    bruttoYtelse: string;
-    nettoYtelse: string;
-    ytelseskomponenttype: string;
-    bruttoYtelseskomponent: string;
-    nettoYtelseskomponent: string;
 }
 
 export interface ManuellRegulering {
