@@ -65,6 +65,14 @@ spec:
       value: "https://supstonad.intern.nav.no/"
     - name: LOG_LEVEL
       value: "debug"
+    - name: APP_ENV
+      value: "prod"
+    - name: UMAMI_SCRIPT_URL
+      value: ""
+    - name: UMAMI_HOST_URL
+      value: ""
+    - name: UMAMI_WEBSITE_ID
+      value: ""
   envFrom:
     - secret: redis-password
     - secret: su-se-framover-session-key
