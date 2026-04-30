@@ -10,6 +10,7 @@ import { OpprettetSøknad } from '~src/api/søknadApi';
 import { SuccessIcon } from '~src/assets/Icons';
 import CircleWithIcon from '~src/components/circleWithIcon/CircleWithIcon';
 import * as personSlice from '~src/features/person/person.slice';
+import innsendingSlice from '~src/features/søknad/innsending.slice';
 import * as søknadslice from '~src/features/søknad/søknad.slice';
 import { pipe } from '~src/lib/fp';
 import { useI18n } from '~src/lib/i18n';
@@ -35,6 +36,7 @@ const Kvittering = () => {
     const handleAvsluttSøknad = (sakId: Nullable<string>) => {
         dispatch(personSlice.default.actions.resetSøkerData());
         dispatch(søknadslice.default.actions.resetSøknad());
+        dispatch(innsendingSlice.actions.resetInnsending());
 
         if (søknadstype === Søknadstype.Papirsøknad && sakId) {
             navigate(Routes.saksoversiktValgtSak.createURL({ sakId: sakId }));

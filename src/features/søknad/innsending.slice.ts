@@ -13,7 +13,7 @@ export const sendUføresøknad = createAsyncThunk<
     søknadApi.OpprettetSøknad,
     { søknad: UføresøknadState; søker: Person },
     { rejectValue: ApiError }
->('innsending/fetch', async ({ søknad, søker }, thunkApi) => {
+>('innsending/sendUføresøknad', async ({ søknad, søker }, thunkApi) => {
     const søknadDto = toUføreinnsending(søknad, søker.fnr);
 
     const res = await søknadApi.sendUføresøknad(søknadDto);
@@ -27,7 +27,7 @@ export const sendAldersøknad = createAsyncThunk<
     søknadApi.OpprettetSøknad,
     { søknad: AlderssøknadState; søker: Person },
     { rejectValue: ApiError }
->('innsending/fetch', async ({ søknad, søker }, thunkApi) => {
+>('innsending/sendAldersøknad', async ({ søknad, søker }, thunkApi) => {
     const søknadDto = toAldersinnsending(søknad, søker.fnr);
 
     const res = await søknadApi.sendAlderssøknad(søknadDto);
@@ -46,9 +46,22 @@ const initialState: InnsendingState = {
 export default createSlice({
     name: 'innsending',
     initialState,
-    reducers: {},
+    reducers: {
+        resetInnsending: () => initialState,
+    },
     extraReducers: (builder) => {
         handleAsyncThunk(builder, sendUføresøknad, {
+            pending: (state) => {
+                state.søknad = RemoteData.pending;
+            },
+            fulfilled: (state, action) => {
+                state.søknad = RemoteData.success(action.payload);
+            },
+            rejected: (state, action) => {
+                state.søknad = simpleRejectedActionToRemoteData(action);
+            },
+        });
+        handleAsyncThunk(builder, sendAldersøknad, {
             pending: (state) => {
                 state.søknad = RemoteData.pending;
             },

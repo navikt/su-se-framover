@@ -12,6 +12,7 @@ import { LinkAsButton } from '~src/components/linkAsButton/LinkAsButton';
 import { BekreftSøknadModal } from '~src/components/modal/BekreftSøknadModal.tsx';
 import Personsøk from '~src/components/Personsøk/Personsøk';
 import * as personSlice from '~src/features/person/person.slice';
+import innsendingSlice from '~src/features/søknad/innsending.slice';
 import søknadSlice from '~src/features/søknad/søknad.slice';
 import { pipe } from '~src/lib/fp';
 import { useApiCall, useAsyncActionCreator } from '~src/lib/hooks';
@@ -237,6 +238,7 @@ const Inngang = () => {
 
     useEffect(() => {
         dispatch(søknadSlice.actions.resetSøknad());
+        dispatch(innsendingSlice.actions.resetInnsending());
     }, [søker]);
 
     const [hentPersonStatus, hentPerson] = useAsyncActionCreator(personSlice.fetchPerson);
@@ -263,6 +265,7 @@ const Inngang = () => {
         if (!isFormValid) {
             return;
         }
+        dispatch(innsendingSlice.actions.resetInnsending());
         dispatch(søknadSlice.actions.startSøknad(isPapirsøknad ? Søknadstype.Papirsøknad : Søknadstype.DigitalSøknad));
         navigate(startstegUrl);
     };
