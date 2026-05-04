@@ -159,21 +159,6 @@ export const hentJournalposter = async (arg: { sakId: string }): Promise<ApiClie
     });
 };
 
-export const bekreftFnrEndring = async (arg: {
-    sakId: string;
-    nyttFnr: string;
-    forrigeFnr: string;
-}): Promise<ApiClientResult<Sak>> => {
-    return apiClient({
-        url: `/saker/${arg.sakId}/fødselsnummer`,
-        method: 'PUT',
-        body: {
-            nyttFnr: arg.nyttFnr,
-            forrigeFnr: arg.forrigeFnr,
-        },
-    });
-};
-
 export const hentEpsSaksIderForDenneSak = async (sakId: string): Promise<ApiClientResult<string[]>> => {
     return apiClient<string[]>({
         url: `/saker/${sakId}/epsSak`,

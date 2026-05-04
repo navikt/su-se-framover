@@ -4,7 +4,6 @@ import { Person } from '~src/types/Person';
 import { Sak, SakvarselType } from '~src/types/Sak';
 import { getSakvarsler, SakvarseltypeMedContext } from '~src/utils/SakUtils';
 
-import FnrEndringsvarsel from './fnrEndringsvarsel/FnrEndringsvarsel';
 import NyttKravgrunnlagsvarsel from './nyttKravgrunnlagsvarsel/NyttKravgrunnlagsvarsel';
 import styles from './Saksvarsler.module.less';
 
@@ -28,8 +27,6 @@ const Saksvarsler = (props: { sak: Sak; søker: Person }) => {
 
 const saksvarseltypeToComponent = (arg: { sak: Sak; søker: Person; varsel: SakvarseltypeMedContext }) => {
     switch (arg.varsel.type) {
-        case SakvarselType.FNR_ENDRING:
-            return <FnrEndringsvarsel sak={arg.sak} søker={arg.søker} />;
         case SakvarselType.NYTT_KRAVGRUNNLAG_MED_ÅPEN_TILBAKEKREVING: {
             if (!arg.varsel.context?.behandlingId) {
                 return (

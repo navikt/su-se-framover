@@ -123,22 +123,6 @@ export const annullerRegistrertUtenlandsopphold = createAsyncThunk<
     return thunkApi.rejectWithValue(res.error);
 });
 
-export const bekreftFnrEndring = createAsyncThunk<
-    Sak,
-    {
-        sakId: string;
-        nyttFnr: string;
-        forrigeFnr: string;
-    },
-    { rejectValue: ApiError }
->('sak/bekreftFnrEndring', async (arg, thunkApi) => {
-    const res = await sakApi.bekreftFnrEndring(arg);
-    if (res.status === 'ok') {
-        return res.data;
-    }
-    return thunkApi.rejectWithValue(res.error);
-});
-
 interface SakState {
     sak: RemoteData.RemoteData<ApiError, Sak>;
 }
@@ -166,10 +150,6 @@ export default createSlice({
             rejected: (state, action) => {
                 state.sak = simpleRejectedActionToRemoteData(action);
             },
-        });
-
-        builder.addCase(bekreftFnrEndring.fulfilled, (state, action) => {
-            state.sak = RemoteData.success(action.payload);
         });
 
         builder.addCase(SøknadsbehandlingActions.startBehandling.fulfilled, (state, action) => {
