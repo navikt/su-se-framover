@@ -66,7 +66,7 @@ const AttesterSøknadsbehandling = (props: { sak: Sak; søknadsbehandling: Søkn
         <div className={styles.mainContentContainer}>
             <AttesteringsForm
                 behandlingsId={props.søknadsbehandling.id}
-                redigerbartBrev={props.søknadsbehandling.brevvalg?.valg === Valg.SEND}
+                redigerbartBrev={props.søknadsbehandling.brevvalg.valg === Valg.SEND}
                 sakId={props.sak.id}
                 behandlingstype="SØKNAD"
                 iverksett={{ fn: iverksettCallback, status: iverksettStatus }}
