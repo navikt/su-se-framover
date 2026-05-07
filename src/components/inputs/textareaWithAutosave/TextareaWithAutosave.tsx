@@ -47,7 +47,7 @@ const TextareaWithAutosave = <T extends object, U extends FieldValues>(props: {
                         {...field}
                         onPaste={(e) => {
                             e.preventDefault();
-                            field.onChange(fjernOverflødigLinjeskift(e, field.value));
+                            field.onChange(fjernOverflødigLinjeskift(e, field.value ?? ''));
                         }}
                         description={
                             props.textarea.description && (
