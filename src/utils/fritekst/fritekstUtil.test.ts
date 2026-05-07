@@ -58,4 +58,14 @@ describe('fjernOverflødigLinjeskift', () => {
         const e = createMockEvent('tekst');
         expect(fjernOverflødigLinjeskift(e, '')).toBe('tekst');
     });
+
+    it('preserves line break when next line starts with single letter o', () => {
+        const e = createMockEvent('tekst\no noe annet');
+        expect(fjernOverflødigLinjeskift(e, '')).toBe('tekst\no noe annet');
+    });
+
+    it('removes line break when next line starts with a word beginning with o', () => {
+        const e = createMockEvent('tekst\nogså noe');
+        expect(fjernOverflødigLinjeskift(e, '')).toBe('tekst også noe');
+    });
 });
