@@ -6,7 +6,7 @@ import { ErrorIcon, SuccessIcon } from '~src/assets/Icons';
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
 import { ApiResult, useAutosaveOnUpdate } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
-
+import { fjernOverflødigLinjeskift } from '~src/utils/fritekst/fritekstUtil.ts';
 import styles from './TextareaWithAutosave.module.less';
 
 const messages = {
@@ -45,6 +45,10 @@ const TextareaWithAutosave = <T extends object, U extends FieldValues>(props: {
                     <Textarea
                         className={styles.textarea}
                         {...field}
+                        onPaste={(e) => {
+                            e.preventDefault();
+                            field.onChange(fjernOverflødigLinjeskift(e, field.value ?? ''));
+                        }}
                         description={
                             props.textarea.description && (
                                 <div className={styles.textareaLabel}>
