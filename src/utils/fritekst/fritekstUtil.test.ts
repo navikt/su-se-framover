@@ -19,9 +19,14 @@ describe('fjernOverflødigLinjeskift', () => {
         expect(fjernOverflødigLinjeskift(e, '')).toBe('hello world');
     });
 
-    it('collapses more than two consecutive line breaks to two, then removes single break before lowercase', () => {
+    it('collapses more than two consecutive line breaks to two and preserves them', () => {
         const e = createMockEvent('a\n\n\n\nb');
-        expect(fjernOverflødigLinjeskift(e, '')).toBe('a \nb');
+        expect(fjernOverflødigLinjeskift(e, '')).toBe('a\n\nb');
+    });
+
+    it('preserves exactly two consecutive line breaks', () => {
+        const e = createMockEvent('a\n\nb');
+        expect(fjernOverflødigLinjeskift(e, '')).toBe('a\n\nb');
     });
 
     it('preserves line break between period and uppercase letter', () => {
@@ -51,7 +56,7 @@ describe('fjernOverflødigLinjeskift', () => {
 
     it('handles \\r\\n line endings by normalizing to \\n', () => {
         const e = createMockEvent('a\r\n\r\n\r\nb');
-        expect(fjernOverflødigLinjeskift(e, '')).toBe('a \nb');
+        expect(fjernOverflødigLinjeskift(e, '')).toBe('a\n\nb');
     });
 
     it('handles null-like empty value gracefully', () => {

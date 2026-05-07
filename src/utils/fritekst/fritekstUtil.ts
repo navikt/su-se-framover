@@ -9,8 +9,8 @@ export function fjernOverflødigLinjeskift(e: ClipboardEvent<HTMLTextAreaElement
     const paste = e.clipboardData
         .getData('text')
         .replace(/\r\n?/g, '\n')
-        .replace(/\n{2,}/g, '\n\n')
-        .replace(/([^.])\n(?!o\s|o$)(?=[^A-ZÆØÅ])/g, '$1 ');
+        .replace(/\n{3,}/g, '\n\n')
+        .replace(/([^.\n])\n(?!\n)(?!o\s|o$)(?=[^A-ZÆØÅ])/g, '$1 ');
 
     const target = e.currentTarget;
     const start = target.selectionStart;
