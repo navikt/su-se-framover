@@ -14,62 +14,62 @@ function createMockEvent(pasteText: string, selectionStart = 0, selectionEnd = 0
 }
 
 describe('fjernOverflødigLinjeskift', () => {
-    it('returns pasted text as-is when no excessive line breaks', () => {
+    it('returnerer limt tekst uendret når det ikke er overflødige linjeskift', () => {
         const e = createMockEvent('hello world');
         expect(fjernOverflødigLinjeskift(e, '')).toBe('hello world');
     });
 
-    it('collapses more than two consecutive line breaks to two and preserves them', () => {
+    it('kollapser mer enn to påfølgende linjeskift til to og beholder dem', () => {
         const e = createMockEvent('a\n\n\n\nb');
         expect(fjernOverflødigLinjeskift(e, '')).toBe('a\n\nb');
     });
 
-    it('preserves exactly two consecutive line breaks', () => {
+    it('beholder nøyaktig to påfølgende linjeskift', () => {
         const e = createMockEvent('a\n\nb');
         expect(fjernOverflødigLinjeskift(e, '')).toBe('a\n\nb');
     });
 
-    it('preserves line break between period and uppercase letter', () => {
+    it('beholder linjeskift mellom punktum og stor bokstav', () => {
         const e = createMockEvent('Setning.\nNy setning');
         expect(fjernOverflødigLinjeskift(e, '')).toBe('Setning.\nNy setning');
     });
 
-    it('removes single line break when previous char is not period and next is lowercase', () => {
+    it('fjerner enkelt linjeskift når forrige tegn ikke er punktum og neste er liten bokstav', () => {
         const e = createMockEvent('dette er\nen test');
         expect(fjernOverflødigLinjeskift(e, '')).toBe('dette er en test');
     });
 
-    it('preserves line break before Norwegian uppercase letters (Æ, Ø, Å)', () => {
+    it('beholder linjeskift før norske store bokstaver (Æ, Ø, Å)', () => {
         const e = createMockEvent('hei.\nØvrig tekst');
         expect(fjernOverflødigLinjeskift(e, '')).toBe('hei.\nØvrig tekst');
     });
 
-    it('inserts pasted text at cursor position in existing value', () => {
+    it('setter inn limt tekst ved markørposisjon i eksisterende verdi', () => {
         const e = createMockEvent('world', 5, 5);
         expect(fjernOverflødigLinjeskift(e, 'hello there')).toBe('helloworld there');
     });
 
-    it('replaces selected text with pasted text', () => {
+    it('erstatter markert tekst med limt tekst', () => {
         const e = createMockEvent('new', 0, 3);
         expect(fjernOverflødigLinjeskift(e, 'old text')).toBe('new text');
     });
 
-    it('handles \\r\\n line endings by normalizing to \\n', () => {
+    it('håndterer \\r\\n linjeskift ved å normalisere til \\n', () => {
         const e = createMockEvent('a\r\n\r\n\r\nb');
         expect(fjernOverflødigLinjeskift(e, '')).toBe('a\n\nb');
     });
 
-    it('handles null-like empty value gracefully', () => {
+    it('håndterer tom verdi', () => {
         const e = createMockEvent('tekst');
         expect(fjernOverflødigLinjeskift(e, '')).toBe('tekst');
     });
 
-    it('preserves line break when next line starts with single letter o', () => {
+    it('beholder linjeskift når neste linje starter med enkeltbokstaven o', () => {
         const e = createMockEvent('tekst\no noe annet');
         expect(fjernOverflødigLinjeskift(e, '')).toBe('tekst\no noe annet');
     });
 
-    it('removes line break when next line starts with a word beginning with o', () => {
+    it('fjerner linjeskift når neste linje starter med et ord som begynner med o', () => {
         const e = createMockEvent('tekst\nogså noe');
         expect(fjernOverflødigLinjeskift(e, '')).toBe('tekst også noe');
     });
