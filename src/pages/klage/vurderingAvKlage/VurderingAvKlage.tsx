@@ -36,10 +36,9 @@ import yup from '~src/lib/validering';
 import { MottakerForm } from '~src/pages/saksbehandling/mottaker/Mottaker.tsx';
 import { KabalVedtakHjemmel, Klage, KlageStatus, KlageSteg, KlageVurderingType } from '~src/types/Klage';
 import { OmgjøringsGrunn } from '~src/types/Revurdering';
+import { fjernOverflødigLinjeskift } from '~src/utils/fritekst/fritekstUtil.ts';
 import { erKlageVurdert, erKlageVurdertBekreftet } from '~src/utils/klage/klageUtils';
-
 import sharedStyles from '../klage.module.less';
-
 import messages from './VurderingAvKlage-nb';
 import styles from './vurderingAvKlage.module.less';
 
@@ -385,6 +384,10 @@ const VurderingAvKlage = (props: { sakId: string; klage: Klage }) => {
                                         render={({ field, fieldState }) => (
                                             <Textarea
                                                 {...field}
+                                                onPaste={(e) => {
+                                                    e.preventDefault();
+                                                    field.onChange(fjernOverflødigLinjeskift(e, field.value ?? ''));
+                                                }}
                                                 minRows={5}
                                                 label={
                                                     <div className={styles.fritekstLabelOgHjelpeTekstContainer}>
