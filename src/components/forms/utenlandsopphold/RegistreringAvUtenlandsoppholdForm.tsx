@@ -56,7 +56,7 @@ const RegistreringAvUtenlandsoppholdForm = (props: {
         setAntallDagerIUtlandet(dager);
 
         setNittidagersdag(
-            dager >= 90 && watched.periode.fraOgMed ? DateFns.addDays(watched.periode.fraOgMed, 91) : null,
+            dager > 90 && watched.periode.fraOgMed ? DateFns.addDays(watched.periode.fraOgMed, 91) : null,
         );
     }, [watched.periode.fraOgMed, watched.periode.tilOgMed]);
 
