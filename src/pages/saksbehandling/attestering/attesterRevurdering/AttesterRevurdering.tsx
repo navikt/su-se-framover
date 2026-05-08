@@ -123,7 +123,7 @@ const AttesterRevurdering = (props: {
                 <div className={styles.mainContentContainer}>
                     <AttesteringsForm
                         behandlingsId={props.revurdering.id}
-                        redigerbartBrev={true}
+                        redigerbartBrev={props.revurdering.brevvalg.valg === Valg.SEND}
                         sakId={props.sakInfo.id}
                         behandlingstype="REVURDERING"
                         iverksett={{ fn: iverksettCallback, status: iverksettStatus }}
