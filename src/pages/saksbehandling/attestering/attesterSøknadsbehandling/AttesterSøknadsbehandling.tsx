@@ -11,6 +11,7 @@ import * as Routes from '~src/lib/routes';
 import { UnderkjennelseGrunn, UnderkjennelseGrunnBehandling } from '~src/types/Behandling';
 import { Sak } from '~src/types/Sak';
 import { Søknadsbehandling } from '~src/types/Søknadsbehandling';
+import { Valg } from '~src/types/Søknadsbehandling.ts';
 import { erIverksatt, erTilAttestering } from '~src/utils/SøknadsbehandlingUtils';
 import styles from './attesterSøknadsbehandling.module.less';
 import messages from './attesterSøknadsbehandling-nb';
@@ -65,7 +66,7 @@ const AttesterSøknadsbehandling = (props: { sak: Sak; søknadsbehandling: Søkn
         <div className={styles.mainContentContainer}>
             <AttesteringsForm
                 behandlingsId={props.søknadsbehandling.id}
-                redigerbartBrev={true}
+                redigerbartBrev={props.søknadsbehandling.brevvalg.valg === Valg.SEND}
                 sakId={props.sak.id}
                 behandlingstype="SØKNAD"
                 iverksett={{ fn: iverksettCallback, status: iverksettStatus }}
