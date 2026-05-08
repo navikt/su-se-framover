@@ -140,12 +140,21 @@ const DryRunPanel = () => {
     const [ikrafttredelse, setIkrafttredelse] = useState<Nullable<Date>>(null);
     const [gverdiDryRun, setGVerdiDryRun] = useState<Nullable<number>>(null);
     const [omregningsfaktor, setOmregningsfaktor] = useState<Nullable<string>>(null);
+    const [gpensjonOrdinærDryRun, setGpensjonOrdinærDryRun] = useState<Nullable<number>>(null);
+    const [gpensjonHøyDryRun, setGpensjonHøyDryRun] = useState<Nullable<number>>(null);
     const [maksAntallSaker, setMaksAntallSaker] = useState<Nullable<number>>(null);
     const [kunSakstype, setKunSakstype] = useState<Nullable<Sakstype>>(null);
 
     const handleSubmit = () => {
         if (nyGrunnbeløp) {
-            if (virkningstidspunkt && gverdiDryRun && omregningsfaktor && gjeldendeSatsFra) {
+            if (
+                virkningstidspunkt &&
+                gverdiDryRun &&
+                omregningsfaktor &&
+                gjeldendeSatsFra &&
+                gpensjonOrdinærDryRun &&
+                gpensjonHøyDryRun
+            ) {
                 dryRun({
                     startDatoRegulering: toIsoMonthOrNull(startDatoRgulering)!,
                     gjeldendeSatsFraOgMed: toIsoDateOnlyString(gjeldendeSatsFra!),
@@ -154,6 +163,8 @@ const DryRunPanel = () => {
                         ikrafttredelse: toStringDateOrNull(ikrafttredelse),
                         grunnbeløp: gverdiDryRun.toString(),
                         omregningsfaktor: omregningsfaktor,
+                        garantipensjonOrdinær: gpensjonOrdinærDryRun.toString(),
+                        garantipensjonHøy: gpensjonHøyDryRun.toString(),
                     },
                     lagreManuelle: lagreManuelle,
                     kunSakstype: kunSakstype,
@@ -216,6 +227,14 @@ const DryRunPanel = () => {
                                     </div>
                                 }
                                 onChange={(v) => setOmregningsfaktor(v.target.value)}
+                            />
+                            <TextField
+                                label="Garantipensjon ordinær"
+                                onChange={(v) => setGpensjonOrdinærDryRun(Number(v.target.value))}
+                            />
+                            <TextField
+                                label="Garantipensjon høy"
+                                onChange={(v) => setGpensjonHøyDryRun(Number(v.target.value))}
                             />
                         </div>
                     )}
