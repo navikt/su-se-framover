@@ -80,9 +80,9 @@ const RegistreringAvUtenlandsoppholdForm = (props: {
                         )}
                     />
                     {!nittidagersdag && (
-                        <div className={styles.antallDagerTeller}>
-                            <Heading size="large">{antallDagerIUtlandet}</Heading>
-                        </div>
+                        <Heading className={styles.antallDagerTeller} size="large">
+                            {antallDagerIUtlandet}
+                        </Heading>
                     )}
                     {nittidagersdag && watched.periode.tilOgMed && (
                         <div className={styles.antallDagerTellerOverNitti}>
