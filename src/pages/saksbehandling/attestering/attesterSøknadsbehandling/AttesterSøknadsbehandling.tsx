@@ -2,6 +2,11 @@ import { Alert } from '@navikt/ds-react';
 import { Link, useNavigate } from 'react-router-dom';
 
 import { AttesteringsForm } from '~src/components/forms/attesteringForm/AttesteringsForm';
+import { OppsummeringPar } from '~src/components/oppsummering/oppsummeringpar/OppsummeringPar.tsx';
+import Oppsummeringspanel, {
+    Oppsummeringsfarge,
+    Oppsummeringsikon,
+} from '~src/components/oppsummering/oppsummeringspanel/Oppsummeringspanel.tsx';
 import OppsummeringAvSøknadsbehandling from '~src/components/oppsummering/søknadsbehandlingoppsummering/OppsummeringAvSøknadsbehandling';
 import * as SøknadsbehandlingActions from '~src/features/SøknadsbehandlingActions';
 import * as sakSlice from '~src/features/saksoversikt/sak.slice';
@@ -76,7 +81,25 @@ const AttesterSøknadsbehandling = (props: { sak: Sak; søknadsbehandling: Søkn
                     underkjennelsesgrunner: Object.values(UnderkjennelseGrunnBehandling),
                 }}
             />
-            <OppsummeringAvSøknadsbehandling behandling={props.søknadsbehandling} />
+            <div className={styles.panelerContainer}>
+                <div className={styles.oppsummeringContainer}>
+                    <OppsummeringAvSøknadsbehandling behandling={props.søknadsbehandling} />
+                </div>
+
+                <Oppsummeringspanel
+                    ikon={Oppsummeringsikon.Email}
+                    farge={Oppsummeringsfarge.Limegrønn}
+                    tittel={formatMessage('oppsummeringspanel.Vedtaksbrev')}
+                >
+                    <div className={styles.brevvalgContainer}>
+                        <OppsummeringPar
+                            label={formatMessage('brevvalg.skalSendeBrev')}
+                            verdi={formatMessage(props.søknadsbehandling.brevvalg.valg)}
+                            retning={'vertikal'}
+                        />
+                    </div>
+                </Oppsummeringspanel>
+            </div>
         </div>
     );
 };
