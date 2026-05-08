@@ -73,4 +73,14 @@ describe('fjernOverflødigLinjeskift', () => {
         const e = createMockEvent('tekst\nogså noe');
         expect(fjernOverflødigLinjeskift(e, '')).toBe('tekst også noe');
     });
+
+    it('beholder linjeskift når neste linje starter med bindestrek', () => {
+        const e = createMockEvent('tekst\n- punkt 1');
+        expect(fjernOverflødigLinjeskift(e, '')).toBe('tekst\n- punkt 1');
+    });
+
+    it('fjerner linjeskift når neste linje starter med et ord som begynner med bindestrek', () => {
+        const e = createMockEvent('tekst\n-sammensatt');
+        expect(fjernOverflødigLinjeskift(e, '')).toBe('tekst -sammensatt');
+    });
 });
