@@ -37,6 +37,7 @@ const RegistreringAvUtenlandsoppholdForm = (props: {
 }) => {
     const { formatMessage } = useI18n({ messages });
     const [antallDagerIUtlandet, setAntallDagerIUtlandet] = useState<number>(0);
+    const [nittidagersdag, setNittidagersdag] = useState<Date | null>(null);
 
     const { control, handleSubmit, watch, formState, setValue, reset } = useForm<RegisteringAvUtenlandsoppholdFormData>(
         {
@@ -50,8 +51,12 @@ const RegistreringAvUtenlandsoppholdForm = (props: {
         const antallDagerIUtlandetMinusUtreiseOgInnreiseDato =
             DateFns.differenceInCalendarDays(watched.periode.tilOgMed ?? 0, watched.periode.fraOgMed ?? 0) - 1;
 
-        setAntallDagerIUtlandet(
-            antallDagerIUtlandetMinusUtreiseOgInnreiseDato < 0 ? 0 : antallDagerIUtlandetMinusUtreiseOgInnreiseDato,
+        const dager =
+            antallDagerIUtlandetMinusUtreiseOgInnreiseDato < 0 ? 0 : antallDagerIUtlandetMinusUtreiseOgInnreiseDato;
+        setAntallDagerIUtlandet(dager);
+
+        setNittidagersdag(
+            dager > 90 && watched.periode.fraOgMed ? DateFns.addDays(watched.periode.fraOgMed, 91) : null,
         );
     }, [watched.periode.fraOgMed, watched.periode.tilOgMed]);
 
@@ -74,9 +79,19 @@ const RegistreringAvUtenlandsoppholdForm = (props: {
                             />
                         )}
                     />
-                    <Heading className={styles.antallDagerTeller} size="large">
-                        {antallDagerIUtlandet}
-                    </Heading>
+                    {!nittidagersdag && (
+                        <Heading className={styles.antallDagerTeller} size="large">
+                            {antallDagerIUtlandet}
+                        </Heading>
+                    )}
+                    {nittidagersdag && watched.periode.tilOgMed && (
+                        <div className={styles.antallDagerTellerOverNitti}>
+                            <Heading size="small">
+                                {antallDagerIUtlandet} - {DateFns.format(watched.periode.tilOgMed, 'dd.MM.yyyy')}
+                            </Heading>
+                            <Heading size={'small'}>90 - {DateFns.format(nittidagersdag, 'dd.MM.yyyy')}</Heading>
+                        </div>
+                    )}
                 </div>
 
                 <Controller
