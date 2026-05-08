@@ -2,9 +2,9 @@ import type { ClipboardEvent } from 'react';
 
 /*
  Fjerner linjeskift når:
-  1. Er flere enn to linjer
+  1. Det er mer enn to påfølgende linjeskift (kollapser 3+ til 2)
   2. Ikke er mellom punktum og stor forbokstav (fører til linjeskift midt i kolonne).
-      Unntak hvis linjeskift er før en enkel bokstav o eller -. De benyttes som punktliste i enkelte tekstfnutter fra Infotrygd
+      Unntak hvis linjeskift er før en enkel bokstav o eller tegnet -. Det benyttes som punktliste i enkelte tekstsnutter fra Infotrygd
 */
 export function fjernOverflødigLinjeskift(e: ClipboardEvent<HTMLTextAreaElement>, value: string): string {
     const paste = e.clipboardData
