@@ -1,6 +1,6 @@
 import { yupResolver } from '@hookform/resolvers/yup';
 import { TrashIcon } from '@navikt/aksel-icons';
-import { Button, Heading, Select, Textarea, TextField } from '@navikt/ds-react';
+import { Button, Heading, HelpText, Select, Textarea, TextField } from '@navikt/ds-react';
 import * as DateFns from 'date-fns';
 import { ReactNode, useEffect, useState } from 'react';
 import { Control, Controller, UseFormReset, UseFormSetValue, useFieldArray, useForm } from 'react-hook-form';
@@ -79,19 +79,27 @@ const RegistreringAvUtenlandsoppholdForm = (props: {
                             />
                         )}
                     />
-                    {!nittidagersdag && (
-                        <Heading className={styles.antallDagerTeller} size="large">
-                            {antallDagerIUtlandet}
-                        </Heading>
-                    )}
-                    {nittidagersdag && watched.periode.tilOgMed && (
-                        <div className={styles.antallDagerTellerOverNitti}>
-                            <Heading size="small">
-                                {antallDagerIUtlandet} - {DateFns.format(watched.periode.tilOgMed, 'dd.MM.yyyy')}
+                    <div>
+                        <HelpText>
+                            Utreisedag og innreisedag regnes som opphold i Norge, og derfor skal disse dagene holdes
+                            utenfor når en beregner utenlandsopphold. Eksempel: Bruker oppholder seg i utlandet i
+                            perioden 01.05.2026-15.08.2026. Utenlandsoppholdet beregnes da til 90 dager 31.07.2026, og
+                            overstiger 90 dager 01.08.2026.
+                        </HelpText>
+                        {!nittidagersdag && (
+                            <Heading className={styles.antallDagerTeller} size="large">
+                                {antallDagerIUtlandet}
                             </Heading>
-                            <Heading size={'small'}>90 - {DateFns.format(nittidagersdag, 'dd.MM.yyyy')}</Heading>
-                        </div>
-                    )}
+                        )}
+                        {nittidagersdag && watched.periode.tilOgMed && (
+                            <div className={styles.antallDagerTellerOverNitti}>
+                                <Heading size="small">
+                                    {antallDagerIUtlandet} - {DateFns.format(watched.periode.tilOgMed, 'dd.MM.yyyy')}
+                                </Heading>
+                                <Heading size={'small'}>90 - {DateFns.format(nittidagersdag, 'dd.MM.yyyy')}</Heading>
+                            </div>
+                        )}
+                    </div>
                 </div>
 
                 <Controller
