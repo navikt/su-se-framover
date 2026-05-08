@@ -30,6 +30,8 @@ export async function dryRunRegulering(args: {
         ikrafttredelse: Nullable<string>;
         grunnbeløp: string;
         omregningsfaktor: string;
+        garantipensjonOrdinær: string;
+        garantipensjonHøy: string;
     }>;
     lagreManuelle: boolean;
     maksAntallSaker: Nullable<number>;
@@ -63,6 +65,8 @@ export async function dryRunRegulering(args: {
                     ikrafttredelse: args.nyttGrunnbeløp.ikrafttredelse,
                     grunnbeløp: args.nyttGrunnbeløp.grunnbeløp,
                     omregningsfaktor: args.nyttGrunnbeløp.omregningsfaktor,
+                    garantipensjonOrdinær: args.nyttGrunnbeløp.garantipensjonOrdinær,
+                    garantipensjonHøy: args.nyttGrunnbeløp.garantipensjonHøy,
                 },
                 lagreManuelle: args.lagreManuelle,
                 maksAntallSaker: args.maksAntallSaker,
