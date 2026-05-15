@@ -12,7 +12,9 @@ async function setupFrontendConfig() {
     try {
         const frontendConfig = await fetchFrontendConfig();
         Store.dispatch(frontendConfigSlice.actions.setFrontendConfig(frontendConfig));
-    } catch (_error) {
+    } catch (error) {
+        // eslint-disable-next-line no-console
+        console.error('Klarte ikke å hente /frontend-config, faller tilbake til environment "unknown".', error);
         Store.dispatch(
             frontendConfigSlice.actions.setFrontendConfig({
                 environment: 'unknown',
