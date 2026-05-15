@@ -67,6 +67,9 @@ spec:
       value: "debug"
     - name: APP_ENV
       value: "prod"
+    # Umami-sporing er midlertidig deaktivert i prod inntil personvernvurdering er ferdig.
+    # Tomme verdier gjør at server returnerer umami=undefined fra /frontend-config,
+    # og <UmamiTracker /> rendrer ingenting.
     - name: UMAMI_SCRIPT_URL
       value: ""
     - name: UMAMI_HOST_URL

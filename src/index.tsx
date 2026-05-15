@@ -3,7 +3,6 @@ import { createRoot } from 'react-dom/client';
 import { fetchFrontendConfig } from '~src/api/frontendConfigApi';
 import frontendConfigSlice from '~src/features/frontendConfig/frontendConfig.slice';
 import Store from '~src/redux/Store';
-import { initUmami } from '~src/utils/umami';
 
 import polyfill from './polyfills';
 import Root from './Root';
@@ -25,7 +24,6 @@ async function setupFrontendConfig() {
 
 polyfill().then(async () => {
     await setupFrontendConfig();
-    initUmami();
 
     const container: HTMLElement | null = document.getElementById('root');
 
