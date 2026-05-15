@@ -9,12 +9,7 @@ const UmamiTracker = () => {
 
     return (
         <Head>
-            <script
-                defer
-                src={umamiConfig.scriptUrl}
-                data-host-url={umamiConfig.hostUrl}
-                data-website-id={umamiConfig.websiteId}
-            />
+            <script defer src={umamiConfig.scriptUrl} data-website-id={umamiConfig.websiteId} />
         </Head>
     );
 };

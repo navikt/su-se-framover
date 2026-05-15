@@ -69,8 +69,6 @@ spec:
       value: "prod"
     - name: UMAMI_SCRIPT_URL
       value: "https://cdn.nav.no/team-researchops/sporing/sporing.js"
-    - name: UMAMI_HOST_URL
-      value: "https://reops-event-proxy.nav.no"
     - name: UMAMI_WEBSITE_ID
       value: "15137b6d-7eed-44f5-aad3-f5f6ed3efa3c"
   envFrom:

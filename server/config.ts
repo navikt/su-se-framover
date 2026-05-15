@@ -63,7 +63,6 @@ export const frontend = {
     environment: envVar({ name: 'APP_ENV', defaultValue: { dev: 'local', prod: 'production' } }),
     umami: {
         scriptUrl: optionalEnvVar('UMAMI_SCRIPT_URL'),
-        hostUrl: optionalEnvVar('UMAMI_HOST_URL'),
         websiteId: optionalEnvVar('UMAMI_WEBSITE_ID'),
     },
 };

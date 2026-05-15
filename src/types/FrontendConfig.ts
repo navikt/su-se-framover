@@ -1,6 +1,5 @@
 export interface UmamiConfig {
     scriptUrl: string;
-    hostUrl: string;
     websiteId: string;
 }
 

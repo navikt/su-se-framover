@@ -8,10 +8,9 @@ async function setup() {
     router.get('/frontend-config', (_req, res) => {
         const umami = Config.frontend.umami;
         const umamiConfig =
-            umami.scriptUrl && umami.hostUrl && umami.websiteId
+            umami.scriptUrl && umami.websiteId
                 ? {
                       scriptUrl: umami.scriptUrl,
-                      hostUrl: umami.hostUrl,
                       websiteId: umami.websiteId,
                   }
                 : undefined;
