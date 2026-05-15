@@ -106,7 +106,6 @@ updates:
       open-pull-requests-limit: 5
       cooldown:
           default-days: 7
-          semver-major-days: 30
     - package-ecosystem: 'docker'
       directory: '/'
       schedule:
@@ -114,4 +113,3 @@ updates:
       open-pull-requests-limit: 5
       cooldown:
           default-days: 7
-          semver-major-days: 30
