@@ -10,7 +10,21 @@ Kjør `get_started.sh`
 
 ```sh
 $ cp .env.template .env # for å sette opp lokale miljøvariabler
-$ npm install # installerer avhengigheter
+$ npm install # installerer avhengigheter for frontend
+$ npm install --prefix server # installerer avhengigheter for server (BFF)
+$ npm run prepare # installerer Husky git hooks (pre-commit, pre-push)
+# eventuelt: npm run install:all (kjører alle tre over)
+```
+
+### Hvorfor `npm run prepare` som eget steg?
+
+`.npmrc` har `ignore-scripts=true` for å beskytte mot ondsinnede lifecycle-skript i tredjeparts pakker (supply chain-angrep).
+Dette skrur også av våre egne lifecycle-skript, inkludert `prepare` som installerer Husky git hooks.
+Derfor må `npm run prepare` kjøres eksplisitt etter install (det er ikke et lifecycle-skript når det kalles direkte, så `ignore-scripts` påvirker det ikke).
+
+Trenger du å kjøre install-skript for en spesifikk pakke (f.eks. native bindings), kan du midlertidig overstyre med:
+```sh
+$ npm install --ignore-scripts=false
 ```
 
 # Moduler release age
