@@ -2,3 +2,4 @@
 git config core.quotePath false
 npm install
 cd server && npm install && cd ..
+npm run prepare
