@@ -67,15 +67,12 @@ spec:
       value: "debug"
     - name: APP_ENV
       value: "prod"
-    # Umami-sporing er midlertidig deaktivert i prod inntil personvernvurdering er ferdig.
-    # Tomme verdier gjør at server returnerer umami=undefined fra /frontend-config,
-    # og <UmamiTracker /> rendrer ingenting.
     - name: UMAMI_SCRIPT_URL
-      value: ""
+      value: "https://cdn.nav.no/team-researchops/sporing/sporing.js"
     - name: UMAMI_HOST_URL
-      value: ""
+      value: "https://reops-event-proxy.nav.no"
     - name: UMAMI_WEBSITE_ID
-      value: ""
+      value: "15137b6d-7eed-44f5-aad3-f5f6ed3efa3c"
   envFrom:
     - secret: redis-password
     - secret: su-se-framover-session-key
