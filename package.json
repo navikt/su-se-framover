@@ -13,7 +13,7 @@
     "eslint-fix": "biome check --write",
     "lint": "biome check",
     "preview": "vite preview",
-    "postinstall": "cd server && npm ci",
+    "install:all": "npm ci && npm ci --prefix server",
     "start": "NODE_ENV=development nodemon && vite",
     "test": "jest --passWithNoTests",
     "build": "vite build",
@@ -27,7 +27,7 @@
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx,md,html,css,less}": [
-      "biome check"
+      "biome check --no-errors-on-unmatched"
     ]
   },
   "repository": {

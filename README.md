@@ -10,7 +10,9 @@ Kjør `get_started.sh`
 
 ```sh
 $ cp .env.template .env # for å sette opp lokale miljøvariabler
-$ npm install # installerer avhengigheter
+$ npm install # installerer avhengigheter for frontend
+$ npm install --prefix server # installerer avhengigheter for server (BFF)
+# eventuelt: npm run install:all (kjører begge over)
 ```
 
 # Moduler release age
