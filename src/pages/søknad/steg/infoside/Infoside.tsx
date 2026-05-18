@@ -24,7 +24,7 @@ const Infoside = () => {
     const suUførFlyktningLink = 'https://www.nav.no/soknader/nb/person/pensjon/supplerende-stonad-til-ufor-flyktning';
     const merOmSuForUføreLink =
         'https://www.nav.no/no/person/pensjon/andre-pensjonsordninger/supplerende-stonad-for-ufore-flyktninger';
-    const personvernLink = 'https://www.nav.no/no/nav-og-samfunn/om-nav/personvern-i-arbeids-og-velferdsetaten';
+    const personvernLink = 'https://www.nav.no/personvern';
 
     const { formatMessage } = useI18n({ messages });
 
