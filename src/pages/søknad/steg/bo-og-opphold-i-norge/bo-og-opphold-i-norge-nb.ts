@@ -16,6 +16,8 @@ export default {
     'innlagtPåInstitusjon.fortsattInnlagt': 'Er fortsatt innlagt på institusjon',
 
     'delerBoligMed.delerBoligMedPersonOver18': 'Deler du bolig med noen over 18 år?',
+    'delerBoligMed.hjelpetekst':
+        'Har du ektefelle eller samboer overgår dette det andre. Klikk derfor på dette alternativet',
     'delerBoligMed.delerMedHvem': 'Hvem deler du bolig med?',
     'delerBoligMed.eps': 'Ektefelle eller samboer',
     'delerBoligMed.voksneBarn': 'Voksne barn',
@@ -26,6 +28,8 @@ export default {
     'adresse.registrerteAdresser': 'Her er adressene vi finner som er registrert på deg. Velg den du bor på.',
     'adresse.ingenAdresse.borPåAnnenAdresse': 'Bor på en annen adresse',
     'adresse.ingenAdresse.borPåAnnenAdresse.advarsel':
-        'Hvis du ikke bor på noen av disse adressene, må du oppdatere adressen i Folkeregisteret.',
+        'Hvis adressen over er feil, må du melde om endring til Folkeregisteret. Nav bruker kun adressen som er registrert der.',
     'adresse.ingenAdresse.harIkkeFastBosted': 'Har ikke fast bosted',
+    'adresse.ingenAdresse.harIkkeFastBosted.advarsel':
+        'Hvis du ikke har fast bosted må du dokumentere hvilken norsk adresse du oppholder deg på.',
 };

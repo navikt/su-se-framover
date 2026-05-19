@@ -191,6 +191,7 @@ const BoOgOppholdINorge = (props: { forrigeUrl: string; nesteUrl: string; avbryt
                                 {...field}
                                 error={fieldState.error?.message}
                                 legend={formatMessage('delerBoligMed.delerMedHvem')}
+                                description={formatMessage('delerBoligMed.hjelpetekst')}
                                 defaultValue={field.value?.toString()}
                                 onChange={(value: DelerBoligMed) => {
                                     field.onChange(value);
@@ -282,6 +283,11 @@ const BoOgOppholdINorge = (props: { forrigeUrl: string; nesteUrl: string; avbryt
                             {form.watch('ingenAdresseGrunn') === IngenAdresseGrunn.BOR_PÅ_ANNEN_ADRESSE && (
                                 <Alert variant="warning">
                                     {formatMessage('adresse.ingenAdresse.borPåAnnenAdresse.advarsel')}
+                                </Alert>
+                            )}
+                            {form.watch('ingenAdresseGrunn') === IngenAdresseGrunn.HAR_IKKE_FAST_BOSTED && (
+                                <Alert variant="warning">
+                                    {formatMessage('adresse.ingenAdresse.harIkkeFastBosted.advarsel')}
                                 </Alert>
                             )}
                         </>

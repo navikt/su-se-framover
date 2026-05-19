@@ -36,8 +36,10 @@ jobs:
               run: |
                 npm i -g npm@11.10.0
                 npm -v
-            - name: install-deps-client-and-server
-              run: npm ci --min-release-age 20
+            - name: install-deps-client
+              run: npm ci --min-release-age 20 --ignore-scripts
+            - name: install-deps-server
+              run: npm ci --min-release-age 20 --ignore-scripts --prefix server
             - name: lint-and-typecheck
               run: npm run lint-and-typecheck
             - name: build-client
@@ -47,7 +49,7 @@ jobs:
               run: npm run build
             - name: docker-login
               if: github.event_name == 'workflow_dispatch' || github.ref == 'refs/heads/master'
-              uses: docker/login-action@v3
+              uses: docker/login-action@v4
               with:
                   registry: ghcr.io
                   username: ${{ github.repository }}

@@ -1,23 +1,9 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import {
-    Alert,
-    Button,
-    Checkbox,
-    GuidePanel,
-    HelpText,
-    Loader,
-    Modal,
-    Radio,
-    RadioGroup,
-    Tabs,
-    TextField,
-} from '@navikt/ds-react';
-import { useEffect, useState } from 'react';
-import * as reguleringApi from '~src/api/reguleringApi';
+import { Alert, Button, Checkbox, HelpText, Modal, Radio, RadioGroup, Tabs, TextField } from '@navikt/ds-react';
+import { useState } from 'react';
 import { dryRunRegulering, startRegulering } from '~src/api/reguleringApi';
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
 import { DatePicker, MonthPicker } from '~src/components/inputs/datePicker/DatePicker';
-import { pipe } from '~src/lib/fp';
 import { useApiCall } from '~src/lib/hooks';
 import { Nullable } from '~src/lib/types';
 import { Sakstype } from '~src/types/Sak.ts';
@@ -45,12 +31,6 @@ const Gregulering = () => {
 };
 
 const GReguleringsModal = (props: { visModal: boolean; onClose: () => void }) => {
-    const [hentÅpneBehandlingerStatus, hentÅpneBehandlinger] = useApiCall(reguleringApi.hentSakerMedÅpneBehandlinger);
-
-    useEffect(() => {
-        hentÅpneBehandlinger({});
-    }, []);
-
     return (
         <Modal
             aria-labelledby="Start regulering"
@@ -59,26 +39,6 @@ const GReguleringsModal = (props: { visModal: boolean; onClose: () => void }) =>
             header={{ heading: 'G-regulering' }}
         >
             <Modal.Body className={styles.modalBody}>
-                <GuidePanel className={styles.guidePanel}>
-                    {pipe(
-                        hentÅpneBehandlingerStatus,
-                        RemoteData.fold(
-                            () => <Loader />,
-                            () => <Loader />,
-                            () => <Alert variant="error">En feil skjedde under henting av åpne behandlinger</Alert>,
-                            (saksnummer) => {
-                                return (
-                                    <>
-                                        <p>Antall saker med åpen behandling eller stans: {saksnummer.length}</p>
-                                        <br />
-                                        <p>{saksnummer.sort().join(', ')}</p>
-                                    </>
-                                );
-                            },
-                        ),
-                    )}
-                </GuidePanel>
-
                 <Tabs defaultValue="dry-run">
                     <Tabs.List>
                         <Tabs.Tab value="dry-run" label="Dry-run" />
