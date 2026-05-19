@@ -13,7 +13,7 @@
     "eslint-fix": "biome check --write",
     "lint": "biome check",
     "preview": "vite preview",
-    "postinstall": "cd server && npm ci",
+    "install:all": "npm ci && npm ci --prefix server && npm run prepare",
     "start": "NODE_ENV=development nodemon && vite",
     "test": "jest --passWithNoTests",
     "build": "vite build",
@@ -22,12 +22,12 @@
     "lint-and-typecheck": "npm run eslint-fix && npm run typecheck",
     "typecheck": "tsc --project tsconfig.json --noEmit && tsc --project server/tsconfig.json --noEmit",
     "tdd": "jest --watch",
-    "prepare": "npx husky install",
+    "prepare": "husky",
     "tsc:watch": "tsc --watch --preserveWatchOutput"
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx,md,html,css,less}": [
-      "biome check"
+      "biome check --no-errors-on-unmatched"
     ]
   },
   "repository": {
