@@ -4,8 +4,9 @@
 
 # Be sure to run `docker-compose up -d` first.
 
-# postinstall runs server npm install
+# Install client and server deps (server install is no longer triggered by postinstall)
 npm ci
+npm ci --prefix server
 npm run build
 npm --prefix server prune --omit=dev
 docker build -t su-se-framover-lokal .
