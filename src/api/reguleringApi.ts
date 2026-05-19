@@ -94,13 +94,6 @@ export async function hentReguleringsstatusUtestående(args: {
     });
 }
 
-export async function hentSakerMedÅpneBehandlinger(): Promise<ApiClientResult<number[]>> {
-    return apiClient({
-        url: `/reguleringer/saker/apneBehandlinger`,
-        method: 'GET',
-    });
-}
-
 export async function avsluttRegulering({ reguleringId }: { reguleringId: string }): Promise<ApiClientResult<void>> {
     return apiClient({
         url: `reguleringer/manuell/${reguleringId}/avslutt`,
