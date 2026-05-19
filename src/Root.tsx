@@ -11,6 +11,7 @@ import BrevPage from './pages/saksbehandling/brev/BrevPage';
 import Vilkår from './pages/saksbehandling/søknadsbehandling/vilkår/Vilkår';
 import Store from './redux/Store';
 import './externalStyles';
+import { SakInngang } from '~src/pages/søknad/steg/inngang/SakInngang.tsx';
 import { ContentWrapper } from './utils/router/ContentWrapper';
 
 const Attestering = lazy(() => import('./pages/saksbehandling/attestering/Attestering'));
@@ -74,6 +75,7 @@ const AppRoutes = () => (
     <Routes>
         <Route path={routes.home.path} element={<WithDocTitle title="Hjem" Page={HomePage} />} />
         <Route path={routes.devTools.path} element={<DevTools />} />
+        <Route path={routes.saker.path} element={<SakInngang />} />
         <Route path={routes.soknad.path} element={<WithDocTitle title="Søknad" Page={Outlet} />}>
             <Route index element={<Søknadsvelger />} />
             <Route path={routes.soknadtema.path} element={<Soknad />}>

@@ -70,6 +70,12 @@ export const soknadtema: Route<{ soknadstema?: TemaFraUrl; papirsøknad?: boolea
         `/soknad${args?.soknadstema ? '/' + args.soknadstema : ''}${args.papirsøknad ? '?papirsoknad=true' : ''}`,
 };
 
+export const saker: Route<never> = {
+    path: 'saker/',
+    absPath: '/saker/opprett',
+    createURL: () => '/saker',
+};
+
 export const soknadPersonSøk: Route<{ papirsøknad?: boolean; soknadstema: TemaFraUrl }> = {
     path: 'personsok',
     absPath: '/soknad/:soknadstema/personsok',

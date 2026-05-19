@@ -27,13 +27,18 @@ const SuHeader = (props: Props) => {
             {props.user && (
                 <div style={{ display: 'flex' }}>
                     {props.user.roller.includes(Rolle.Saksbehandler) && (
-                        <InternalHeader.Title
-                            href={Routes.soknadtema.createURL({
-                                papirsøknad: true,
-                            })}
-                        >
-                            {formatMessage('link.papirsøknad')}
-                        </InternalHeader.Title>
+                        <>
+                            <InternalHeader.Title
+                                href={Routes.soknadtema.createURL({
+                                    papirsøknad: true,
+                                })}
+                            >
+                                {formatMessage('link.papirsøknad')}
+                            </InternalHeader.Title>
+                            <InternalHeader.Title href={Routes.saker.createURL()}>
+                                {formatMessage('link.sak')}
+                            </InternalHeader.Title>
+                        </>
                     )}
                     <Dropdown>
                         <InternalHeader.UserButton

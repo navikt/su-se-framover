@@ -1,0 +1,56 @@
+@import "@styles/variables.less";
+
+.bakgrunn {
+  max-width: 1400px;
+  margin: 0 auto @spacing-xxl auto;
+  background-color: @navBakgrunn;
+  min-height: calc(100vh - 200px);
+  padding: @spacing-xl @spacing-xxl;
+}
+.pageContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: @spacing-l @spacing;
+  max-width: 900px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.heading {
+  display: flex;
+  align-items: center;
+  gap: @spacing-s;
+}
+
+.headingpanel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: @spacing;
+  padding: @spacing-xl;
+  background-color: var(--a-green-50);
+  width: 100%;
+}
+
+.successIcon {
+  width: 48px;
+  height: 48px;
+  color: var(--a-green-600);
+}
+
+.headingContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: @spacing-xs;
+}
+
+.formWrapper {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 600px;
+  margin-top: @spacing;
+}
