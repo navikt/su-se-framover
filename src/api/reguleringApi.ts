@@ -6,7 +6,6 @@ import {
     ProdusertReguleringStatus,
     Regulering,
     ReguleringOversiktsstatus,
-    ReguleringStatusUtestående,
 } from '~src/types/Regulering';
 import { Sakstype } from '~src/types/Sak.ts';
 import apiClient, { ApiClientResult } from './apiClient';

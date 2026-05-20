@@ -1,5 +1,5 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import { Button, Heading, Loader, Select, Table } from '@navikt/ds-react';
+import { Alert, Button, Heading, Loader, Select, Table } from '@navikt/ds-react';
 import { useEffect, useState } from 'react';
 import { hentReguleringsstatusUtestående, produserReguleringsstatusUtestående } from '~src/api/reguleringApi.ts';
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert.tsx';
@@ -9,7 +9,7 @@ const ReguleringStatus = () => {
     const [reguleringsstatusUtestående, reguleringsstatusUteståendeRequest] = useApiCall(
         hentReguleringsstatusUtestående,
     );
-    const [_produserReguleringsstatusUteståendeStatus, produserReguleringsstatusUteståendeRequest] = useApiCall(
+    const [produserReguleringsstatusUteståendeStatus, produserReguleringsstatusUteståendeRequest] = useApiCall(
         produserReguleringsstatusUtestående,
     );
     const currentYear = new Date().getFullYear();
@@ -31,6 +31,18 @@ const ReguleringStatus = () => {
                     Hent utestående reguleringer
                 </Button>
             </div>
+            <div style={{ marginTop: '2rem' }}>
+                {RemoteData.isPending(produserReguleringsstatusUteståendeStatus) && <Loader />}
+                {RemoteData.isSuccess(produserReguleringsstatusUteståendeStatus) && (
+                    <Alert variant="success">
+                        Produksjon av reguleringsstatus er oppstartet. Det kan ta noen minutter og krever refresh av
+                        side.
+                    </Alert>
+                )}
+                {RemoteData.isFailure(produserReguleringsstatusUteståendeStatus) && (
+                    <ApiErrorAlert error={produserReguleringsstatusUteståendeStatus.error} />
+                )}
+            </div>
             {RemoteData.isFailure(reguleringsstatusUtestående) && (
                 <ApiErrorAlert error={reguleringsstatusUtestående.error} />
             )}
@@ -43,10 +55,10 @@ const ReguleringStatus = () => {
                     >
                         {status.reguleringStatus && (
                             <div>
-                                <Heading size={'medium'}>
-                                    Regulering status {status.reguleringStatus.aar} ({status.produserStatus})
-                                </Heading>
-
+                                <Alert variant={status.produserStatus === 'Fullført' ? 'success' : 'error'}>
+                                    {' '}
+                                    Regulering status {status.reguleringStatus.aar}
+                                </Alert>
                                 <section style={{ marginTop: '2rem' }}>
                                     <Heading size={'small'}>Siste grunnbeløp og satser</Heading>
                                     <Table>
