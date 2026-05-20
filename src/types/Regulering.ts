@@ -142,6 +142,12 @@ export enum UnderkjennelseGrunnRegulering {
     REGULERING_ER_FEIL = 'REGULERING_ER_FEIL',
 }
 
+export interface ProdusertReguleringStatus {
+    id: string;
+    produserStatus: string;
+    reguleringStatus: Nullable<ReguleringStatusUtestående>;
+}
+
 export interface ReguleringStatusUtestående {
     aar: number;
     sisteGrunnbeløpOgSatser: SisteGrunnbeløpOgSatser;
@@ -159,6 +165,6 @@ export interface SakMedGammeltGrunnbeløp {
 
 export interface SisteGrunnbeløpOgSatser {
     grunnbeløp: number;
-    garantipensjonOrdinær: number;
-    garantipensjonHøy: number;
+    garantipensjonOrdinærMåned: number;
+    garantipensjonHøyMåned: number;
 }
