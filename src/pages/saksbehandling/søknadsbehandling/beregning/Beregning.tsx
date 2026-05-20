@@ -154,12 +154,44 @@ const Beregning = (props: VilkårsvurderingBaseProps & ExtendedBeregningProps) =
         if (!validForm) {
             return;
         }
-        if (
-            !props.behandling.beregning ||
-            erFradragUlike(props.behandling.beregning?.fradrag, form.getValues('fradrag'), stønadsperiode) ||
-            props.behandling.beregning.begrunnelse !== form.getValues('begrunnelse')
-        ) {
+
+        const fradragEndret = erFradragUlike(
+            props.behandling.beregning?.fradrag,
+            form.getValues('fradrag'),
+            stønadsperiode,
+        );
+        const begrunnelseEndret = props.behandling.beregning?.begrunnelse !== form.getValues('begrunnelse');
+
+        if (!props.behandling.beregning || fradragEndret) {
             return setNeedsBeregning(true);
+        }
+
+        if (begrunnelseEndret) {
+            beregn(
+                {
+                    sakId: props.sakId,
+                    behandlingId: props.behandling.id,
+                    begrunnelse: form.getValues('begrunnelse'),
+                },
+                () => {
+                    if (!kanSimuleres(props.behandling)) {
+                        if (props.behandling.status === SøknadsbehandlingStatus.BEREGNET_AVSLAG) {
+                            return navigate(props.nesteUrl);
+                        }
+
+                        return setNeedsBeregning(true);
+                    }
+
+                    simuler(
+                        {
+                            sakId: props.sakId,
+                            behandlingId: props.behandling.id,
+                        },
+                        () => navigate(props.nesteUrl),
+                    );
+                },
+            );
+            return;
         }
 
         if (!kanSimuleres(props.behandling)) {
