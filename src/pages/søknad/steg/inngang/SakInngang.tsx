@@ -46,11 +46,6 @@ export const SakInngang = () => {
                                     sakstype: opprettSakStatus.value.sakstype === Sakstype.Alder ? 'Alder' : 'Uføre',
                                 })}
                             </span>
-                            <span>
-                                {formatMessage('heading.saksnummer', {
-                                    saksnummer: opprettSakStatus.value.saksnummer,
-                                })}
-                            </span>
                         </Heading>
                     </Panel>
 
