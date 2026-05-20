@@ -31,6 +31,14 @@ export async function fetchSakBySaksnummer(saksnummer: string): Promise<ApiClien
     });
 }
 
+export async function sakOpprettelse(request: { fnr: string; sakstype: Sakstype }): Promise<ApiClientResult<Sak>> {
+    return apiClient({
+        url: `/saker/opprett`,
+        method: 'POST',
+        body: request,
+    });
+}
+
 export async function fetchSakBySakId(sakId: string): Promise<ApiClientResult<Sak>> {
     return apiClient({ url: `/saker/${sakId}`, method: 'GET' });
 }
