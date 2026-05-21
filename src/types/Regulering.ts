@@ -161,6 +161,7 @@ export interface SakMedGammeltGrunnbeløp {
     benyttetGrunnbeløp: number | null; // Kun uføre
     benyttetSatskategori: string;
     benyttetSats: number;
+    vedtakFomSenereEnnMai: boolean;
 }
 
 export interface SisteGrunnbeløpOgSatser {
