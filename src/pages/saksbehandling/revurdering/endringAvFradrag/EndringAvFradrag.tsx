@@ -1,8 +1,6 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Heading } from '@navikt/ds-react';
-import { getEq } from 'fp-ts/lib/Array';
-import { struct } from 'fp-ts/lib/Eq';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
@@ -12,7 +10,6 @@ import { Behandlingstype, RevurderingOgFeilmeldinger } from '~src/api/GrunnlagOg
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
 import FradragForm from '~src/components/forms/vilkårOgGrunnlagForms/fradrag/FradragForm';
 import {
-    eqFradragFormData,
     FradragFormData,
     fradragFormdataTilFradrag,
     fradragSchema,
@@ -43,11 +40,6 @@ import messages from './endringAvFradrag-nb';
 interface EndringAvFradragFormData {
     fradrag: FradragFormData[];
 }
-
-//TODO - en del ting her burde bli abstrahert ut
-export const eqFradragGrunnlagFormData = struct<EndringAvFradragFormData>({
-    fradrag: getEq(eqFradragFormData),
-});
 
 const EndringAvFradrag = (props: RevurderingStegProps) => {
     const { intl } = useI18n({

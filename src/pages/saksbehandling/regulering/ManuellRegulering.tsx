@@ -228,6 +228,7 @@ const ManuellRegulering = () => {
                                             }}
                                             harEPS={false}
                                             readonly={readOnly()}
+                                            tillatFradragstypeAnnet
                                         />
                                     ) : (
                                         <p>{formatMessage('ingen.fradrag')}.</p>
