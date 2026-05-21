@@ -71,7 +71,7 @@ export enum VelgbareFradragskategorier {
     Kapitalinntekt = 'Kapitalinntekt',
     Fosterhjemsgodtgjørelse = 'Fosterhjemsgodtgjørelse',
     Annet = 'Annet',
-    Omsorgslønn = 'Omsorgslønn',
+    Omsorgsstønad = 'Omsorgsstønad',
     Omstillingsstønad = 'Omstillingsstønad',
     Overgangsstønad = 'Overgangsstønad',
 }
@@ -105,7 +105,7 @@ type tagVarianter =
 export const fradragTilLabelTag: Record<Fradragskategori, tagVarianter> = {
     Alderspensjon: 'info',
     Annet: 'info-filled',
-    Omsorgslønn: 'info',
+    Omsorgsstønad: 'info',
     Omstillingsstønad: 'info',
     Overgangsstønad: 'info',
     Arbeidsavklaringspenger: 'error-filled',
@@ -165,7 +165,7 @@ export const måReguleresManuelt = (fradrag: Fradragskategori): boolean => {
         case IkkeVelgbareFradragskategorier.NAVytelserTilLivsopphold:
             return true;
         case VelgbareFradragskategorier.Annet:
-        case VelgbareFradragskategorier.Omsorgslønn:
+        case VelgbareFradragskategorier.Omsorgsstønad:
         case VelgbareFradragskategorier.Omstillingsstønad:
         case VelgbareFradragskategorier.Overgangsstønad:
         case VelgbareFradragskategorier.Sykepenger:
