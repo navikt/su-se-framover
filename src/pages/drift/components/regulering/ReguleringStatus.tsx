@@ -56,7 +56,6 @@ const ReguleringStatus = () => {
                         {status.reguleringStatus && (
                             <div>
                                 <Alert variant={status.produserStatus === 'Fullført' ? 'success' : 'error'}>
-                                    {' '}
                                     Regulering status {status.reguleringStatus.aar}
                                 </Alert>
                                 <section style={{ marginTop: '2rem' }}>
