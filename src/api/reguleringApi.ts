@@ -3,9 +3,9 @@ import { Fradrag } from '~src/types/Fradrag';
 import { Uføregrunnlag } from '~src/types/grunnlagsdataOgVilkårsvurderinger/uføre/Uføregrunnlag';
 import {
     ManuellRegulering,
+    ProdusertReguleringStatus,
     Regulering,
     ReguleringOversiktsstatus,
-    ReguleringStatusUtestående,
 } from '~src/types/Regulering';
 import { Sakstype } from '~src/types/Sak.ts';
 import apiClient, { ApiClientResult } from './apiClient';
@@ -83,13 +83,19 @@ export async function hentReguleringsstatus(): Promise<ApiClientResult<Regulerin
     });
 }
 
-export async function hentReguleringsstatusUtestående(args: {
-    år: number;
-}): Promise<ApiClientResult<ReguleringStatusUtestående>> {
-    const query = new URLSearchParams({ aar: args.år.toString() });
-
+export async function produserReguleringsstatusUtestående(args: { år: number }): Promise<ApiClientResult<void>> {
     return apiClient({
-        url: `/reguleringer/status-regulering-utestaende?${query.toString()}`,
+        url: `/reguleringer/status-regulering-utestaende`,
+        method: 'POST',
+        body: {
+            aar: args.år,
+        },
+    });
+}
+
+export async function hentReguleringsstatusUtestående(): Promise<ApiClientResult<ProdusertReguleringStatus[]>> {
+    return apiClient({
+        url: `/reguleringer/status-regulering-utestaende`,
         method: 'GET',
     });
 }
