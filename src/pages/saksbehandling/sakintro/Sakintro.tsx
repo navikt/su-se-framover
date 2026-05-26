@@ -53,8 +53,6 @@ const Sakintro = () => {
     const iverksatteInnvilgedeSøknader = getIverksatteInnvilgedeSøknader(props.sak);
     const harUtbetalinger = !isEmpty(props.sak.utbetalinger);
 
-    const harVedtak = !isEmpty(props.sak.vedtak);
-
     const avsluttedeRevurderinger = props.sak.revurderinger.filter(erRevurderingAvsluttet);
     const avsluttedeReguleringer = props.sak.reguleringer.filter(erReguleringAvsluttet);
     const avsluttedeKlager = props.sak.klager.filter(erKlageAvsluttet);
@@ -134,12 +132,7 @@ const Sakintro = () => {
             <SuksessStatuser locationState={locationState} />
             <div className={styles.pageHeader}>
                 <div className={styles.headerKnapper}>
-                    {harVedtak && (
-                        <NyBehandlingVelger
-                            sakId={props.sak.id}
-                            kanRevurdere={iverksatteInnvilgedeSøknader.length > 0}
-                        />
-                    )}
+                    <NyBehandlingVelger sakId={props.sak.id} kanRevurdere={iverksatteInnvilgedeSøknader.length > 0} />
                     {harUtbetalinger && (
                         <LinkAsButton
                             variant="secondary"

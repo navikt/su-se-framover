@@ -7,7 +7,9 @@ import yup from '~src/lib/validering';
 export interface OpprettKlageFormData {
     journalpostId: string;
     datoKlageMottatt: Nullable<Date>;
-    relatertBehandlingId: string;
+    relatertBehandlingId?: string;
+    erEksternSak: boolean;
+    erEksternSakId?: string;
 }
 
 export const opprettKlageSchema = yup.object<OpprettKlageFormData>({
@@ -23,8 +25,15 @@ export const opprettKlageSchema = yup.object<OpprettKlageFormData>({
         .required()
         .typeError('Feltet må være en dato på formatet dd/mm/yyyy')
         .max(DateFns.endOfDay(new Date())),
-    relatertBehandlingId: yup
-        .string()
-        .uuid('Må være en gyldig behandlingsid')
-        .required('Relatert behandling må velges'),
+    erEksternSak: yup.boolean().required(),
+    erEksternSakId: yup.string().when('erEksternSak', {
+        is: true,
+        then: (schema: yup.StringSchema) => schema.trim().required('ID for ekstern sak må oppgis'),
+        otherwise: (schema: yup.StringSchema) => schema.optional(),
+    }),
+    relatertBehandlingId: yup.string().when('erEksternSak', {
+        is: false,
+        then: (schema: yup.StringSchema) => schema.trim().required('Relatert behandling må velges'),
+        otherwise: (schema: yup.StringSchema) => schema.optional(),
+    }),
 });

@@ -1,6 +1,6 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Button, HelpText, Loader, Select, TextField } from '@navikt/ds-react';
+import { Button, Checkbox, HelpText, Loader, Select, TextField } from '@navikt/ds-react';
 import * as DateFns from 'date-fns';
 import { Controller, useForm } from 'react-hook-form';
 import { useNavigate, useOutletContext } from 'react-router-dom';
@@ -28,10 +28,12 @@ const OpprettKlage = () => {
     const props = useOutletContext<SaksoversiktContext>();
     const [opprettKlageStatus, opprettKlage] = useAsyncActionCreator(klageActions.opprettKlage);
 
-    const { handleSubmit, register, control, formState } = useForm<OpprettKlageFormData>({
+    const { handleSubmit, register, control, formState, watch } = useForm<OpprettKlageFormData>({
         resolver: yupResolver(opprettKlageSchema),
-        defaultValues: { journalpostId: '' },
+        defaultValues: { journalpostId: '', erEksternSak: false, erEksternSakId: '' },
     });
+    const erEksternSak = watch('erEksternSak');
+
     const navigate = useNavigate();
     const { formatMessage } = useI18n({ messages });
 
@@ -52,6 +54,8 @@ const OpprettKlage = () => {
                                     representation: 'date',
                                 }),
                                 relatertBehandlingId: values.relatertBehandlingId,
+                                erEksternSak: values.erEksternSak,
+                                erEksternSakId: values.erEksternSakId,
                             },
                             (klage) => {
                                 navigate(
@@ -92,26 +96,43 @@ const OpprettKlage = () => {
                             )}
                         />
                         <Controller
-                            name={'relatertBehandlingId'}
+                            name="erEksternSak"
                             control={control}
-                            render={({ field, fieldState }) => (
-                                <Select
-                                    label="Relatert vedtak"
-                                    {...field}
-                                    value={field.value}
-                                    error={fieldState.error?.message}
-                                >
-                                    <option value="">Velg vedtak</option>
-                                    {props.sak.vedtak.map((vedtak) => {
-                                        return (
-                                            <option key={vedtak.id} value={vedtak.behandlingId}>
-                                                {vedtak.type} {formatDateTime(vedtak.opprettet)}
-                                            </option>
-                                        );
-                                    })}
-                                </Select>
+                            render={({ field }) => (
+                                <Checkbox checked={field.value} onChange={(e) => field.onChange(e.target.checked)}>
+                                    Ekstern sak
+                                </Checkbox>
                             )}
                         />
+                        {erEksternSak ? (
+                            <TextField
+                                {...register('erEksternSakId')}
+                                error={formState.errors.erEksternSakId?.message}
+                                label="Ekstern sakId"
+                            />
+                        ) : (
+                            <Controller
+                                name={'relatertBehandlingId'}
+                                control={control}
+                                render={({ field, fieldState }) => (
+                                    <Select
+                                        label="Relatert vedtak"
+                                        {...field}
+                                        value={field.value}
+                                        error={fieldState.error?.message}
+                                    >
+                                        <option value="">Velg vedtak</option>
+                                        {props.sak.vedtak.map((vedtak) => {
+                                            return (
+                                                <option key={vedtak.id} value={vedtak.behandlingId}>
+                                                    {vedtak.type} {formatDateTime(vedtak.opprettet)}
+                                                </option>
+                                            );
+                                        })}
+                                    </Select>
+                                )}
+                            />
+                        )}
                         <div className={styles.buttons}>
                             <LinkAsButton
                                 variant="secondary"

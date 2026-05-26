@@ -9,7 +9,9 @@ export async function opprettKlage(arg: {
     sakId: string;
     journalpostId: string;
     datoKlageMottatt: string;
-    relatertBehandlingId: string;
+    relatertBehandlingId?: string;
+    erEksternSak: boolean;
+    erEksternSakId?: string;
 }): Promise<ApiClientResult<Klage>> {
     return apiClient({
         url: `/saker/${arg.sakId}/klager`,
@@ -18,6 +20,8 @@ export async function opprettKlage(arg: {
             journalpostId: arg.journalpostId,
             datoKlageMottatt: arg.datoKlageMottatt,
             relatertBehandlingId: arg.relatertBehandlingId,
+            erEksternSak: arg.erEksternSak,
+            erEksternSakId: arg.erEksternSakId,
         },
     });
 }
