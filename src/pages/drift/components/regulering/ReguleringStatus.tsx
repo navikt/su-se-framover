@@ -1,5 +1,5 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import { Alert, Button, Heading, HelpText, Loader, Select, Table } from '@navikt/ds-react';
+import { Alert, Button, Heading, Loader, Select, Table } from '@navikt/ds-react';
 import { useEffect, useState } from 'react';
 import { hentReguleringsstatusUtestående, produserReguleringsstatusUtestående } from '~src/api/reguleringApi.ts';
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert.tsx';
@@ -105,7 +105,6 @@ const ReguleringStatus = () => {
                                                 <Table.HeaderCell>Benyttet grunnbeløp</Table.HeaderCell>
                                                 <Table.HeaderCell>Sats</Table.HeaderCell>
                                                 <Table.HeaderCell>Satskategori</Table.HeaderCell>
-                                                <Table.HeaderCell>Fra og med mai</Table.HeaderCell>
                                             </Table.Row>
                                         </Table.Header>
                                         <Table.Body>
@@ -116,19 +115,6 @@ const ReguleringStatus = () => {
                                                     <Table.DataCell>{sak.benyttetGrunnbeløp ?? '—'}</Table.DataCell>
                                                     <Table.DataCell>{sak.benyttetSats}</Table.DataCell>
                                                     <Table.DataCell>{sak.benyttetSatskategori}</Table.DataCell>
-                                                    <Table.DataCell>
-                                                        {sak.vedtakFomSenereEnnMai ? (
-                                                            'Ja'
-                                                        ) : (
-                                                            <Alert variant="warning">
-                                                                Nei{' '}
-                                                                <HelpText>
-                                                                    Sjekket vedtak var ikke fom mai og bør sjekke fra og
-                                                                    med mai manuelt
-                                                                </HelpText>
-                                                            </Alert>
-                                                        )}
-                                                    </Table.DataCell>
                                                 </Table.Row>
                                             ))}
                                         </Table.Body>
