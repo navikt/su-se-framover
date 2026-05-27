@@ -68,6 +68,7 @@ export const SakInngang = () => {
                         </>
                     </Heading>
                     <BodyLong spacing>{formatMessage('sak.beskrivelse')}</BodyLong>
+                    <BodyLong spacing>{formatMessage('sak.opprettkrav')}</BodyLong>
 
                     <div className={styles.formWrapper}>
                         <TextField
