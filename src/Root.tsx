@@ -1,4 +1,5 @@
 import { Loader } from '@navikt/ds-react';
+import { createHead, UnheadProvider } from '@unhead/react/client';
 import { lazy, Suspense, useEffect } from 'react';
 import { Provider } from 'react-redux';
 import { BrowserRouter, Outlet, Route, Routes, useLocation } from 'react-router-dom';
@@ -13,6 +14,7 @@ import Store from './redux/Store';
 import './externalStyles';
 import { SakInngang } from '~src/pages/søknad/steg/inngang/SakInngang.tsx';
 import { ContentWrapper } from './utils/router/ContentWrapper';
+import UmamiTracker from './utils/UmamiTracker';
 
 const Attestering = lazy(() => import('./pages/saksbehandling/attestering/Attestering'));
 const Kvittering = lazy(() => import('./pages/søknad/kvittering/Kvittering'));
@@ -55,19 +57,24 @@ const ScrollToTop = () => {
     return null;
 };
 
+const head = createHead();
+
 const Root = () => (
     <Provider store={Store}>
-        <BrowserRouter>
-            <ErrorBoundary>
-                <ContentWrapper>
-                    <Suspense fallback={<Loader />}>
-                        <Toaster />
-                        <ScrollToTop />
-                        <AppRoutes />
-                    </Suspense>
-                </ContentWrapper>
-            </ErrorBoundary>
-        </BrowserRouter>
+        <UnheadProvider head={head}>
+            <UmamiTracker />
+            <BrowserRouter>
+                <ErrorBoundary>
+                    <ContentWrapper>
+                        <Suspense fallback={<Loader />}>
+                            <Toaster />
+                            <ScrollToTop />
+                            <AppRoutes />
+                        </Suspense>
+                    </ContentWrapper>
+                </ErrorBoundary>
+            </BrowserRouter>
+        </UnheadProvider>
     </Provider>
 );
 

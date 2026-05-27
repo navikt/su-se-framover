@@ -1,5 +1,5 @@
 /// <reference types="vite/client" />
-import { UmamiData } from '~src/utils/umami.ts';
+import type { UmamiData } from '~src/utils/umami.ts';
 
 export {};
 
