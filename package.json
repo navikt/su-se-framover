@@ -55,6 +55,7 @@
     "@reduxjs/toolkit": "2.10.1",
     "@types/jest": "30.0.0",
     "@types/react-dom": "19.2.3",
+    "@unhead/react": "2.1.13",
     "classnames": "2.5.1",
     "country-data-list": "1.6.0",
     "date-fns": "4.1.0",

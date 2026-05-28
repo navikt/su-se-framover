@@ -5,6 +5,23 @@ import * as Config from './config.js';
 async function setup() {
     const router = express.Router();
 
+    router.get('/frontend-config', (_req, res) => {
+        const umami = Config.frontend.umami;
+        const umamiConfig =
+            umami.scriptUrl && umami.websiteId
+                ? {
+                      scriptUrl: umami.scriptUrl,
+                      websiteId: umami.websiteId,
+                  }
+                : undefined;
+
+        res.set('Cache-Control', 'no-store');
+        res.json({
+            environment: Config.frontend.environment,
+            umami: umamiConfig,
+        });
+    });
+
     router.get('/isAlive', (_req, res) => {
         res.send('ALIVE');
     });
