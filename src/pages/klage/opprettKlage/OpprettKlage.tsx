@@ -31,6 +31,7 @@ const OpprettKlage = () => {
     const { handleSubmit, register, control, formState, watch } = useForm<OpprettKlageFormData>({
         resolver: yupResolver(opprettKlageSchema),
         defaultValues: { journalpostId: '', erEksternSak: false, erEksternSakId: '' },
+        shouldUnregister: true,
     });
     const erEksternSak = watch('erEksternSak');
 
@@ -53,9 +54,8 @@ const OpprettKlage = () => {
                                 datoKlageMottatt: DateFns.formatISO(values.datoKlageMottatt!, {
                                     representation: 'date',
                                 }),
-                                relatertBehandlingId: values.relatertBehandlingId,
-                                erEksternSak: values.erEksternSak,
-                                erEksternSakId: values.erEksternSakId,
+                                relatertBehandlingId: values.erEksternSak ? undefined : values.relatertBehandlingId,
+                                erEksternSakId: values.erEksternSak ? values.erEksternSakId : undefined,
                             },
                             (klage) => {
                                 navigate(

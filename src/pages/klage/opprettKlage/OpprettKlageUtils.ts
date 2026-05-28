@@ -29,7 +29,11 @@ export const opprettKlageSchema = yup.object<OpprettKlageFormData>({
     erEksternSakId: yup.string().when('erEksternSak', {
         is: true,
         then: (schema: yup.StringSchema) => schema.trim().required('ID for ekstern sak må oppgis'),
-        otherwise: (schema: yup.StringSchema) => schema.optional(),
+        otherwise: (schema: yup.StringSchema) =>
+            schema
+                .transform((value) => (typeof value === 'string' ? value.trim() : value))
+                .transform((value) => (value === '' ? undefined : value))
+                .optional(),
     }),
     relatertBehandlingId: yup.string().when('erEksternSak', {
         is: false,
