@@ -25,7 +25,7 @@ jobs:
             contents: 'read'
             id-token: 'write'
         steps:
-            - uses: actions/checkout@v6
+            - uses: actions/checkout@v6.0.2
               with:
                   persist-credentials: false
             - uses: actions/setup-node@v6.2.0
@@ -74,7 +74,7 @@ jobs:
         needs: build-push-docker-image
         runs-on: ubuntu-latest
         steps:
-            - uses: actions/checkout@v6
+            - uses: actions/checkout@v6.0.2
             - uses: nais/deploy/actions/deploy@v2
               env:
                   CLUSTER: dev-gcp
@@ -90,7 +90,7 @@ jobs:
             id-token: write
         runs-on: ubuntu-latest
         steps:
-            - uses: actions/checkout@v6
+            - uses: actions/checkout@v6.0.2
             - uses: nais/deploy/actions/deploy@v2
               env:
                   CLUSTER: prod-gcp
