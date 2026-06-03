@@ -1,6 +1,7 @@
 import { configureStore } from '@reduxjs/toolkit';
 import { useDispatch, useSelector } from 'react-redux';
 
+import frontendConfig from '~src/features/frontendConfig/frontendConfig.slice';
 import me from '~src/features/me/me.slice';
 import person from '~src/features/person/person.slice';
 import sakSlice from '~src/features/saksoversikt/sak.slice';
@@ -16,6 +17,7 @@ const store = configureStore({
         innsending: innsending.reducer,
         me: me.reducer,
         toast: toastsSlice.reducer,
+        frontendConfig: frontendConfig.reducer,
     },
 });
 

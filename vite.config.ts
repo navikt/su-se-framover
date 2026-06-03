@@ -32,6 +32,9 @@ export default defineConfig({
                     }
                 },
             },
+            '/frontend-config': {
+                target: 'http://localhost:5678',
+            },
             '/login': {
                 target: 'http://localhost:5678',
             },
