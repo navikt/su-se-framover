@@ -161,46 +161,44 @@ const Sakintro = () => {
                         utbetalingsperioder={props.sak.utbetalinger}
                         kanStansesEllerGjenopptas={props.sak.utbetalingerKanStansesEllerGjenopptas}
                     />
-                    <div className={styles.behandlingstabellContainer}>
-                        {alleÅpneBehandlinger.length > 0 && (
-                            <ÅpneBehandlingerTabell sakId={props.sak.id} tabellBehandlinger={alleÅpneBehandlinger} />
-                        )}
-
-                        {props.sak.vedtak.length > 0 && (
-                            <Vedtakstabell
-                                klager={props.sak.klager}
-                                revurderinger={props.sak.revurderinger}
-                                behandlinger={props.sak.behandlinger}
-                                sakId={props.sak.id}
-                                vedtakOgOversendteKlager={[
-                                    ...props.sak.vedtak,
-                                    ...props.sak.klager.filter((it) => it.status === KlageStatus.OVERSENDT),
-                                ]}
-                            />
-                        )}
-
-                        {alleAvsluttedeBehandlinger.length > 0 && (
-                            <AvsluttedeBehandlingerTabell tabellBehandlinger={alleAvsluttedeBehandlinger} />
-                        )}
-                    </div>
-
-                    <div>
-                        <LinkPanel
-                            href={Routes.alleDokumenterForSak.createURL({ sakId: props.sak.id })}
-                            className={styles.dokumenterLinkpanel}
-                        >
-                            <div className={styles.dokumenterLink}>
-                                <span className={styles.dokumenterLinkIcon}>
-                                    <ÅpentBrev />
-                                </span>
-                                <LinkPanel.Title>{formatMessage('link.dokumenter')}</LinkPanel.Title>
-                            </div>
-                        </LinkPanel>
-                    </div>
                 </div>
             ) : (
                 'Ingen søknader'
             )}
+            <div className={styles.contentContainer}>
+                <div className={styles.behandlingstabellContainer}>
+                    {alleÅpneBehandlinger.length > 0 && (
+                        <ÅpneBehandlingerTabell sakId={props.sak.id} tabellBehandlinger={alleÅpneBehandlinger} />
+                    )}
+
+                    {alleAvsluttedeBehandlinger.length > 0 && (
+                        <AvsluttedeBehandlingerTabell tabellBehandlinger={alleAvsluttedeBehandlinger} />
+                    )}
+                </div>
+                <Vedtakstabell
+                    klager={props.sak.klager}
+                    revurderinger={props.sak.revurderinger}
+                    behandlinger={props.sak.behandlinger}
+                    sakId={props.sak.id}
+                    vedtakOgOversendteKlager={[
+                        ...props.sak.vedtak,
+                        ...props.sak.klager.filter((it) => it.status === KlageStatus.OVERSENDT),
+                    ]}
+                />
+                <div>
+                    <LinkPanel
+                        href={Routes.alleDokumenterForSak.createURL({ sakId: props.sak.id })}
+                        className={styles.dokumenterLinkpanel}
+                    >
+                        <div className={styles.dokumenterLink}>
+                            <span className={styles.dokumenterLinkIcon}>
+                                <ÅpentBrev />
+                            </span>
+                            <LinkPanel.Title>{formatMessage('link.dokumenter')}</LinkPanel.Title>
+                        </div>
+                    </LinkPanel>
+                </div>
+            </div>
         </div>
     );
 };

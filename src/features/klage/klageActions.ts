@@ -44,17 +44,19 @@ export const vurderFormkrav = createAsyncThunk<Klage, FormkravRequest, { rejectV
             klagesDetPåKonkreteElementerIVedtaket,
             erUnderskrevet,
             fremsattRettsligKlageinteresse,
+            eksternSakId,
         },
         thunkApi,
     ) => {
         const res = await klageApi.vilkårsvurder({
             sakId,
             klageId,
-            vedtakId,
+            vedtakId: vedtakId === 'null' ? null : vedtakId,
             innenforFristen,
             klagesDetPåKonkreteElementerIVedtaket,
             erUnderskrevet,
             fremsattRettsligKlageinteresse,
+            eksternSakId,
         });
         if (res.status === 'ok') {
             return res.data;

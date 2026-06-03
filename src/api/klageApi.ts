@@ -34,6 +34,7 @@ export async function vilkårsvurder(arg: FormkravRequest): Promise<ApiClientRes
             klagesDetPåKonkreteElementerIVedtaket: arg.klagesDetPåKonkreteElementerIVedtaket,
             erUnderskrevet: arg.erUnderskrevet,
             fremsattRettsligKlageinteresse: arg.fremsattRettsligKlageinteresse,
+            eksternSakId: arg.eksternSakId,
         },
     });
 }

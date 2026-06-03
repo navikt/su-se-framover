@@ -68,71 +68,86 @@ function isValidSvarord(value: string | null | undefined): value is Svarord {
     return typeof value === 'string' && Object.values(Svarord).includes(value as Svarord);
 }
 
-const schema = yup.object<FormData>({
-    vedtakId: yup.string().defined().required(),
-    innenforFristen: yup
-        .object<SvarMedBegrunnelse>()
-        .defined()
-        .when('svar', {
-            is: (svar: string | null | undefined) => !isValidSvarord(svar),
-            then: yup.object({
-                svar: yup
-                    .string()
-                    .defined()
-                    .required('Svar må fylles ut')
-                    .oneOf(Object.values(Svarord), 'Feltet må være "Ja", "Nei, men skal til vurdering", eller "Nei"'),
-                begrunnelse: yup.string().nullable().notRequired(),
+const schema = (erEksternSak: boolean) =>
+    yup.object<FormData>({
+        vedtakId: yup
+            .string()
+            .defined()
+            .test('vedtak-required', 'Vedtak må velges', (value) => (erEksternSak ? true : !!value)),
+        innenforFristen: yup
+            .object<SvarMedBegrunnelse>()
+            .defined()
+            .when('svar', {
+                is: (svar: string | null | undefined) => !isValidSvarord(svar),
+                then: yup.object({
+                    svar: yup
+                        .string()
+                        .defined()
+                        .required('Svar må fylles ut')
+                        .oneOf(
+                            Object.values(Svarord),
+                            'Feltet må være "Ja", "Nei, men skal til vurdering", eller "Nei"',
+                        ),
+                    begrunnelse: yup.string().nullable().notRequired(),
+                }),
+                otherwise: yup.object().nullable(),
             }),
-            otherwise: yup.object().nullable(),
-        }),
-    klagesDetPåKonkreteElementerIVedtaket: yup
-        .object<BooleanMedBegrunnelse>()
-        .defined()
-        .when('svar', {
-            is: (svar: boolean | null | undefined) => !svar,
-            then: yup.object({
-                svar: yup.boolean().defined().required('Svar må fylles ut'),
-                begrunnelse: yup.string().nullable().notRequired(),
+        klagesDetPåKonkreteElementerIVedtaket: yup
+            .object<BooleanMedBegrunnelse>()
+            .defined()
+            .when('svar', {
+                is: (svar: boolean | null | undefined) => !svar,
+                then: yup.object({
+                    svar: yup.boolean().defined().required('Svar må fylles ut'),
+                    begrunnelse: yup.string().nullable().notRequired(),
+                }),
+                otherwise: yup.object().nullable(),
             }),
-            otherwise: yup.object().nullable(),
-        }),
-    erUnderskrevet: yup
-        .object<SvarMedBegrunnelse>()
-        .defined()
-        .when('svar', {
-            is: (svar: string | null | undefined) => !isValidSvarord(svar),
-            then: yup.object({
-                svar: yup
-                    .string()
-                    .defined()
-                    .required('Svar må fylles ut')
-                    .oneOf(Object.values(Svarord), 'Feltet må være "Ja", "Nei, men skal til vurdering", eller "Nei"'),
-                begrunnelse: yup.string().nullable().notRequired(),
+        erUnderskrevet: yup
+            .object<SvarMedBegrunnelse>()
+            .defined()
+            .when('svar', {
+                is: (svar: string | null | undefined) => !isValidSvarord(svar),
+                then: yup.object({
+                    svar: yup
+                        .string()
+                        .defined()
+                        .required('Svar må fylles ut')
+                        .oneOf(
+                            Object.values(Svarord),
+                            'Feltet må være "Ja", "Nei, men skal til vurdering", eller "Nei"',
+                        ),
+                    begrunnelse: yup.string().nullable().notRequired(),
+                }),
+                otherwise: yup.object().nullable(),
             }),
-            otherwise: yup.object().nullable(),
-        }),
-    fremsattRettsligKlageinteresse: yup
-        .object<SvarMedBegrunnelse>()
-        .defined()
-        .when('svar', {
-            is: (svar: string | null | undefined) => !isValidSvarord(svar),
-            then: yup.object({
-                svar: yup
-                    .string()
-                    .defined()
-                    .required('Svar må fylles ut')
-                    .oneOf(Object.values(Svarord), 'Feltet må være "Ja", "Nei, men skal til vurdering", eller "Nei"'),
-                begrunnelse: yup.string().nullable().notRequired(),
+        fremsattRettsligKlageinteresse: yup
+            .object<SvarMedBegrunnelse>()
+            .defined()
+            .when('svar', {
+                is: (svar: string | null | undefined) => !isValidSvarord(svar),
+                then: yup.object({
+                    svar: yup
+                        .string()
+                        .defined()
+                        .required('Svar må fylles ut')
+                        .oneOf(
+                            Object.values(Svarord),
+                            'Feltet må være "Ja", "Nei, men skal til vurdering", eller "Nei"',
+                        ),
+                    begrunnelse: yup.string().nullable().notRequired(),
+                }),
+                otherwise: yup.object().nullable(),
             }),
-            otherwise: yup.object().nullable(),
-        }),
-});
+    });
 
 const VurderFormkrav = (props: Props) => {
     const navigate = useNavigate();
     const { formatMessage } = useI18n({ messages });
     const [lagreStatus, lagre] = useAsyncActionCreator(klageActions.vurderFormkrav);
     const [bekreftStatus, bekreft] = useAsyncActionCreator(klageActions.bekreftFormkrav);
+
+    const erEksternSak = !!props.klage.eksternSakId;
 
     const initialValues: FormData = {
         vedtakId: props.klage.vedtakId,
@@ -148,7 +163,7 @@ const VurderFormkrav = (props: Props) => {
         watch,
         formState: { isDirty },
     } = useForm<FormData>({
-        resolver: yupResolver(schema),
+        resolver: yupResolver(schema(erEksternSak)),
         defaultValues: initialValues,
     });
 
@@ -174,6 +189,7 @@ const VurderFormkrav = (props: Props) => {
             ),
             erUnderskrevet: fjernObjektLagetFraRHF(values.erUnderskrevet),
             fremsattRettsligKlageinteresse: fjernObjektLagetFraRHF(values.fremsattRettsligKlageinteresse),
+            eksternSakId: props.klage.eksternSakId,
         };
 
         lagre(sanitized, () => {
@@ -210,6 +226,7 @@ const VurderFormkrav = (props: Props) => {
                 klagesDetPåKonkreteElementerIVedtaket: values.klagesDetPåKonkreteElementerIVedtaket,
                 erUnderskrevet: values.erUnderskrevet,
                 fremsattRettsligKlageinteresse: values.fremsattRettsligKlageinteresse,
+                eksternSakId: props.klage.eksternSakId,
             },
             () => {
                 bekreft(
@@ -251,28 +268,31 @@ const VurderFormkrav = (props: Props) => {
             {{
                 left: (
                     <form className={styles.form} onSubmit={handleSubmit(handleBekreftOgFortsettClick)}>
-                        <Controller
-                            control={control}
-                            name="vedtakId"
-                            render={({ field, fieldState }) => (
-                                <Select
-                                    className={styles.vedtakSelecter}
-                                    label="Velg vedtak"
-                                    error={fieldState.error?.message}
-                                    {...field}
-                                    value={field.value ?? ''}
-                                >
-                                    <option value={''}>{formatMessage('formkrav.vedtak.option.default')}</option>
-                                    {props.vedtak
-                                        .filter((v) => v.skalSendeBrev)
-                                        .map((v) => (
-                                            <option key={v.id} value={v.id}>{`${formatMessage(v.type)} ${formatDateTime(
-                                                v.opprettet,
-                                            )}`}</option>
-                                        ))}
-                                </Select>
-                            )}
-                        />
+                        {!erEksternSak && (
+                            <Controller
+                                control={control}
+                                name="vedtakId"
+                                render={({ field, fieldState }) => (
+                                    <Select
+                                        className={styles.vedtakSelecter}
+                                        label="Velg vedtak"
+                                        error={fieldState.error?.message}
+                                        {...field}
+                                        value={field.value ?? ''}
+                                    >
+                                        <option value={''}>{formatMessage('formkrav.vedtak.option.default')}</option>
+                                        {props.vedtak
+                                            .filter((v) => v.skalSendeBrev)
+                                            .map((v) => (
+                                                <option
+                                                    key={v.id}
+                                                    value={v.id}
+                                                >{`${formatMessage(v.type)} ${formatDateTime(v.opprettet)}`}</option>
+                                            ))}
+                                    </Select>
+                                )}
+                            />
+                        )}
                         <Heading level="2" size="medium" spacing>
                             {formatMessage('klagefrist.tittel')}
                         </Heading>
