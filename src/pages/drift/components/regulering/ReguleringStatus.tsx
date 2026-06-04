@@ -1,5 +1,5 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import { Alert, Button, Heading, Loader, Select, Table } from '@navikt/ds-react';
+import { Alert, Button, Heading, Loader, Select, Table, Textarea } from '@navikt/ds-react';
 import { useEffect, useState } from 'react';
 import { hentReguleringsstatusUtestående, produserReguleringsstatusUtestående } from '~src/api/reguleringApi.ts';
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert.tsx';
@@ -48,82 +48,96 @@ const ReguleringStatus = () => {
             )}
             {RemoteData.isPending(reguleringsstatusUtestående) && <Loader />}
             {RemoteData.isSuccess(reguleringsstatusUtestående) &&
-                reguleringsstatusUtestående.value.map((status) => (
-                    <div
-                        key={status.id}
-                        style={{ marginTop: '2rem', paddingBottom: '2rem', borderBottom: '1px solid #c6c2bf' }}
-                    >
-                        {status.reguleringStatus && (
-                            <div>
-                                <Alert variant={status.produserStatus === 'Fullført' ? 'success' : 'error'}>
-                                    Regulering status {status.reguleringStatus.aar}
-                                </Alert>
-                                <section style={{ marginTop: '2rem' }}>
-                                    <Heading size={'small'}>Siste grunnbeløp og satser</Heading>
-                                    <Table>
-                                        <Table.Body>
-                                            <Table.Row>
-                                                <Table.HeaderCell scope="row">Grunnbeløp</Table.HeaderCell>
-                                                <Table.DataCell>
-                                                    {status.reguleringStatus.sisteGrunnbeløpOgSatser.grunnbeløp}
-                                                </Table.DataCell>
-                                            </Table.Row>
-                                            <Table.Row>
-                                                <Table.HeaderCell scope="row">Garantipensjon ordinær</Table.HeaderCell>
-                                                <Table.DataCell>
-                                                    {
-                                                        status.reguleringStatus.sisteGrunnbeløpOgSatser
-                                                            .garantipensjonOrdinærMåned
-                                                    }
-                                                </Table.DataCell>
-                                            </Table.Row>
-                                            <Table.Row>
-                                                <Table.HeaderCell scope="row">Garantipensjon høy</Table.HeaderCell>
-                                                <Table.DataCell>
-                                                    {
-                                                        status.reguleringStatus.sisteGrunnbeløpOgSatser
-                                                            .garantipensjonHøyMåned
-                                                    }
-                                                </Table.DataCell>
-                                            </Table.Row>
-                                        </Table.Body>
-                                    </Table>
-                                </section>
+                reguleringsstatusUtestående.value.map((status) => {
+                    const statusAlert =
+                        status.produserStatus === 'Feilet'
+                            ? 'error'
+                            : status.produserStatus === 'Fullført'
+                              ? 'success'
+                              : 'warning';
 
-                                <section style={{ marginTop: '2rem' }}>
-                                    <Heading size={'small'}>
-                                        Saker med utebetaling i mai ({status.reguleringStatus.sakerMedUtebetalingIMai})
-                                    </Heading>
-                                    <Heading size={'small'}>
-                                        Saker med gammelt grunnbeløp ({status.reguleringStatus.sakerMedGammelG.length})
-                                    </Heading>
-                                    <Table>
-                                        <Table.Header>
-                                            <Table.Row>
-                                                <Table.HeaderCell>Saksnummer</Table.HeaderCell>
-                                                <Table.HeaderCell>Type</Table.HeaderCell>
-                                                <Table.HeaderCell>Benyttet grunnbeløp</Table.HeaderCell>
-                                                <Table.HeaderCell>Sats</Table.HeaderCell>
-                                                <Table.HeaderCell>Satskategori</Table.HeaderCell>
-                                            </Table.Row>
-                                        </Table.Header>
-                                        <Table.Body>
-                                            {status.reguleringStatus.sakerMedGammelG.map((sak) => (
-                                                <Table.Row key={sak.saksnummer}>
-                                                    <Table.DataCell>{sak.saksnummer}</Table.DataCell>
-                                                    <Table.DataCell>{sak.type}</Table.DataCell>
-                                                    <Table.DataCell>{sak.benyttetGrunnbeløp ?? '—'}</Table.DataCell>
-                                                    <Table.DataCell>{sak.benyttetSats}</Table.DataCell>
-                                                    <Table.DataCell>{sak.benyttetSatskategori}</Table.DataCell>
+                    const utenÅpenRegulering = status.reguleringStatus
+                        ? status.reguleringStatus.utenÅpenRegulering.map((it) => it.saksnummer).join(', ')
+                        : '';
+
+                    return (
+                        <div
+                            key={status.id}
+                            style={{ marginTop: '2rem', paddingBottom: '2rem', borderBottom: '1px solid #c6c2bf' }}
+                        >
+                            <Alert variant={statusAlert}>Uthenting av status {status.produserStatus}</Alert>
+                            {status.reguleringStatus && (
+                                <div>
+                                    <section style={{ marginTop: '2rem' }}>
+                                        <Heading size={'small'}>Siste grunnbeløp og satser</Heading>
+                                        <Table>
+                                            <Table.Body>
+                                                <Table.Row>
+                                                    <Table.HeaderCell scope="row">Grunnbeløp</Table.HeaderCell>
+                                                    <Table.DataCell>
+                                                        {status.reguleringStatus.sisteGrunnbeløpOgSatser.grunnbeløp}
+                                                    </Table.DataCell>
                                                 </Table.Row>
-                                            ))}
-                                        </Table.Body>
-                                    </Table>
-                                </section>
-                            </div>
-                        )}
-                    </div>
-                ))}
+                                                <Table.Row>
+                                                    <Table.HeaderCell scope="row">
+                                                        Garantipensjon ordinær
+                                                    </Table.HeaderCell>
+                                                    <Table.DataCell>
+                                                        {
+                                                            status.reguleringStatus.sisteGrunnbeløpOgSatser
+                                                                .garantipensjonOrdinærMåned
+                                                        }
+                                                    </Table.DataCell>
+                                                </Table.Row>
+                                                <Table.Row>
+                                                    <Table.HeaderCell scope="row">Garantipensjon høy</Table.HeaderCell>
+                                                    <Table.DataCell>
+                                                        {
+                                                            status.reguleringStatus.sisteGrunnbeløpOgSatser
+                                                                .garantipensjonHøyMåned
+                                                        }
+                                                    </Table.DataCell>
+                                                </Table.Row>
+                                            </Table.Body>
+                                        </Table>
+                                    </section>
+
+                                    <section style={{ marginTop: '2rem' }}>
+                                        <Heading size={'small'}>
+                                            Saker med utebetaling i mai (
+                                            {status.reguleringStatus.sakerMedUtebetalingIMai})
+                                        </Heading>
+                                        <Heading size={'small'}>
+                                            Saker med gammelt grunnbeløp ({status.reguleringStatus.sakerMedGammelG})
+                                        </Heading>
+                                        <Heading size={'small'}>
+                                            Uten åpen manuell behandling (
+                                            {status.reguleringStatus.utenÅpenRegulering.length})
+                                        </Heading>
+                                        <Table>
+                                            <Table.Header>
+                                                <Table.Row>
+                                                    <Table.HeaderCell>Saksnummer</Table.HeaderCell>
+                                                    <Table.HeaderCell>Type</Table.HeaderCell>
+                                                    <Table.HeaderCell>Benyttet grunnbeløp</Table.HeaderCell>
+                                                    <Table.HeaderCell>Sats</Table.HeaderCell>
+                                                    <Table.HeaderCell>Satskategori</Table.HeaderCell>
+                                                </Table.Row>
+                                            </Table.Header>
+                                            <Table.Body>
+                                                {status.reguleringStatus.utenÅpenRegulering.length > 0 && (
+                                                    <Textarea resize readOnly label="Saker med stans">
+                                                        {utenÅpenRegulering}
+                                                    </Textarea>
+                                                )}
+                                            </Table.Body>
+                                        </Table>
+                                    </section>
+                                </div>
+                            )}
+                        </div>
+                    );
+                })}
         </>
     );
 };

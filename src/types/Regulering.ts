@@ -152,7 +152,8 @@ export interface ReguleringStatusUtestående {
     aar: number;
     sisteGrunnbeløpOgSatser: SisteGrunnbeløpOgSatser;
     sakerMedUtebetalingIMai: number;
-    sakerMedGammelG: SakMedGammeltGrunnbeløp[];
+    sakerMedGammelG: number;
+    utenÅpenRegulering: SakMedGammeltGrunnbeløp[];
 }
 
 export interface SakMedGammeltGrunnbeløp {
