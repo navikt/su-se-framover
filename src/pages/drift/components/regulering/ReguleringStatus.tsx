@@ -114,24 +114,11 @@ const ReguleringStatus = () => {
                                             Uten åpen manuell behandling (
                                             {status.reguleringStatus.utenÅpenRegulering.length})
                                         </Heading>
-                                        <Table>
-                                            <Table.Header>
-                                                <Table.Row>
-                                                    <Table.HeaderCell>Saksnummer</Table.HeaderCell>
-                                                    <Table.HeaderCell>Type</Table.HeaderCell>
-                                                    <Table.HeaderCell>Benyttet grunnbeløp</Table.HeaderCell>
-                                                    <Table.HeaderCell>Sats</Table.HeaderCell>
-                                                    <Table.HeaderCell>Satskategori</Table.HeaderCell>
-                                                </Table.Row>
-                                            </Table.Header>
-                                            <Table.Body>
-                                                {status.reguleringStatus.utenÅpenRegulering.length > 0 && (
-                                                    <Textarea resize readOnly label="Saker med stans">
-                                                        {utenÅpenRegulering}
-                                                    </Textarea>
-                                                )}
-                                            </Table.Body>
-                                        </Table>
+                                        {status.reguleringStatus.utenÅpenRegulering.length > 0 && (
+                                            <Textarea resize readOnly label="saksnummer">
+                                                {utenÅpenRegulering}
+                                            </Textarea>
+                                        )}
                                     </section>
                                 </div>
                             )}
