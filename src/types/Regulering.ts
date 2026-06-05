@@ -48,22 +48,12 @@ export enum Reguleringstype {
 }
 
 export enum ÅrsakTilManuellReguleringKategori {
-    FradragMåHåndteresManuelt = 'FradragMåHåndteresManuelt',
-    UtbetalingFeilet = 'UtbetalingFeilet',
-    BrukerManglerSupplement = 'BrukerManglerSupplement',
-    SupplementInneholderIkkeFradraget = 'SupplementInneholderIkkeFradraget',
-    FinnesFlerePerioderAvFradrag = 'FinnesFlerePerioderAvFradrag',
-    FradragErUtenlandsinntekt = 'FradragErUtenlandsinntekt',
-    SupplementHarFlereVedtaksperioderForFradrag = 'SupplementHarFlereVedtaksperioderForFradrag',
-    DifferanseFørRegulering = 'DifferanseFørRegulering',
-    DifferanseEtterRegulering = 'DifferanseEtterRegulering',
+    ManglerRegulertBeløpForFradrag = 'ManglerRegulertBeløpForFradrag',
+    ManglerIeuFraPesys = 'ManglerIeuFraPesys',
     YtelseErMidlertidigStanset = 'YtelseErMidlertidigStanset',
-    ForventetInntektErStørreEnn0 = 'ForventetInntektErStørreEnn0',
-    AutomatiskSendingTilUtbetalingFeilet = 'AutomatiskSendingTilUtbetalingFeilet',
-    VedtakstidslinjeErIkkeSammenhengende = 'VedtakstidslinjeErIkkeSammenhengende',
-    DelvisOpphør = 'DelvisOpphør',
-    FantIkkeVedtakForApril = 'FantIkkeVedtakForApril',
-    MerEnn1Eps = 'MerEnn1Eps',
+    EtAutomatiskFradragHarFremtidigPeriode = 'EtAutomatiskFradragHarFremtidigPeriode',
+    UgyldigePerioderForAutomatiskRegulering = 'UgyldigePerioderForAutomatiskRegulering',
+    AapManglerGyldigPeriode = 'AapManglerGyldigPeriode',
 }
 
 export interface YtelseErMidlertidigStanset extends ÅrsakForManuell {}
