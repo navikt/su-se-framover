@@ -160,7 +160,7 @@ const ManuellRegulering = () => {
                             <ÅrsakForManuellRegulering årsaker={regulering.årsakForManuell} />
                             <Heading
                                 level="3"
-                                size="medium"
+                                size="large"
                             >{`${formatMessage('periode')}: ${formatPeriode(regulering.periode)}`}</Heading>
 
                             <form onSubmit={form.handleSubmit(submitBeregning)} className={styles.form}>
