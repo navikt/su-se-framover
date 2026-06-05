@@ -35,7 +35,6 @@ import {
 import { parseIsoDateOnly } from '~src/utils/date/dateUtils';
 import { fjernFradragSomIkkeErVelgbareEkskludertNavYtelserTilLivsopphold } from '~src/utils/fradrag/fradragUtil';
 import { formatPeriode } from '~src/utils/periode/periodeUtils';
-import reguleringstext from '../behandlingsoversikt/regulering/regulering-nb';
 import styles from './manuellRegulering.module.less';
 import messages from './manuellRegulering-nb';
 
@@ -279,7 +278,6 @@ export default ManuellRegulering;
 const filtrerRegulerbarIEU = (grunnlag: Nullable<Uføregrunnlag>): grunnlag is Uføregrunnlag => grunnlag !== null;
 
 const ÅrsakForManuellRegulering = (props: { årsaker: ÅrsakForManuell[] }) => {
-    const { formatMessage } = useI18n({ messages: { ...reguleringstext } });
     return props.årsaker.length > 0 ? (
         <Alert className={styles.advarsel} variant="warning">
             <Label>Reguleringen er til manuell behandling fordi: </Label>
@@ -289,11 +287,6 @@ const ÅrsakForManuellRegulering = (props: { årsaker: ÅrsakForManuell[] }) => 
                         case ÅrsakTilManuellReguleringKategori.ManglerRegulertBeløpForFradrag: {
                             return (
                                 <li key={i}>
-                                    <BodyShort>
-                                        {formatMessage(
-                                            ÅrsakTilManuellReguleringKategori.ManglerRegulertBeløpForFradrag,
-                                        )}
-                                    </BodyShort>
                                     <div className={styles.årsaksdetaljer}>
                                         <BodyShort>{årsak.begrunnelse ?? ''}</BodyShort>
                                     </div>
@@ -303,9 +296,6 @@ const ÅrsakForManuellRegulering = (props: { årsaker: ÅrsakForManuell[] }) => 
                         case ÅrsakTilManuellReguleringKategori.ManglerIeuFraPesys: {
                             return (
                                 <li key={i}>
-                                    <BodyShort>
-                                        {formatMessage(ÅrsakTilManuellReguleringKategori.ManglerIeuFraPesys)}
-                                    </BodyShort>
                                     <div className={styles.årsaksdetaljer}>
                                         <BodyShort>{årsak.begrunnelse ?? ''}</BodyShort>
                                     </div>
@@ -315,9 +305,6 @@ const ÅrsakForManuellRegulering = (props: { årsaker: ÅrsakForManuell[] }) => 
                         case ÅrsakTilManuellReguleringKategori.YtelseErMidlertidigStanset: {
                             return (
                                 <li key={i}>
-                                    <BodyShort>
-                                        {formatMessage(ÅrsakTilManuellReguleringKategori.YtelseErMidlertidigStanset)}
-                                    </BodyShort>
                                     <div className={styles.årsaksdetaljer}>
                                         <BodyShort>{årsak.begrunnelse ?? ''}</BodyShort>
                                     </div>
@@ -327,11 +314,6 @@ const ÅrsakForManuellRegulering = (props: { årsaker: ÅrsakForManuell[] }) => 
                         case ÅrsakTilManuellReguleringKategori.EtAutomatiskFradragHarFremtidigPeriode: {
                             return (
                                 <li key={i}>
-                                    <BodyShort>
-                                        {formatMessage(
-                                            ÅrsakTilManuellReguleringKategori.EtAutomatiskFradragHarFremtidigPeriode,
-                                        )}
-                                    </BodyShort>
                                     <div className={styles.årsaksdetaljer}>
                                         <BodyShort>{årsak.begrunnelse ?? ''}</BodyShort>
                                     </div>
@@ -341,11 +323,6 @@ const ÅrsakForManuellRegulering = (props: { årsaker: ÅrsakForManuell[] }) => 
                         case ÅrsakTilManuellReguleringKategori.UgyldigePerioderForAutomatiskRegulering: {
                             return (
                                 <li key={i}>
-                                    <BodyShort>
-                                        {formatMessage(
-                                            ÅrsakTilManuellReguleringKategori.UgyldigePerioderForAutomatiskRegulering,
-                                        )}
-                                    </BodyShort>
                                     <div className={styles.årsaksdetaljer}>
                                         <BodyShort>{årsak.begrunnelse ?? ''}</BodyShort>
                                     </div>
@@ -355,9 +332,6 @@ const ÅrsakForManuellRegulering = (props: { årsaker: ÅrsakForManuell[] }) => 
                         case ÅrsakTilManuellReguleringKategori.AapManglerGyldigPeriode: {
                             return (
                                 <li key={i}>
-                                    <BodyShort>
-                                        {formatMessage(ÅrsakTilManuellReguleringKategori.AapManglerGyldigPeriode)}
-                                    </BodyShort>
                                     <div className={styles.årsaksdetaljer}>
                                         <BodyShort>{årsak.begrunnelse ?? ''}</BodyShort>
                                     </div>
