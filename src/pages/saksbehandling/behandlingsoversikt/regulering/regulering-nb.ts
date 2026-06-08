@@ -5,6 +5,7 @@ import {
 import { ÅrsakTilManuellReguleringKategori } from '~src/types/Regulering.ts';
 
 const manuelleÅrsakerForRegulering: { [key in ÅrsakTilManuellReguleringKategori]: string } = {
+    [ÅrsakTilManuellReguleringKategori.OpprettetAvSaksbehandler]: 'Opprettet av saksbehandler',
     [ÅrsakTilManuellReguleringKategori.ManglerRegulertBeløpForFradrag]: 'Mangler regulert beløp for fradrag',
     [ÅrsakTilManuellReguleringKategori.ManglerIeuFraPesys]: 'Mangler IEU fra Pesys',
     [ÅrsakTilManuellReguleringKategori.YtelseErMidlertidigStanset]: 'Ytelsen er midlertidig stanset',

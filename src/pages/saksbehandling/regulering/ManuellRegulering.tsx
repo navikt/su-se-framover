@@ -283,7 +283,18 @@ const ÅrsakForManuellRegulering = (props: { årsaker: ÅrsakForManuell[] }) => 
             <Label>Reguleringen er til manuell behandling fordi: </Label>
             <ul className={styles.årsaksContainer}>
                 {props.årsaker.map((årsak, i) => {
+                    console.log('årsak', årsak);
                     switch (årsak.type) {
+                        case ÅrsakTilManuellReguleringKategori.OpprettetAvSaksbehandler: {
+                            console.log('her');
+                            return (
+                                <li key={i}>
+                                    <div className={styles.årsaksdetaljer}>
+                                        <BodyShort>{årsak.begrunnelse ?? ''}</BodyShort>
+                                    </div>
+                                </li>
+                            );
+                        }
                         case ÅrsakTilManuellReguleringKategori.ManglerRegulertBeløpForFradrag: {
                             return (
                                 <li key={i}>
