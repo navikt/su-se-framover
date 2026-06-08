@@ -17,6 +17,7 @@ export default {
     'popover.option.klage': 'Klage',
     'popover.option.revurder': 'Revurder',
     'popover.option.tilbakekreving': 'Tilbakekreving',
+    'popover.option.regulering': 'Regulering',
 
     'link.dokumenter': 'Brev for sak',
     'link.kontrollsamtale': 'Kontrollsamtale',
