@@ -42,6 +42,7 @@ const RevurderingIntroPage = lazy(
     () => import('./pages/saksbehandling/revurdering/revurderingIntro/RevurderingIntroPage'),
 );
 const ManuellReguleringPage = lazy(() => import('./pages/saksbehandling/regulering/ManuellRegulering'));
+const OpprettReguleringPage = lazy(() => import('./pages/saksbehandling/regulering/OpprettRegulering'));
 const Stans = lazy(() => import('./pages/saksbehandling/stans/Stans'));
 const Gjenoppta = lazy(() => import('./pages/saksbehandling/gjenoppta/Gjenoppta'));
 const Utenlandsopphold = lazy(() => import('./pages/saksbehandling/utenlandsopphold/Utenlandsopphold'));
@@ -116,6 +117,7 @@ const AppRoutes = () => (
             <Route path={routes.alleDokumenterForSak.path} element={<DokumenterPage />} />
             <Route path={routes.kontrollsamtale.path} element={<NyDatoForKontrollsamtale />} />
             <Route path={routes.manuellRegulering.path} element={<ManuellReguleringPage />} />
+            <Route path={routes.opprettRegulering.path} element={<OpprettReguleringPage />} />
             <Route path={routes.utenlandsopphold.path} element={<Utenlandsopphold />} />
             <Route path={routes.brevPage.path} element={<BrevPage />} />
 
