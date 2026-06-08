@@ -10,7 +10,7 @@ export async function opprettKlage(arg: {
     journalpostId: string;
     datoKlageMottatt: string;
     relatertBehandlingId?: string;
-    erEksternSakId?: string;
+    erInfotrygdSakId?: string;
 }): Promise<ApiClientResult<Klage>> {
     return apiClient({
         url: `/saker/${arg.sakId}/klager`,
@@ -19,7 +19,7 @@ export async function opprettKlage(arg: {
             journalpostId: arg.journalpostId,
             datoKlageMottatt: arg.datoKlageMottatt,
             relatertBehandlingId: arg.relatertBehandlingId,
-            erEksternSakId: arg.erEksternSakId,
+            erInfotrygdSakId: arg.erInfotrygdSakId,
         },
     });
 }
@@ -34,7 +34,7 @@ export async function vilkårsvurder(arg: FormkravRequest): Promise<ApiClientRes
             klagesDetPåKonkreteElementerIVedtaket: arg.klagesDetPåKonkreteElementerIVedtaket,
             erUnderskrevet: arg.erUnderskrevet,
             fremsattRettsligKlageinteresse: arg.fremsattRettsligKlageinteresse,
-            eksternSakId: arg.eksternSakId,
+            infotrygdSakId: arg.infotrygdSakId,
         },
     });
 }

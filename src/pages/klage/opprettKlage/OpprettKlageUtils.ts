@@ -9,7 +9,7 @@ export interface OpprettKlageFormData {
     datoKlageMottatt: Nullable<Date>;
     relatertBehandlingId?: string;
     erEksternSak: boolean;
-    erEksternSakId?: string;
+    erInfotrygdSakId?: string;
 }
 
 export const opprettKlageSchema = yup.object<OpprettKlageFormData>({
@@ -26,7 +26,7 @@ export const opprettKlageSchema = yup.object<OpprettKlageFormData>({
         .typeError('Feltet må være en dato på formatet dd/mm/yyyy')
         .max(DateFns.endOfDay(new Date())),
     erEksternSak: yup.boolean().required(),
-    erEksternSakId: yup.string().when('erEksternSak', {
+    erInfotrygdSakId: yup.string().when('erEksternSak', {
         is: true,
         then: (schema: yup.StringSchema) => schema.trim().required('ID for ekstern sak må oppgis'),
         otherwise: (schema: yup.StringSchema) =>

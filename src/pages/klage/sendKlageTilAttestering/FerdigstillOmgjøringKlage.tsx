@@ -53,7 +53,7 @@ export const FerdigstillOmgjøringKlage = (props: { sakId: string; klage: Klage;
     }
 
     const klagensVedtak = props.vedtaker.find((v) => v.id === props.klage.vedtakId);
-    const erEksternSak = !!props.klage.eksternSakId;
+    const erEksternSak = !!props.klage.infotrygdSakId;
     if (!erEksternSak && !klagensVedtak) {
         return (
             <div className={sharedStyles.feilTilstandContainer}>

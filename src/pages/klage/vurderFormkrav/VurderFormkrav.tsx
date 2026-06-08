@@ -147,7 +147,7 @@ const VurderFormkrav = (props: Props) => {
     const [lagreStatus, lagre] = useAsyncActionCreator(klageActions.vurderFormkrav);
     const [bekreftStatus, bekreft] = useAsyncActionCreator(klageActions.bekreftFormkrav);
 
-    const erEksternSak = !!props.klage.eksternSakId;
+    const erEksternSak = !!props.klage.infotrygdSakId;
 
     const initialValues: FormData = {
         vedtakId: props.klage.vedtakId,
@@ -189,7 +189,7 @@ const VurderFormkrav = (props: Props) => {
             ),
             erUnderskrevet: fjernObjektLagetFraRHF(values.erUnderskrevet),
             fremsattRettsligKlageinteresse: fjernObjektLagetFraRHF(values.fremsattRettsligKlageinteresse),
-            eksternSakId: props.klage.eksternSakId,
+            infotrygdSakId: props.klage.infotrygdSakId,
         };
 
         lagre(sanitized, () => {
@@ -226,7 +226,7 @@ const VurderFormkrav = (props: Props) => {
                 klagesDetPåKonkreteElementerIVedtaket: values.klagesDetPåKonkreteElementerIVedtaket,
                 erUnderskrevet: values.erUnderskrevet,
                 fremsattRettsligKlageinteresse: values.fremsattRettsligKlageinteresse,
-                eksternSakId: props.klage.eksternSakId,
+                infotrygdSakId: props.klage.infotrygdSakId,
             },
             () => {
                 bekreft(

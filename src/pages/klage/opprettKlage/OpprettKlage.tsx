@@ -30,7 +30,7 @@ const OpprettKlage = () => {
 
     const { handleSubmit, register, control, formState, watch } = useForm<OpprettKlageFormData>({
         resolver: yupResolver(opprettKlageSchema),
-        defaultValues: { journalpostId: '', erEksternSak: false, erEksternSakId: '' },
+        defaultValues: { journalpostId: '', erEksternSak: false, erInfotrygdSakId: '' },
         shouldUnregister: true,
     });
     const erEksternSak = watch('erEksternSak');
@@ -55,7 +55,7 @@ const OpprettKlage = () => {
                                     representation: 'date',
                                 }),
                                 relatertBehandlingId: values.erEksternSak ? undefined : values.relatertBehandlingId,
-                                erEksternSakId: values.erEksternSak ? values.erEksternSakId : undefined,
+                                erInfotrygdSakId: values.erEksternSak ? values.erInfotrygdSakId : undefined,
                             },
                             (klage) => {
                                 navigate(
@@ -106,8 +106,8 @@ const OpprettKlage = () => {
                         />
                         {erEksternSak ? (
                             <TextField
-                                {...register('erEksternSakId')}
-                                error={formState.errors.erEksternSakId?.message}
+                                {...register('erInfotrygdSakId')}
+                                error={formState.errors.erInfotrygdSakId?.message}
                                 label="Ekstern sakId"
                             />
                         ) : (

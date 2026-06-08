@@ -13,18 +13,18 @@ export const opprettKlage = createAsyncThunk<
         journalpostId: string;
         datoKlageMottatt: string;
         relatertBehandlingId?: string;
-        erEksternSakId?: string;
+        erInfotrygdSakId?: string;
     },
     { rejectValue: ApiError }
 >(
     'klage/opprett',
-    async ({ sakId, journalpostId, datoKlageMottatt, relatertBehandlingId, erEksternSakId }, thunkApi) => {
+    async ({ sakId, journalpostId, datoKlageMottatt, relatertBehandlingId, erInfotrygdSakId }, thunkApi) => {
         const res = await klageApi.opprettKlage({
             sakId,
             journalpostId,
             datoKlageMottatt,
             relatertBehandlingId,
-            erEksternSakId,
+            erInfotrygdSakId,
         });
         if (res.status === 'ok') {
             return res.data;
@@ -44,7 +44,7 @@ export const vurderFormkrav = createAsyncThunk<Klage, FormkravRequest, { rejectV
             klagesDetPåKonkreteElementerIVedtaket,
             erUnderskrevet,
             fremsattRettsligKlageinteresse,
-            eksternSakId,
+            infotrygdSakId,
         },
         thunkApi,
     ) => {
@@ -56,7 +56,7 @@ export const vurderFormkrav = createAsyncThunk<Klage, FormkravRequest, { rejectV
             klagesDetPåKonkreteElementerIVedtaket,
             erUnderskrevet,
             fremsattRettsligKlageinteresse,
-            eksternSakId,
+            infotrygdSakId: infotrygdSakId,
         });
         if (res.status === 'ok') {
             return res.data;
