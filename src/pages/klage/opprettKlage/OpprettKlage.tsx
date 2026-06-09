@@ -70,18 +70,16 @@ const OpprettKlage = () => {
                     )}
                 >
                     <div className={styles.opprettelseContainer}>
-                        {!erEksternSak && (
-                            <TextField
-                                {...register('journalpostId')}
-                                error={formState.errors.journalpostId?.message}
-                                label={
-                                    <div className={styles.journalpostIdLabel}>
-                                        {formatMessage('opprett.journalpostId.label')}
-                                        <HelpText>{formatMessage('opprett.journalpostId.hjelpetekst')}</HelpText>
-                                    </div>
-                                }
-                            />
-                        )}
+                        <TextField
+                            {...register('journalpostId')}
+                            error={formState.errors.journalpostId?.message}
+                            label={
+                                <div className={styles.journalpostIdLabel}>
+                                    {formatMessage('opprett.journalpostId.label')}
+                                    <HelpText>{formatMessage('opprett.journalpostId.hjelpetekst')}</HelpText>
+                                </div>
+                            }
+                        />
 
                         <Controller
                             control={control}
