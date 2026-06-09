@@ -1,23 +1,88 @@
-name: Deploy til prod-gcp ved release
+name: Deploy til prod-gcp ved merge til master
 
 on:
-    release:
-        types: [published]
+    push:
+        branches:
+          - master
 
 permissions: { }
 
 jobs:
-    deploy_to_prod:
-        name: Deploy to prod
-        runs-on: ubuntu-latest
-        permissions:
-            contents: read
-            id-token: write
-        steps:
-            - uses: actions/checkout@v6
-            - uses: nais/deploy/actions/deploy@v2
-              env:
-                  #se https://console.cloud.google.com/artifacts/docker/nais-management-233d/europe-north1/supstonad?authuser=1&inv=1&invt=AbybBg&project=supstonad-prod-9599
-                  VAR: image=europe-north1-docker.pkg.dev/nais-management-233d/supstonad/su-se-framover-app:${{ github.sha }}
-                  CLUSTER: prod-gcp
-                  RESOURCE: .nais/prod-gcp.yaml
+  build-push-docker-image:
+    name: build-push-docker-image
+    runs-on: ubuntu-latest
+    outputs:
+      image: ${{ steps.docker-build-push.outputs.image }}
+    permissions:
+      packages: 'write'
+      contents: 'read'
+      id-token: 'write'
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v6.2.0
+        with:
+          node-version: '24.1.0'
+      - name: Ensure npm has min-release-age support
+        # Denne versjonen er første med min-release-age support
+        run: |
+          npm i -g npm@11.10.0
+          npm -v
+      - name: install-deps-client
+        run: npm ci --min-release-age 20 --ignore-scripts
+      - name: install-deps-server
+        run: npm ci --min-release-age 20 --ignore-scripts --prefix server
+      - name: lint-and-typecheck
+        run: npm run lint-and-typecheck
+      - name: build-client
+        run: npm run build
+      - name: build-server
+        working-directory: server
+        run: npm run build
+      - name: docker-login
+        uses: docker/login-action@v4
+        with:
+          registry: ghcr.io
+          username: ${{ github.repository }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Build and publish Docker image
+        uses: nais/docker-build-push@v0
+        id: docker-build-push
+        with:
+          docker_context: .
+          team: supstonad
+          salsa: false
+          image_suffix: app # hvis denne endres så må prod-deploy oppdateres likt
+          tag: ${{ github.sha }}
+
+  deploy-to-dev-gcp:
+    name: deploy-to-dev-gcp
+    permissions:
+      contents: read
+      id-token: write
+    needs: build-push-docker-image
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: nais/deploy/actions/deploy@v2
+        env:
+          CLUSTER: dev-gcp
+          RESOURCE: .nais/dev-gcp.yaml
+          VAR: image=${{ needs.build-push-docker-image.outputs.image }}
+
+  deploy_to_prod:
+    needs: deploy-to-dev-gcp
+    name: Deploy to prod
+    runs-on: ubuntu-latest
+    permissions:
+        contents: read
+        id-token: write
+    steps:
+        - uses: actions/checkout@v6
+        - uses: nais/deploy/actions/deploy@v2
+          env:
+              #se https://console.cloud.google.com/artifacts/docker/nais-management-233d/europe-north1/supstonad?authuser=1&inv=1&invt=AbybBg&project=supstonad-prod-9599
+              VAR: image=europe-north1-docker.pkg.dev/nais-management-233d/supstonad/su-se-framover-app:${{ github.sha }}
+              CLUSTER: prod-gcp
+              RESOURCE: .nais/prod-gcp.yaml

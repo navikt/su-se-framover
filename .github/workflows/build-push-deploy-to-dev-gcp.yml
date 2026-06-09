@@ -1,16 +1,10 @@
-name: build-push-deploy-to-gcp.yml
+name: Deploy to dev-gcp
 
 on:
     push:
         branches-ignore:
             - 'gh-readonly-queue/**'
     workflow_dispatch:
-      inputs:
-        deploy_prod:
-          description: 'Deploy to production'
-          type: boolean
-          required: false
-          default: false
 
 permissions: {}
 
@@ -48,14 +42,14 @@ jobs:
               working-directory: server
               run: npm run build
             - name: docker-login
-              if: github.event_name == 'workflow_dispatch' || github.ref == 'refs/heads/master'
+              if: github.event_name == 'workflow_dispatch'
               uses: docker/login-action@v4
               with:
                   registry: ghcr.io
                   username: ${{ github.repository }}
                   password: ${{ secrets.GITHUB_TOKEN }}
             - name: Build and publish Docker image
-              if: github.event_name == 'workflow_dispatch' || github.ref == 'refs/heads/master'
+              if: github.event_name == 'workflow_dispatch'
               uses: nais/docker-build-push@v0
               id: docker-build-push
               with:
@@ -66,7 +60,7 @@ jobs:
                   tag: ${{ github.sha }}
 
     deploy-to-dev-gcp:
-        if: github.event_name == 'workflow_dispatch' || github.ref == 'refs/heads/master'
+        if: github.event_name == 'workflow_dispatch'
         name: deploy-to-dev-gcp
         permissions:
             contents: read
@@ -79,20 +73,4 @@ jobs:
               env:
                   CLUSTER: dev-gcp
                   RESOURCE: .nais/dev-gcp.yaml
-                  VAR: image=${{ needs.build-push-docker-image.outputs.image }}
-
-    deploy-to-prod:
-        needs: build-push-docker-image
-        if: ${{ inputs.deploy_prod == true && github.ref == 'refs/heads/master' }}
-        name: Deploy to prod gcp
-        permissions:
-            contents: read
-            id-token: write
-        runs-on: ubuntu-latest
-        steps:
-            - uses: actions/checkout@v6
-            - uses: nais/deploy/actions/deploy@v2
-              env:
-                  CLUSTER: prod-gcp
-                  RESOURCE: .nais/prod-gcp.yaml
                   VAR: image=${{ needs.build-push-docker-image.outputs.image }}
