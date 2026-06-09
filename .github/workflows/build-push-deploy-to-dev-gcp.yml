@@ -61,7 +61,7 @@ jobs:
               with:
                   docker_context: .
                   team: supstonad
-                  salsa: false
+                  salsa: true
                   image_suffix: app # hvis denne endres så må prod-deploy oppdateres likt
                   tag: ${{ github.sha }}
 
