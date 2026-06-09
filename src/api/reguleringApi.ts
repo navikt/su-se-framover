@@ -3,6 +3,7 @@ import { Fradrag } from '~src/types/Fradrag';
 import { Uføregrunnlag } from '~src/types/grunnlagsdataOgVilkårsvurderinger/uføre/Uføregrunnlag';
 import {
     ManuellRegulering,
+    OpprettReguleringRequest,
     ProdusertReguleringStatus,
     Regulering,
     ReguleringOversiktsstatus,
@@ -168,5 +169,15 @@ export async function hentManuellRegulering(args: {
     return apiClient({
         url: `reguleringer/manuell/${args.reguleringId}`,
         method: 'GET',
+    });
+}
+
+export async function opprettRegulering(args: OpprettReguleringRequest): Promise<ApiClientResult<ManuellRegulering>> {
+    return apiClient({
+        url: `/reguleringer/manuell/opprett/${args.sakId}`,
+        method: 'POST',
+        body: {
+            begrunnelse: args.begrunnelse,
+        },
     });
 }

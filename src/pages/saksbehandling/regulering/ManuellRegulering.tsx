@@ -284,6 +284,15 @@ const ÅrsakForManuellRegulering = (props: { årsaker: ÅrsakForManuell[] }) => 
             <ul className={styles.årsaksContainer}>
                 {props.årsaker.map((årsak, i) => {
                     switch (årsak.type) {
+                        case ÅrsakTilManuellReguleringKategori.OpprettetAvSaksbehandler: {
+                            return (
+                                <li key={i}>
+                                    <div className={styles.årsaksdetaljer}>
+                                        <BodyShort>{årsak.begrunnelse ?? ''}</BodyShort>
+                                    </div>
+                                </li>
+                            );
+                        }
                         case ÅrsakTilManuellReguleringKategori.ManglerRegulertBeløpForFradrag: {
                             return (
                                 <li key={i}>
