@@ -48,6 +48,7 @@ export enum Reguleringstype {
 }
 
 export enum ÅrsakTilManuellReguleringKategori {
+    OpprettetAvSaksbehandler = 'OpprettetAvSaksbehandler',
     ManglerRegulertBeløpForFradrag = 'ManglerRegulertBeløpForFradrag',
     ManglerIeuFraPesys = 'ManglerIeuFraPesys',
     YtelseErMidlertidigStanset = 'YtelseErMidlertidigStanset',
@@ -96,4 +97,9 @@ export interface SisteGrunnbeløpOgSatser {
     grunnbeløp: number;
     garantipensjonOrdinærMåned: number;
     garantipensjonHøyMåned: number;
+}
+
+export interface OpprettReguleringRequest {
+    sakId: string;
+    begrunnelse: string;
 }
