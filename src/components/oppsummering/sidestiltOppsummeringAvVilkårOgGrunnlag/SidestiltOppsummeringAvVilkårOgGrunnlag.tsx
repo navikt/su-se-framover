@@ -8,6 +8,7 @@ import {
     AccordionItemFradrag,
     AccordionItemInstitusjonsopphold,
     AccordionItemLovligOpphold,
+    AccordionItemOpplysningsplikt,
     AccordionItemPersonligOppmøte,
     AccordionItemUtenlandsopphold,
 } from '~src/components/oppsummering/sidestiltOppsummeringAvVilkårOgGrunnlag/FellesVilkår.tsx';
@@ -53,6 +54,7 @@ const SidestiltOppsummeringAvVilkårOgGrunnlag = (props: {
                     <Heading size="medium">{formatMessage('accordion.overskrift.fraSøknad')}</Heading>
                 )}
             </div>
+
             {props.sakstype === Sakstype.Uføre && (
                 <VilkårUføre
                     uføre={props.grunnlagsdataOgVilkårsvurderinger.uføre}
@@ -72,6 +74,14 @@ const SidestiltOppsummeringAvVilkårOgGrunnlag = (props: {
                 />
             )}
             <Accordion>
+                <AccordionItemOpplysningsplikt
+                    fraGrunnlag={props.grunnlagsdataOgVilkårsvurderinger.opplysningsplikt}
+                    sidestilt={
+                        sidestiltMedGrunnlagOgVilkår
+                            ? (props.visesSidestiltMed as GrunnlagsdataOgVilkårsvurderinger).opplysningsplikt
+                            : undefined
+                    }
+                />
                 <AccordionItemLovligOpphold
                     lovligOppholdFraGrunnlag={props.grunnlagsdataOgVilkårsvurderinger.lovligOpphold}
                     sidestiltLovligOppholdVilkår={
