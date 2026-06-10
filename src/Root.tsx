@@ -1,4 +1,5 @@
 import { Loader } from '@navikt/ds-react';
+import { createHead, UnheadProvider } from '@unhead/react/client';
 import { lazy, Suspense, useEffect } from 'react';
 import { Provider } from 'react-redux';
 import { BrowserRouter, Outlet, Route, Routes, useLocation } from 'react-router-dom';
@@ -11,7 +12,9 @@ import BrevPage from './pages/saksbehandling/brev/BrevPage';
 import Vilkår from './pages/saksbehandling/søknadsbehandling/vilkår/Vilkår';
 import Store from './redux/Store';
 import './externalStyles';
+import { SakInngang } from '~src/pages/søknad/steg/inngang/SakInngang.tsx';
 import { ContentWrapper } from './utils/router/ContentWrapper';
+import UmamiTracker from './utils/UmamiTracker';
 
 const Attestering = lazy(() => import('./pages/saksbehandling/attestering/Attestering'));
 const Kvittering = lazy(() => import('./pages/søknad/kvittering/Kvittering'));
@@ -39,6 +42,7 @@ const RevurderingIntroPage = lazy(
     () => import('./pages/saksbehandling/revurdering/revurderingIntro/RevurderingIntroPage'),
 );
 const ManuellReguleringPage = lazy(() => import('./pages/saksbehandling/regulering/ManuellRegulering'));
+const OpprettReguleringPage = lazy(() => import('./pages/saksbehandling/regulering/OpprettRegulering'));
 const Stans = lazy(() => import('./pages/saksbehandling/stans/Stans'));
 const Gjenoppta = lazy(() => import('./pages/saksbehandling/gjenoppta/Gjenoppta'));
 const Utenlandsopphold = lazy(() => import('./pages/saksbehandling/utenlandsopphold/Utenlandsopphold'));
@@ -54,19 +58,24 @@ const ScrollToTop = () => {
     return null;
 };
 
+const head = createHead();
+
 const Root = () => (
     <Provider store={Store}>
-        <BrowserRouter>
-            <ErrorBoundary>
-                <ContentWrapper>
-                    <Suspense fallback={<Loader />}>
-                        <Toaster />
-                        <ScrollToTop />
-                        <AppRoutes />
-                    </Suspense>
-                </ContentWrapper>
-            </ErrorBoundary>
-        </BrowserRouter>
+        <UnheadProvider head={head}>
+            <UmamiTracker />
+            <BrowserRouter>
+                <ErrorBoundary>
+                    <ContentWrapper>
+                        <Suspense fallback={<Loader />}>
+                            <Toaster />
+                            <ScrollToTop />
+                            <AppRoutes />
+                        </Suspense>
+                    </ContentWrapper>
+                </ErrorBoundary>
+            </BrowserRouter>
+        </UnheadProvider>
     </Provider>
 );
 
@@ -74,6 +83,7 @@ const AppRoutes = () => (
     <Routes>
         <Route path={routes.home.path} element={<WithDocTitle title="Hjem" Page={HomePage} />} />
         <Route path={routes.devTools.path} element={<DevTools />} />
+        <Route path={routes.saker.path} element={<SakInngang />} />
         <Route path={routes.soknad.path} element={<WithDocTitle title="Søknad" Page={Outlet} />}>
             <Route index element={<Søknadsvelger />} />
             <Route path={routes.soknadtema.path} element={<Soknad />}>
@@ -107,6 +117,7 @@ const AppRoutes = () => (
             <Route path={routes.alleDokumenterForSak.path} element={<DokumenterPage />} />
             <Route path={routes.kontrollsamtale.path} element={<NyDatoForKontrollsamtale />} />
             <Route path={routes.manuellRegulering.path} element={<ManuellReguleringPage />} />
+            <Route path={routes.opprettRegulering.path} element={<OpprettReguleringPage />} />
             <Route path={routes.utenlandsopphold.path} element={<Utenlandsopphold />} />
             <Route path={routes.brevPage.path} element={<BrevPage />} />
 

@@ -32,6 +32,7 @@ interface Props<T extends FieldValues> {
     harEPS: boolean;
     beregningsDato: Nullable<NullablePeriode>;
     readonly: boolean;
+    tillatFradragstypeAnnet?: boolean;
 }
 
 const støtter_fra_utland = new Set<Fradragskategori>([
@@ -100,6 +101,12 @@ const FradragForm = <T extends FieldValues>(props: Props<T>) => {
                                                 >
                                                     <option value="">{formatMessage('fradrag.type.emptyLabel')}</option>
                                                     {Object.values(VelgbareFradragskategorier)
+                                                        .filter(
+                                                            (f) =>
+                                                                props.tillatFradragstypeAnnet ||
+                                                                f !== VelgbareFradragskategorier.Annet ||
+                                                                field.value === VelgbareFradragskategorier.Annet,
+                                                        )
                                                         .sort()
                                                         .map((f) => (
                                                             <option value={f} key={f}>

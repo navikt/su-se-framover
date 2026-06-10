@@ -70,6 +70,12 @@ export const soknadtema: Route<{ soknadstema?: TemaFraUrl; papirsøknad?: boolea
         `/soknad${args?.soknadstema ? '/' + args.soknadstema : ''}${args.papirsøknad ? '?papirsoknad=true' : ''}`,
 };
 
+export const saker: Route<never> = {
+    path: 'saker/opprett',
+    absPath: '/saker/opprett',
+    createURL: () => '/saker/opprett',
+};
+
 export const soknadPersonSøk: Route<{ papirsøknad?: boolean; soknadstema: TemaFraUrl }> = {
     path: 'personsok',
     absPath: '/soknad/:soknadstema/personsok',
@@ -261,6 +267,12 @@ export const manuellRegulering: Route<{ sakId: string; reguleringId: string }> =
     path: 'reguler/:reguleringId',
     absPath: '/saksoversikt/:sakId/reguler/:reguleringId',
     createURL: (args) => `/saksoversikt/${args.sakId}/reguler/${args.reguleringId}`,
+};
+
+export const opprettRegulering: Route<{ sakId: string }> = {
+    path: 'reguler/opprett',
+    absPath: '/saksoversikt/:sakId/reguler/opprett',
+    createURL: (args) => `/saksoversikt/${args.sakId}/reguler/opprett`,
 };
 
 export interface SuccessNotificationState {

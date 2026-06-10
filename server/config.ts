@@ -8,6 +8,10 @@ function hasEnvVar(name: string): boolean {
     return process.env[name] !== undefined;
 }
 
+function optionalEnvVar(name: string): string | undefined {
+    return process.env[name] || undefined;
+}
+
 function envVar({
     name,
     defaultValue,
@@ -53,6 +57,14 @@ export const server = {
 
     mockOauthServerPort: Number.parseInt(envVar({ name: 'LOCAL_AUTH_SERVER_PORT', defaultValue: '4321' })),
     logLevel: envVar({ name: 'LOG_LEVEL', defaultValue: 'info' }),
+};
+
+export const frontend = {
+    environment: envVar({ name: 'APP_ENV', defaultValue: { dev: 'local', prod: 'production' } }),
+    umami: {
+        scriptUrl: optionalEnvVar('UMAMI_SCRIPT_URL'),
+        websiteId: optionalEnvVar('UMAMI_WEBSITE_ID'),
+    },
 };
 
 // For auth
