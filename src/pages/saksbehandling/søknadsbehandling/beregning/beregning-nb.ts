@@ -1,5 +1,6 @@
 export default {
-    'alert.advarsel.kjørBeregningFørst': 'Du må kjøre en beregning før du kan gå videre',
+    'alert.advarsel.kjørBeregningFørst':
+        'Du må kjøre en beregning før du kan gå videre, husk å sjekke at fradragene stemmer med stønadsperiode hvis den er endret.',
 
     'alert.feil.beregningFeilet': 'Beregning feilet',
 
