@@ -37,7 +37,7 @@ const BosituasjonPage = (props: RevurderingStegProps & { søker: Person } & { sa
     );
     const form = useForm<BosituasjonGrunnlagFormData>({
         defaultValues: initialValues,
-        resolver: yupResolver(bosituasjonFormSchema),
+        resolver: yupResolver(bosituasjonFormSchema(props.søker.fnr)),
     });
 
     const lagreBosituasjon = (
