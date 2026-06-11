@@ -40,6 +40,7 @@ export interface ReguleringOversiktsstatus {
     fnr: string;
     fradragsKategori: Fradragskategori[];
     årsakTilManuellRegulering: ÅrsakTilManuellReguleringKategori[];
+    status: Reguleringsstatus;
 }
 
 export enum Reguleringstype {

@@ -26,6 +26,7 @@ export default {
     'tabell.fnr': 'Fødselsnummer',
     'tabell.ekstraInformasjon': 'Ekstra informasjon',
     'tabell.årsakTilManuellRegulering': 'Årsak til manuell G-regulering',
+    'tabell.status': 'Status',
     'tabell.lenke.knapp': 'Se sak',
     ...manuelleÅrsakerForRegulering,
     ...velgbareFradragskategoriMessages,
