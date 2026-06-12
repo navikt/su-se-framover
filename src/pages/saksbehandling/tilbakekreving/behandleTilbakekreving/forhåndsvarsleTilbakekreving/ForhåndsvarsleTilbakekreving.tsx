@@ -1,7 +1,8 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
+
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Button, Heading, Radio, RadioGroup } from '@navikt/ds-react';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 
@@ -19,6 +20,7 @@ import { useI18n } from '~src/lib/i18n';
 import * as Routes from '~src/lib/routes';
 import { Nullable } from '~src/lib/types.ts';
 import { hookFormErrorsTilFeiloppsummering } from '~src/lib/validering';
+import { MottakerForm } from '~src/pages/saksbehandling/mottaker/Mottaker.tsx';
 import {
     ForhåndsvarselsInfo,
     ManuellTilbakekrevingsbehandling,
@@ -98,6 +100,8 @@ const ForhåndsvarsleTilbakekreving = (props: {
     const [forhåndsvisStatus, forhåndsvis] = useBrevForhåndsvisning(forhåndsvisForhåndsvarsel);
     const [redigertForhåndsvarselStatus, saveRedigerForhåndsvarsel] = useApiCall(redigerFritekst);
 
+    const [visDødsbo, setVisDødsbo] = useState(false);
+
     const handleRedigertForhåndsvarsel = (data: HandleRedigertForhåndsvarsel, onSuccess: () => void) => {
         return saveRedigerForhåndsvarsel(
             {
@@ -167,6 +171,24 @@ const ForhåndsvarsleTilbakekreving = (props: {
                                 }}
                             />
                         )}
+
+                        <div>
+                            {!visDødsbo && (
+                                <Button variant="secondary" type="button" onClick={() => setVisDødsbo(true)}>
+                                    Dødsbo
+                                </Button>
+                            )}
+
+                            {visDødsbo && (
+                                <MottakerForm
+                                    sakId={props.sakId}
+                                    referanseId={props.tilbakekreving.id}
+                                    referanseType="DØDSBO"
+                                    brevtype="VEDTAK"
+                                    onClose={() => setVisDødsbo(false)}
+                                />
+                            )}
+                        </div>
 
                         <div>
                             <Feiloppsummering
