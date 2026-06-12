@@ -9,6 +9,7 @@ export default {
     'opprett.journalpostId.hjelpetekst': 'Dette er den journalførte innkommende klagen fra bruker',
     'opprett.klageMottatt.label': 'Klage mottatt',
     'opprett.klageMottatt.hjelpetekst': 'Fyll inn datoen NAV mottok klagen',
+    'opprett.eksternSak.hjelpetekst': 'Kryss av kun når det er klage på sak i Infotrygd som skal registreres.',
 
     'framdriftsindikator.formkrav': 'Formkrav og klagefrist',
     'framdriftsindikator.vurdering': 'Vurdering',
