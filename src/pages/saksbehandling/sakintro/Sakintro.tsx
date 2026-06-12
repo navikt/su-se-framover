@@ -42,6 +42,7 @@ enum NyBehandling {
     REVURDER = 'REVURDER',
     KLAGE = 'KLAGE',
     TILBAKEKREVING = 'TILBAKEKREVING',
+    REGULERING = 'REGULERING',
 }
 
 const Sakintro = () => {
@@ -215,6 +216,8 @@ const NyBehandlingVelger = (props: { sakId: string; kanRevurdere: boolean }) => 
                 return Routes.klageOpprett.createURL({ sakId: props.sakId });
             case NyBehandling.TILBAKEKREVING:
                 return Routes.tilbakekrevValgtSak.createURL({ sakId: props.sakId });
+            case NyBehandling.REGULERING:
+                return Routes.opprettRegulering.createURL({ sakId: props.sakId });
         }
     };
 
@@ -263,6 +266,13 @@ const NyBehandlingVelger = (props: { sakId: string; kanRevurdere: boolean }) => 
                         href={nyBehandlingTilRoute(NyBehandling.TILBAKEKREVING)}
                     >
                         {formatMessage('popover.option.tilbakekreving')}
+                    </LinkAsButton>
+                    <LinkAsButton
+                        className={styles.popoverOption}
+                        variant="tertiary"
+                        href={nyBehandlingTilRoute(NyBehandling.REGULERING)}
+                    >
+                        {formatMessage('popover.option.regulering')}
                     </LinkAsButton>
                 </div>
             </Popover>

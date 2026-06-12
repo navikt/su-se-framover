@@ -269,6 +269,12 @@ export const manuellRegulering: Route<{ sakId: string; reguleringId: string }> =
     createURL: (args) => `/saksoversikt/${args.sakId}/reguler/${args.reguleringId}`,
 };
 
+export const opprettRegulering: Route<{ sakId: string }> = {
+    path: 'reguler/opprett',
+    absPath: '/saksoversikt/:sakId/reguler/opprett',
+    createURL: (args) => `/saksoversikt/${args.sakId}/reguler/opprett`,
+};
+
 export interface SuccessNotificationState {
     notification?: string;
 }
