@@ -1,15 +1,17 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Button, Heading, Radio, RadioGroup } from '@navikt/ds-react';
+import { Alert, Button, Heading, Radio, RadioGroup } from '@navikt/ds-react';
 import { useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 
 import { FritekstTyper, hentFritekst, redigerFritekst } from '~src/api/fritekstApi.ts';
+import { Brevtype, hentMottaker, ReferanseType } from '~src/api/mottakerClient.ts';
 import { forhåndsvisForhåndsvarsel, visUtsendtForhåndsvarsel } from '~src/api/tilbakekrevingApi';
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
 import TextareaWithAutosave from '~src/components/inputs/textareaWithAutosave/TextareaWithAutosave.tsx';
+import { MottakerAlert, toMottakerAlert } from '~src/components/mottaker/mottakerUtils.ts';
 import Navigasjonsknapper from '~src/components/navigasjonsknapper/Navigasjonsknapper';
 import Feiloppsummering from '~src/components/oppsummering/feiloppsummering/Feiloppsummering';
 import OppsummeringAvKravgrunnlag from '~src/components/oppsummering/kravgrunnlag/OppsummeringAvKravgrunnlag';
@@ -27,9 +29,7 @@ import {
     TilbakekrevingSteg,
 } from '~src/types/ManuellTilbakekrevingsbehandling';
 import { formatDateTime } from '~src/utils/date/dateUtils';
-
 import messages from '../../Tilbakekreving-nb';
-
 import styles from './ForhåndsvarsleTilbakekreving.module.less';
 import {
     ForhåndsvarsleTilbakekrevingFormData,
@@ -99,8 +99,6 @@ const ForhåndsvarsleTilbakekreving = (props: {
 
     const [forhåndsvisStatus, forhåndsvis] = useBrevForhåndsvisning(forhåndsvisForhåndsvarsel);
     const [redigertForhåndsvarselStatus, saveRedigerForhåndsvarsel] = useApiCall(redigerFritekst);
-
-    const [visDødsbo, setVisDødsbo] = useState(false);
 
     const handleRedigertForhåndsvarsel = (data: HandleRedigertForhåndsvarsel, onSuccess: () => void) => {
         return saveRedigerForhåndsvarsel(
@@ -172,23 +170,7 @@ const ForhåndsvarsleTilbakekreving = (props: {
                             />
                         )}
 
-                        <div>
-                            {!visDødsbo && (
-                                <Button variant="secondary" type="button" onClick={() => setVisDødsbo(true)}>
-                                    Dødsbo
-                                </Button>
-                            )}
-
-                            {visDødsbo && (
-                                <MottakerForm
-                                    sakId={props.sakId}
-                                    referanseId={props.tilbakekreving.id}
-                                    referanseType="DØDSBO"
-                                    brevtype="VEDTAK"
-                                    onClose={() => setVisDødsbo(false)}
-                                />
-                            )}
-                        </div>
+                        <MottakerDødsbo tilbakekreving={props.tilbakekreving} sakId={props.sakId} />
 
                         <div>
                             <Feiloppsummering
@@ -282,6 +264,54 @@ export const TidligereSendtForhåndsvarsler = (props: {
                 {formatDateTime(props.forhåndsvarselInfo.hendelsestidspunkt)}
             </Button>
             {RemoteData.isFailure(visForhåndsvarselStatus) && <ApiErrorAlert error={visForhåndsvarselStatus.error} />}
+        </div>
+    );
+};
+
+const MottakerDødsbo = (props: { sakId: string; tilbakekreving: ManuellTilbakekrevingsbehandling }) => {
+    const [visDødsbo, setVisDødsbo] = useState(false);
+    const [harDødsbo, setHarDødsbo] = useState(false);
+    const [mottakerFetchError, setMottakerFetchError] = useState<MottakerAlert | null>(null);
+    const brevtype: Brevtype = 'FORHANDSVARSEL';
+    const referansetype: ReferanseType = 'DØDSBO';
+
+    useEffect(() => {
+        const sjekkMottaker = async () => {
+            const res = await hentMottaker(props.sakId, referansetype, props.tilbakekreving.id, brevtype);
+            if (res.status === 'ok') {
+                if (res.data) {
+                    setHarDødsbo(true);
+                }
+                return;
+            }
+            setMottakerFetchError(toMottakerAlert(res.error, 'Kan ikke hente mottaker'));
+        };
+        sjekkMottaker();
+    }, []);
+
+    return (
+        <div>
+            {!visDødsbo && (
+                <Button variant="secondary" type="button" onClick={() => setVisDødsbo(true)}>
+                    {harDødsbo ? 'Vis dødsbo' : 'Legg til dødsbo'}
+                </Button>
+            )}
+
+            {mottakerFetchError && (
+                <Alert variant={mottakerFetchError.variant} size="small">
+                    {mottakerFetchError.text}
+                </Alert>
+            )}
+
+            {visDødsbo && (
+                <MottakerForm
+                    sakId={props.sakId}
+                    referanseId={props.tilbakekreving.id}
+                    referanseType={referansetype}
+                    brevtype={brevtype}
+                    onClose={() => setVisDødsbo(false)}
+                />
+            )}
         </div>
     );
 };
