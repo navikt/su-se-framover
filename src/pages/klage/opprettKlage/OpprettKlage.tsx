@@ -74,7 +74,7 @@ const OpprettKlage = () => {
                             {...register('journalpostId')}
                             error={formState.errors.journalpostId?.message}
                             label={
-                                <div className={styles.journalpostIdLabel}>
+                                <div className={styles.hjelpetekstIdLabel}>
                                     {formatMessage('opprett.journalpostId.label')}
                                     <HelpText>{formatMessage('opprett.journalpostId.hjelpetekst')}</HelpText>
                                 </div>
@@ -99,9 +99,12 @@ const OpprettKlage = () => {
                             name="erEksternSak"
                             control={control}
                             render={({ field }) => (
-                                <Checkbox checked={field.value} onChange={(e) => field.onChange(e.target.checked)}>
-                                    Ekstern sak
-                                </Checkbox>
+                                <div className={styles.hjelpetekstIdLabel}>
+                                    <Checkbox checked={field.value} onChange={(e) => field.onChange(e.target.checked)}>
+                                        Ekstern sak
+                                    </Checkbox>
+                                    <HelpText>{formatMessage('opprett.eksternSak.hjelpetekst')}</HelpText>
+                                </div>
                             )}
                         />
                         {erEksternSak ? (
