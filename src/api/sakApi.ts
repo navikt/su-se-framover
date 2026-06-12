@@ -171,7 +171,7 @@ interface EpsSakIdResponse {
     sakId: string | null;
 }
 
-export const hentEpsSaksIderForDenneSak = async (sakId: string): Promise<ApiClientResult<EpsSakIdResponse>> => {
+export const hentEpsSaksIdForDenneSak = async (sakId: string): Promise<ApiClientResult<EpsSakIdResponse>> => {
     return apiClient<EpsSakIdResponse>({
         url: `/saker/${sakId}/epsSak`,
         method: 'GET',

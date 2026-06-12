@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 
 import { ErrorCode } from '~src/api/apiClient';
 import { fetchPerson } from '~src/api/personApi';
-import { hentEpsSaksIderForDenneSak } from '~src/api/sakApi';
+import { hentEpsSaksIdForDenneSak } from '~src/api/sakApi';
 import { KjønnUkjent } from '~src/assets/Icons';
 import { pipe } from '~src/lib/fp';
 import { useApiCall } from '~src/lib/hooks';
@@ -89,7 +89,7 @@ export const storForBokstav = (str: string) => {
 const EpsSakLinkUtenSivilstand = (props: { sakId: string }) => {
     const { insert } = useToast();
 
-    const [hentEpsSaksIderStatus, hentEpsSaksIder] = useApiCall(hentEpsSaksIderForDenneSak);
+    const [hentEpsSaksIderStatus, hentEpsSaksIder] = useApiCall(hentEpsSaksIdForDenneSak);
 
     useEffect(() => {
         hentEpsSaksIder(props.sakId);
@@ -139,7 +139,7 @@ const Sivilstand = (props: { sakId: string; sivilstand: ISivilstand; sakstype: S
 
     const { insert } = useToast();
     const [status, hentPerson] = useApiCall(fetchPerson);
-    const [hentEpsSaksIderStatus, hentEpsSaksIder] = useApiCall(hentEpsSaksIderForDenneSak);
+    const [hentEpsSaksIderStatus, hentEpsSaksIder] = useApiCall(hentEpsSaksIdForDenneSak);
 
     useEffect(() => {
         if (props.sivilstand.relatertVedSivilstand) {
