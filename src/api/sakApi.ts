@@ -167,8 +167,12 @@ export const hentJournalposter = async (arg: { sakId: string }): Promise<ApiClie
     });
 };
 
-export const hentEpsSaksIderForDenneSak = async (sakId: string): Promise<ApiClientResult<string[]>> => {
-    return apiClient<string[]>({
+interface EpsSakIdResponse {
+    sakId: string | null;
+}
+
+export const hentEpsSaksIderForDenneSak = async (sakId: string): Promise<ApiClientResult<EpsSakIdResponse>> => {
+    return apiClient<EpsSakIdResponse>({
         url: `/saker/${sakId}/epsSak`,
         method: 'GET',
     });

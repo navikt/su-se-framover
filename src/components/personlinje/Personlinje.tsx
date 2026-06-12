@@ -105,16 +105,6 @@ const EpsSakLinkUtenSivilstand = (props: { sakId: string }) => {
                 }),
             );
         }
-
-        if (RemoteData.isSuccess(hentEpsSaksIderStatus) && hentEpsSaksIderStatus.value.length > 1) {
-            insert(
-                createToast({
-                    type: ToastType.INFO,
-                    duration: 5000,
-                    message: 'Saken har flere EPS som har SU-uføre sak',
-                }),
-            );
-        }
     }, [hentEpsSaksIderStatus._tag]);
 
     return pipe(
@@ -125,13 +115,13 @@ const EpsSakLinkUtenSivilstand = (props: { sakId: string }) => {
             () => null,
             (epsSaker) => (
                 <div>
-                    {epsSaker.length === 1 ? (
+                    {epsSaker.sakId ? (
                         <Alert variant="info">
                             <BodyShort>Saken har EPS registrert fra vedtak, men fant ikke fra PDL</BodyShort>
                             <Link
                                 target="_blank"
                                 to={Routes.saksoversiktValgtSak.createURL({
-                                    sakId: epsSaker[0],
+                                    sakId: epsSaker.sakId,
                                 })}
                             >
                                 <BodyShort>Gå til EPS-sak</BodyShort>
@@ -173,16 +163,6 @@ const Sivilstand = (props: { sakId: string; sivilstand: ISivilstand; sakstype: S
                 }),
             );
         }
-
-        if (RemoteData.isSuccess(hentEpsSaksIderStatus) && hentEpsSaksIderStatus.value.length > 1) {
-            insert(
-                createToast({
-                    type: ToastType.INFO,
-                    duration: 5000,
-                    message: 'Saken har flere EPS som har SU-uføre sak',
-                }),
-            );
-        }
     }, [hentEpsSaksIderStatus._tag]);
 
     return (
@@ -207,11 +187,11 @@ const Sivilstand = (props: { sakId: string; sivilstand: ISivilstand; sakstype: S
                     (eps) => (
                         <span className={styles.epsInformasjon}>
                             <KjønnUkjent size="24px" />
-                            {RemoteData.isSuccess(hentEpsSaksIderStatus) && hentEpsSaksIderStatus.value.length === 1 ? (
+                            {RemoteData.isSuccess(hentEpsSaksIderStatus) && hentEpsSaksIderStatus.value.sakId ? (
                                 <Link
                                     target="_blank"
                                     to={Routes.saksoversiktValgtSak.createURL({
-                                        sakId: hentEpsSaksIderStatus.value[0],
+                                        sakId: hentEpsSaksIderStatus.value.sakId,
                                     })}
                                 >
                                     <BodyShort>{showName(eps.navn)}</BodyShort>
