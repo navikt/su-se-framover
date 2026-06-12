@@ -113,15 +113,15 @@ const EpsSakLinkUtenSivilstand = (props: { sakId: string }) => {
             () => null,
             () => <Loader />,
             () => null,
-            (epsSaker) => (
+            (epsSak) => (
                 <div>
-                    {epsSaker.sakId ? (
+                    {epsSak.sakId ? (
                         <Alert variant="info">
                             <BodyShort>Saken har EPS registrert fra vedtak, men fant ikke fra PDL</BodyShort>
                             <Link
                                 target="_blank"
                                 to={Routes.saksoversiktValgtSak.createURL({
-                                    sakId: epsSaker.sakId,
+                                    sakId: epsSak.sakId,
                                 })}
                             >
                                 <BodyShort>Gå til EPS-sak</BodyShort>
