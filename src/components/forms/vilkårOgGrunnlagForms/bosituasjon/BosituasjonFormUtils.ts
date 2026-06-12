@@ -88,63 +88,71 @@ export const bosituasjongrunnlagFormDataTilRequest = (args: {
     })),
 });
 
-export const bosituasjonFormSchema = yup
-    .object<BosituasjonGrunnlagFormData>({
-        bosituasjoner: yup
-            .array<BosituasjonFormItemData>(
-                yup
-                    .object<BosituasjonFormItemData>({
-                        periode: yup
-                            .object<NullablePeriode>({
-                                fraOgMed: yup.date().required().typeError('Feltet må fylles ut'),
-                                tilOgMed: yup.date().required().typeError('Feltet må fylles ut'),
-                            })
-                            .required(),
-                        harEPS: yup.boolean().required('Feltet må fylles ut').nullable(),
-                        erEpsFylt67: yup.boolean().defined().when('harEPS', {
-                            is: true,
-                            then: yup.boolean().required(),
-                        }),
-                        epsFnr: yup
-                            .string()
-                            .defined()
-                            .when('harEPS', {
+export const bosituasjonFormSchema = (søkerFnr: string) =>
+    yup
+        .object<BosituasjonGrunnlagFormData>({
+            bosituasjoner: yup
+                .array<BosituasjonFormItemData>(
+                    yup
+                        .object<BosituasjonFormItemData>({
+                            periode: yup
+                                .object<NullablePeriode>({
+                                    fraOgMed: yup.date().required().typeError('Feltet må fylles ut'),
+                                    tilOgMed: yup.date().required().typeError('Feltet må fylles ut'),
+                                })
+                                .required(),
+                            harEPS: yup.boolean().required('Feltet må fylles ut').nullable(),
+                            erEpsFylt67: yup.boolean().defined().when('harEPS', {
                                 is: true,
-                                then: yup
-                                    .string()
-                                    .required()
-                                    .test({
-                                        name: 'Gyldig fødselsnummer',
-                                        message: 'Ugyldig fødselsnummer',
-                                        test: function (value) {
-                                            return typeof value === 'string' && value.length === 11;
+                                then: yup.boolean().required(),
+                            }),
+                            epsFnr: yup
+                                .string()
+                                .defined()
+                                .when('harEPS', {
+                                    is: true,
+                                    then: yup
+                                        .string()
+                                        .required()
+                                        .test({
+                                            name: 'Gyldig fødselsnummer',
+                                            message: 'Ugyldig fødselsnummer',
+                                            test: function (value) {
+                                                return typeof value === 'string' && value.length === 11;
+                                            },
+                                        })
+                                        .test({
+                                            name: 'Kan ikke være samme som søker sitt fnr',
+                                            message: 'Kan ikke være samme som søker sitt fødselsnummer',
+                                            test: function (value) {
+                                                return typeof value === 'string' && value !== søkerFnr;
+                                            },
+                                        }),
+                                }),
+                            erEPSUførFlyktning: yup
+                                .boolean()
+                                .defined()
+                                .when('harEPS', {
+                                    is: true,
+                                    then: yup.boolean().test({
+                                        name: 'er eps ufør flyktning',
+                                        message: 'Feltet må fylles ut',
+                                        test: function () {
+                                            if (this.parent.epsAlder && this.parent.epsAlder < 67) {
+                                                return this.parent.erEPSUførFlyktning !== null;
+                                            }
+                                            return true;
                                         },
                                     }),
-                            }),
-                        erEPSUførFlyktning: yup
-                            .boolean()
-                            .defined()
-                            .when('harEPS', {
-                                is: true,
-                                then: yup.boolean().test({
-                                    name: 'er eps ufør flyktning',
-                                    message: 'Feltet må fylles ut',
-                                    test: function () {
-                                        if (this.parent.epsAlder && this.parent.epsAlder < 67) {
-                                            return this.parent.erEPSUførFlyktning !== null;
-                                        }
-                                        return true;
-                                    },
                                 }),
+                            delerBolig: yup.boolean().defined().when('harEPS', {
+                                is: false,
+                                then: yup.boolean().required(),
+                                otherwise: yup.boolean().defined(),
                             }),
-                        delerBolig: yup.boolean().defined().when('harEPS', {
-                            is: false,
-                            then: yup.boolean().required(),
-                            otherwise: yup.boolean().defined(),
-                        }),
-                    })
-                    .required(),
-            )
-            .required(),
-    })
-    .required();
+                        })
+                        .required(),
+                )
+                .required(),
+        })
+        .required();

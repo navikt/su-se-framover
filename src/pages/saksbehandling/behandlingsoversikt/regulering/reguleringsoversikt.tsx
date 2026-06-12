@@ -93,6 +93,7 @@ const Reguleringsoversikt = () => {
                             <Table.HeaderCell>{formatMessage('tabell.lenke')}</Table.HeaderCell>
                             <Table.HeaderCell>{formatMessage('tabell.ekstraInformasjon')}</Table.HeaderCell>
                             <Table.HeaderCell>{formatMessage('tabell.årsakTilManuellRegulering')}</Table.HeaderCell>
+                            <Table.HeaderCell>{formatMessage('tabell.status')}</Table.HeaderCell>
                         </Table.Row>
                     </Table.Header>
                     <Table.Body>
@@ -100,7 +101,7 @@ const Reguleringsoversikt = () => {
                             data,
                             arr.sortBy([sortByFnr]),
                             arr.mapWithIndex(
-                                (index, { saksnummer, fnr, fradragsKategori, årsakTilManuellRegulering }) => {
+                                (index, { saksnummer, fnr, fradragsKategori, årsakTilManuellRegulering, status }) => {
                                     return (
                                         <Table.Row key={index}>
                                             <Table.DataCell>{saksnummer}</Table.DataCell>
@@ -160,6 +161,7 @@ const Reguleringsoversikt = () => {
                                             <Table.DataCell>
                                                 {årsakTilManuellRegulering.map((årsak) => formatMessage(årsak))}
                                             </Table.DataCell>
+                                            <Table.DataCell>{status}</Table.DataCell>
                                         </Table.Row>
                                     );
                                 },
