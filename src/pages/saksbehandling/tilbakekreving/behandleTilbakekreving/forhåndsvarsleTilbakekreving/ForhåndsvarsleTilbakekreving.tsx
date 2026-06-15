@@ -269,10 +269,14 @@ export const TidligereSendtForhåndsvarsler = (props: {
 };
 
 const MottakerDødsbo = (props: { sakId: string; tilbakekreving: ManuellTilbakekrevingsbehandling }) => {
+    if (process.env.NODE_ENV !== 'development') {
+        return;
+    }
+
     const [visDødsbo, setVisDødsbo] = useState(false);
     const [harDødsbo, setHarDødsbo] = useState(false);
     const [mottakerFetchError, setMottakerFetchError] = useState<MottakerAlert | null>(null);
-    const brevtype: Brevtype = 'FORHANDSVARSEL';
+    const brevtype: Brevtype = 'TILBAKEKREVING';
     const referansetype: ReferanseType = 'DØDSBO';
 
     useEffect(() => {
