@@ -1,6 +1,6 @@
+import * as RemoteData from '@devexperts/remote-data-ts';
 import { Alert, Box, Heading, HStack, Label, Loader, Table, VStack } from '@navikt/ds-react';
-import { useEffect, useState } from 'react';
-import { ApiClientResult } from '~src/api/apiClient.ts';
+import { useEffect } from 'react';
 import {
     AapFradragResponse,
     AlderBeregningsperioderPerPerson,
@@ -12,6 +12,7 @@ import {
     ResponseDtoUføre,
     UføreBeregningsperioderPerPerson,
 } from '~src/api/EksterneFradragApi.ts';
+import { ApiResult, useApiCall } from '~src/lib/hooks.ts';
 import { formatDate } from '~src/utils/date/dateUtils.ts';
 
 interface Props {
@@ -26,18 +27,18 @@ interface Props {
 }
 
 export const EksterneFradrag = ({ sakId, fnr, periode }: Props) => {
-    const [alderspensjon, setAlderspensjon] = useState<ApiClientResult<ResponseDtoAlder> | null>(null);
-    const [uforetrygd, setUforetrygd] = useState<ApiClientResult<ResponseDtoUføre> | null>(null);
-    const [aap, setAap] = useState<ApiClientResult<AapFradragResponse> | null>(null);
+    const [alderspensjon, hentAlderspensjon] = useApiCall(hentEksterneFradragAlderspensjon);
+    const [uforetrygd, hentUforetrygd] = useApiCall(hentEksterneFradragUføretrygd);
+    const [aap, hentAap] = useApiCall(hentEksterneAAP);
 
     useEffect(() => {
         if (!periode) return;
 
         const req: HentFradragRequest = { sakId, fnr, periode };
 
-        hentEksterneFradragAlderspensjon(req).then(setAlderspensjon);
-        hentEksterneFradragUføretrygd(req).then(setUforetrygd);
-        hentEksterneAAP(req).then(setAap);
+        hentAlderspensjon(req);
+        hentUforetrygd(req);
+        hentAap(req);
     }, [sakId, fnr, periode?.fraOgMed, periode?.tilOgMed]);
 
     return (
@@ -52,15 +53,15 @@ export const EksterneFradrag = ({ sakId, fnr, periode }: Props) => {
     );
 };
 
-const AlderspensjonSeksjon = ({ resultat }: { resultat: ApiClientResult<ResponseDtoAlder> | null }) => (
+const AlderspensjonSeksjon = ({ resultat }: { resultat: ApiResult<ResponseDtoAlder> }) => (
     <EksternSeksjon tittel="Alderspensjon" resultat={resultat}>
-        {resultat?.status === 'ok' && (resultat.data ?? []).length > 0 && (
+        {RemoteData.isSuccess(resultat) && (resultat.value ?? []).length > 0 && (
             <VStack gap="4">
-                {(resultat.data ?? []).map((person) => (
+                {(resultat.value ?? []).map((person) => (
                     <AlderPersonTabell
                         key={person.fnr}
                         person={person}
-                        visPersonFnr={(resultat.data ?? []).length > 1}
+                        visPersonFnr={(resultat.value ?? []).length > 1}
                     />
                 ))}
             </VStack>
@@ -98,15 +99,15 @@ const AlderPersonTabell = ({
     </VStack>
 );
 
-const UforetrygdSeksjon = ({ resultat }: { resultat: ApiClientResult<ResponseDtoUføre> | null }) => (
+const UforetrygdSeksjon = ({ resultat }: { resultat: ApiResult<ResponseDtoUføre> }) => (
     <EksternSeksjon tittel="Uføretrygd" resultat={resultat}>
-        {resultat?.status === 'ok' && (resultat.data ?? []).length > 0 && (
+        {RemoteData.isSuccess(resultat) && (resultat.value ?? []).length > 0 && (
             <VStack gap="4">
-                {(resultat.data ?? []).map((person) => (
+                {(resultat.value ?? []).map((person) => (
                     <UforePersonTabell
                         key={person.fnr}
                         person={person}
-                        visPersonFnr={(resultat.data ?? []).length > 1}
+                        visPersonFnr={(resultat.value ?? []).length > 1}
                     />
                 ))}
             </VStack>
@@ -150,9 +151,9 @@ const UforePersonTabell = ({
     </VStack>
 );
 
-const AapSeksjon = ({ resultat }: { resultat: ApiClientResult<AapFradragResponse> | null }) => (
+const AapSeksjon = ({ resultat }: { resultat: ApiResult<AapFradragResponse> }) => (
     <EksternSeksjon tittel="Arbeidsavklaringspenger (AAP)" resultat={resultat}>
-        {resultat?.status === 'ok' && (resultat.data ?? []).length > 0 && (
+        {RemoteData.isSuccess(resultat) && (resultat.value ?? []).length > 0 && (
             <Table size="small">
                 <Table.Header>
                     <Table.Row>
@@ -163,7 +164,7 @@ const AapSeksjon = ({ resultat }: { resultat: ApiClientResult<AapFradragResponse
                     </Table.Row>
                 </Table.Header>
                 <Table.Body>
-                    {(resultat.data ?? []).map((entry, i) => (
+                    {(resultat.value ?? []).map((entry, i) => (
                         <Table.Row key={i}>
                             <Table.DataCell>{entry.fraOgMedDato ? formatDate(entry.fraOgMedDato) : '—'}</Table.DataCell>
                             <Table.DataCell>{entry.tilOgMedDato ? formatDate(entry.tilOgMedDato) : '—'}</Table.DataCell>
@@ -183,16 +184,16 @@ const EksternSeksjon = ({
     children,
 }: {
     tittel: string;
-    resultat: ApiClientResult<unknown> | null;
+    resultat: ApiResult<unknown>;
     children?: React.ReactNode;
 }) => (
     <Box background="surface-default" padding="4" borderRadius="medium" borderWidth="1" borderColor="border-subtle">
         <VStack gap="3">
             <HStack gap="2" align="center">
                 <Heading size="xsmall">{tittel}</Heading>
-                {resultat === null && <Loader size="xsmall" title={`Henter ${tittel}`} />}
+                {RemoteData.isPending(resultat) && <Loader size="xsmall" title={`Henter ${tittel}`} />}
             </HStack>
-            {resultat?.status === 'error' && (
+            {RemoteData.isFailure(resultat) && (
                 <Alert variant="error" size="small" inline>
                     Kunne ikke hente {tittel.toLowerCase()}
                 </Alert>

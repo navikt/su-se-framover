@@ -325,7 +325,7 @@ const GrunnlagOgVilkårSteg = (props: {
                 <BosituasjonPage {...stegProps} søker={søker} sakstype={props.sakstype} />
             )}
             {props.seksjonOgSteg.steg === RevurderingGrunnlagOgVilkårSteg.EndringAvFradrag && (
-                <EndringAvFradrag {...stegProps} />
+                <EndringAvFradrag {...stegProps} søker={søker} />
             )}
             {props.seksjonOgSteg.steg === RevurderingGrunnlagOgVilkårSteg.Pensjon && (
                 <AlderspensjonPage {...stegProps} />
