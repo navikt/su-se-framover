@@ -101,7 +101,7 @@ const EndringAvFradrag = (props: RevurderingStegProps & { søker: Person }) => {
         }
     };
 
-    const harEps = props.revurdering.grunnlagsdataOgVilkårsvurderinger.bosituasjon.find((bosituasjon) =>
+    const harEps = props.revurdering.grunnlagsdataOgVilkårsvurderinger.bosituasjon.filter((bosituasjon) =>
         bosituasjonHarEps(bosituasjon),
     );
     return (
@@ -123,16 +123,24 @@ const EndringAvFradrag = (props: RevurderingStegProps & { søker: Person }) => {
                                 sakId={props.sakId}
                                 fnr={props.søker.fnr}
                                 periode={props.revurdering.periode}
-                                tittel={'Eksterne fradrag søker'}
+                                tittel={'Eksterne fradrag stønadsmottaker'}
                             />
-                            {harEps?.fnr && (
-                                <EksterneFradrag
-                                    sakId={props.sakId}
-                                    fnr={harEps.fnr}
-                                    periode={props.revurdering.periode}
-                                    tittel={'Eksterne fradrag EPS'}
-                                />
-                            )}
+                            <>
+                                {harEps.map((epsBosituasjon) => {
+                                    if (epsBosituasjon.fnr) {
+                                        return (
+                                            <EksterneFradrag
+                                                key={epsBosituasjon.fnr}
+                                                sakId={props.sakId}
+                                                fnr={epsBosituasjon.fnr}
+                                                periode={props.revurdering.periode}
+                                                tittel={`Eksterne fradrag EPS ${epsBosituasjon.fnr}`}
+                                            />
+                                        );
+                                    }
+                                    return null;
+                                })}
+                            </>
                             <div className={styles.fradragInputsContainer}>
                                 <FradragForm
                                     name={'fradrag'}

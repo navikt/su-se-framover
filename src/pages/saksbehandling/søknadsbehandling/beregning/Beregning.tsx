@@ -249,14 +249,14 @@ const Beregning = (props: VilkårsvurderingBaseProps & ExtendedBeregningProps) =
                             sakId={props.sakId}
                             fnr={props.søker.fnr}
                             periode={props.behandling.stønadsperiode?.periode}
-                            tittel={'Eksterne fradrag søker'}
+                            tittel={'Eksterne fradrag stønadsmottaker'}
                         />
                         {harEps?.fnr && (
                             <EksterneFradrag
                                 sakId={props.sakId}
                                 fnr={harEps.fnr}
                                 periode={props.behandling.stønadsperiode?.periode}
-                                tittel={'Eksterne fradrag EPS'}
+                                tittel={`Eksterne fradrag EPS ${harEps.fnr}`}
                             />
                         )}
                         <div className={styles.container}>
