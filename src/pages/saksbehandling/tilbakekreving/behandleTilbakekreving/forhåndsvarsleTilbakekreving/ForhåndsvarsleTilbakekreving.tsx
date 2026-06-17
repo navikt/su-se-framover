@@ -7,7 +7,7 @@ import { Controller, useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 
 import { FritekstTyper, hentFritekst, redigerFritekst } from '~src/api/fritekstApi.ts';
-import { Brevtype, hentMottaker, ReferanseType } from '~src/api/mottakerClient.ts';
+import { hentMottaker } from '~src/api/mottakerClient.ts';
 import { forhåndsvisForhåndsvarsel, visUtsendtForhåndsvarsel } from '~src/api/tilbakekrevingApi';
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
 import TextareaWithAutosave from '~src/components/inputs/textareaWithAutosave/TextareaWithAutosave.tsx';
@@ -112,6 +112,30 @@ const ForhåndsvarsleTilbakekreving = (props: {
         );
     };
 
+    const [harDødsbo, setHarDødsbo] = useState(false);
+    const [mottakerFetchError, setMottakerFetchError] = useState<MottakerAlert | null>(null);
+    useEffect(() => {
+        const sjekkMottaker = async () => {
+            const res = await hentMottaker(
+                props.sakId,
+                'DØDSBO_TILBAKEKREVING',
+                props.tilbakekreving.id,
+                'FORHANDSVARSEL',
+            );
+            if (res.status === 'ok') {
+                if (res.data) {
+                    setHarDødsbo(true);
+                }
+                return;
+            } else {
+                if (res.error.statusCode) {
+                    setMottakerFetchError(toMottakerAlert(res.error, 'Kan ikke hente mottaker'));
+                }
+            }
+        };
+        sjekkMottaker();
+    }, []);
+
     return (
         <ToKolonner tittel={formatMessage('forhåndsvarsleTilbakekreving.tittel')}>
             {{
@@ -170,7 +194,15 @@ const ForhåndsvarsleTilbakekreving = (props: {
                             />
                         )}
 
-                        <MottakerDødsbo tilbakekreving={props.tilbakekreving} sakId={props.sakId} />
+                        {form.watch('skalForhåndsvarsle') && (
+                            <MottakerDødsbo
+                                tilbakekreving={props.tilbakekreving}
+                                sakId={props.sakId}
+                                harDødsbo={harDødsbo}
+                                setHardødsbo={(harDødsbo: boolean) => setHarDødsbo(harDødsbo)}
+                                mottakerFetchError={mottakerFetchError}
+                            />
+                        )}
 
                         <div>
                             <Feiloppsummering
@@ -268,30 +300,23 @@ export const TidligereSendtForhåndsvarsler = (props: {
     );
 };
 
-const MottakerDødsbo = (props: { sakId: string; tilbakekreving: ManuellTilbakekrevingsbehandling }) => {
+const MottakerDødsbo = ({
+    sakId,
+    tilbakekreving,
+    harDødsbo,
+    setHardødsbo,
+    mottakerFetchError,
+}: {
+    sakId: string;
+    tilbakekreving: ManuellTilbakekrevingsbehandling;
+    harDødsbo: boolean;
+    setHardødsbo: (harDødsbo: boolean) => void;
+    mottakerFetchError: MottakerAlert | null;
+}) => {
     if (process.env.NODE_ENV !== 'development') {
         return;
     }
-
     const [visDødsbo, setVisDødsbo] = useState(false);
-    const [harDødsbo, setHarDødsbo] = useState(false);
-    const [mottakerFetchError, setMottakerFetchError] = useState<MottakerAlert | null>(null);
-    const brevtype: Brevtype = 'TILBAKEKREVING';
-    const referansetype: ReferanseType = 'DØDSBO';
-
-    useEffect(() => {
-        const sjekkMottaker = async () => {
-            const res = await hentMottaker(props.sakId, referansetype, props.tilbakekreving.id, brevtype);
-            if (res.status === 'ok') {
-                if (res.data) {
-                    setHarDødsbo(true);
-                }
-                return;
-            }
-            setMottakerFetchError(toMottakerAlert(res.error, 'Kan ikke hente mottaker'));
-        };
-        sjekkMottaker();
-    }, []);
 
     return (
         <div>
@@ -301,20 +326,23 @@ const MottakerDødsbo = (props: { sakId: string; tilbakekreving: ManuellTilbakek
                 </Button>
             )}
 
-            {mottakerFetchError && (
-                <Alert variant={mottakerFetchError.variant} size="small">
-                    {mottakerFetchError.text}
-                </Alert>
-            )}
-
             {visDødsbo && (
-                <MottakerForm
-                    sakId={props.sakId}
-                    referanseId={props.tilbakekreving.id}
-                    referanseType={referansetype}
-                    brevtype={brevtype}
-                    onClose={() => setVisDødsbo(false)}
-                />
+                <>
+                    <MottakerForm
+                        sakId={sakId}
+                        referanseId={tilbakekreving.id}
+                        referanseType={'DØDSBO_TILBAKEKREVING'}
+                        brevtype={'FORHANDSVARSEL'}
+                        onClose={() => setVisDødsbo(false)}
+                        onDelete={() => setHardødsbo(false)}
+                    />
+
+                    {mottakerFetchError && (
+                        <Alert variant={mottakerFetchError.variant} size="small">
+                            {mottakerFetchError.text}
+                        </Alert>
+                    )}
+                </>
             )}
         </div>
     );
