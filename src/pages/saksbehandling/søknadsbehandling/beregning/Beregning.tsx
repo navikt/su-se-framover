@@ -10,6 +10,7 @@ import { useNavigate } from 'react-router-dom';
 
 import { Behandlingstype } from '~src/api/GrunnlagOgVilkårApi';
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
+import { EksterneFradrag } from '~src/components/forms/vilkårOgGrunnlagForms/fradrag/EksterneFradrag.tsx';
 import FradragForm from '~src/components/forms/vilkårOgGrunnlagForms/fradrag/FradragForm';
 import {
     eqFradragFormData,
@@ -48,7 +49,6 @@ import * as DateUtils from '~src/utils/date/dateUtils';
 import { fjernFradragSomIkkeErVelgbareEkskludertNavYtelserTilLivsopphold } from '~src/utils/fradrag/fradragUtil';
 import { kanSimuleres } from '~src/utils/SøknadsbehandlingUtils';
 import { hentBosituasjongrunnlag } from '~src/utils/søknadsbehandlingOgRevurdering/bosituasjon/bosituasjonUtils';
-
 import EksisterendeVedtaksinformasjon from '../EksisterendeVedtaksinformasjon';
 import sharedI18n from '../sharedI18n-nb';
 import styles from './beregning.module.less';
@@ -241,6 +241,11 @@ const Beregning = (props: VilkårsvurderingBaseProps & ExtendedBeregningProps) =
                         <Heading level="2" size="medium">
                             Fradrag
                         </Heading>
+                        <EksterneFradrag
+                            sakId={props.sakId}
+                            fnr={props.søker.fnr}
+                            periode={props.behandling.stønadsperiode?.periode}
+                        />
                         <div className={styles.container}>
                             <FradragForm
                                 name={'fradrag'}

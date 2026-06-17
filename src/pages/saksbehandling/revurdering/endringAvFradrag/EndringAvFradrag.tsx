@@ -8,6 +8,7 @@ import { useNavigate } from 'react-router-dom';
 import { ApiError, ErrorMessage } from '~src/api/apiClient';
 import { Behandlingstype, RevurderingOgFeilmeldinger } from '~src/api/GrunnlagOgVilkårApi';
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
+import { EksterneFradrag } from '~src/components/forms/vilkårOgGrunnlagForms/fradrag/EksterneFradrag.tsx';
 import FradragForm from '~src/components/forms/vilkårOgGrunnlagForms/fradrag/FradragForm';
 import {
     FradragFormData,
@@ -25,11 +26,11 @@ import sharedMessages from '~src/pages/saksbehandling/revurdering/revurdering-nb
 import fradragMessages from '~src/pages/saksbehandling/søknadsbehandling/beregning/beregning-nb';
 import { useAppDispatch } from '~src/redux/Store';
 import { bosituasjonHarEps } from '~src/types/grunnlagsdataOgVilkårsvurderinger/bosituasjon/Bosituasjongrunnlag';
+import { Person } from '~src/types/Person.ts';
 import { InformasjonsRevurdering, Revurdering, RevurderingStegProps } from '~src/types/Revurdering';
 import * as DateUtils from '~src/utils/date/dateUtils';
 import { fjernFradragSomIkkeErVelgbareEkskludertNavYtelserTilLivsopphold } from '~src/utils/fradrag/fradragUtil';
 import { lagDatePeriodeAvStringPeriode } from '~src/utils/periode/periodeUtils';
-
 import Navigasjonsknapper from '../../../../components/navigasjonsknapper/Navigasjonsknapper';
 import uføreMessages from '../../søknadsbehandling/uførhet/uførhet-nb';
 import RevurderingsperiodeHeader from '../revurderingsperiodeheader/RevurderingsperiodeHeader';
@@ -41,7 +42,7 @@ interface EndringAvFradragFormData {
     fradrag: FradragFormData[];
 }
 
-const EndringAvFradrag = (props: RevurderingStegProps) => {
+const EndringAvFradrag = (props: RevurderingStegProps & { søker: Person }) => {
     const { intl } = useI18n({
         messages: { ...sharedMessages, ...fradragMessages, ...uføreMessages, ...messages },
     });
@@ -115,6 +116,11 @@ const EndringAvFradrag = (props: RevurderingStegProps) => {
                         )}
                     >
                         <div>
+                            <EksterneFradrag
+                                sakId={props.sakId}
+                                fnr={props.søker.fnr}
+                                periode={props.revurdering.periode}
+                            />
                             <div className={styles.fradragInputsContainer}>
                                 <FradragForm
                                     name={'fradrag'}
