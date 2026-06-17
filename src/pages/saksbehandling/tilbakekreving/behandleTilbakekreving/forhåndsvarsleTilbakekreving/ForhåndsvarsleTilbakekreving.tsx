@@ -1,7 +1,7 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Alert, Button, Heading, Radio, RadioGroup } from '@navikt/ds-react';
+import { Button, Heading, Radio, RadioGroup } from '@navikt/ds-react';
 import { useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
@@ -22,7 +22,7 @@ import { useI18n } from '~src/lib/i18n';
 import * as Routes from '~src/lib/routes';
 import { Nullable } from '~src/lib/types.ts';
 import { hookFormErrorsTilFeiloppsummering } from '~src/lib/validering';
-import { MottakerForm } from '~src/pages/saksbehandling/mottaker/Mottaker.tsx';
+import { MottakerDødsbo } from '~src/pages/saksbehandling/mottaker/MottakerDødsbo.tsx';
 import {
     ForhåndsvarselsInfo,
     ManuellTilbakekrevingsbehandling,
@@ -296,54 +296,6 @@ export const TidligereSendtForhåndsvarsler = (props: {
                 {formatDateTime(props.forhåndsvarselInfo.hendelsestidspunkt)}
             </Button>
             {RemoteData.isFailure(visForhåndsvarselStatus) && <ApiErrorAlert error={visForhåndsvarselStatus.error} />}
-        </div>
-    );
-};
-
-const MottakerDødsbo = ({
-    sakId,
-    tilbakekreving,
-    harDødsbo,
-    setHardødsbo,
-    mottakerFetchError,
-}: {
-    sakId: string;
-    tilbakekreving: ManuellTilbakekrevingsbehandling;
-    harDødsbo: boolean;
-    setHardødsbo: (harDødsbo: boolean) => void;
-    mottakerFetchError: MottakerAlert | null;
-}) => {
-    if (process.env.NODE_ENV !== 'development') {
-        return;
-    }
-    const [visDødsbo, setVisDødsbo] = useState(false);
-
-    return (
-        <div>
-            {!visDødsbo && (
-                <Button variant="secondary" type="button" onClick={() => setVisDødsbo(true)}>
-                    {harDødsbo ? 'Vis dødsbo' : 'Legg til dødsbo'}
-                </Button>
-            )}
-
-            {visDødsbo && (
-                <>
-                    <MottakerForm
-                        sakId={sakId}
-                        referanseId={tilbakekreving.id}
-                        referanseType={'DØDSBO_TILBAKEKREVING'}
-                        brevtype={'FORHANDSVARSEL'}
-                        onClose={() => setVisDødsbo(false)}
-                        onDelete={() => setHardødsbo(false)}
-                    />
-
-                    {mottakerFetchError && (
-                        <Alert variant={mottakerFetchError.variant} size="small">
-                            {mottakerFetchError.text}
-                        </Alert>
-                    )}
-                </>
-            )}
         </div>
     );
 };
