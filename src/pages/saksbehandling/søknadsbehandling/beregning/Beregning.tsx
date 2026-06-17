@@ -36,6 +36,7 @@ import { eqNullable, Nullable } from '~src/lib/types';
 import yup, { hookFormErrorsTilFeiloppsummering } from '~src/lib/validering';
 import { VilkårsvurderingBaseProps } from '~src/pages/saksbehandling/søknadsbehandling/types';
 import { Fradrag } from '~src/types/Fradrag';
+import { bosituasjonHarEps } from '~src/types/grunnlagsdataOgVilkårsvurderinger/bosituasjon/Bosituasjongrunnlag.ts';
 import { NullablePeriode } from '~src/types/Periode';
 import { Person } from '~src/types/Person';
 import {
@@ -233,6 +234,9 @@ const Beregning = (props: VilkårsvurderingBaseProps & ExtendedBeregningProps) =
 
     useDraftFormSubscribe(form.watch);
 
+    const harEps = props.behandling.grunnlagsdataOgVilkårsvurderinger.bosituasjon.find((bosituasjon) =>
+        bosituasjonHarEps(bosituasjon),
+    );
     return (
         <ToKolonner tittel={formatMessage('page.tittel')}>
             {{
@@ -245,7 +249,16 @@ const Beregning = (props: VilkårsvurderingBaseProps & ExtendedBeregningProps) =
                             sakId={props.sakId}
                             fnr={props.søker.fnr}
                             periode={props.behandling.stønadsperiode?.periode}
+                            tittel={'Eksterne fradrag søker'}
                         />
+                        {harEps?.fnr && (
+                            <EksterneFradrag
+                                sakId={props.sakId}
+                                fnr={harEps.fnr}
+                                periode={props.behandling.stønadsperiode?.periode}
+                                tittel={'Eksterne fradrag EPS'}
+                            />
+                        )}
                         <div className={styles.container}>
                             <FradragForm
                                 name={'fradrag'}

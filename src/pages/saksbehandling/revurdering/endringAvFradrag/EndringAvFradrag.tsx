@@ -101,6 +101,9 @@ const EndringAvFradrag = (props: RevurderingStegProps & { søker: Person }) => {
         }
     };
 
+    const harEps = props.revurdering.grunnlagsdataOgVilkårsvurderinger.bosituasjon.find((bosituasjon) =>
+        bosituasjonHarEps(bosituasjon),
+    );
     return (
         <ToKolonner tittel={<RevurderingsperiodeHeader periode={props.revurdering.periode} />}>
             {{
@@ -120,7 +123,16 @@ const EndringAvFradrag = (props: RevurderingStegProps & { søker: Person }) => {
                                 sakId={props.sakId}
                                 fnr={props.søker.fnr}
                                 periode={props.revurdering.periode}
+                                tittel={'Eksterne fradrag søker'}
                             />
+                            {harEps?.fnr && (
+                                <EksterneFradrag
+                                    sakId={props.sakId}
+                                    fnr={harEps.fnr}
+                                    periode={props.revurdering.periode}
+                                    tittel={'Eksterne fradrag EPS'}
+                                />
+                            )}
                             <div className={styles.fradragInputsContainer}>
                                 <FradragForm
                                     name={'fradrag'}
