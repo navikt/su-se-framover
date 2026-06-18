@@ -1,5 +1,6 @@
 import { Seksjon } from '~src/components/framdriftsindikator/Framdriftsindikator';
 import { GrunnlagsdataOgVilkårsvurderinger } from '~src/types/grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
+import { Person } from '~src/types/Person.ts';
 import {
     InformasjonsRevurdering,
     RevurderingOppsummeringSteg,
@@ -7,13 +8,13 @@ import {
     RevurderingSteg,
 } from '~src/types/Revurdering';
 import { Sakstype } from '~src/types/Sak.ts';
-
 import ForhåndsvarselForm from './forhåndsvarsel/ForhåndsvarselForm';
 import SendTilAttestering from './sendTilAttestering/SendTilAttestering';
 
 const RevurderingOppsummeringPage = (props: {
     sakId: string;
     sakstype: Sakstype;
+    søker: Person;
     revurdering: InformasjonsRevurdering;
     aktivSeksjonOgSteg: { seksjon: RevurderingSeksjoner; steg: RevurderingSteg };
     seksjoner: Seksjon[];
@@ -34,6 +35,7 @@ const RevurderingOppsummeringPage = (props: {
                 <SendTilAttestering
                     sakId={props.sakId}
                     sakstype={props.sakstype}
+                    søker={props.søker}
                     revurdering={props.revurdering}
                     gjeldendeGrunnlagOgVilkår={props.gjeldendeGrunnlagOgVilkår}
                 />

@@ -9,6 +9,7 @@ import { Brevtype, hentMottaker } from '~src/api/mottakerClient.ts';
 import * as pdfApi from '~src/api/pdfApi';
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
 import TextareaWithAutosave from '~src/components/inputs/textareaWithAutosave/TextareaWithAutosave';
+import { AdresseOppslag } from '~src/components/mottaker/AdresseOppslag.tsx';
 import { MottakerAlert, toMottakerAlert } from '~src/components/mottaker/mottakerUtils';
 import OppsummeringAvInformasjonsrevurdering from '~src/components/oppsummering/oppsummeringAvRevurdering/informasjonsrevurdering/OppsummeringAvInformasjonsrevurdering';
 import ToKolonner from '~src/components/toKolonner/ToKolonner';
@@ -21,6 +22,7 @@ import yup from '~src/lib/validering';
 import { MottakerForm } from '~src/pages/saksbehandling/mottaker/Mottaker.tsx';
 import { FormWrapper } from '~src/pages/saksbehandling/søknadsbehandling/FormWrapper';
 import { GrunnlagsdataOgVilkårsvurderinger } from '~src/types/grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
+import { Person } from '~src/types/Person.ts';
 import {
     InformasjonsRevurdering,
     RevurderingOppsummeringSteg,
@@ -73,6 +75,7 @@ const brevvalgSchema = (revurdering: InformasjonsRevurdering) =>
 const SendTilAttestering = (props: {
     sakId: string;
     sakstype: Sakstype;
+    søker: Person;
     revurdering: InformasjonsRevurdering;
     gjeldendeGrunnlagOgVilkår: GrunnlagsdataOgVilkårsvurderinger;
 }) => {
@@ -230,6 +233,7 @@ const SendTilAttestering = (props: {
                         }}
                     >
                         <div>
+                            <AdresseOppslag sakId={props.sakId} fnr={props.søker.fnr} />
                             <Controller
                                 control={form.control}
                                 name="valg"
