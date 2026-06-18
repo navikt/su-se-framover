@@ -42,6 +42,7 @@ enum NyBehandling {
     REVURDER = 'REVURDER',
     KLAGE = 'KLAGE',
     TILBAKEKREVING = 'TILBAKEKREVING',
+    REGULERING = 'REGULERING',
 }
 
 const Sakintro = () => {
@@ -52,8 +53,6 @@ const Sakintro = () => {
 
     const iverksatteInnvilgedeSøknader = getIverksatteInnvilgedeSøknader(props.sak);
     const harUtbetalinger = !isEmpty(props.sak.utbetalinger);
-
-    const harVedtak = !isEmpty(props.sak.vedtak);
 
     const avsluttedeRevurderinger = props.sak.revurderinger.filter(erRevurderingAvsluttet);
     const avsluttedeReguleringer = props.sak.reguleringer.filter(erReguleringAvsluttet);
@@ -134,12 +133,7 @@ const Sakintro = () => {
             <SuksessStatuser locationState={locationState} />
             <div className={styles.pageHeader}>
                 <div className={styles.headerKnapper}>
-                    {harVedtak && (
-                        <NyBehandlingVelger
-                            sakId={props.sak.id}
-                            kanRevurdere={iverksatteInnvilgedeSøknader.length > 0}
-                        />
-                    )}
+                    <NyBehandlingVelger sakId={props.sak.id} kanRevurdere={iverksatteInnvilgedeSøknader.length > 0} />
                     {harUtbetalinger && (
                         <LinkAsButton
                             variant="secondary"
@@ -168,46 +162,44 @@ const Sakintro = () => {
                         utbetalingsperioder={props.sak.utbetalinger}
                         kanStansesEllerGjenopptas={props.sak.utbetalingerKanStansesEllerGjenopptas}
                     />
-                    <div className={styles.behandlingstabellContainer}>
-                        {alleÅpneBehandlinger.length > 0 && (
-                            <ÅpneBehandlingerTabell sakId={props.sak.id} tabellBehandlinger={alleÅpneBehandlinger} />
-                        )}
-
-                        {props.sak.vedtak.length > 0 && (
-                            <Vedtakstabell
-                                klager={props.sak.klager}
-                                revurderinger={props.sak.revurderinger}
-                                behandlinger={props.sak.behandlinger}
-                                sakId={props.sak.id}
-                                vedtakOgOversendteKlager={[
-                                    ...props.sak.vedtak,
-                                    ...props.sak.klager.filter((it) => it.status === KlageStatus.OVERSENDT),
-                                ]}
-                            />
-                        )}
-
-                        {alleAvsluttedeBehandlinger.length > 0 && (
-                            <AvsluttedeBehandlingerTabell tabellBehandlinger={alleAvsluttedeBehandlinger} />
-                        )}
-                    </div>
-
-                    <div>
-                        <LinkPanel
-                            href={Routes.alleDokumenterForSak.createURL({ sakId: props.sak.id })}
-                            className={styles.dokumenterLinkpanel}
-                        >
-                            <div className={styles.dokumenterLink}>
-                                <span className={styles.dokumenterLinkIcon}>
-                                    <ÅpentBrev />
-                                </span>
-                                <LinkPanel.Title>{formatMessage('link.dokumenter')}</LinkPanel.Title>
-                            </div>
-                        </LinkPanel>
-                    </div>
                 </div>
             ) : (
                 'Ingen søknader'
             )}
+            <div className={styles.contentContainer}>
+                <div className={styles.behandlingstabellContainer}>
+                    {alleÅpneBehandlinger.length > 0 && (
+                        <ÅpneBehandlingerTabell sakId={props.sak.id} tabellBehandlinger={alleÅpneBehandlinger} />
+                    )}
+
+                    {alleAvsluttedeBehandlinger.length > 0 && (
+                        <AvsluttedeBehandlingerTabell tabellBehandlinger={alleAvsluttedeBehandlinger} />
+                    )}
+                </div>
+                <Vedtakstabell
+                    klager={props.sak.klager}
+                    revurderinger={props.sak.revurderinger}
+                    behandlinger={props.sak.behandlinger}
+                    sakId={props.sak.id}
+                    vedtakOgOversendteKlager={[
+                        ...props.sak.vedtak,
+                        ...props.sak.klager.filter((it) => it.status === KlageStatus.OVERSENDT),
+                    ]}
+                />
+                <div>
+                    <LinkPanel
+                        href={Routes.alleDokumenterForSak.createURL({ sakId: props.sak.id })}
+                        className={styles.dokumenterLinkpanel}
+                    >
+                        <div className={styles.dokumenterLink}>
+                            <span className={styles.dokumenterLinkIcon}>
+                                <ÅpentBrev />
+                            </span>
+                            <LinkPanel.Title>{formatMessage('link.dokumenter')}</LinkPanel.Title>
+                        </div>
+                    </LinkPanel>
+                </div>
+            </div>
         </div>
     );
 };
@@ -224,6 +216,8 @@ const NyBehandlingVelger = (props: { sakId: string; kanRevurdere: boolean }) => 
                 return Routes.klageOpprett.createURL({ sakId: props.sakId });
             case NyBehandling.TILBAKEKREVING:
                 return Routes.tilbakekrevValgtSak.createURL({ sakId: props.sakId });
+            case NyBehandling.REGULERING:
+                return Routes.opprettRegulering.createURL({ sakId: props.sakId });
         }
     };
 
@@ -272,6 +266,13 @@ const NyBehandlingVelger = (props: { sakId: string; kanRevurdere: boolean }) => 
                         href={nyBehandlingTilRoute(NyBehandling.TILBAKEKREVING)}
                     >
                         {formatMessage('popover.option.tilbakekreving')}
+                    </LinkAsButton>
+                    <LinkAsButton
+                        className={styles.popoverOption}
+                        variant="tertiary"
+                        href={nyBehandlingTilRoute(NyBehandling.REGULERING)}
+                    >
+                        {formatMessage('popover.option.regulering')}
                     </LinkAsButton>
                 </div>
             </Popover>

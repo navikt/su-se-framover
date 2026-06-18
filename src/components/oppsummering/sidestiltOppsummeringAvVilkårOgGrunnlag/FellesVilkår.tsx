@@ -1,6 +1,6 @@
 import { InformationSquareIcon } from '@navikt/aksel-icons';
 import { Accordion } from '@navikt/ds-react';
-
+import isEqual from 'lodash.isequal';
 import OppsummeringAvBoforhold from '~src/components/oppsummering/oppsummeringAvSøknadinnhold/OppsummeringAvBoforhold.tsx';
 import OppsummeringAvFormue from '~src/components/oppsummering/oppsummeringAvSøknadinnhold/OppsummeringAvFormue.tsx';
 import OppsummeringAvForNav from '~src/components/oppsummering/oppsummeringAvSøknadinnhold/OppsummeringAvForNav.tsx';
@@ -13,6 +13,7 @@ import OppsummeringAvFormueVilkår from '~src/components/oppsummering/oppsummeri
 import OppsummeringAvFradrag from '~src/components/oppsummering/oppsummeringAvVilkårOgGrunnlag/OppsummeringAvFradrag.tsx';
 import OppsummeringAvInstitusjonsoppholdvilkår from '~src/components/oppsummering/oppsummeringAvVilkårOgGrunnlag/OppsummeringAvInstitusjonsopphold.tsx';
 import OppsummeringAvLovligOppholdvilkår from '~src/components/oppsummering/oppsummeringAvVilkårOgGrunnlag/OppsummeringAvLovligOpphold.tsx';
+import OppsummeringAvOpplysningspliktvilkår from '~src/components/oppsummering/oppsummeringAvVilkårOgGrunnlag/OppsummeringAvOpplysningsplikt.tsx';
 import OppsummeringAvPersonligoppmøtevilkår from '~src/components/oppsummering/oppsummeringAvVilkårOgGrunnlag/OppsummeringAvPersonligOppmøte.tsx';
 import OppsummeringAvUtenlandsopphold from '~src/components/oppsummering/oppsummeringAvVilkårOgGrunnlag/OppsummeringAvUtenlandsopphold.tsx';
 import styles from '~src/components/oppsummering/sidestiltOppsummeringAvVilkårOgGrunnlag/SidestiltOppsummeringAvVilkårOgGrunnlag.module.less';
@@ -39,6 +40,7 @@ import {
     LovligOppholdVilkår,
     lovligOppholdErLik,
 } from '~src/types/grunnlagsdataOgVilkårsvurderinger/lovligOpphold/LovligOppholdVilkår.ts';
+import { OpplysningspliktVilkår } from '~src/types/grunnlagsdataOgVilkårsvurderinger/opplysningsplikt/Opplysningsplikt.ts';
 import {
     PersonligOppmøteVilkår,
     personligOppmøteErLik,
@@ -87,6 +89,36 @@ export const AccordionItemLovligOpphold = (props: {
                     )}
                     {props.sidestiltOppholdstillatelseFraSøknad && (
                         <OppsummeringAvOpphold oppholdstillatelse={props.sidestiltOppholdstillatelseFraSøknad} />
+                    )}
+                </div>
+            </Accordion.Content>
+        </Accordion.Item>
+    );
+};
+export const AccordionItemOpplysningsplikt = (props: {
+    fraGrunnlag: Nullable<OpplysningspliktVilkår>;
+    sidestilt?: Nullable<OpplysningspliktVilkår>;
+}) => {
+    const { formatMessage } = useI18n({ messages });
+    const harEndretSeg = props.sidestilt && !isEqual(props.fraGrunnlag, props.sidestilt);
+    return (
+        <Accordion.Item>
+            <Accordion.Header className={styles.accordionHeader}>
+                <div className={styles.accordionHeaderContent}>
+                    <VilkårResultatStatusIkon resultat={props.fraGrunnlag?.resultat ?? null} />
+                    {formatMessage('accordion.header.opplysningsplikt')}
+                </div>
+                {harEndretSeg && (
+                    <div className={styles.accordionHeaderContent}>
+                        <InformationSquareIcon width={'1.8rem'} height={'1.8rem'} />
+                    </div>
+                )}
+            </Accordion.Header>
+            <Accordion.Content>
+                <div className={styles.accordionContent}>
+                    <OppsummeringAvOpplysningspliktvilkår opplysningspliktVilkår={props.fraGrunnlag} />
+                    {props.sidestilt && (
+                        <OppsummeringAvOpplysningspliktvilkår opplysningspliktVilkår={props.sidestilt} />
                     )}
                 </div>
             </Accordion.Content>

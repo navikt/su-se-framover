@@ -34,6 +34,7 @@ export interface FormkravRequest {
     klagesDetPåKonkreteElementerIVedtaket: Nullable<BooleanMedBegrunnelse>;
     erUnderskrevet: Nullable<KlageErUnderskrevet>;
     fremsattRettsligKlageinteresse: Nullable<FremsattRettsligKlageinteresse>;
+    infotrygdSakId: Nullable<string>;
 }
 
 export interface VurderingRequest {

@@ -7,6 +7,7 @@ import { Behandlingstype, RevurderingOgFeilmeldinger, VilkårOgGrunnlagApiResult
 import * as sakApi from '~src/api/sakApi';
 import * as GrunnlagOgVilkårActions from '~src/features/grunnlagsdataOgVilkårsvurderinger/GrunnlagOgVilkårActions';
 import * as klageActions from '~src/features/klage/klageActions';
+import * as reguleringActions from '~src/features/ReguleringAction';
 import * as revurderingActions from '~src/features/revurdering/revurderingActions';
 import * as SøknadsbehandlingActions from '~src/features/SøknadsbehandlingActions';
 import * as SøknadActions from '~src/features/søknad/SøknadActions';
@@ -24,6 +25,7 @@ import {
     RegistrerteUtenlandsopphold,
     RegistrerUtenlandsoppholdRequest,
 } from '~src/types/RegistrertUtenlandsopphold';
+import { Regulering } from '~src/types/Regulering.ts';
 import { Revurdering } from '~src/types/Revurdering';
 import { Sak } from '~src/types/Sak';
 import { Søknadsbehandling } from '~src/types/Søknadsbehandling';
@@ -394,6 +396,10 @@ export default createSlice({
             state.sak = opprettEllerOppdaterRevurderingISak(state.sak, action.payload.revurdering);
         });
 
+        builder.addCase(reguleringActions.opprettRegulering.fulfilled, (state, action) => {
+            state.sak = opprettEllerOppdaterReguleringISak(state.sak, action.payload.regulering);
+        });
+
         //---------------Tilbakekreving-----------------//
         builder.addCase(tilbakekrevingActions.opprettNyTilbakekrevingsbehandling.fulfilled, (state, action) => {
             state.sak = pipe(
@@ -554,5 +560,23 @@ function oppdaterTilbakekrevingPåSak(
             tilbakekrevinger: s.tilbakekrevinger.map((t) => (t.id === tilbakekreving.id ? tilbakekreving : t)),
             versjon: tilbakekreving.versjon,
         })),
+    );
+}
+
+function opprettEllerOppdaterReguleringISak(sak: RemoteData.RemoteData<ApiError, Sak>, regulering: Regulering) {
+    return pipe(
+        sak,
+        RemoteData.map((s) => {
+            if (s.reguleringer.some((r) => r.id === regulering.id)) {
+                return {
+                    ...s,
+                    reguleringer: s.reguleringer.map((r) => (r.id === regulering.id ? regulering : r)),
+                };
+            }
+            return {
+                ...s,
+                reguleringer: [...s.reguleringer, regulering],
+            };
+        }),
     );
 }

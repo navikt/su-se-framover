@@ -324,7 +324,7 @@ const messages: { [key in ApiErrorCode]: string } = {
     [ApiErrorCode.VURDERINGENE_MÅ_HA_SAMME_RESULTAT]:
         'Vurdering av vilkår må ha samme resultat for hele behandlingsperioden',
     [ApiErrorCode.VURDERINGSPERIODE_UTENFOR_REVURDERINGSPERIODE]:
-        'Vurdering av vilkår må gjøres innenfor behandlingsperioden',
+        'Vurdering av vilkår må gjøres innenfor behandlingsperioden, husk å sjekke at fradrag stemmer med stønadsperioden.',
     [ApiErrorCode.VURDERINGSPERIODER_MANGLER]: 'Hele eller deler av revurderingsperioden mangler vurdering(er)',
 
     //Å

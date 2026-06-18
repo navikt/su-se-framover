@@ -56,7 +56,7 @@ const Bosituasjon = (
 
     const form = useForm<BosituasjonGrunnlagFormData>({
         defaultValues: draft ?? initialValues,
-        resolver: yupResolver(bosituasjonFormSchema),
+        resolver: yupResolver(bosituasjonFormSchema(props.søker.fnr)),
     });
 
     useDraftFormSubscribe(form.watch);

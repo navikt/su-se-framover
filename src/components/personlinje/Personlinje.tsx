@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 
 import { ErrorCode } from '~src/api/apiClient';
 import { fetchPerson } from '~src/api/personApi';
-import { hentEpsSaksIderForDenneSak } from '~src/api/sakApi';
+import { hentEpsSaksIdForDenneSak } from '~src/api/sakApi';
 import { KjønnUkjent } from '~src/assets/Icons';
 import { pipe } from '~src/lib/fp';
 import { useApiCall } from '~src/lib/hooks';
@@ -89,7 +89,7 @@ export const storForBokstav = (str: string) => {
 const EpsSakLinkUtenSivilstand = (props: { sakId: string }) => {
     const { insert } = useToast();
 
-    const [hentEpsSaksIderStatus, hentEpsSaksIder] = useApiCall(hentEpsSaksIderForDenneSak);
+    const [hentEpsSaksIderStatus, hentEpsSaksIder] = useApiCall(hentEpsSaksIdForDenneSak);
 
     useEffect(() => {
         hentEpsSaksIder(props.sakId);
@@ -105,16 +105,6 @@ const EpsSakLinkUtenSivilstand = (props: { sakId: string }) => {
                 }),
             );
         }
-
-        if (RemoteData.isSuccess(hentEpsSaksIderStatus) && hentEpsSaksIderStatus.value.length > 1) {
-            insert(
-                createToast({
-                    type: ToastType.INFO,
-                    duration: 5000,
-                    message: 'Saken har flere EPS som har SU-uføre sak',
-                }),
-            );
-        }
     }, [hentEpsSaksIderStatus._tag]);
 
     return pipe(
@@ -123,15 +113,15 @@ const EpsSakLinkUtenSivilstand = (props: { sakId: string }) => {
             () => null,
             () => <Loader />,
             () => null,
-            (epsSaker) => (
+            (epsSak) => (
                 <div>
-                    {epsSaker.length === 1 ? (
+                    {epsSak.sakId ? (
                         <Alert variant="info">
                             <BodyShort>Saken har EPS registrert fra vedtak, men fant ikke fra PDL</BodyShort>
                             <Link
                                 target="_blank"
                                 to={Routes.saksoversiktValgtSak.createURL({
-                                    sakId: epsSaker[0],
+                                    sakId: epsSak.sakId,
                                 })}
                             >
                                 <BodyShort>Gå til EPS-sak</BodyShort>
@@ -149,7 +139,7 @@ const Sivilstand = (props: { sakId: string; sivilstand: ISivilstand; sakstype: S
 
     const { insert } = useToast();
     const [status, hentPerson] = useApiCall(fetchPerson);
-    const [hentEpsSaksIderStatus, hentEpsSaksIder] = useApiCall(hentEpsSaksIderForDenneSak);
+    const [hentEpsSaksIderStatus, hentEpsSaksIder] = useApiCall(hentEpsSaksIdForDenneSak);
 
     useEffect(() => {
         if (props.sivilstand.relatertVedSivilstand) {
@@ -170,16 +160,6 @@ const Sivilstand = (props: { sakId: string; sivilstand: ISivilstand; sakstype: S
                     type: ToastType.ERROR,
                     duration: 5000,
                     message: 'En feil skjedde ved sjekk om eps har sak',
-                }),
-            );
-        }
-
-        if (RemoteData.isSuccess(hentEpsSaksIderStatus) && hentEpsSaksIderStatus.value.length > 1) {
-            insert(
-                createToast({
-                    type: ToastType.INFO,
-                    duration: 5000,
-                    message: 'Saken har flere EPS som har SU-uføre sak',
                 }),
             );
         }
@@ -207,11 +187,11 @@ const Sivilstand = (props: { sakId: string; sivilstand: ISivilstand; sakstype: S
                     (eps) => (
                         <span className={styles.epsInformasjon}>
                             <KjønnUkjent size="24px" />
-                            {RemoteData.isSuccess(hentEpsSaksIderStatus) && hentEpsSaksIderStatus.value.length === 1 ? (
+                            {RemoteData.isSuccess(hentEpsSaksIderStatus) && hentEpsSaksIderStatus.value.sakId ? (
                                 <Link
                                     target="_blank"
                                     to={Routes.saksoversiktValgtSak.createURL({
-                                        sakId: hentEpsSaksIderStatus.value[0],
+                                        sakId: hentEpsSaksIderStatus.value.sakId,
                                     })}
                                 >
                                     <BodyShort>{showName(eps.navn)}</BodyShort>
