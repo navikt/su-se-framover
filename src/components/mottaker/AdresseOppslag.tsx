@@ -8,10 +8,8 @@ import { ApiResult, useApiCall } from '~src/lib/hooks.ts';
 
 interface Props {
     sakId: string;
-    fnr: string | undefined;
+    fnr: string;
 }
-
-const harGyldigFnr = (fnr: string | undefined) => Boolean(fnr?.trim().match(/^\d{11}$/));
 
 const formatAdresse = (adresse: NorskPostadresse) =>
     [
@@ -25,17 +23,10 @@ const formatAdresse = (adresse: NorskPostadresse) =>
         .join(', ');
 
 export const AdresseOppslag = ({ sakId, fnr }: Props) => {
-    const [status, hentAdresse, resetStatus] = useApiCall(sjekkAdresse);
-
-    const trimmedFnr = fnr?.trim();
+    const [status, hentAdresse] = useApiCall(sjekkAdresse);
 
     useEffect(() => {
-        if (!harGyldigFnr(trimmedFnr)) {
-            resetStatus();
-            return;
-        }
-
-        hentAdresse({ sakId, fnr: trimmedFnr! });
+        hentAdresse({ sakId, fnr });
     }, [sakId]);
 
     return (
