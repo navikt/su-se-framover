@@ -101,6 +101,9 @@ const EndringAvFradrag = (props: RevurderingStegProps & { søker: Person }) => {
         }
     };
 
+    const harEps = props.revurdering.grunnlagsdataOgVilkårsvurderinger.bosituasjon.filter((bosituasjon) =>
+        bosituasjonHarEps(bosituasjon),
+    );
     return (
         <ToKolonner tittel={<RevurderingsperiodeHeader periode={props.revurdering.periode} />}>
             {{
@@ -120,7 +123,24 @@ const EndringAvFradrag = (props: RevurderingStegProps & { søker: Person }) => {
                                 sakId={props.sakId}
                                 fnr={props.søker.fnr}
                                 periode={props.revurdering.periode}
+                                tittel={'Eksterne fradrag stønadsmottaker'}
                             />
+                            <>
+                                {harEps.map((epsBosituasjon) => {
+                                    if (epsBosituasjon.fnr) {
+                                        return (
+                                            <EksterneFradrag
+                                                key={epsBosituasjon.fnr}
+                                                sakId={props.sakId}
+                                                fnr={epsBosituasjon.fnr}
+                                                periode={props.revurdering.periode}
+                                                tittel={`Eksterne fradrag EPS ${epsBosituasjon.fnr}`}
+                                            />
+                                        );
+                                    }
+                                    return null;
+                                })}
+                            </>
                             <div className={styles.fradragInputsContainer}>
                                 <FradragForm
                                     name={'fradrag'}
