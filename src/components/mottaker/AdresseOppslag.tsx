@@ -66,7 +66,7 @@ const AdresseOppslagResultat = ({ status }: { status: ApiResult<SjekkAdresseResp
     return (
         <Alert variant="success" size="small">
             <VStack gap="2">
-                <BodyShort>Fant navn og adresse.</BodyShort>
+                <BodyShort>Fant adresse for navn</BodyShort>
                 <Box>
                     <BodyShort weight="semibold">{status.value.navn}</BodyShort>
                     <BodyShort>{formatAdresse(status.value.adresse)}</BodyShort>
