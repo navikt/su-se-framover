@@ -27,7 +27,7 @@ export const AdresseOppslag = ({ sakId, fnr }: Props) => {
 
     useEffect(() => {
         hentAdresse({ sakId, fnr });
-    }, [sakId]);
+    }, [sakId, fnr]);
 
     return (
         <VStack gap="3">
