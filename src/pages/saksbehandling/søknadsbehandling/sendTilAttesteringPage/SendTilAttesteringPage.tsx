@@ -183,7 +183,6 @@ const SendTilAttesteringPage = (props: Props) => {
                     left: (
                         <form className={styles.vedtakContainer} onSubmit={form.handleSubmit(handleSubmit)}>
                             <div>
-                                <AdresseOppslag sakId={props.sakId} fnr={props.søker.fnr} />
                                 <Controller
                                     control={form.control}
                                     name="valg"
@@ -212,6 +211,7 @@ const SendTilAttesteringPage = (props: Props) => {
                             </div>
                             <div className={styles.fritekstareaOuterContainer}>
                                 <div className={styles.fritekstareaContainer}>
+                                    {valg === Valg.SEND && <AdresseOppslag sakId={props.sakId} fnr={props.søker.fnr} />}
                                     {valg === Valg.SEND && (
                                         <TextareaWithAutosave
                                             textarea={{

@@ -233,7 +233,6 @@ const SendTilAttestering = (props: {
                         }}
                     >
                         <div>
-                            <AdresseOppslag sakId={props.sakId} fnr={props.søker.fnr} />
                             <Controller
                                 control={form.control}
                                 name="valg"
@@ -251,6 +250,9 @@ const SendTilAttestering = (props: {
                             />
 
                             <div className={styles.textareaContainer}>
+                                {watch.valg === Valg.SEND && (
+                                    <AdresseOppslag sakId={props.sakId} fnr={props.søker.fnr} />
+                                )}
                                 {watch.valg === Valg.SEND && (
                                     <TextareaWithAutosave
                                         textarea={{
