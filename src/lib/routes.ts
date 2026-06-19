@@ -1,5 +1,5 @@
 import { NavigateFunction, useParams } from 'react-router-dom';
-
+import { KontrollsamtaleSteg } from '~src/pages/kontrollsamtale/types.ts';
 import { Søknadssteg } from '~src/pages/søknad/types';
 import { KlageSteg } from '~src/types/Klage';
 import { TilbakekrevingSteg } from '~src/types/ManuellTilbakekrevingsbehandling';
@@ -298,6 +298,14 @@ export const kontrollsamtale: Route<{
     path: 'kontrollsamtale/',
     absPath: '/saksoversikt/:sakId/kontrollsamtale/',
     createURL: (args) => `/saksoversikt/${args.sakId}/kontrollsamtale/`,
+};
+
+export const kontrollsamtaleUtfylling: Route<{
+    step: KontrollsamtaleSteg;
+}> = {
+    path: 'utfylling/:step',
+    absPath: '/kontrollsamtale/utfylling/:step',
+    createURL: (args) => `/kontrollsamtale/utfylling/${args.step}`,
 };
 
 export const utenlandsopphold: Route<{ sakId: string }> = {
