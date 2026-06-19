@@ -1,7 +1,6 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Alert, BodyShort, Button, HelpText, Radio, RadioGroup, Select, Textarea, TextField } from '@navikt/ds-react';
-import { useEffect, useState } from 'react';
+import { BodyShort, Button, HelpText, Radio, RadioGroup, Select, Textarea, TextField } from '@navikt/ds-react';
 import { Controller, UseFormClearErrors, UseFormTrigger, useForm } from 'react-hook-form';
 
 import {
