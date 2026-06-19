@@ -7,16 +7,10 @@ import { useI18n } from '~src/lib/i18n';
 import * as Routes from '~src/lib/routes';
 import { Rolle } from '~src/types/LoggedInUser';
 import { loggUmamiEvent } from '~src/utils/umami.ts';
-import { KontrollsamtaleSteg } from '../kontrollsamtale/types';
 import messages from './nb';
 import styles from './søknadsvelger.module.less';
 
 const Søknadsvelger = () => {
-    console.log(
-        Routes.kontrollsamtaleUtfylling.createURL({
-            step: KontrollsamtaleSteg.PersonligOppmøte,
-        }),
-    );
     const user = useUserContext();
     const { formatMessage } = useI18n({ messages });
     const isPapirsøknad = location.search.includes('papirsoknad');
