@@ -3,7 +3,7 @@ import * as RemoteData from '@devexperts/remote-data-ts';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Button, Heading, Radio, RadioGroup } from '@navikt/ds-react';
 import { useEffect, useState } from 'react';
-import { Controller, UseFormReturn, useForm } from 'react-hook-form';
+import { Controller, useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 
 import { FritekstTyper, hentFritekst, redigerFritekst } from '~src/api/fritekstApi.ts';
@@ -83,12 +83,48 @@ const ForhåndsvarsleTilbakekreving = (props: {
             return;
         }
 
+        const dødsbo = visDødsbo ? dødsboForm.getValues() : null;
+        if (dødsbo) {
+            if (dødsbo) {
+                const harFnr = Boolean(dødsbo.foedselsnummer?.trim());
+                const harOrgnr = Boolean(dødsbo.orgnummer?.trim());
+
+                if (harFnr && harOrgnr) {
+                    dødsboForm.setError('foedselsnummer', {
+                        message: 'Kan ikke ha både fødselsnummer og organisasjonsnummer.',
+                    });
+                    dødsboForm.setError('orgnummer', {
+                        message: 'Kan ikke ha både fødselsnummer og organisasjonsnummer.',
+                    });
+                    return;
+                }
+                if (!harFnr && !harOrgnr) {
+                    dødsboForm.setError('foedselsnummer', {
+                        message: 'Du må fylle ut enten fødselsnummer eller organisasjonsnummer.',
+                    });
+                    dødsboForm.setError('orgnummer', {
+                        message: 'Du må fylle ut enten fødselsnummer eller organisasjonsnummer.',
+                    });
+                    return;
+                }
+                if (!dødsbo.navn.trim()) {
+                    dødsboForm.setError('navn', { message: 'Navn er påkrevd.' });
+                    return;
+                }
+                if (!dødsbo.adresse.adresselinje1.trim()) {
+                    dødsboForm.setError('adresse.adresselinje1', { message: 'Adresselinje 1 er påkrevd.' });
+                    return;
+                }
+            }
+        }
+
         lagreForhåndsvarsel(
             {
                 sakId: props.sakId,
                 saksversjon: props.saksversjon,
                 behandlingId: props.tilbakekreving.id,
                 fritekst: data.fritekst,
+                dødsbo: dødsbo,
             },
             () => {
                 navigate(Routes.saksoversiktValgtSak.createURL({ sakId: props.sakId }));
@@ -110,6 +146,10 @@ const ForhåndsvarsleTilbakekreving = (props: {
             onSuccess,
         );
     };
+
+    const [visDødsbo, setVisDødsbo] = useState(false);
+    const referanseType = 'DØDSBO_TILBAKEKREVING';
+    const brevtype = 'FORHANDSVARSEL';
 
     // referanseId skal bli hendelseId, men den blir til først i backend
     const emptyFormValues: LagreMottakerRequest = {
@@ -191,11 +231,24 @@ const ForhåndsvarsleTilbakekreving = (props: {
                         )}
 
                         {form.watch('skalForhåndsvarsle') && (
-                            <MottakerDødsboForhåndsvarsel
-                                tilbakekreving={props.tilbakekreving}
-                                sakId={props.sakId}
-                                form={dødsboForm}
-                            />
+                            <div>
+                                {!visDødsbo && (
+                                    <Button variant="secondary" type="button" onClick={() => setVisDødsbo(true)}>
+                                        legg til dødsbo
+                                    </Button>
+                                )}
+
+                                {visDødsbo && (
+                                    <MottakerForm
+                                        sakId={props.sakId}
+                                        referanseId={''}
+                                        referanseType={referanseType}
+                                        brevtype={brevtype}
+                                        onClose={() => setVisDødsbo(false)}
+                                        form={dødsboForm}
+                                    />
+                                )}
+                            </div>
                         )}
 
                         <div>
@@ -256,46 +309,6 @@ const ForhåndsvarsleTilbakekreving = (props: {
                 ),
             }}
         </ToKolonner>
-    );
-};
-
-const MottakerDødsboForhåndsvarsel = ({
-    sakId,
-    tilbakekreving,
-    form,
-}: {
-    sakId: string;
-    tilbakekreving: ManuellTilbakekrevingsbehandling;
-    form: UseFormReturn<LagreMottakerRequest>;
-}) => {
-    if (process.env.NODE_ENV !== 'development') {
-        return;
-    }
-    const [visDødsbo, setVisDødsbo] = useState(false);
-
-    const referanseId = tilbakekreving.id;
-    const referanseType = 'DØDSBO_TILBAKEKREVING';
-    const brevtype = 'FORHANDSVARSEL';
-
-    return (
-        <div>
-            {!visDødsbo && (
-                <Button variant="secondary" type="button" onClick={() => setVisDødsbo(true)}>
-                    legg til dødsbo
-                </Button>
-            )}
-
-            {visDødsbo && (
-                <MottakerForm
-                    sakId={sakId}
-                    referanseId={referanseId}
-                    referanseType={referanseType}
-                    brevtype={brevtype}
-                    onClose={() => setVisDødsbo(false)}
-                    form={form}
-                />
-            )}
-        </div>
     );
 };
 
