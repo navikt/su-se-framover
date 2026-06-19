@@ -1,7 +1,8 @@
 import { Alert, Button } from '@navikt/ds-react';
 import { useState } from 'react';
+import { Brevtype, ReferanseType } from '~src/api/mottakerClient.ts';
 import { MottakerAlert } from '~src/components/mottaker/mottakerUtils.ts';
-import { MottakerForm } from '~src/pages/saksbehandling/mottaker/Mottaker.tsx';
+import { Mottaker } from '~src/pages/saksbehandling/mottaker/Mottaker.tsx';
 import { ManuellTilbakekrevingsbehandling } from '~src/types/ManuellTilbakekrevingsbehandling.ts';
 
 export const MottakerDødsbo = ({
@@ -9,10 +10,14 @@ export const MottakerDødsbo = ({
     tilbakekreving,
     harDødsbo,
     setHardødsbo,
+    referanseType,
+    brevtype,
     mottakerFetchError,
 }: {
     sakId: string;
     tilbakekreving: ManuellTilbakekrevingsbehandling;
+    referanseType: ReferanseType;
+    brevtype: Brevtype;
     harDødsbo: boolean;
     setHardødsbo: (harDødsbo: boolean) => void;
     mottakerFetchError: MottakerAlert | null;
@@ -32,11 +37,11 @@ export const MottakerDødsbo = ({
 
             {visDødsbo && (
                 <>
-                    <MottakerForm
+                    <Mottaker
                         sakId={sakId}
                         referanseId={tilbakekreving.id}
-                        referanseType={'DØDSBO_TILBAKEKREVING'}
-                        brevtype={'FORHANDSVARSEL'}
+                        referanseType={referanseType}
+                        brevtype={brevtype}
                         onClose={() => setVisDødsbo(false)}
                         onDelete={() => setHardødsbo(false)}
                     />

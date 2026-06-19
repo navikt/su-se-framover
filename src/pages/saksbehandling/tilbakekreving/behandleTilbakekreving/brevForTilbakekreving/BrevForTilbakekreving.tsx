@@ -223,6 +223,8 @@ const BrevForTilbakekreving = (props: {
                                 <MottakerDødsbo
                                     tilbakekreving={props.tilbakekreving}
                                     sakId={props.sakId}
+                                    referanseType={'DØDSBO_TILBAKEKREVING'}
+                                    brevtype={'FORHANDSVARSEL'}
                                     harDødsbo={harDødsbo}
                                     setHardødsbo={(harDødsbo: boolean) => setHarDødsbo(harDødsbo)}
                                     mottakerFetchError={mottakerFetchError}

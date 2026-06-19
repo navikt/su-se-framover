@@ -30,7 +30,7 @@ type FeedbackVariant = 'success' | 'error' | 'info' | 'warning';
 type Feedback = { text: string; variant: FeedbackVariant };
 type ActionState = 'idle' | 'loading' | 'success' | 'error';
 
-interface MottakerFormExtendedProps extends MottakerFormProps {
+interface MottakerFormPropsExtended extends MottakerFormProps {
     form: UseFormReturn<FormValues>;
 }
 export function Mottaker(props: MottakerFormProps) {
@@ -57,16 +57,15 @@ export function Mottaker(props: MottakerFormProps) {
         defaultValues: emptyFormValues,
     });
 
-    const extendedProps = {
+    const lok: MottakerFormPropsExtended = {
         ...props,
         form: form,
     };
 
-    return <MottakerForm {...extendedProps} />;
+    return <MottakerForm {...lok} />;
 }
 
-// TODO fortsatt noe tilstansbevaring som skjer er uavhengig av forom som prop??
-export function MottakerForm({
+function MottakerForm({
     form,
     sakId,
     referanseId,
@@ -74,7 +73,7 @@ export function MottakerForm({
     brevtype,
     onClose,
     onDelete,
-}: MottakerFormExtendedProps) {
+}: MottakerFormPropsExtended) {
     const emptyFormValues = useMemo<FormValues>(
         () => ({
             navn: '',
