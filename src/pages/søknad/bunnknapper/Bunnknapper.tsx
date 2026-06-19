@@ -79,7 +79,7 @@ const Bunnknapper = (props: {
                                 {formatMessage('steg.avbryt')}
                             </Button>
                             <LinkAsButton variant="danger" href={props.avbryt.toRoute}>
-                                {formatMessage('modal.lukkSøknad')}
+                                {formatMessage('modal.lukk')}
                             </LinkAsButton>
                         </div>
                     </div>

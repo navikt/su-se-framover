@@ -2,6 +2,7 @@ import { configureStore } from '@reduxjs/toolkit';
 import { useDispatch, useSelector } from 'react-redux';
 
 import frontendConfig from '~src/features/frontendConfig/frontendConfig.slice';
+import kontrollsamtaleSlice from '~src/features/kontrollsamtale/kontrollsamtale.slice.ts';
 import me from '~src/features/me/me.slice';
 import person from '~src/features/person/person.slice';
 import sakSlice from '~src/features/saksoversikt/sak.slice';
@@ -13,6 +14,7 @@ const store = configureStore({
     reducer: {
         personopplysninger: person.reducer,
         soknad: søknadSlice.reducer,
+        kontrollsamtale: kontrollsamtaleSlice.reducer,
         sak: sakSlice.reducer,
         innsending: innsending.reducer,
         me: me.reducer,
