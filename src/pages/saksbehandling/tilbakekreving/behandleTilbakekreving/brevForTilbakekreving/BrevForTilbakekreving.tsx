@@ -1,13 +1,15 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Radio, RadioGroup } from '@navikt/ds-react';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Controller, UseFormTrigger, useForm, useWatch } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import { FritekstTyper, hentFritekst } from '~src/api/fritekstApi.ts';
+import { hentMottaker } from '~src/api/mottakerClient.ts';
 import { forhåndsvisVedtaksbrevTilbakekrevingsbehandling } from '~src/api/tilbakekrevingApi';
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
 import TextareaWithAutosave from '~src/components/inputs/textareaWithAutosave/TextareaWithAutosave';
+import { MottakerAlert, toMottakerAlert } from '~src/components/mottaker/mottakerUtils.ts';
 import Navigasjonsknapper from '~src/components/navigasjonsknapper/Navigasjonsknapper';
 import Feiloppsummering from '~src/components/oppsummering/feiloppsummering/Feiloppsummering';
 import OppsummeringAvVurdering from '~src/components/oppsummering/oppsummeringAvTilbakekrevingsbehandling/vurdering/OppsummeringAvVurdering';
@@ -21,6 +23,7 @@ import { useI18n } from '~src/lib/i18n';
 import * as routes from '~src/lib/routes';
 import { Nullable } from '~src/lib/types';
 import { hookFormErrorsTilFeiloppsummering } from '~src/lib/validering';
+import { MottakerDødsbo } from '~src/pages/saksbehandling/mottaker/MottakerDødsbo.tsx';
 import { ManuellTilbakekrevingsbehandling, TilbakekrevingSteg } from '~src/types/ManuellTilbakekrevingsbehandling';
 import messages from '../../Tilbakekreving-nb';
 import styles from './BrevForTilbakekreving.module.less';
@@ -132,6 +135,26 @@ const BrevForTilbakekreving = (props: {
             form.setError('fritekst', { message: 'Kunne ikke hente fritekst' });
         });
     }, [skalSendeBrev, props.tilbakekreving.id, props.sakId]);
+
+    const [harDødsbo, setHarDødsbo] = useState(false);
+    const [mottakerFetchError, setMottakerFetchError] = useState<MottakerAlert | null>(null);
+    useEffect(() => {
+        const sjekkMottaker = async () => {
+            const res = await hentMottaker(props.sakId, 'DØDSBO_TILBAKEKREVING', props.tilbakekreving.id, 'VEDTAK');
+            if (res.status === 'ok') {
+                if (res.data) {
+                    setHarDødsbo(true);
+                }
+                return;
+            } else {
+                if (res.error.statusCode) {
+                    setMottakerFetchError(toMottakerAlert(res.error, 'Kan ikke hente mottaker'));
+                }
+            }
+        };
+        sjekkMottaker();
+    }, []);
+
     return (
         <ToKolonner tittel={formatMessage('brevForTilbakekreving.tittel')}>
             {{
@@ -193,6 +216,16 @@ const BrevForTilbakekreving = (props: {
                                             }),
                                         status: forhåndsvisStatus,
                                     }}
+                                />
+                            )}
+
+                            {skalSendeBrev && (
+                                <MottakerDødsbo
+                                    tilbakekreving={props.tilbakekreving}
+                                    sakId={props.sakId}
+                                    harDødsbo={harDødsbo}
+                                    setHardødsbo={(harDødsbo: boolean) => setHarDødsbo(harDødsbo)}
+                                    mottakerFetchError={mottakerFetchError}
                                 />
                             )}
 
