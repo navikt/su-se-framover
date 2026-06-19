@@ -45,8 +45,6 @@ const UtenlandsOpphold = ({ nesteUrl, forrigeUrl, avbrytUrl }: Props) => {
         },
         resolver: yupResolver(schema),
     });
-    console.log('watch', form.watch());
-    console.log('utenlandsoppholdDatoer', form.watch('utenlandsoppholdDatoer'));
 
     const harVærtUtenlands = form.watch('harVærtUtenlands') === true;
     const harPlanerOmUtenlandsreise = form.watch('harPlanerOmUtenlandsreise') === true;

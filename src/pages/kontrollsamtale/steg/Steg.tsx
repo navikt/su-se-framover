@@ -10,6 +10,9 @@ import ØkonomiskSituasjon from '~src/pages/kontrollsamtale/steg/økonomi/Økono
 import { KontrollsamtaleSteg } from '~src/pages/kontrollsamtale/types.ts';
 
 const KontrollSamtaleSteg = () => {
+    if (process.env.NODE_ENV !== 'development') {
+        return;
+    }
     const { step } = useRouteParams<typeof kontrollsamtaleUtfylling>();
 
     const avbrytUrl = routes.soknad.createURL();

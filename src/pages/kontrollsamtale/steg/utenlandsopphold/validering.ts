@@ -12,13 +12,13 @@ export type FormData = Pick<
 
 //todo: fiks dato schema
 const reiseDatoSchema = yup.object({
-    utreiseDato: yup.string(),
-    innreiseDato: yup.string(),
+    utreisedato: yup.string(),
+    innreisedato: yup.string(),
 });
 export const schema = yup.object({
-    harVærtUtenlands: yup.boolean().nullable().required('Du må svare '),
-    harPlanerOmUtenlandsreise: yup.boolean().nullable().required('Du må svare '),
-    reisedokumentasjon: yup.boolean().nullable().required('Du må svare '),
+    harVærtUtenlands: yup.boolean().nullable().required('Du må svare'),
+    harPlanerOmUtenlandsreise: yup.boolean().nullable().required('Du må svare'),
+    reisedokumentasjon: yup.boolean().nullable().required('Du må svare'),
     utenlandsoppholdDatoer: yup.array().of(reiseDatoSchema).default([]),
     planlagteUtenlandsreiseDatoer: yup.array().of(reiseDatoSchema).default([]),
 });

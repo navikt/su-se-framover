@@ -1,20 +1,27 @@
-import { BodyLong, GuidePanel, Heading, Ingress, Link, Panel } from '@navikt/ds-react';
-import { useState } from 'react';
+import { BodyLong, BodyShort, Button, GuidePanel, Heading, Ingress, Link, Modal, Panel } from '@navikt/ds-react';
+import { useRef, useState } from 'react';
+import forsteSideBildet from '~src/assets/images/forsteSide.png';
 import LinkAsButton from '~src/components/linkAsButton/LinkAsButton';
 import { useUserContext } from '~src/context/userContext';
 import { useI18n } from '~src/lib/i18n';
 import * as Routes from '~src/lib/routes';
-import { KontrollsamtaleSteg } from '~src/pages/kontrollsamtale/types.ts';
 import { Rolle } from '~src/types/LoggedInUser';
 import { loggUmamiEvent } from '~src/utils/umami.ts';
+import { KontrollsamtaleSteg } from '../kontrollsamtale/types';
 import messages from './nb';
 import styles from './søknadsvelger.module.less';
 
 const Søknadsvelger = () => {
+    console.log(
+        Routes.kontrollsamtaleUtfylling.createURL({
+            step: KontrollsamtaleSteg.PersonligOppmøte,
+        }),
+    );
     const user = useUserContext();
     const { formatMessage } = useI18n({ messages });
     const isPapirsøknad = location.search.includes('papirsoknad');
-    const [, setOpen] = useState(false);
+    const ref = useRef<HTMLDialogElement>(null);
+    const [open, setOpen] = useState(false);
 
     if (user.roller.includes(Rolle.Saksbehandler) || user.roller.includes(Rolle.Veileder)) {
         return (
@@ -80,18 +87,53 @@ const Søknadsvelger = () => {
                                 {formatMessage('velg-kontrollsamtale-tittel')}
                             </Heading>
                             <Ingress>{formatMessage('kontrollsamtale-beskrivelse')}</Ingress>
-                            <LinkAsButton
+                            <Button
                                 variant="secondary"
-                                href={Routes.kontrollsamtaleUtfylling.createURL({
-                                    step: KontrollsamtaleSteg.PersonligOppmøte,
-                                })}
+                                type="button"
                                 onClick={() => {
                                     loggUmamiEvent('kontrollsamtale-lenke-klikket', {});
                                     setOpen(true);
                                 }}
                             >
-                                {formatMessage('kontrollsamtaleSkjema-lenke')}
-                            </LinkAsButton>
+                                {formatMessage('kontrollsamtale-lenke')}
+                            </Button>
+                            <Modal ref={ref} aria-label="Kontrollsamtale" open={open} onClose={() => setOpen(false)}>
+                                <Modal.Body>
+                                    <Heading size="medium" spacing>
+                                        {formatMessage('innsending-kontrollnotat')}
+                                    </Heading>
+                                    <form>
+                                        <BodyShort spacing>
+                                            {formatMessage('servicerutine-link')}
+                                            <Link
+                                                target="_blank"
+                                                href="https://navno.sharepoint.com/sites/fag-og-ytelser-regelverk-og-rutiner/SitePages/Supplerende%20st%C3%B8nad.aspx?web=1"
+                                            >
+                                                servicerutine
+                                            </Link>
+                                            {formatMessage('servicerutine-link-videre')}
+                                        </BodyShort>
+                                        <BodyShort>
+                                            {formatMessage('kontrollsamtale.advarsel', {
+                                                strong: (text) => <strong>{text}</strong>,
+                                            })}
+                                        </BodyShort>
+                                        <div className={styles.forsteSide}>
+                                            <BodyShort>{formatMessage('forste.side.info')}</BodyShort>
+                                            <img
+                                                src={forsteSideBildet}
+                                                alt="Førsteside som skal brukes"
+                                                className={styles.bilde}
+                                            />
+                                        </div>
+                                        <div style={{ marginTop: '1rem', textAlign: 'right' }}>
+                                            <Button variant="secondary" type="button" onClick={() => setOpen(false)}>
+                                                Lukk
+                                            </Button>
+                                        </div>
+                                    </form>
+                                </Modal.Body>
+                            </Modal>
                         </Panel>
                     </div>
                 </div>
