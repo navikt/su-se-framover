@@ -10,6 +10,7 @@ import * as PdfApi from '~src/api/pdfApi';
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
 import TextareaWithAutosave from '~src/components/inputs/textareaWithAutosave/TextareaWithAutosave.tsx';
 import LinkAsButton from '~src/components/linkAsButton/LinkAsButton';
+import { AdresseOppslag } from '~src/components/mottaker/AdresseOppslag.tsx';
 import { MottakerAlert, toMottakerAlert } from '~src/components/mottaker/mottakerUtils';
 import OppsummeringAvSøknadsbehandling from '~src/components/oppsummering/søknadsbehandlingoppsummering/OppsummeringAvSøknadsbehandling';
 import ToKolonner from '~src/components/toKolonner/ToKolonner';
@@ -20,6 +21,7 @@ import { useI18n } from '~src/lib/i18n';
 import * as Routes from '~src/lib/routes';
 import { MottakerForm } from '~src/pages/saksbehandling/mottaker/Mottaker.tsx';
 import { VilkårsvurderingBaseProps } from '~src/pages/saksbehandling/søknadsbehandling/types.ts';
+import { Person } from '~src/types/Person.ts';
 import { Sakstype } from '~src/types/Sak';
 import { EksisterendeVedtaksinformasjonTidligerePeriodeResponse, Valg } from '~src/types/Søknadsbehandling.ts';
 import { Vilkårtype, VilkårVurderingStatus } from '~src/types/Vilkårsvurdering';
@@ -40,6 +42,7 @@ interface FormData {
 }
 type Props = VilkårsvurderingBaseProps & {
     tidligerePeriodeData: ApiResult<EksisterendeVedtaksinformasjonTidligerePeriodeResponse>;
+    søker: Person;
 };
 const SendTilAttesteringPage = (props: Props) => {
     const { formatMessage } = useI18n({ messages });
@@ -208,6 +211,7 @@ const SendTilAttesteringPage = (props: Props) => {
                             </div>
                             <div className={styles.fritekstareaOuterContainer}>
                                 <div className={styles.fritekstareaContainer}>
+                                    {valg === Valg.SEND && <AdresseOppslag sakId={props.sakId} fnr={props.søker.fnr} />}
                                     {valg === Valg.SEND && (
                                         <TextareaWithAutosave
                                             textarea={{

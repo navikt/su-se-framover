@@ -231,6 +231,7 @@ const Vilkår = () => {
                             avsluttUrl={avsluttUrl}
                             sakId={sakId}
                             tidligerePeriodeData={hentGjeldendeVedtaksdataForTidligerePeriodeStatus}
+                            søker={props.søker}
                         />
                     )}
                 </div>
