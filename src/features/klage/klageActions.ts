@@ -12,21 +12,26 @@ export const opprettKlage = createAsyncThunk<
         sakId: string;
         journalpostId: string;
         datoKlageMottatt: string;
-        relatertBehandlingId: string;
+        relatertBehandlingId?: string;
+        erInfotrygdSakId?: string;
     },
     { rejectValue: ApiError }
->('klage/opprett', async ({ sakId, journalpostId, datoKlageMottatt, relatertBehandlingId }, thunkApi) => {
-    const res = await klageApi.opprettKlage({
-        sakId,
-        journalpostId,
-        datoKlageMottatt,
-        relatertBehandlingId,
-    });
-    if (res.status === 'ok') {
-        return res.data;
-    }
-    return thunkApi.rejectWithValue(res.error);
-});
+>(
+    'klage/opprett',
+    async ({ sakId, journalpostId, datoKlageMottatt, relatertBehandlingId, erInfotrygdSakId }, thunkApi) => {
+        const res = await klageApi.opprettKlage({
+            sakId,
+            journalpostId,
+            datoKlageMottatt,
+            relatertBehandlingId,
+            erInfotrygdSakId,
+        });
+        if (res.status === 'ok') {
+            return res.data;
+        }
+        return thunkApi.rejectWithValue(res.error);
+    },
+);
 
 export const vurderFormkrav = createAsyncThunk<Klage, FormkravRequest, { rejectValue: ApiError }>(
     'klage/vurderFormkrav',
@@ -39,17 +44,19 @@ export const vurderFormkrav = createAsyncThunk<Klage, FormkravRequest, { rejectV
             klagesDetPåKonkreteElementerIVedtaket,
             erUnderskrevet,
             fremsattRettsligKlageinteresse,
+            infotrygdSakId,
         },
         thunkApi,
     ) => {
         const res = await klageApi.vilkårsvurder({
             sakId,
             klageId,
-            vedtakId,
+            vedtakId: vedtakId === 'null' ? null : vedtakId,
             innenforFristen,
             klagesDetPåKonkreteElementerIVedtaket,
             erUnderskrevet,
             fremsattRettsligKlageinteresse,
+            infotrygdSakId: infotrygdSakId,
         });
         if (res.status === 'ok') {
             return res.data;

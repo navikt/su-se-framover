@@ -1,6 +1,6 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Button, HelpText, Loader, Select, TextField } from '@navikt/ds-react';
+import { Button, Checkbox, HelpText, Loader, Select, TextField } from '@navikt/ds-react';
 import * as DateFns from 'date-fns';
 import { Controller, useForm } from 'react-hook-form';
 import { useNavigate, useOutletContext } from 'react-router-dom';
@@ -28,10 +28,13 @@ const OpprettKlage = () => {
     const props = useOutletContext<SaksoversiktContext>();
     const [opprettKlageStatus, opprettKlage] = useAsyncActionCreator(klageActions.opprettKlage);
 
-    const { handleSubmit, register, control, formState } = useForm<OpprettKlageFormData>({
+    const { handleSubmit, register, control, formState, watch } = useForm<OpprettKlageFormData>({
         resolver: yupResolver(opprettKlageSchema),
-        defaultValues: { journalpostId: '' },
+        defaultValues: { journalpostId: '', erEksternSak: false, erInfotrygdSakId: '' },
+        shouldUnregister: true,
     });
+    const erEksternSak = watch('erEksternSak');
+
     const navigate = useNavigate();
     const { formatMessage } = useI18n({ messages });
 
@@ -51,7 +54,8 @@ const OpprettKlage = () => {
                                 datoKlageMottatt: DateFns.formatISO(values.datoKlageMottatt!, {
                                     representation: 'date',
                                 }),
-                                relatertBehandlingId: values.relatertBehandlingId,
+                                relatertBehandlingId: values.erEksternSak ? undefined : values.relatertBehandlingId,
+                                erInfotrygdSakId: values.erEksternSak ? values.erInfotrygdSakId : undefined,
                             },
                             (klage) => {
                                 navigate(
@@ -70,7 +74,7 @@ const OpprettKlage = () => {
                             {...register('journalpostId')}
                             error={formState.errors.journalpostId?.message}
                             label={
-                                <div className={styles.journalpostIdLabel}>
+                                <div className={styles.hjelpetekstIdLabel}>
                                     {formatMessage('opprett.journalpostId.label')}
                                     <HelpText>{formatMessage('opprett.journalpostId.hjelpetekst')}</HelpText>
                                 </div>
@@ -92,26 +96,46 @@ const OpprettKlage = () => {
                             )}
                         />
                         <Controller
-                            name={'relatertBehandlingId'}
+                            name="erEksternSak"
                             control={control}
-                            render={({ field, fieldState }) => (
-                                <Select
-                                    label="Relatert vedtak"
-                                    {...field}
-                                    value={field.value}
-                                    error={fieldState.error?.message}
-                                >
-                                    <option value="">Velg vedtak</option>
-                                    {props.sak.vedtak.map((vedtak) => {
-                                        return (
-                                            <option key={vedtak.id} value={vedtak.behandlingId}>
-                                                {vedtak.type} {formatDateTime(vedtak.opprettet)}
-                                            </option>
-                                        );
-                                    })}
-                                </Select>
+                            render={({ field }) => (
+                                <div className={styles.hjelpetekstIdLabel}>
+                                    <Checkbox checked={field.value} onChange={(e) => field.onChange(e.target.checked)}>
+                                        Ekstern sak
+                                    </Checkbox>
+                                    <HelpText>{formatMessage('opprett.eksternSak.hjelpetekst')}</HelpText>
+                                </div>
                             )}
                         />
+                        {erEksternSak ? (
+                            <TextField
+                                {...register('erInfotrygdSakId')}
+                                error={formState.errors.erInfotrygdSakId?.message}
+                                label="Ekstern sakId"
+                            />
+                        ) : (
+                            <Controller
+                                name={'relatertBehandlingId'}
+                                control={control}
+                                render={({ field, fieldState }) => (
+                                    <Select
+                                        label="Relatert vedtak"
+                                        {...field}
+                                        value={field.value}
+                                        error={fieldState.error?.message}
+                                    >
+                                        <option value="">Velg vedtak</option>
+                                        {props.sak.vedtak.map((vedtak) => {
+                                            return (
+                                                <option key={vedtak.id} value={vedtak.behandlingId}>
+                                                    {vedtak.type} {formatDateTime(vedtak.opprettet)}
+                                                </option>
+                                            );
+                                        })}
+                                    </Select>
+                                )}
+                            />
+                        )}
                         <div className={styles.buttons}>
                             <LinkAsButton
                                 variant="secondary"

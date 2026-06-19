@@ -7,6 +7,7 @@ export interface VurderingsperiodeOpplysningsplikt {
 }
 
 export interface OpplysningspliktVilkår {
+    resultat: OpplysningspliktBeksrivelse;
     vurderinger: VurderingsperiodeOpplysningsplikt[];
 }
 

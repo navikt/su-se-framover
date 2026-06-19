@@ -40,7 +40,9 @@ const InntektsOppsummering = ({
             {inntekt.andreYtelserINav && (
                 <Oppsummeringsfelt
                     label={formatMessage('andreYtelserINAV.ytelse')}
-                    verdi={inntekt.andreYtelserINavYtelse ? inntekt.andreYtelserINavYtelse : 'Ubesvart'}
+                    verdi={
+                        inntekt.andreYtelserINavYtelse ? `${inntekt.andreYtelserINavYtelse} kr per måned` : 'Ubesvart'
+                    }
                 />
             )}
             {inntekt.andreYtelserINav && (

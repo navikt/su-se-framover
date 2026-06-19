@@ -9,7 +9,7 @@ import { Klage } from '~src/types/Klage';
 import { Vedtak } from '~src/types/Vedtak';
 import * as DateUtils from '~src/utils/date/dateUtils';
 
-export const FormkravInfo = (props: { klage: Klage; klagensVedtak: Vedtak }) => {
+export const FormkravInfo = (props: { klage: Klage; klagensVedtak?: Vedtak }) => {
     const { formatMessage } = useI18n({
         messages: { ...oppsummeringMessages, ...formkravMessages, ...vurderingMessages },
     });
@@ -20,12 +20,16 @@ export const FormkravInfo = (props: { klage: Klage; klagensVedtak: Vedtak }) => 
             <div className={styles.informasjonsContentContainer}>
                 <OppsummeringPar
                     label={formatMessage('label.vedtak.type')}
-                    verdi={formatMessage(props.klagensVedtak.type)}
+                    verdi={props.klagensVedtak ? formatMessage(props.klagensVedtak.type) : 'Ekstern sak'}
                     retning={'vertikal'}
                 />
                 <OppsummeringPar
                     label={formatMessage('label.vedtak.dato')}
-                    verdi={DateUtils.formatDateTime(props.klagensVedtak.opprettet)}
+                    verdi={
+                        props.klagensVedtak
+                            ? DateUtils.formatDateTime(props.klagensVedtak.opprettet)
+                            : 'Ikke tilgjengelig'
+                    }
                     retning={'vertikal'}
                 />
                 <OppsummeringPar label="Klagestatus" verdi={status} retning={'vertikal'} />

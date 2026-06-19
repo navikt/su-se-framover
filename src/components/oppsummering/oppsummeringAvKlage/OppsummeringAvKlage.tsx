@@ -29,7 +29,7 @@ import {
 import styles from './oppsummeringAvKlage.module.less';
 import oppsummeringMessages from './oppsummeringAvKlage-nb';
 
-const OppsummeringAvKlage = (props: { klage: Klage; klagensVedtak: Vedtak }) => {
+const OppsummeringAvKlage = (props: { klage: Klage; klagensVedtak?: Vedtak }) => {
     const { formatMessage } = useI18n({ messages: oppsummeringMessages });
 
     const [brevStatus, hentBrev] = useBrevForhåndsvisning(pdfApi.hentBrevutkastForKlage);

@@ -27,25 +27,14 @@ import { ReguleringAttestering } from '~src/pages/saksbehandling/regulering/Regu
 import { måReguleresManuelt } from '~src/types/Fradrag';
 import { Uføregrunnlag } from '~src/types/grunnlagsdataOgVilkårsvurderinger/uføre/Uføregrunnlag';
 import {
-    BrukerManglerSupplement,
-    DelvisOpphør,
-    DifferanseEtterRegulering,
-    DifferanseFørRegulering,
-    FantIkkeVedtakForApril,
-    FinnesFlerePerioderAvFradrag,
-    FradragErUtenlandsinntekt,
     Regulering,
     Reguleringsstatus,
-    SupplementHarFlereVedtaksperioderForFradrag,
-    SupplementInneholderIkkeFradraget,
-    YtelseErMidlertidigStanset,
     ÅrsakForManuell,
     ÅrsakTilManuellReguleringKategori,
 } from '~src/types/Regulering';
 import { parseIsoDateOnly } from '~src/utils/date/dateUtils';
 import { fjernFradragSomIkkeErVelgbareEkskludertNavYtelserTilLivsopphold } from '~src/utils/fradrag/fradragUtil';
-import { formatPeriode, formatPeriodeMedOptionalTilOgMed } from '~src/utils/periode/periodeUtils';
-import reguleringstext from '../behandlingsoversikt/regulering/regulering-nb';
+import { formatPeriode } from '~src/utils/periode/periodeUtils';
 import styles from './manuellRegulering.module.less';
 import messages from './manuellRegulering-nb';
 
@@ -171,7 +160,7 @@ const ManuellRegulering = () => {
                             <ÅrsakForManuellRegulering årsaker={regulering.årsakForManuell} />
                             <Heading
                                 level="3"
-                                size="medium"
+                                size="large"
                             >{`${formatMessage('periode')}: ${formatPeriode(regulering.periode)}`}</Heading>
 
                             <form onSubmit={form.handleSubmit(submitBeregning)} className={styles.form}>
@@ -289,258 +278,71 @@ export default ManuellRegulering;
 const filtrerRegulerbarIEU = (grunnlag: Nullable<Uføregrunnlag>): grunnlag is Uføregrunnlag => grunnlag !== null;
 
 const ÅrsakForManuellRegulering = (props: { årsaker: ÅrsakForManuell[] }) => {
-    const { formatMessage } = useI18n({ messages: { ...reguleringstext } });
     return props.årsaker.length > 0 ? (
         <Alert className={styles.advarsel} variant="warning">
             <Label>Reguleringen er til manuell behandling fordi: </Label>
             <ul className={styles.årsaksContainer}>
                 {props.årsaker.map((årsak, i) => {
                     switch (årsak.type) {
-                        case ÅrsakTilManuellReguleringKategori.FradragMåHåndteresManuelt: {
+                        case ÅrsakTilManuellReguleringKategori.OpprettetAvSaksbehandler: {
                             return (
                                 <li key={i}>
-                                    <BodyShort>
-                                        {formatMessage(ÅrsakTilManuellReguleringKategori.FradragMåHåndteresManuelt)}
-                                    </BodyShort>
-                                    <BodyShort>{årsak.begrunnelse ?? ''}</BodyShort>
-                                </li>
-                            );
-                        }
-                        case ÅrsakTilManuellReguleringKategori.UtbetalingFeilet: {
-                            return (
-                                <li key={i}>
-                                    <BodyShort>
-                                        {formatMessage(ÅrsakTilManuellReguleringKategori.UtbetalingFeilet)}
-                                    </BodyShort>
-                                    <BodyShort>{årsak.begrunnelse ?? ''}</BodyShort>
-                                </li>
-                            );
-                        }
-                        case ÅrsakTilManuellReguleringKategori.BrukerManglerSupplement: {
-                            const asserted = årsak as BrukerManglerSupplement;
-
-                            return (
-                                <li key={i}>
-                                    <BodyShort>
-                                        {formatMessage(ÅrsakTilManuellReguleringKategori.BrukerManglerSupplement)}
-                                    </BodyShort>
                                     <div className={styles.årsaksdetaljer}>
-                                        <BodyShort>Fradraget tilhører - {asserted.fradragTilhører}</BodyShort>
-                                        <BodyShort>For fradrag - {asserted.fradragskategori}</BodyShort>
-                                        <BodyShort>{asserted.begrunnelse}</BodyShort>
+                                        <BodyShort>{årsak.begrunnelse ?? ''}</BodyShort>
                                     </div>
                                 </li>
                             );
                         }
-                        case ÅrsakTilManuellReguleringKategori.SupplementInneholderIkkeFradraget: {
-                            const asserted = årsak as SupplementInneholderIkkeFradraget;
+                        case ÅrsakTilManuellReguleringKategori.ManglerRegulertBeløpForFradrag: {
                             return (
                                 <li key={i}>
-                                    <BodyShort>
-                                        {formatMessage(
-                                            ÅrsakTilManuellReguleringKategori.SupplementInneholderIkkeFradraget,
-                                        )}
-                                    </BodyShort>
                                     <div className={styles.årsaksdetaljer}>
-                                        <BodyShort>Fradraget tilhører - {asserted.fradragTilhører}</BodyShort>
-                                        <BodyShort>For fradrag - {asserted.fradragskategori}</BodyShort>
-                                        <BodyShort>{asserted.begrunnelse}</BodyShort>
+                                        <BodyShort>{årsak.begrunnelse ?? ''}</BodyShort>
                                     </div>
                                 </li>
                             );
                         }
-                        case ÅrsakTilManuellReguleringKategori.MerEnn1Eps: {
-                            const asserted = årsak as SupplementInneholderIkkeFradraget;
+                        case ÅrsakTilManuellReguleringKategori.ManglerIeuFraPesys: {
                             return (
                                 <li key={i}>
-                                    <BodyShort>{formatMessage(ÅrsakTilManuellReguleringKategori.MerEnn1Eps)}</BodyShort>
                                     <div className={styles.årsaksdetaljer}>
-                                        <BodyShort>Fradraget tilhører - {asserted.fradragTilhører}</BodyShort>
-                                        <BodyShort>For fradrag - {asserted.fradragskategori}</BodyShort>
-                                        <BodyShort>{asserted.begrunnelse}</BodyShort>
-                                    </div>
-                                </li>
-                            );
-                        }
-                        case ÅrsakTilManuellReguleringKategori.FinnesFlerePerioderAvFradrag: {
-                            const asserted = årsak as FinnesFlerePerioderAvFradrag;
-                            return (
-                                <li key={i}>
-                                    <BodyShort>
-                                        {formatMessage(ÅrsakTilManuellReguleringKategori.FinnesFlerePerioderAvFradrag)}
-                                    </BodyShort>
-                                    <div className={styles.årsaksdetaljer}>
-                                        <BodyShort>Fradraget tilhører - {asserted.fradragTilhører}</BodyShort>
-                                        <BodyShort>For fradrag - {asserted.fradragskategori}</BodyShort>
-                                        <BodyShort>{asserted.begrunnelse}</BodyShort>
-                                    </div>
-                                </li>
-                            );
-                        }
-                        case ÅrsakTilManuellReguleringKategori.FradragErUtenlandsinntekt: {
-                            const asserted = årsak as FradragErUtenlandsinntekt;
-                            return (
-                                <li key={i}>
-                                    <BodyShort>
-                                        {formatMessage(ÅrsakTilManuellReguleringKategori.FradragErUtenlandsinntekt)}
-                                    </BodyShort>
-                                    <div className={styles.årsaksdetaljer}>
-                                        <BodyShort>Fradraget tilhører - {asserted.fradragTilhører}</BodyShort>
-                                        <BodyShort>For fradrag - {asserted.fradragskategori}</BodyShort>
-                                        <BodyShort>{asserted.begrunnelse}</BodyShort>
-                                    </div>
-                                </li>
-                            );
-                        }
-                        case ÅrsakTilManuellReguleringKategori.FantIkkeVedtakForApril: {
-                            const asserted = årsak as FantIkkeVedtakForApril;
-                            return (
-                                <li key={i}>
-                                    <BodyShort>
-                                        {formatMessage(ÅrsakTilManuellReguleringKategori.FantIkkeVedtakForApril)}
-                                    </BodyShort>
-                                    <div className={styles.årsaksdetaljer}>
-                                        <BodyShort>Fradraget tilhører - {asserted.fradragTilhører}</BodyShort>
-                                        <BodyShort>For fradrag - {asserted.fradragskategori}</BodyShort>
-                                        <BodyShort>{asserted.begrunnelse}</BodyShort>
-                                    </div>
-                                </li>
-                            );
-                        }
-                        case ÅrsakTilManuellReguleringKategori.SupplementHarFlereVedtaksperioderForFradrag: {
-                            const asserted = årsak as SupplementHarFlereVedtaksperioderForFradrag;
-                            return (
-                                <li key={i}>
-                                    <BodyShort>
-                                        {formatMessage(
-                                            ÅrsakTilManuellReguleringKategori.SupplementHarFlereVedtaksperioderForFradrag,
-                                        )}
-                                    </BodyShort>
-                                    <div className={styles.årsaksdetaljer}>
-                                        <BodyShort>Fradraget tilhører - {asserted.fradragTilhører}</BodyShort>
-                                        <BodyShort>For fradrag - {asserted.fradragskategori}</BodyShort>
-                                        <BodyShort>Vedtaksperioder</BodyShort>
-                                        <div className={styles.årsaksdetaljer}>
-                                            {asserted.eksterneReguleringsvedtakperioder.map((periode) => (
-                                                <BodyShort key={`${periode.fraOgMed}-${periode.tilOgMed}`}>
-                                                    {formatPeriodeMedOptionalTilOgMed(periode)}
-                                                </BodyShort>
-                                            ))}
-                                        </div>
-                                        <BodyShort>{asserted.begrunnelse}</BodyShort>
-                                    </div>
-                                </li>
-                            );
-                        }
-                        case ÅrsakTilManuellReguleringKategori.DifferanseFørRegulering: {
-                            const asserted = årsak as DifferanseFørRegulering;
-                            return (
-                                <li key={i}>
-                                    <BodyShort>
-                                        {formatMessage(ÅrsakTilManuellReguleringKategori.DifferanseFørRegulering)}
-                                    </BodyShort>
-                                    <div className={styles.årsaksdetaljer}>
-                                        <BodyShort>Fradraget tilhører - {asserted.fradragTilhører}</BodyShort>
-                                        <BodyShort>For fradrag - {asserted.fradragskategori}</BodyShort>
-                                        <BodyShort>
-                                            Vårt beløp før regulering {asserted.vårtBeløpFørRegulering}
-                                        </BodyShort>
-                                        <BodyShort>
-                                            Netto beløp fra ekstern kilde {asserted.eksternNettoBeløpFørRegulering}
-                                        </BodyShort>
-                                        <BodyShort>{asserted.begrunnelse}</BodyShort>
-                                    </div>
-                                </li>
-                            );
-                        }
-                        case ÅrsakTilManuellReguleringKategori.DifferanseEtterRegulering: {
-                            const asserted = årsak as DifferanseEtterRegulering;
-                            return (
-                                <li key={i}>
-                                    <BodyShort>
-                                        {formatMessage(ÅrsakTilManuellReguleringKategori.DifferanseEtterRegulering)}
-                                    </BodyShort>
-                                    <div className={styles.årsaksdetaljer}>
-                                        <BodyShort>Fradraget tilhører - {asserted.fradragTilhører}</BodyShort>
-                                        <BodyShort>For fradrag - {asserted.fradragskategori}</BodyShort>
-                                        <BodyShort>
-                                            Forventet beløp etter regulering {asserted.forventetBeløpEtterRegulering}
-                                        </BodyShort>
-                                        <BodyShort>
-                                            Regulert netto beløp fra ekstern kilde{' '}
-                                            {asserted.eksternNettoBeløpEtterRegulering}
-                                        </BodyShort>
-                                        <BodyShort>{asserted.begrunnelse}</BodyShort>
+                                        <BodyShort>{årsak.begrunnelse ?? ''}</BodyShort>
                                     </div>
                                 </li>
                             );
                         }
                         case ÅrsakTilManuellReguleringKategori.YtelseErMidlertidigStanset: {
-                            const asserted = årsak as YtelseErMidlertidigStanset;
                             return (
                                 <li key={i}>
-                                    <BodyShort>
-                                        {formatMessage(ÅrsakTilManuellReguleringKategori.YtelseErMidlertidigStanset)}
-                                    </BodyShort>
                                     <div className={styles.årsaksdetaljer}>
-                                        <BodyShort>{asserted.begrunnelse}</BodyShort>
+                                        <BodyShort>{årsak.begrunnelse ?? ''}</BodyShort>
                                     </div>
                                 </li>
                             );
                         }
-                        case ÅrsakTilManuellReguleringKategori.ForventetInntektErStørreEnn0: {
+                        case ÅrsakTilManuellReguleringKategori.EtAutomatiskFradragHarFremtidigPeriode: {
                             return (
                                 <li key={i}>
-                                    <BodyShort>
-                                        {formatMessage(ÅrsakTilManuellReguleringKategori.ForventetInntektErStørreEnn0)}
-                                    </BodyShort>
                                     <div className={styles.årsaksdetaljer}>
-                                        <BodyShort>{årsak.begrunnelse}</BodyShort>
+                                        <BodyShort>{årsak.begrunnelse ?? ''}</BodyShort>
                                     </div>
                                 </li>
                             );
                         }
-                        case ÅrsakTilManuellReguleringKategori.AutomatiskSendingTilUtbetalingFeilet: {
+                        case ÅrsakTilManuellReguleringKategori.UgyldigePerioderForAutomatiskRegulering: {
                             return (
                                 <li key={i}>
-                                    <BodyShort>
-                                        {formatMessage(
-                                            ÅrsakTilManuellReguleringKategori.AutomatiskSendingTilUtbetalingFeilet,
-                                        )}
-                                    </BodyShort>
                                     <div className={styles.årsaksdetaljer}>
-                                        <BodyShort>{årsak.begrunnelse}</BodyShort>
+                                        <BodyShort>{årsak.begrunnelse ?? ''}</BodyShort>
                                     </div>
                                 </li>
                             );
                         }
-                        case ÅrsakTilManuellReguleringKategori.VedtakstidslinjeErIkkeSammenhengende: {
+                        case ÅrsakTilManuellReguleringKategori.AapManglerGyldigPeriode: {
                             return (
                                 <li key={i}>
-                                    <BodyShort>
-                                        {formatMessage(
-                                            ÅrsakTilManuellReguleringKategori.VedtakstidslinjeErIkkeSammenhengende,
-                                        )}
-                                    </BodyShort>
                                     <div className={styles.årsaksdetaljer}>
-                                        <BodyShort>{årsak.begrunnelse}</BodyShort>
-                                    </div>
-                                </li>
-                            );
-                        }
-                        case ÅrsakTilManuellReguleringKategori.DelvisOpphør: {
-                            const asserted = årsak as DelvisOpphør;
-                            return (
-                                <li key={i}>
-                                    <BodyShort>
-                                        {formatMessage(ÅrsakTilManuellReguleringKategori.DelvisOpphør)}
-                                    </BodyShort>
-                                    <div className={styles.årsaksdetaljer}>
-                                        <BodyShort>Opphørte perioder</BodyShort>
-                                        <div className={styles.årsaksdetaljer}>
-                                            {asserted.opphørsperioder.map((periode) => formatPeriode(periode))}
-                                        </div>
-                                        <BodyShort>{asserted.begrunnelse}</BodyShort>
+                                        <BodyShort>{årsak.begrunnelse ?? ''}</BodyShort>
                                     </div>
                                 </li>
                             );
