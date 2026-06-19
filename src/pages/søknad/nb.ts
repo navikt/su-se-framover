@@ -47,6 +47,7 @@ export default {
     'alder-lenke': 'Start søknad for person over 67 år',
     'ufør-lenke': 'Start søknad for uføre flyktninger',
     'kontrollsamtale-lenke': 'Innsending av kontrollnotat',
+    'kontrollsamtaleSkjema-lenke': 'Start skjema for kontrollsamtale',
     'velg-undertittel': 'Velg alternativet som passer for deg',
 
     'innsending-kontrollnotat': 'Innsending av kontrollnotat',
