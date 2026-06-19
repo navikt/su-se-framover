@@ -14,6 +14,7 @@ import { useApiCall } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
 import * as routes from '~src/lib/routes';
 import { GrunnlagsdataOgVilkårsvurderinger } from '~src/types/grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
+import { Person } from '~src/types/Person.ts';
 import {
     InformasjonSomRevurderes,
     InformasjonsRevurdering,
@@ -53,7 +54,7 @@ const AlderspensjonPage = lazy(() => import('~src/pages/saksbehandling/revurderi
 const FamiliegjenforeningPage = lazy(() => import('./familiegjenforening/Familiegjenforening'));
 
 const RevurderingPage = () => {
-    const { sak } = useOutletContext<SaksoversiktContext>();
+    const { sak, søker } = useOutletContext<SaksoversiktContext>();
     const props = {
         sakId: sak.id,
         utbetalinger: sak.utbetalinger,
@@ -103,6 +104,7 @@ const RevurderingPage = () => {
                 <RevurderingSeksjonerWrapper
                     sakId={sak.id}
                     sakstype={sak.sakstype}
+                    søker={søker}
                     revurdering={påbegyntRevurdering}
                     seksjonOgSteg={{ seksjon: urlParams.seksjon!, steg: urlParams.steg! }}
                     harUteståendeKravgrunnlag={harUteståendeKravgrunnlag}
@@ -115,6 +117,7 @@ const RevurderingPage = () => {
 const RevurderingSeksjonerWrapper = (props: {
     sakId: string;
     sakstype: Sakstype;
+    søker: Person;
     revurdering: InformasjonsRevurdering;
     seksjonOgSteg: {
         seksjon: RevurderingSeksjoner;
@@ -180,6 +183,7 @@ const RevurderingSeksjonerWrapper = (props: {
                         <RevurderingOppsummeringPage
                             sakId={props.sakId}
                             sakstype={props.sakstype}
+                            søker={props.søker}
                             revurdering={props.revurdering}
                             aktivSeksjonOgSteg={props.seksjonOgSteg}
                             seksjoner={seksjoner}
