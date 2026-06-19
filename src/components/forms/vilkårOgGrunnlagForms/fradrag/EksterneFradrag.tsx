@@ -24,9 +24,10 @@ interface Props {
               tilOgMed: string;
           }
         | undefined;
+    tittel: string;
 }
 
-export const EksterneFradrag = ({ sakId, fnr, periode }: Props) => {
+export const EksterneFradrag = ({ sakId, fnr, periode, tittel }: Props) => {
     const [alderspensjon, hentAlderspensjon] = useApiCall(hentEksterneFradragAlderspensjon);
     const [uforetrygd, hentUforetrygd] = useApiCall(hentEksterneFradragUføretrygd);
     const [aap, hentAap] = useApiCall(hentEksterneAAP);
@@ -44,7 +45,7 @@ export const EksterneFradrag = ({ sakId, fnr, periode }: Props) => {
     return (
         <Box background="surface-subtle" padding="5" borderWidth="1" borderRadius="medium" borderColor="border-subtle">
             <VStack gap="5">
-                <Heading size="small">Eksterne fradrag</Heading>
+                <Heading size="small">{tittel}</Heading>
                 <AlderspensjonSeksjon resultat={alderspensjon} />
                 <UforetrygdSeksjon resultat={uforetrygd} />
                 <AapSeksjon resultat={aap} />

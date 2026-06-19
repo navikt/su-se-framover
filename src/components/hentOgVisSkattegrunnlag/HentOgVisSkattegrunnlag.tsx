@@ -1,7 +1,6 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Alert, BodyShort, Button, HelpText, Radio, RadioGroup, Select, Textarea, TextField } from '@navikt/ds-react';
-import { useEffect, useState } from 'react';
+import { BodyShort, Button, HelpText, Radio, RadioGroup, Select, Textarea, TextField } from '@navikt/ds-react';
 import { Controller, UseFormClearErrors, UseFormTrigger, useForm } from 'react-hook-form';
 
 import {
@@ -22,7 +21,6 @@ import { FrioppslagFormData, frioppslagSchema, HentSkatteDataFor } from './HentO
 const HentOfVisSkattegrunnlagForFrioppslag = () => {
     const { formatMessage } = useI18n({ messages });
 
-    const [warning, setWarning] = useState<string>('');
     const [journalførStatus, journalførSkattPdf] = useApiCall(fetchSkattPdfOgJournalfør);
     const [journalførStatusUtenVerifisering, journalførSkattPdfUtenVerifisering] = useApiCall(
         fetchSkattPdfOgJournalførUtenVerifisering,
@@ -96,50 +94,6 @@ const HentOfVisSkattegrunnlagForFrioppslag = () => {
 
     const watch = form.watch();
 
-    useEffect(() => {
-        if (form.formState.touchedFields.fagsystemId && form.formState.touchedFields.sakstype) {
-            if (watch.fagsystemId.length !== 0 && watch.fagsystemId.length === 4 && watch.sakstype === Sakstype.Alder) {
-                setWarning('Valgt sakstype alder med fagsystemId som matcher uføre');
-            }
-
-            if (watch.fagsystemId.length !== 0 && watch.fagsystemId.length !== 4 && watch.sakstype === Sakstype.Uføre) {
-                setWarning('Valgt sakstype uføre med fagsystemId som ikke matcher uføre');
-            }
-
-            if (
-                watch.fagsystemId.length !== 0 &&
-                watch.fagsystemId.length !== 7 &&
-                watch.fagsystemId.length !== 4 &&
-                watch.sakstype === Sakstype.Alder
-            ) {
-                setWarning(
-                    'Valgt sakstype alder med ukjent format på fagsystemId - vennligst dobbeltsjekk at dette er riktig',
-                );
-            }
-
-            if (
-                watch.fagsystemId.length !== 0 &&
-                watch.fagsystemId.length === 7 &&
-                watch.sakstype === Sakstype.Alder &&
-                watch.fagsystemId.match('[0-9]{7}')
-            ) {
-                setWarning(
-                    'Valgt sakstype alder med gammel fagsystemId som kun inneholder tall. Vennligst dobbeltsjekk at dette er riktig',
-                );
-            }
-
-            if (
-                watch.fagsystemId.length === 0 ||
-                (watch.fagsystemId.length === 4 && watch.sakstype === Sakstype.Uføre) ||
-                (watch.fagsystemId.length === 7 &&
-                    watch.sakstype === Sakstype.Alder &&
-                    !watch.fagsystemId.match('[0-9]{7}'))
-            ) {
-                setWarning('');
-            }
-        }
-    }, [watch.begrunnelse, watch.fagsystemId, watch.sakstype, watch.epsFnr, watch.år, watch.fnr]);
-
     return (
         <form
             onSubmit={form.handleSubmit((data) =>
@@ -165,12 +119,6 @@ const HentOfVisSkattegrunnlagForFrioppslag = () => {
             )}
         >
             <div className={styles.formContainer}>
-                {warning && (
-                    <Alert className={styles.alert} variant="warning">
-                        {warning}
-                    </Alert>
-                )}
-
                 <div className={styles.upperFormContainer}>
                     <div className={styles.skatteDataForContainer}>
                         <Controller

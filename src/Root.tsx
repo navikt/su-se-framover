@@ -12,6 +12,8 @@ import BrevPage from './pages/saksbehandling/brev/BrevPage';
 import Vilkår from './pages/saksbehandling/søknadsbehandling/vilkår/Vilkår';
 import Store from './redux/Store';
 import './externalStyles';
+import Kontrollsamtale from '~src/pages/kontrollsamtale';
+import KontrollSamtaleSteg from '~src/pages/kontrollsamtale/steg/Steg.tsx';
 import { SakInngang } from '~src/pages/søknad/steg/inngang/SakInngang.tsx';
 import { ContentWrapper } from './utils/router/ContentWrapper';
 import UmamiTracker from './utils/UmamiTracker';
@@ -92,6 +94,10 @@ const AppRoutes = () => (
                 <Route path={routes.soknadsutfylling.path} element={<StartUtfylling />} />
                 <Route path={routes.søknadskvittering.path} element={<Kvittering />} />
             </Route>
+        </Route>
+        <Route path={routes.kontrollsamtale.path} element={<WithDocTitle title="Kontrollsamtale" Page={Outlet} />}>
+            <Route index element={<Kontrollsamtale />} />
+            <Route path={routes.kontrollsamtaleUtfylling.path} element={<KontrollSamtaleSteg />} />
         </Route>
         <Route
             path={routes.saksoversiktValgtSak.path}
