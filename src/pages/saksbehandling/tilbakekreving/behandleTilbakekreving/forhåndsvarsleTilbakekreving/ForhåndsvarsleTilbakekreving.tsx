@@ -82,39 +82,8 @@ const ForhåndsvarsleTilbakekreving = (props: {
             );
             return;
         }
-
         const dødsbo = visDødsbo ? dødsboForm.getValues() : null;
-        if (dødsbo) {
-            const harFnr = Boolean(dødsbo.foedselsnummer?.trim());
-            const harOrgnr = Boolean(dødsbo.orgnummer?.trim());
-
-            if (harFnr && harOrgnr) {
-                dødsboForm.setError('foedselsnummer', {
-                    message: 'Kan ikke ha både fødselsnummer og organisasjonsnummer.',
-                });
-                dødsboForm.setError('orgnummer', {
-                    message: 'Kan ikke ha både fødselsnummer og organisasjonsnummer.',
-                });
-                return;
-            }
-            if (!harFnr && !harOrgnr) {
-                dødsboForm.setError('foedselsnummer', {
-                    message: 'Du må fylle ut enten fødselsnummer eller organisasjonsnummer.',
-                });
-                dødsboForm.setError('orgnummer', {
-                    message: 'Du må fylle ut enten fødselsnummer eller organisasjonsnummer.',
-                });
-                return;
-            }
-            if (!dødsbo.navn.trim()) {
-                dødsboForm.setError('navn', { message: 'Navn er påkrevd.' });
-                return;
-            }
-            if (!dødsbo.adresse.adresselinje1.trim()) {
-                dødsboForm.setError('adresse.adresselinje1', { message: 'Adresselinje 1 er påkrevd.' });
-                return;
-            }
-        }
+        if (dødsbo && !validateDødsbo(dødsbo)) return;
 
         lagreForhåndsvarsel(
             {
@@ -169,6 +138,51 @@ const ForhåndsvarsleTilbakekreving = (props: {
     const dødsboForm = useForm<LagreMottakerRequest>({
         defaultValues: emptyFormValues,
     });
+
+    const validateDødsbo = (dødsbo: LagreMottakerRequest): boolean => {
+        dødsboForm.clearErrors();
+        let isValid = true;
+
+        const harFnr = Boolean(dødsbo.foedselsnummer?.trim());
+        const harOrgnr = Boolean(dødsbo.orgnummer?.trim());
+
+        if (harFnr && harOrgnr) {
+            dødsboForm.setError('foedselsnummer', {
+                message: 'Kan ikke ha både fødselsnummer og organisasjonsnummer.',
+            });
+            dødsboForm.setError('orgnummer', {
+                message: 'Kan ikke ha både fødselsnummer og organisasjonsnummer.',
+            });
+            isValid = false;
+        } else if (!harFnr && !harOrgnr) {
+            dødsboForm.setError('foedselsnummer', {
+                message: 'Du må fylle ut enten fødselsnummer eller organisasjonsnummer.',
+            });
+            dødsboForm.setError('orgnummer', {
+                message: 'Du må fylle ut enten fødselsnummer eller organisasjonsnummer.',
+            });
+            isValid = false;
+        }
+
+        if (!dødsbo.navn.trim()) {
+            dødsboForm.setError('navn', { message: 'Navn er påkrevd.' });
+            isValid = false;
+        }
+        if (!dødsbo.adresse.adresselinje1.trim()) {
+            dødsboForm.setError('adresse.adresselinje1', { message: 'Adresselinje 1 er påkrevd.' });
+            isValid = false;
+        }
+        if (!dødsbo.adresse.postnummer.trim()) {
+            dødsboForm.setError('adresse.postnummer', { message: 'Postnummer er påkrevd.' });
+            isValid = false;
+        }
+        if (!dødsbo.adresse.poststed.trim()) {
+            dødsboForm.setError('adresse.poststed', { message: 'Poststed er påkrevd.' });
+            isValid = false;
+        }
+
+        return isValid;
+    };
 
     return (
         <ToKolonner tittel={formatMessage('forhåndsvarsleTilbakekreving.tittel')}>
