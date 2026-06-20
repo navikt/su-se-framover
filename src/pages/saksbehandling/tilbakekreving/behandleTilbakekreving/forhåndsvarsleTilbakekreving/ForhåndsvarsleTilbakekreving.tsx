@@ -85,36 +85,34 @@ const ForhåndsvarsleTilbakekreving = (props: {
 
         const dødsbo = visDødsbo ? dødsboForm.getValues() : null;
         if (dødsbo) {
-            if (dødsbo) {
-                const harFnr = Boolean(dødsbo.foedselsnummer?.trim());
-                const harOrgnr = Boolean(dødsbo.orgnummer?.trim());
+            const harFnr = Boolean(dødsbo.foedselsnummer?.trim());
+            const harOrgnr = Boolean(dødsbo.orgnummer?.trim());
 
-                if (harFnr && harOrgnr) {
-                    dødsboForm.setError('foedselsnummer', {
-                        message: 'Kan ikke ha både fødselsnummer og organisasjonsnummer.',
-                    });
-                    dødsboForm.setError('orgnummer', {
-                        message: 'Kan ikke ha både fødselsnummer og organisasjonsnummer.',
-                    });
-                    return;
-                }
-                if (!harFnr && !harOrgnr) {
-                    dødsboForm.setError('foedselsnummer', {
-                        message: 'Du må fylle ut enten fødselsnummer eller organisasjonsnummer.',
-                    });
-                    dødsboForm.setError('orgnummer', {
-                        message: 'Du må fylle ut enten fødselsnummer eller organisasjonsnummer.',
-                    });
-                    return;
-                }
-                if (!dødsbo.navn.trim()) {
-                    dødsboForm.setError('navn', { message: 'Navn er påkrevd.' });
-                    return;
-                }
-                if (!dødsbo.adresse.adresselinje1.trim()) {
-                    dødsboForm.setError('adresse.adresselinje1', { message: 'Adresselinje 1 er påkrevd.' });
-                    return;
-                }
+            if (harFnr && harOrgnr) {
+                dødsboForm.setError('foedselsnummer', {
+                    message: 'Kan ikke ha både fødselsnummer og organisasjonsnummer.',
+                });
+                dødsboForm.setError('orgnummer', {
+                    message: 'Kan ikke ha både fødselsnummer og organisasjonsnummer.',
+                });
+                return;
+            }
+            if (!harFnr && !harOrgnr) {
+                dødsboForm.setError('foedselsnummer', {
+                    message: 'Du må fylle ut enten fødselsnummer eller organisasjonsnummer.',
+                });
+                dødsboForm.setError('orgnummer', {
+                    message: 'Du må fylle ut enten fødselsnummer eller organisasjonsnummer.',
+                });
+                return;
+            }
+            if (!dødsbo.navn.trim()) {
+                dødsboForm.setError('navn', { message: 'Navn er påkrevd.' });
+                return;
+            }
+            if (!dødsbo.adresse.adresselinje1.trim()) {
+                dødsboForm.setError('adresse.adresselinje1', { message: 'Adresselinje 1 er påkrevd.' });
+                return;
             }
         }
 
@@ -232,13 +230,11 @@ const ForhåndsvarsleTilbakekreving = (props: {
 
                         {form.watch('skalForhåndsvarsle') && (
                             <div>
-                                {!visDødsbo && (
+                                {!visDødsbo ? (
                                     <Button variant="secondary" type="button" onClick={() => setVisDødsbo(true)}>
                                         legg til dødsbo
                                     </Button>
-                                )}
-
-                                {visDødsbo && (
+                                ) : (
                                     <MottakerForm
                                         sakId={props.sakId}
                                         referanseId={''}
@@ -246,6 +242,7 @@ const ForhåndsvarsleTilbakekreving = (props: {
                                         brevtype={brevtype}
                                         onClose={() => setVisDødsbo(false)}
                                         form={dødsboForm}
+                                        kunForm={true}
                                     />
                                 )}
                             </div>

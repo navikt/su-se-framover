@@ -17,7 +17,7 @@ import * as Routes from '~src/lib/routes';
 import { Nullable } from '~src/lib/types';
 import yup from '~src/lib/validering';
 import { VisDokumenter } from '~src/pages/saksbehandling/dokumenter/DokumenterPage';
-import { Mottaker } from '~src/pages/saksbehandling/mottaker/MottakerTest.tsx';
+import { Mottaker } from '~src/pages/saksbehandling/mottaker/Mottaker.tsx';
 import { FormWrapper } from '~src/pages/saksbehandling/søknadsbehandling/FormWrapper';
 import { DokumentIdType } from '~src/types/dokument/Dokument';
 import { GrunnlagsdataOgVilkårsvurderinger } from '~src/types/grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';

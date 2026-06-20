@@ -32,6 +32,7 @@ type ActionState = 'idle' | 'loading' | 'success' | 'error';
 
 interface MottakerFormExtendedProps extends MottakerFormProps {
     form: UseFormReturn<FormValues>;
+    kunForm?: boolean; // kun brukes som form og ikke gjøre noen requests mot backend
 }
 export function Mottaker(props: MottakerFormProps) {
     const emptyFormValues = useMemo<FormValues>(
@@ -65,7 +66,6 @@ export function Mottaker(props: MottakerFormProps) {
     return <MottakerForm {...extendedProps} />;
 }
 
-// TODO fortsatt noe tilstansbevaring som skjer er uavhengig av forom som prop??
 export function MottakerForm({
     form,
     sakId,
@@ -74,6 +74,7 @@ export function MottakerForm({
     brevtype,
     onClose,
     onDelete,
+    kunForm = false,
 }: MottakerFormExtendedProps) {
     const emptyFormValues = useMemo<FormValues>(
         () => ({
@@ -97,7 +98,7 @@ export function MottakerForm({
     const { register, handleSubmit, reset, formState, setError, clearErrors, watch } = form;
 
     const [feedback, setFeedback] = useState<Feedback | null>(null);
-    const [loading, setLoading] = useState<boolean>(true);
+    const [loading, setLoading] = useState<boolean>(!kunForm);
     const [harEksisterendeMottaker, setHarEksisterendeMottaker] = useState<boolean>(false);
     const [mottakerId, setMottakerId] = useState<string | null>(null);
     const [saveState, setSaveState] = useState<ActionState>('idle');
@@ -152,6 +153,8 @@ export function MottakerForm({
 
     useEffect(() => {
         const hentOgFyll = async () => {
+            if (kunForm) return;
+
             setLoading(true);
             setFeedback(null);
             setSaveState('idle');
@@ -183,6 +186,7 @@ export function MottakerForm({
     }, [referanseId, referanseType, brevtype]);
 
     const onSubmit = async (data: FormValues) => {
+        if (kunForm) return;
         setFeedback(null);
         clearErrors();
 
@@ -259,6 +263,7 @@ export function MottakerForm({
     };
 
     const handleSlett = async () => {
+        if (kunForm) return;
         setFeedback(null);
         setDeleteState('loading');
 
@@ -378,31 +383,33 @@ export function MottakerForm({
                             </HStack>
 
                             <VStack gap="3" className={styles.actions}>
-                                <HStack gap="3" className={styles.actionRow}>
-                                    <Button
-                                        type="button"
-                                        onClick={(event) => {
-                                            event.preventDefault();
-                                            event.stopPropagation();
-                                            handleSubmit(onSubmit)();
-                                        }}
-                                        loading={saveState === 'loading'}
-                                        disabled={erOpptatt}
-                                        icon={lagreIkon}
-                                    >
-                                        {submitLabel}
-                                    </Button>
-                                    <Button
-                                        type="button"
-                                        variant="danger"
-                                        onClick={handleSlett}
-                                        disabled={erOpptatt || !harEksisterendeMottaker}
-                                        loading={deleteState === 'loading'}
-                                        icon={slettIkon}
-                                    >
-                                        Slett mottaker
-                                    </Button>
-                                </HStack>
+                                {!kunForm && (
+                                    <HStack gap="3" className={styles.actionRow}>
+                                        <Button
+                                            type="button"
+                                            onClick={(event) => {
+                                                event.preventDefault();
+                                                event.stopPropagation();
+                                                handleSubmit(onSubmit)();
+                                            }}
+                                            loading={saveState === 'loading'}
+                                            disabled={erOpptatt}
+                                            icon={lagreIkon}
+                                        >
+                                            {submitLabel}
+                                        </Button>
+                                        <Button
+                                            type="button"
+                                            variant="danger"
+                                            onClick={handleSlett}
+                                            disabled={erOpptatt || !harEksisterendeMottaker}
+                                            loading={deleteState === 'loading'}
+                                            icon={slettIkon}
+                                        >
+                                            Slett mottaker
+                                        </Button>
+                                    </HStack>
+                                )}
                                 {typeof onClose === 'function' && (
                                     <Button type="button" variant="secondary" onClick={onClose}>
                                         Lukk
