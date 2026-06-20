@@ -236,6 +236,7 @@ const ForhåndsvarsleTilbakekreving = (props: {
                                             behandlingId: props.tilbakekreving.id,
                                             saksversjon: props.saksversjon,
                                             brevtekst: form.getValues('fritekst'),
+                                            dødsbo: visDødsbo,
                                         }),
                                     status: forhåndsvisStatus,
                                 }}

@@ -113,6 +113,7 @@ export interface ForhåndsvisBrevtekstTilbakekrevingsbehandlingRequest {
     saksversjon: number;
     behandlingId: string;
     brevtekst: Nullable<string>;
+    dødsbo: Boolean;
 }
 
 export interface VisUtsendtForhåndsvarselTilbakekrevingsbehandlingRequest {
