@@ -22,6 +22,7 @@ interface MottakerFormProps {
     referanseType: ReferanseType;
     brevtype: Brevtype;
     onClose?: () => void;
+    onDelete?: () => void;
 }
 
 type FormValues = LagreMottakerRequest;
@@ -29,7 +30,7 @@ type FeedbackVariant = 'success' | 'error' | 'info' | 'warning';
 type Feedback = { text: string; variant: FeedbackVariant };
 type ActionState = 'idle' | 'loading' | 'success' | 'error';
 
-export function MottakerForm({ sakId, referanseId, referanseType, brevtype, onClose }: MottakerFormProps) {
+export function MottakerForm({ sakId, referanseId, referanseType, brevtype, onClose, onDelete }: MottakerFormProps) {
     const emptyFormValues = useMemo<FormValues>(
         () => ({
             navn: '',
@@ -226,6 +227,7 @@ export function MottakerForm({ sakId, referanseId, referanseType, brevtype, onCl
             setDeleteState('success');
             resetTilTomtSkjema({ text: 'Mottaker slettet!', variant: 'success' });
             clearErrors();
+            onDelete && onDelete();
         } else {
             const alert = toMottakerAlert(res.error, 'Kunne ikke slette mottaker');
             setFeedback({ text: alert.text, variant: alert.variant });

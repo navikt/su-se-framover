@@ -1,14 +1,17 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
+
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Button, Heading, Radio, RadioGroup } from '@navikt/ds-react';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 
 import { FritekstTyper, hentFritekst, redigerFritekst } from '~src/api/fritekstApi.ts';
+import { hentMottaker } from '~src/api/mottakerClient.ts';
 import { forhåndsvisForhåndsvarsel, visUtsendtForhåndsvarsel } from '~src/api/tilbakekrevingApi';
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
 import TextareaWithAutosave from '~src/components/inputs/textareaWithAutosave/TextareaWithAutosave.tsx';
+import { MottakerAlert, toMottakerAlert } from '~src/components/mottaker/mottakerUtils.ts';
 import Navigasjonsknapper from '~src/components/navigasjonsknapper/Navigasjonsknapper';
 import Feiloppsummering from '~src/components/oppsummering/feiloppsummering/Feiloppsummering';
 import OppsummeringAvKravgrunnlag from '~src/components/oppsummering/kravgrunnlag/OppsummeringAvKravgrunnlag';
@@ -19,15 +22,14 @@ import { useI18n } from '~src/lib/i18n';
 import * as Routes from '~src/lib/routes';
 import { Nullable } from '~src/lib/types.ts';
 import { hookFormErrorsTilFeiloppsummering } from '~src/lib/validering';
+import { MottakerDødsbo } from '~src/pages/saksbehandling/mottaker/MottakerDødsbo.tsx';
 import {
     ForhåndsvarselsInfo,
     ManuellTilbakekrevingsbehandling,
     TilbakekrevingSteg,
 } from '~src/types/ManuellTilbakekrevingsbehandling';
 import { formatDateTime } from '~src/utils/date/dateUtils';
-
 import messages from '../../Tilbakekreving-nb';
-
 import styles from './ForhåndsvarsleTilbakekreving.module.less';
 import {
     ForhåndsvarsleTilbakekrevingFormData,
@@ -110,6 +112,30 @@ const ForhåndsvarsleTilbakekreving = (props: {
         );
     };
 
+    const [harDødsbo, setHarDødsbo] = useState(false);
+    const [mottakerFetchError, setMottakerFetchError] = useState<MottakerAlert | null>(null);
+    useEffect(() => {
+        const sjekkMottaker = async () => {
+            const res = await hentMottaker(
+                props.sakId,
+                'DØDSBO_TILBAKEKREVING',
+                props.tilbakekreving.id,
+                'FORHANDSVARSEL',
+            );
+            if (res.status === 'ok') {
+                if (res.data) {
+                    setHarDødsbo(true);
+                }
+                return;
+            } else {
+                if (res.error.statusCode) {
+                    setMottakerFetchError(toMottakerAlert(res.error, 'Kan ikke hente mottaker'));
+                }
+            }
+        };
+        sjekkMottaker();
+    }, []);
+
     return (
         <ToKolonner tittel={formatMessage('forhåndsvarsleTilbakekreving.tittel')}>
             {{
@@ -165,6 +191,16 @@ const ForhåndsvarsleTilbakekreving = (props: {
                                         }),
                                     status: forhåndsvisStatus,
                                 }}
+                            />
+                        )}
+
+                        {form.watch('skalForhåndsvarsle') && (
+                            <MottakerDødsbo
+                                tilbakekreving={props.tilbakekreving}
+                                sakId={props.sakId}
+                                harDødsbo={harDødsbo}
+                                setHardødsbo={(harDødsbo: boolean) => setHarDødsbo(harDødsbo)}
+                                mottakerFetchError={mottakerFetchError}
                             />
                         )}
 
