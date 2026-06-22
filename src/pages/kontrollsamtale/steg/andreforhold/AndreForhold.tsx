@@ -1,5 +1,4 @@
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Heading } from '@navikt/ds-react';
 import { Controller, useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import { BooleanRadioGroup } from '~src/components/formElements/FormElements.tsx';
@@ -34,9 +33,6 @@ const AndreForhold = ({ nesteUrl, forrigeUrl, avbrytUrl }: Props) => {
     };
     return (
         <form onSubmit={form.handleSubmit(onSubmit)}>
-            <Heading level="1" size="large" spacing>
-                Andre forhold
-            </Heading>
             <Controller
                 control={form.control}
                 name="andreForhold"
