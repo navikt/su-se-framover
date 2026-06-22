@@ -7,7 +7,7 @@ export const steg: { [key in KontrollsamtaleSteg]: string } = {
     [KontrollsamtaleSteg.ReisetilUtlandet]: 'Reise til utlandet',
     [KontrollsamtaleSteg.ØkonomiskSituasjon]: 'Økonomisk situasjon',
     [KontrollsamtaleSteg.AndreForhold]: 'Andre forhold',
-    [KontrollsamtaleSteg.SkatteOpplysninger]: 'Skatteppplysninger',
+    [KontrollsamtaleSteg.SkatteOpplysninger]: 'Skatteopplysninger',
 };
 
 export default {
