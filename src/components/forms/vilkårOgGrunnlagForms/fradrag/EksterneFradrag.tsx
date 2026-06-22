@@ -1,5 +1,5 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import { Alert, Box, Heading, HStack, Label, Loader, Table, VStack } from '@navikt/ds-react';
+import { Alert, BodyShort, Box, Heading, HStack, Label, Loader, Table, VStack } from '@navikt/ds-react';
 import { useEffect } from 'react';
 import {
     AapFradragResponse,
@@ -56,29 +56,22 @@ export const EksterneFradrag = ({ sakId, fnr, periode, tittel }: Props) => {
 
 const AlderspensjonSeksjon = ({ resultat }: { resultat: ApiResult<ResponseDtoAlder> }) => (
     <EksternSeksjon tittel="Alderspensjon" resultat={resultat}>
-        {RemoteData.isSuccess(resultat) && (resultat.value ?? []).length > 0 && (
-            <VStack gap="4">
-                {(resultat.value ?? []).map((person) => (
-                    <AlderPersonTabell
-                        key={person.fnr}
-                        person={person}
-                        visPersonFnr={(resultat.value ?? []).length > 1}
-                    />
-                ))}
-            </VStack>
-        )}
+        {RemoteData.isSuccess(resultat) &&
+            (resultat.value.length === 0 ? (
+                <BodyShort>Ingen fradrag</BodyShort>
+            ) : (
+                <VStack gap="4">
+                    {resultat.value.map((person) => (
+                        <AlderPersonTabell key={person.fnr} person={person} />
+                    ))}
+                </VStack>
+            ))}
     </EksternSeksjon>
 );
 
-const AlderPersonTabell = ({
-    person,
-    visPersonFnr,
-}: {
-    person: AlderBeregningsperioderPerPerson;
-    visPersonFnr: boolean;
-}) => (
+const AlderPersonTabell = ({ person }: { person: AlderBeregningsperioderPerPerson }) => (
     <VStack gap="2">
-        {visPersonFnr && <Label size="small">Fnr: {person.fnr}</Label>}
+        <Label size="small">Fnr: {person.fnr}</Label>
         <Table size="small">
             <Table.Header>
                 <Table.Row>
@@ -102,29 +95,22 @@ const AlderPersonTabell = ({
 
 const UforetrygdSeksjon = ({ resultat }: { resultat: ApiResult<ResponseDtoUføre> }) => (
     <EksternSeksjon tittel="Uføretrygd" resultat={resultat}>
-        {RemoteData.isSuccess(resultat) && (resultat.value ?? []).length > 0 && (
-            <VStack gap="4">
-                {(resultat.value ?? []).map((person) => (
-                    <UforePersonTabell
-                        key={person.fnr}
-                        person={person}
-                        visPersonFnr={(resultat.value ?? []).length > 1}
-                    />
-                ))}
-            </VStack>
-        )}
+        {RemoteData.isSuccess(resultat) &&
+            (resultat.value.length === 0 ? (
+                <BodyShort>Ingen fradrag</BodyShort>
+            ) : (
+                <VStack gap="4">
+                    {resultat.value.map((person) => (
+                        <UforePersonTabell key={person.fnr} person={person} />
+                    ))}
+                </VStack>
+            ))}
     </EksternSeksjon>
 );
 
-const UforePersonTabell = ({
-    person,
-    visPersonFnr,
-}: {
-    person: UføreBeregningsperioderPerPerson;
-    visPersonFnr: boolean;
-}) => (
+const UforePersonTabell = ({ person }: { person: UføreBeregningsperioderPerPerson }) => (
     <VStack gap="2">
-        {visPersonFnr && <Label size="small">Fnr: {person.fnr}</Label>}
+        <Label size="small">Fnr: {person.fnr}</Label>
         <Table size="small">
             <Table.Header>
                 <Table.Row>
@@ -154,28 +140,35 @@ const UforePersonTabell = ({
 
 const AapSeksjon = ({ resultat }: { resultat: ApiResult<AapFradragResponse> }) => (
     <EksternSeksjon tittel="Arbeidsavklaringspenger (AAP)" resultat={resultat}>
-        {RemoteData.isSuccess(resultat) && (resultat.value ?? []).length > 0 && (
-            <Table size="small">
-                <Table.Header>
-                    <Table.Row>
-                        <Table.HeaderCell>Fra og med</Table.HeaderCell>
-                        <Table.HeaderCell>Til og med</Table.HeaderCell>
-                        <Table.HeaderCell>Dagsats</Table.HeaderCell>
-                        <Table.HeaderCell>Barnetillegg</Table.HeaderCell>
-                    </Table.Row>
-                </Table.Header>
-                <Table.Body>
-                    {(resultat.value ?? []).map((entry, i) => (
-                        <Table.Row key={i}>
-                            <Table.DataCell>{entry.fraOgMedDato ? formatDate(entry.fraOgMedDato) : '—'}</Table.DataCell>
-                            <Table.DataCell>{entry.tilOgMedDato ? formatDate(entry.tilOgMedDato) : '—'}</Table.DataCell>
-                            <Table.DataCell>{entry.dagsats.toLocaleString('nb-NO')} kr</Table.DataCell>
-                            <Table.DataCell>{entry.barnetillegg.toLocaleString('nb-NO')} kr</Table.DataCell>
+        {RemoteData.isSuccess(resultat) &&
+            (resultat.value.length === 0 ? (
+                <BodyShort>Ingen fradrag</BodyShort>
+            ) : (
+                <Table size="small">
+                    <Table.Header>
+                        <Table.Row>
+                            <Table.HeaderCell>Fra og med</Table.HeaderCell>
+                            <Table.HeaderCell>Til og med</Table.HeaderCell>
+                            <Table.HeaderCell>Dagsats</Table.HeaderCell>
+                            <Table.HeaderCell>Barnetillegg</Table.HeaderCell>
                         </Table.Row>
-                    ))}
-                </Table.Body>
-            </Table>
-        )}
+                    </Table.Header>
+                    <Table.Body>
+                        {resultat.value.map((entry, i) => (
+                            <Table.Row key={i}>
+                                <Table.DataCell>
+                                    {entry.fraOgMedDato ? formatDate(entry.fraOgMedDato) : '—'}
+                                </Table.DataCell>
+                                <Table.DataCell>
+                                    {entry.tilOgMedDato ? formatDate(entry.tilOgMedDato) : '—'}
+                                </Table.DataCell>
+                                <Table.DataCell>{entry.dagsats.toLocaleString('nb-NO')} kr</Table.DataCell>
+                                <Table.DataCell>{entry.barnetillegg.toLocaleString('nb-NO')} kr</Table.DataCell>
+                            </Table.Row>
+                        ))}
+                    </Table.Body>
+                </Table>
+            ))}
     </EksternSeksjon>
 );
 
