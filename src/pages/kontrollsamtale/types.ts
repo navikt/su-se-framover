@@ -1,9 +1,9 @@
 export enum KontrollsamtaleSteg {
-    PersonligOppmøte = 'Personlig oppmøte',
-    FullmaktOgLegeerklæring = 'Fullmakt og legeerklæring',
-    OriginalPass = 'Original pass',
-    ReisetilUtlandet = 'Reise til utlandet',
-    ØkonomiskSituasjon = 'Økonomisk situasjon',
-    AndreForhold = 'Andre forhold',
-    SkatteOpplysninger = 'Skatteopplysninger',
+    PersonligOppmøte = 'personlig-oppmøte',
+    FullmaktOgLegeerklæring = 'fullmakt-og-legeerklæring',
+    OriginalPass = 'original-pass',
+    ReisetilUtlandet = 'reise-til-utlandet',
+    ØkonomiskSituasjon = 'økonomisk-situasjon',
+    AndreForhold = 'andre-forhold',
+    SkatteOpplysninger = 'skatteopplysninger',
 }
