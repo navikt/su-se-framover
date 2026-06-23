@@ -19,7 +19,7 @@ import * as SøknadsbehandlingActions from '~src/features/SøknadsbehandlingActi
 import { ApiResult, useApiCall, useAsyncActionCreator, useBrevForhåndsvisning } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
 import * as Routes from '~src/lib/routes';
-import { MottakerForm } from '~src/pages/saksbehandling/mottaker/Mottaker.tsx';
+import { Mottaker } from '~src/pages/saksbehandling/mottaker/Mottaker.tsx';
 import { VilkårsvurderingBaseProps } from '~src/pages/saksbehandling/søknadsbehandling/types.ts';
 import { Person } from '~src/types/Person.ts';
 import { Sakstype } from '~src/types/Sak';
@@ -283,7 +283,7 @@ const SendTilAttesteringPage = (props: Props) => {
                                               : formatMessage('knapp.leggtilmottaker')}
                                     </Button>
                                     {skalLeggeTilMottaker && (
-                                        <MottakerForm
+                                        <Mottaker
                                             sakId={props.sakId}
                                             referanseId={props.behandling.id}
                                             referanseType={'SØKNAD'}

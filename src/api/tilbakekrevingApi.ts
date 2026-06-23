@@ -55,6 +55,7 @@ export async function forhåndsvisForhåndsvarsel(
         body: {
             versjon: arg.saksversjon,
             fritekst: arg.brevtekst,
+            dødsbo: arg.dødsbo,
         },
         bodyTransformer: (res) => res.blob(),
     });
@@ -80,6 +81,7 @@ export async function sendForhåndsvarsel(
         body: {
             versjon: arg.saksversjon,
             fritekst: arg.fritekst,
+            dødsbo: arg.dødsbo,
         },
     });
 }

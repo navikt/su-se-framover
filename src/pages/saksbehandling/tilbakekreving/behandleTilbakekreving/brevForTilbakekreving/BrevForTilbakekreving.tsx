@@ -1,6 +1,6 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Radio, RadioGroup } from '@navikt/ds-react';
+import { Alert, Button, Radio, RadioGroup } from '@navikt/ds-react';
 import { useEffect, useRef, useState } from 'react';
 import { Controller, UseFormTrigger, useForm, useWatch } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
@@ -23,7 +23,7 @@ import { useI18n } from '~src/lib/i18n';
 import * as routes from '~src/lib/routes';
 import { Nullable } from '~src/lib/types';
 import { hookFormErrorsTilFeiloppsummering } from '~src/lib/validering';
-import { MottakerDødsbo } from '~src/pages/saksbehandling/mottaker/MottakerDødsbo.tsx';
+import { Mottaker } from '~src/pages/saksbehandling/mottaker/Mottaker.tsx';
 import { ManuellTilbakekrevingsbehandling, TilbakekrevingSteg } from '~src/types/ManuellTilbakekrevingsbehandling';
 import messages from '../../Tilbakekreving-nb';
 import styles from './BrevForTilbakekreving.module.less';
@@ -70,6 +70,9 @@ const BrevForTilbakekreving = (props: {
     };
 
     const handleBrevtekstSave = (data: HandleBrevtekstSave, onSuccess: () => void) => {
+        if (visDødsbo && !harDødsbo) {
+            return;
+        }
         return saveBrevtekst(
             {
                 sakId: props.sakId,
@@ -138,9 +141,14 @@ const BrevForTilbakekreving = (props: {
 
     const [harDødsbo, setHarDødsbo] = useState(false);
     const [mottakerFetchError, setMottakerFetchError] = useState<MottakerAlert | null>(null);
+    const [visDødsbo, setVisDødsbo] = useState(false);
+    const referanseType = 'DØDSBO_TILBAKEKREVING';
+    const brevtype = 'VEDTAK';
+    const referanseId = props.tilbakekreving.id;
+
     useEffect(() => {
         const sjekkMottaker = async () => {
-            const res = await hentMottaker(props.sakId, 'DØDSBO_TILBAKEKREVING', props.tilbakekreving.id, 'VEDTAK');
+            const res = await hentMottaker(props.sakId, referanseType, referanseId, brevtype);
             if (res.status === 'ok') {
                 if (res.data) {
                     setHarDødsbo(true);
@@ -220,13 +228,32 @@ const BrevForTilbakekreving = (props: {
                             )}
 
                             {skalSendeBrev && (
-                                <MottakerDødsbo
-                                    tilbakekreving={props.tilbakekreving}
-                                    sakId={props.sakId}
-                                    harDødsbo={harDødsbo}
-                                    setHardødsbo={(harDødsbo: boolean) => setHarDødsbo(harDødsbo)}
-                                    mottakerFetchError={mottakerFetchError}
-                                />
+                                <div>
+                                    {!visDødsbo && (
+                                        <Button variant="secondary" type="button" onClick={() => setVisDødsbo(true)}>
+                                            {harDødsbo ? 'Vis dødsbo' : 'Legg til dødsbo'}
+                                        </Button>
+                                    )}
+
+                                    {visDødsbo && (
+                                        <>
+                                            <Mottaker
+                                                sakId={props.sakId}
+                                                referanseId={referanseId}
+                                                referanseType={referanseType}
+                                                brevtype={brevtype}
+                                                onClose={() => setVisDødsbo(false)}
+                                                onDelete={() => setHarDødsbo(false)}
+                                            />
+
+                                            {mottakerFetchError && (
+                                                <Alert variant={mottakerFetchError.variant} size="small">
+                                                    {mottakerFetchError.text}
+                                                </Alert>
+                                            )}
+                                        </>
+                                    )}
+                                </div>
                             )}
 
                             <TextareaWithAutosave
