@@ -3,14 +3,14 @@ import { Alert, BodyShort, Box, Heading, HStack, Label, Loader, Table, VStack } 
 import { useEffect } from 'react';
 import {
     AapFradragResponse,
-    AlderBeregningsperioderPerPerson,
+    AlderBeregningsperiode,
     HentFradragRequest,
     hentEksterneAAP,
     hentEksterneFradragAlderspensjon,
     hentEksterneFradragUføretrygd,
     ResponseDtoAlder,
     ResponseDtoUføre,
-    UføreBeregningsperioderPerPerson,
+    UføreBeregningsperiode,
 } from '~src/api/EksterneFradragApi.ts';
 import { ApiResult, useApiCall } from '~src/lib/hooks.ts';
 import { formatDate } from '~src/utils/date/dateUtils.ts';
@@ -57,21 +57,23 @@ export const EksterneFradrag = ({ sakId, fnr, periode, tittel }: Props) => {
 const AlderspensjonSeksjon = ({ resultat }: { resultat: ApiResult<ResponseDtoAlder> }) => (
     <EksternSeksjon tittel="Alderspensjon" resultat={resultat}>
         {RemoteData.isSuccess(resultat) &&
-            (resultat.value.length === 0 ? (
+            (resultat.value.perioder.length === 0 ? (
                 <BodyShort>Ingen fradrag</BodyShort>
             ) : (
                 <VStack gap="4">
-                    {resultat.value.map((person) => (
-                        <AlderPersonTabell key={person.fnr} person={person} />
-                    ))}
+                    <AlderPersonTabell
+                        key={resultat.value.fnr}
+                        fnr={resultat.value.fnr}
+                        perioder={resultat.value.perioder}
+                    />
                 </VStack>
             ))}
     </EksternSeksjon>
 );
 
-const AlderPersonTabell = ({ person }: { person: AlderBeregningsperioderPerPerson }) => (
+const AlderPersonTabell = ({ perioder, fnr }: { perioder: AlderBeregningsperiode[]; fnr: string }) => (
     <VStack gap="2">
-        <Label size="small">Fnr: {person.fnr}</Label>
+        <Label size="small">Fnr: {fnr}</Label>
         <Table size="small">
             <Table.Header>
                 <Table.Row>
@@ -81,7 +83,7 @@ const AlderPersonTabell = ({ person }: { person: AlderBeregningsperioderPerPerso
                 </Table.Row>
             </Table.Header>
             <Table.Body>
-                {person.perioder.map((p, i) => (
+                {perioder.map((p, i) => (
                     <Table.Row key={i}>
                         <Table.DataCell>{formatDate(p.fom)}</Table.DataCell>
                         <Table.DataCell>{p.tom ? formatDate(p.tom) : '—'}</Table.DataCell>
@@ -96,21 +98,23 @@ const AlderPersonTabell = ({ person }: { person: AlderBeregningsperioderPerPerso
 const UforetrygdSeksjon = ({ resultat }: { resultat: ApiResult<ResponseDtoUføre> }) => (
     <EksternSeksjon tittel="Uføretrygd" resultat={resultat}>
         {RemoteData.isSuccess(resultat) &&
-            (resultat.value.length === 0 ? (
+            (resultat.value.perioder.length === 0 ? (
                 <BodyShort>Ingen fradrag</BodyShort>
             ) : (
                 <VStack gap="4">
-                    {resultat.value.map((person) => (
-                        <UforePersonTabell key={person.fnr} person={person} />
-                    ))}
+                    <UforePersonTabell
+                        key={resultat.value.fnr}
+                        perioder={resultat.value.perioder}
+                        fnr={resultat.value.fnr}
+                    />
                 </VStack>
             ))}
     </EksternSeksjon>
 );
 
-const UforePersonTabell = ({ person }: { person: UføreBeregningsperioderPerPerson }) => (
+const UforePersonTabell = ({ perioder, fnr }: { perioder: UføreBeregningsperiode[]; fnr: string }) => (
     <VStack gap="2">
-        <Label size="small">Fnr: {person.fnr}</Label>
+        <Label size="small">Fnr: {fnr}</Label>
         <Table size="small">
             <Table.Header>
                 <Table.Row>
@@ -121,7 +125,7 @@ const UforePersonTabell = ({ person }: { person: UføreBeregningsperioderPerPers
                 </Table.Row>
             </Table.Header>
             <Table.Body>
-                {person.perioder.map((p, i) => (
+                {perioder.map((p, i) => (
                     <Table.Row key={i}>
                         <Table.DataCell>{formatDate(p.fom)}</Table.DataCell>
                         <Table.DataCell>{p.tom ? formatDate(p.tom) : '—'}</Table.DataCell>
