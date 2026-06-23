@@ -14,7 +14,7 @@ const DødsboPage = () => {
     const { søker } = useAppSelector((s) => ({ søker: s.personopplysninger.søker }));
 
     if (RemoteData.isSuccess(søker)) {
-        const dødsbo = søker.value.dødsbo;
+        const dødsbo = søker.value.dødsbo ?? [];
         return (
             <div className={styles.pageContainer}>
                 <Heading level="2" size={'large'}>

@@ -129,7 +129,7 @@ const Sakintro = () => {
     ];
 
     const { søker } = useAppSelector((s) => ({ søker: s.personopplysninger.søker }));
-    const dødsbo = RemoteData.isSuccess(søker) ? søker.value.dødsbo : [];
+    const dødsbo = RemoteData.isSuccess(søker) && søker.value.dødsbo ? søker.value.dødsbo : [];
 
     return (
         <div className={styles.sakintroContainer}>

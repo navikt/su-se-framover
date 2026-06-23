@@ -321,9 +321,9 @@ export const brevPage: Route<{ sakId: string }> = {
 };
 
 export const dødsboPage: Route<{ sakId: string }> = {
-    path: 'dødsbo/',
-    absPath: '/saksoversikt/:sakId/dødsbo',
-    createURL: (args) => `/saksoversikt/${args.sakId}/dødsbo/`,
+    path: 'doedsbo/',
+    absPath: '/saksoversikt/:sakId/doedsbo',
+    createURL: (args) => `/saksoversikt/${args.sakId}/doedsbo/`,
 };
 
 //---------------Tilbakekreving-------------------------

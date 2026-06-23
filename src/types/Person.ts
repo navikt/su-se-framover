@@ -21,7 +21,7 @@ export interface Person {
     }>;
     vergemål: Nullable<boolean>;
     dødsdato: Nullable<string>;
-    dødsbo: KontaktInfoDødsbo[];
+    dødsbo: Nullable<KontaktInfoDødsbo[]>;
 }
 
 export interface Fødsel {
