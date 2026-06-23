@@ -1,5 +1,7 @@
+import { Heading, Ingress } from '@navikt/ds-react';
+import { useEffect, useRef } from 'react';
+import styles from 'src/pages/søknad/index.module.less';
 import * as routes from '~src/lib/routes.ts';
-import { kontrollsamtaleUtfylling, useRouteParams } from '~src/lib/routes.ts';
 import AndreForhold from '~src/pages/kontrollsamtale/steg/andreforhold/AndreForhold.tsx';
 import FullmaktOgLegeerklæring from '~src/pages/kontrollsamtale/steg/fullmakt/FullmaktOgLegeerklæring.tsx';
 import OriginalPass from '~src/pages/kontrollsamtale/steg/pass/OriginalPass.tsx';
@@ -9,12 +11,28 @@ import Utenlandsopphold from '~src/pages/kontrollsamtale/steg/utenlandsopphold/U
 import ØkonomiskSituasjon from '~src/pages/kontrollsamtale/steg/økonomi/ØkonomiskSituasjon.tsx';
 import { KontrollsamtaleSteg } from '~src/pages/kontrollsamtale/types.ts';
 
-const KontrollSamtaleSteg = () => {
-    const { step } = useRouteParams<typeof kontrollsamtaleUtfylling>();
+const Steg = (props: { step: KontrollsamtaleSteg; title: string; hjelpetekst?: string }) => {
+    const sectionRef = useRef<HTMLDivElement>(null);
+    useEffect(() => {
+        sectionRef.current?.focus();
+    }, [props.step]);
 
+    return (
+        <section aria-labelledby="steg-heading">
+            <div className={styles.stegHeadingContainer} ref={sectionRef} tabIndex={-1}>
+                <Heading id="steg-heading" level="1" size="large" spacing>
+                    {props.title}
+                </Heading>
+                {props.hjelpetekst && <Ingress>{props.hjelpetekst}</Ingress>}
+            </div>
+            <ShowSteg step={props.step} />
+        </section>
+    );
+};
+const ShowSteg = (props: { step: KontrollsamtaleSteg }) => {
     const avbrytUrl = routes.soknad.createURL();
 
-    switch (step) {
+    switch (props.step) {
         case KontrollsamtaleSteg.PersonligOppmøte:
             return (
                 <PersonligOppmøte
@@ -97,7 +115,8 @@ const KontrollSamtaleSteg = () => {
                 />
             );
         default:
-            return <h1>midlertidlig</h1>; //todo: legge til oppsummering
+            return null;
     }
 };
-export default KontrollSamtaleSteg;
+
+export default Steg;

@@ -1,5 +1,4 @@
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Heading } from '@navikt/ds-react';
 import { Controller, useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import { BooleanRadioGroup } from '~src/components/formElements/FormElements.tsx';
@@ -16,6 +15,7 @@ import { useI18n } from '~src/lib/i18n.ts';
 import messages from '~src/pages/kontrollsamtale/steg/utenlandsopphold/utenlandsOpphold-nb.ts';
 import { FormData, schema } from '~src/pages/kontrollsamtale/steg/utenlandsopphold/validering.ts';
 import Bunnknapper from '~src/pages/søknad/bunnknapper/Bunnknapper.tsx';
+import styles from '~src/pages/søknad/steg/utenlandsopphold/utenlandsopphold.module.less';
 import { useAppDispatch, useAppSelector } from '~src/redux/Store.ts';
 import { toDateOrNull, toIsoDateOnlyString } from '~src/utils/date/dateUtils.ts';
 
@@ -69,137 +69,137 @@ const UtenlandsOpphold = ({ nesteUrl, forrigeUrl, avbrytUrl }: Props) => {
                 console.log('errors', errors);
             })}
         >
-            <Heading level="1" size="large" spacing>
-                Reise til utlandet
-            </Heading>
+            <div className={styles.reiseItemContainer}>
+                <Controller
+                    control={form.control}
+                    name="harVærtUtenlands"
+                    render={({ field, fieldState }) => (
+                        <BooleanRadioGroup
+                            {...field}
+                            legend={formatMessage('harVærtUtenlands.label')}
+                            error={fieldState.error?.message}
+                            onChange={(value: boolean) => {
+                                field.onChange(value);
+                                form.setValue('utenlandsoppholdDatoer', value ? [dato] : []);
+                            }}
+                        />
+                    )}
+                />
 
-            <Controller
-                control={form.control}
-                name="harVærtUtenlands"
-                render={({ field, fieldState }) => (
-                    <BooleanRadioGroup
-                        {...field}
-                        legend={formatMessage('harVærtUtenlands.label')}
-                        error={fieldState.error?.message}
-                        onChange={(value: boolean) => {
-                            field.onChange(value);
-                            form.setValue('utenlandsoppholdDatoer', value ? [dato] : []);
-                        }}
-                    />
+                {harVærtUtenlands && (
+                    <>
+                        <Controller
+                            control={form.control}
+                            name="utenlandsoppholdDatoer.0.utreisedato"
+                            render={({ field, fieldState }) => (
+                                <DatePicker
+                                    label="Utreisedato"
+                                    value={toDateOrNull(field.value)}
+                                    error={fieldState.error?.message}
+                                    onChange={(value) => {
+                                        return value && field.onChange(toIsoDateOnlyString(value));
+                                    }}
+                                />
+                            )}
+                        />
+                        <Controller
+                            control={form.control}
+                            name="utenlandsoppholdDatoer.0.innreisedato"
+                            render={({ field, fieldState }) => (
+                                <DatePicker
+                                    label="Innreisedato"
+                                    value={toDateOrNull(field.value)}
+                                    error={fieldState.error?.message}
+                                    onChange={(value) => {
+                                        return value && field.onChange(toIsoDateOnlyString(value));
+                                    }}
+                                />
+                            )}
+                        />
+                    </>
                 )}
-            />
 
-            {harVærtUtenlands && (
-                <>
-                    <Controller
-                        control={form.control}
-                        name="utenlandsoppholdDatoer.0.utreisedato"
-                        render={({ field, fieldState }) => (
-                            <DatePicker
-                                label="Utreisedato"
-                                value={toDateOrNull(field.value)}
-                                error={fieldState.error?.message}
-                                onChange={(value) => {
-                                    return value && field.onChange(toIsoDateOnlyString(value));
-                                }}
-                            />
-                        )}
-                    />
-                    <Controller
-                        control={form.control}
-                        name="utenlandsoppholdDatoer.0.innreisedato"
-                        render={({ field, fieldState }) => (
-                            <DatePicker
-                                label="Innreisedato"
-                                value={toDateOrNull(field.value)}
-                                error={fieldState.error?.message}
-                                onChange={(value) => {
-                                    return value && field.onChange(toIsoDateOnlyString(value));
-                                }}
-                            />
-                        )}
-                    />
-                </>
-            )}
-
-            <Controller
-                control={form.control}
-                name="harPlanerOmUtenlandsreise"
-                render={({ field, fieldState }) => (
-                    <BooleanRadioGroup
-                        {...field}
-                        legend={formatMessage('harPlanerOmUtenlandsreise.label')}
-                        error={fieldState.error?.message}
-                        onChange={(value: boolean) => {
-                            field.onChange(value);
-                            form.setValue('planlagteUtenlandsreiseDatoer', value ? [dato] : []);
-                        }}
-                    />
+                <Controller
+                    control={form.control}
+                    name="harPlanerOmUtenlandsreise"
+                    render={({ field, fieldState }) => (
+                        <BooleanRadioGroup
+                            {...field}
+                            legend={formatMessage('harPlanerOmUtenlandsreise.label')}
+                            error={fieldState.error?.message}
+                            onChange={(value: boolean) => {
+                                field.onChange(value);
+                                form.setValue('planlagteUtenlandsreiseDatoer', value ? [dato] : []);
+                            }}
+                        />
+                    )}
+                />
+                {harPlanerOmUtenlandsreise && (
+                    <>
+                        <Controller
+                            control={form.control}
+                            name="planlagteUtenlandsreiseDatoer.0.utreisedato"
+                            render={({ field, fieldState }) => (
+                                <DatePicker
+                                    label="Utreisedato"
+                                    value={toDateOrNull(field.value)}
+                                    error={fieldState.error?.message}
+                                    onChange={(value) => {
+                                        return value && field.onChange(toIsoDateOnlyString(value));
+                                    }}
+                                />
+                            )}
+                        />
+                        <Controller
+                            control={form.control}
+                            name="planlagteUtenlandsreiseDatoer.0.innreisedato"
+                            render={({ field, fieldState }) => (
+                                <DatePicker
+                                    label="Innreisedato"
+                                    value={toDateOrNull(field.value)}
+                                    error={fieldState.error?.message}
+                                    onChange={(value) => {
+                                        return value && field.onChange(toIsoDateOnlyString(value));
+                                    }}
+                                />
+                            )}
+                        />
+                    </>
                 )}
-            />
-            {harPlanerOmUtenlandsreise && (
-                <>
-                    <Controller
-                        control={form.control}
-                        name="planlagteUtenlandsreiseDatoer.0.utreisedato"
-                        render={({ field, fieldState }) => (
-                            <DatePicker
-                                label="Utreisedato"
-                                value={toDateOrNull(field.value)}
-                                error={fieldState.error?.message}
-                                onChange={(value) => {
-                                    return value && field.onChange(toIsoDateOnlyString(value));
-                                }}
-                            />
-                        )}
-                    />
-                    <Controller
-                        control={form.control}
-                        name="planlagteUtenlandsreiseDatoer.0.innreisedato"
-                        render={({ field, fieldState }) => (
-                            <DatePicker
-                                label="Innreisedato"
-                                value={toDateOrNull(field.value)}
-                                error={fieldState.error?.message}
-                                onChange={(value) => {
-                                    return value && field.onChange(toIsoDateOnlyString(value));
-                                }}
-                            />
-                        )}
-                    />
-                </>
-            )}
-            <Controller
-                control={form.control}
-                name="reisedokumentasjon"
-                render={({ field, fieldState }) => (
-                    <BooleanRadioGroup
-                        {...field}
-                        legend={formatMessage('reisedokumentasjon.label')}
-                        error={fieldState.error?.message}
-                        onChange={(value: boolean) => {
-                            field.onChange(value);
-                        }}
-                    />
-                )}
-            />
+                <Controller
+                    control={form.control}
+                    name="reisedokumentasjon"
+                    render={({ field, fieldState }) => (
+                        <BooleanRadioGroup
+                            {...field}
+                            legend={formatMessage('reisedokumentasjon.label')}
+                            error={fieldState.error?.message}
+                            onChange={(value: boolean) => {
+                                field.onChange(value);
+                            }}
+                        />
+                    )}
+                />
 
-            <Bunnknapper
-                previous={{
-                    onClick: () => {
-                        dispatch(harVærtUtenlandsUpdated(form.getValues().harVærtUtenlands));
-                        dispatch(harPlanerOmUtenlandsreiseUpdated(form.getValues().harPlanerOmUtenlandsreise));
-                        dispatch(utenlandsoppholdDatoerUpdated(form.getValues().utenlandsoppholdDatoer));
-                        dispatch(planlagteUtenlandsreiseDatoerUpdated(form.getValues().planlagteUtenlandsreiseDatoer));
-                        dispatch(reisedokumentasjonUpdated(form.getValues().reisedokumentasjon));
-                        navigate(forrigeUrl);
-                    },
-                }}
-                next={{}}
-                avbryt={{
-                    toRoute: avbrytUrl,
-                }}
-            />
+                <Bunnknapper
+                    previous={{
+                        onClick: () => {
+                            dispatch(harVærtUtenlandsUpdated(form.getValues().harVærtUtenlands));
+                            dispatch(harPlanerOmUtenlandsreiseUpdated(form.getValues().harPlanerOmUtenlandsreise));
+                            dispatch(utenlandsoppholdDatoerUpdated(form.getValues().utenlandsoppholdDatoer));
+                            dispatch(
+                                planlagteUtenlandsreiseDatoerUpdated(form.getValues().planlagteUtenlandsreiseDatoer),
+                            );
+                            dispatch(reisedokumentasjonUpdated(form.getValues().reisedokumentasjon));
+                            navigate(forrigeUrl);
+                        },
+                    }}
+                    next={{}}
+                    avbryt={{
+                        toRoute: avbrytUrl,
+                    }}
+                />
+            </div>
         </form>
     );
 };
