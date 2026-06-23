@@ -9,7 +9,7 @@ export interface HentFradragRequest {
     };
 }
 
-export type ResponseDtoAlder = AlderBeregningsperioderPerPerson[];
+export type ResponseDtoAlder = AlderBeregningsperioderPerPerson;
 
 export interface AlderBeregningsperioderPerPerson {
     fnr: string;
@@ -35,7 +35,7 @@ export async function hentEksterneFradragAlderspensjon(
     });
 }
 
-export type ResponseDtoUføre = UføreBeregningsperioderPerPerson[];
+export type ResponseDtoUføre = UføreBeregningsperioderPerPerson;
 
 export interface UføreBeregningsperioderPerPerson {
     fnr: string;
