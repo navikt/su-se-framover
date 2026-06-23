@@ -1,9 +1,9 @@
+import * as RemoteData from '@devexperts/remote-data-ts';
 import { ChevronDownIcon, ChevronUpIcon } from '@navikt/aksel-icons';
 import { Alert, Button, LinkPanel, Popover } from '@navikt/ds-react';
 import { isEmpty, partition } from 'fp-ts/Array';
 import { useState } from 'react';
 import { useOutletContext } from 'react-router-dom';
-
 import { ÅpentBrev } from '~src/assets/Illustrations';
 import LinkAsButton from '~src/components/linkAsButton/LinkAsButton';
 import Vedtakstidslinje from '~src/components/vedtakstidslinje/VedtaksTidslinje';
@@ -13,6 +13,7 @@ import { useI18n } from '~src/lib/i18n';
 import * as Routes from '~src/lib/routes';
 import { Nullable } from '~src/lib/types';
 import Utbetalinger from '~src/pages/saksbehandling/sakintro/Utbetalinger';
+import { useAppSelector } from '~src/redux/Store.ts';
 import { KlageStatus } from '~src/types/Klage';
 import { erKlageAvsluttet, erKlageÅpen } from '~src/utils/klage/klageUtils';
 import {
@@ -23,7 +24,6 @@ import { erReguleringAvsluttet, erReguleringÅpen } from '~src/utils/ReguleringU
 import { erRevurderingAvsluttet, erRevurderingÅpen } from '~src/utils/revurdering/revurderingUtils';
 import { erSøknadsbehandlingÅpen } from '~src/utils/SøknadsbehandlingUtils';
 import { erSøknadLukket, erSøknadÅpen, getIverksatteInnvilgedeSøknader } from '~src/utils/søknad/søknadUtils';
-
 import AvsluttedeBehandlingerTabell from './avsluttedeBehandlingerTabell/AvsluttedeBehandlingerTabell';
 import styles from './sakintro.module.less';
 import messages from './sakintro-nb';
@@ -128,6 +128,9 @@ const Sakintro = () => {
         ...åpneTilbakekrevingsbehandlinger,
     ];
 
+    const { søker } = useAppSelector((s) => ({ søker: s.personopplysninger.søker }));
+    const dødsbo = RemoteData.isSuccess(søker) ? søker.value.dødsbo : [];
+
     return (
         <div className={styles.sakintroContainer}>
             <SuksessStatuser locationState={locationState} />
@@ -150,6 +153,12 @@ const Sakintro = () => {
                     <LinkAsButton variant="secondary" href={Routes.brevPage.createURL({ sakId: props.sak.id })}>
                         {formatMessage('link.brev')}
                     </LinkAsButton>
+
+                    {dødsbo.length > 0 && (
+                        <LinkAsButton variant="secondary" href={Routes.dødsboPage.createURL({ sakId: props.sak.id })}>
+                            Dødsbo
+                        </LinkAsButton>
+                    )}
                 </div>
             </div>
             <div className={styles.vedtaksTidslinjeContainer}>

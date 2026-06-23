@@ -21,6 +21,7 @@ export interface Person {
     }>;
     vergemål: Nullable<boolean>;
     dødsdato: Nullable<string>;
+    dødsbo: KontaktInfoDødsbo[];
 }
 
 export interface Fødsel {
@@ -74,4 +75,24 @@ export enum SivilstandTyper {
     SEPARERT_PARTNER = 'SEPARERT_PARTNER',
     SKILT_PARTNER = 'SKILT_PARTNER',
     GJENLEVENDE_PARTNER = 'GJENLEVENDE_PARTNER',
+}
+
+export interface KontaktInfoDødsbo {
+    kontaktPerson: Nullable<Kontaktinformasjon>;
+    kontaktAdvokat: Nullable<Kontaktinformasjon>;
+    kontaktOrganisasjon: Nullable<Kontaktinformasjon>;
+    adresselinje1: Nullable<string>;
+    adresselinje2: Nullable<string>;
+    poststedsnavn: Nullable<string>;
+    postnummer: Nullable<string>;
+    landkode: Nullable<string>;
+}
+
+export interface Kontaktinformasjon {
+    fornavn: Nullable<string>;
+    mellomnavn: Nullable<string>;
+    etternavn: Nullable<string>;
+    identifikasjonsnummer: Nullable<string>;
+    organisasjonsnavn: Nullable<string>;
+    organisasjonsnummer: Nullable<string>;
 }
