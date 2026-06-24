@@ -101,7 +101,7 @@ const AppRoutes = () => (
             path={routes.kontrollsamtalePersonSok.path}
             element={<WithDocTitle title="Kontrollsamtale" Page={Index} />}
         >
-            <Route index element={<InngangKontrollnotat />} />{' '}
+            <Route index element={<InngangKontrollnotat />} />
         </Route>
         <Route path={routes.kontrollsamtale.path} element={<WithDocTitle title="Kontrollsamtale" Page={Index} />}>
             <Route path={routes.kontrollsamtaleUtfylling.path} element={<Startutfylling />} />
