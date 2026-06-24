@@ -7,11 +7,10 @@ import { Controller, useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 
 import { FritekstTyper, hentFritekst, redigerFritekst } from '~src/api/fritekstApi.ts';
-import { hentMottaker } from '~src/api/mottakerClient.ts';
+import { LagreMottakerRequest } from '~src/api/mottakerClient.ts';
 import { forhåndsvisForhåndsvarsel, visUtsendtForhåndsvarsel } from '~src/api/tilbakekrevingApi';
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
 import TextareaWithAutosave from '~src/components/inputs/textareaWithAutosave/TextareaWithAutosave.tsx';
-import { MottakerAlert, toMottakerAlert } from '~src/components/mottaker/mottakerUtils.ts';
 import Navigasjonsknapper from '~src/components/navigasjonsknapper/Navigasjonsknapper';
 import Feiloppsummering from '~src/components/oppsummering/feiloppsummering/Feiloppsummering';
 import OppsummeringAvKravgrunnlag from '~src/components/oppsummering/kravgrunnlag/OppsummeringAvKravgrunnlag';
@@ -22,7 +21,7 @@ import { useI18n } from '~src/lib/i18n';
 import * as Routes from '~src/lib/routes';
 import { Nullable } from '~src/lib/types.ts';
 import { hookFormErrorsTilFeiloppsummering } from '~src/lib/validering';
-import { MottakerDødsbo } from '~src/pages/saksbehandling/mottaker/MottakerDødsbo.tsx';
+import { MottakerForm } from '~src/pages/saksbehandling/mottaker/Mottaker.tsx';
 import {
     ForhåndsvarselsInfo,
     ManuellTilbakekrevingsbehandling,
@@ -83,6 +82,8 @@ const ForhåndsvarsleTilbakekreving = (props: {
             );
             return;
         }
+        const dødsbo = visDødsbo ? dødsboForm.getValues() : null;
+        if (dødsbo && !validateDødsbo(dødsbo)) return;
 
         lagreForhåndsvarsel(
             {
@@ -90,6 +91,7 @@ const ForhåndsvarsleTilbakekreving = (props: {
                 saksversjon: props.saksversjon,
                 behandlingId: props.tilbakekreving.id,
                 fritekst: data.fritekst,
+                dødsbo: dødsbo,
             },
             () => {
                 navigate(Routes.saksoversiktValgtSak.createURL({ sakId: props.sakId }));
@@ -112,29 +114,75 @@ const ForhåndsvarsleTilbakekreving = (props: {
         );
     };
 
-    const [harDødsbo, setHarDødsbo] = useState(false);
-    const [mottakerFetchError, setMottakerFetchError] = useState<MottakerAlert | null>(null);
-    useEffect(() => {
-        const sjekkMottaker = async () => {
-            const res = await hentMottaker(
-                props.sakId,
-                'DØDSBO_TILBAKEKREVING',
-                props.tilbakekreving.id,
-                'FORHANDSVARSEL',
-            );
-            if (res.status === 'ok') {
-                if (res.data) {
-                    setHarDødsbo(true);
-                }
-                return;
-            } else {
-                if (res.error.statusCode) {
-                    setMottakerFetchError(toMottakerAlert(res.error, 'Kan ikke hente mottaker'));
-                }
-            }
-        };
-        sjekkMottaker();
-    }, []);
+    const [visDødsbo, setVisDødsbo] = useState(false);
+    const referanseType = 'DØDSBO_TILBAKEKREVING';
+    const brevtype = 'FORHANDSVARSEL';
+
+    // referanseId skal bli hendelseId, men den blir til først i backend
+    const emptyFormValues: LagreMottakerRequest = {
+        navn: '',
+        foedselsnummer: '',
+        orgnummer: '',
+        adresse: {
+            adresselinje1: '',
+            adresselinje2: '',
+            adresselinje3: '',
+            postnummer: '',
+            poststed: '',
+        },
+        referanseType: 'DØDSBO_TILBAKEKREVING',
+        brevtype: 'FORHANDSVARSEL',
+        referanseId: '',
+    };
+
+    const dødsboForm = useForm<LagreMottakerRequest>({
+        defaultValues: emptyFormValues,
+    });
+
+    const validateDødsbo = (dødsbo: LagreMottakerRequest): boolean => {
+        dødsboForm.clearErrors();
+        let isValid = true;
+
+        const harFnr = Boolean(dødsbo.foedselsnummer?.trim());
+        const harOrgnr = Boolean(dødsbo.orgnummer?.trim());
+
+        if (harFnr && harOrgnr) {
+            dødsboForm.setError('foedselsnummer', {
+                message: 'Kan ikke ha både fødselsnummer og organisasjonsnummer.',
+            });
+            dødsboForm.setError('orgnummer', {
+                message: 'Kan ikke ha både fødselsnummer og organisasjonsnummer.',
+            });
+            isValid = false;
+        } else if (!harFnr && !harOrgnr) {
+            dødsboForm.setError('foedselsnummer', {
+                message: 'Du må fylle ut enten fødselsnummer eller organisasjonsnummer.',
+            });
+            dødsboForm.setError('orgnummer', {
+                message: 'Du må fylle ut enten fødselsnummer eller organisasjonsnummer.',
+            });
+            isValid = false;
+        }
+
+        if (!dødsbo.navn.trim()) {
+            dødsboForm.setError('navn', { message: 'Navn er påkrevd.' });
+            isValid = false;
+        }
+        if (!dødsbo.adresse.adresselinje1.trim()) {
+            dødsboForm.setError('adresse.adresselinje1', { message: 'Adresselinje 1 er påkrevd.' });
+            isValid = false;
+        }
+        if (!dødsbo.adresse.postnummer.trim()) {
+            dødsboForm.setError('adresse.postnummer', { message: 'Postnummer er påkrevd.' });
+            isValid = false;
+        }
+        if (!dødsbo.adresse.poststed.trim()) {
+            dødsboForm.setError('adresse.poststed', { message: 'Poststed er påkrevd.' });
+            isValid = false;
+        }
+
+        return isValid;
+    };
 
     return (
         <ToKolonner tittel={formatMessage('forhåndsvarsleTilbakekreving.tittel')}>
@@ -188,6 +236,7 @@ const ForhåndsvarsleTilbakekreving = (props: {
                                             behandlingId: props.tilbakekreving.id,
                                             saksversjon: props.saksversjon,
                                             brevtekst: form.getValues('fritekst'),
+                                            dødsbo: visDødsbo,
                                         }),
                                     status: forhåndsvisStatus,
                                 }}
@@ -195,13 +244,23 @@ const ForhåndsvarsleTilbakekreving = (props: {
                         )}
 
                         {form.watch('skalForhåndsvarsle') && (
-                            <MottakerDødsbo
-                                tilbakekreving={props.tilbakekreving}
-                                sakId={props.sakId}
-                                harDødsbo={harDødsbo}
-                                setHardødsbo={(harDødsbo: boolean) => setHarDødsbo(harDødsbo)}
-                                mottakerFetchError={mottakerFetchError}
-                            />
+                            <div>
+                                {!visDødsbo ? (
+                                    <Button variant="secondary" type="button" onClick={() => setVisDødsbo(true)}>
+                                        legg til dødsbo
+                                    </Button>
+                                ) : (
+                                    <MottakerForm
+                                        sakId={props.sakId}
+                                        referanseId={''}
+                                        referanseType={referanseType}
+                                        brevtype={brevtype}
+                                        onClose={() => setVisDødsbo(false)}
+                                        form={dødsboForm}
+                                        kunForm={true}
+                                    />
+                                )}
+                            </div>
                         )}
 
                         <div>

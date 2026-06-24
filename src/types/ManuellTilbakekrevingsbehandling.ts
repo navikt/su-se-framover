@@ -1,5 +1,5 @@
+import { LagreMottakerRequest } from '~src/api/mottakerClient.ts';
 import { Nullable } from '~src/lib/types';
-
 import { Attestering } from './Behandling';
 import { Kravgrunnlag } from './Kravgrunnlag';
 import { Periode } from './Periode';
@@ -93,6 +93,7 @@ export interface ForhåndsvarsleTilbakekrevingRequest {
     saksversjon: number;
     behandlingId: string;
     fritekst: string;
+    dødsbo: Nullable<LagreMottakerRequest>;
 }
 
 export interface BrevtekstTilbakekrevingsbehandlingRequest {
@@ -112,6 +113,7 @@ export interface ForhåndsvisBrevtekstTilbakekrevingsbehandlingRequest {
     saksversjon: number;
     behandlingId: string;
     brevtekst: Nullable<string>;
+    dødsbo: Boolean;
 }
 
 export interface VisUtsendtForhåndsvarselTilbakekrevingsbehandlingRequest {

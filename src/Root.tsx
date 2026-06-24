@@ -13,6 +13,7 @@ import BrevPage from './pages/saksbehandling/brev/BrevPage';
 import Vilkår from './pages/saksbehandling/søknadsbehandling/vilkår/Vilkår';
 import Store from './redux/Store';
 import './externalStyles';
+import DødsboPage from '~src/pages/saksbehandling/mottaker/Dødsbo.tsx';
 import { SakInngang } from '~src/pages/søknad/steg/inngang/SakInngang.tsx';
 import { ContentWrapper } from './utils/router/ContentWrapper';
 import UmamiTracker from './utils/UmamiTracker';
@@ -132,6 +133,7 @@ const AppRoutes = () => (
             <Route path={routes.opprettRegulering.path} element={<OpprettReguleringPage />} />
             <Route path={routes.utenlandsopphold.path} element={<Utenlandsopphold />} />
             <Route path={routes.brevPage.path} element={<BrevPage />} />
+            <Route path={routes.dødsboPage.path} element={<DødsboPage />} />
 
             <Route path={routes.tilbakekrevingRoot.path} element={<Tilbakekreving />} />
         </Route>

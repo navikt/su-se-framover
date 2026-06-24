@@ -19,7 +19,7 @@ import { useI18n } from '~src/lib/i18n';
 import * as Routes from '~src/lib/routes';
 import { Nullable } from '~src/lib/types';
 import yup from '~src/lib/validering';
-import { MottakerForm } from '~src/pages/saksbehandling/mottaker/Mottaker.tsx';
+import { Mottaker } from '~src/pages/saksbehandling/mottaker/Mottaker.tsx';
 import { FormWrapper } from '~src/pages/saksbehandling/søknadsbehandling/FormWrapper';
 import { GrunnlagsdataOgVilkårsvurderinger } from '~src/types/grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
 import { Person } from '~src/types/Person.ts';
@@ -310,7 +310,7 @@ const SendTilAttestering = (props: {
                                             )}
                                         </Button>
                                         {skalLeggeTilMottaker && (
-                                            <MottakerForm
+                                            <Mottaker
                                                 sakId={props.sakId}
                                                 referanseId={props.revurdering.id}
                                                 referanseType={'REVURDERING'}
