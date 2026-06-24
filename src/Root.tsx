@@ -21,6 +21,7 @@ const Attestering = lazy(() => import('./pages/saksbehandling/attestering/Attest
 const Kvittering = lazy(() => import('./pages/søknad/kvittering/Kvittering'));
 const Infoside = lazy(() => import('./pages/søknad/steg/infoside/Infoside'));
 const Inngang = lazy(() => import('./pages/søknad/steg/inngang/Inngang'));
+const InngangKontrollnotat = lazy(() => import('./pages/kontrollsamtale/steg/inngang/InngangKontrollnotat'));
 const Søknadsvelger = lazy(() => import('./pages/søknad/Søknadsvelger'));
 const StartUtfylling = lazy(() => import('./pages/søknad/steg/start-utfylling/StartUtfylling'));
 const Startutfylling = lazy(() => import('./pages/kontrollsamtale/StartUtfylling'));
@@ -94,6 +95,12 @@ const AppRoutes = () => (
                 <Route path={routes.soknadsutfylling.path} element={<StartUtfylling />} />
                 <Route path={routes.søknadskvittering.path} element={<Kvittering />} />
             </Route>
+        </Route>
+        <Route
+            path={routes.kontrollsamtalePersonSok.path}
+            element={<WithDocTitle title="Kontrollsamtale" Page={Index} />}
+        >
+            <Route index element={<InngangKontrollnotat />} />{' '}
         </Route>
         <Route path={routes.kontrollsamtale.path} element={<WithDocTitle title="Kontrollsamtale" Page={Index} />}>
             <Route path={routes.kontrollsamtaleUtfylling.path} element={<Startutfylling />} />
