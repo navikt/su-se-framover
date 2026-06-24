@@ -30,3 +30,31 @@
 .actionRow {
     width: 100%;
 }
+
+
+.pageContainer {
+    display: flex;
+    flex-direction: column;
+    gap: @spacing;
+    margin-left: 10vw;
+    margin-top: @spacing;
+}
+
+.box {
+    display: flex;
+    flex-direction: column;
+    gap: @spacing-s;
+    width: 35rem;
+
+    //tvinger frem hr til å vises i en flex-container
+    hr {
+        margin-left: 0;
+        margin-right: 0;
+    }
+}
+
+.buttonContainer {
+    display: flex;
+    gap: @spacing;
+    justify-content: flex-start;
+}
