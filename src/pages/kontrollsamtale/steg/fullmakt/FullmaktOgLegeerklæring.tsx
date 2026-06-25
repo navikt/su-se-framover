@@ -40,6 +40,7 @@ const FullmaktOgLegeerklæring = ({ nesteUrl, forrigeUrl, avbrytUrl }: Props) =>
                     <BooleanRadioGroup
                         {...field}
                         legend={formatMessage('fullmaktOgLegeerklæring.label')}
+                        description={formatMessage('fullmaktOgLegeerklæring.hjelpetekst')}
                         error={fieldState.error?.message}
                         onChange={(value: boolean) => {
                             field.onChange(value);
