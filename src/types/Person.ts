@@ -96,3 +96,19 @@ export interface Kontaktinformasjon {
     organisasjonsnavn: Nullable<string>;
     organisasjonsnummer: Nullable<string>;
 }
+
+export interface BorPåAdresse {
+    treff: PersonPåAdresse[];
+}
+
+interface PersonPåAdresse {
+    etternavn: string;
+    fornavn: string;
+    mellomnavn: string | null;
+    husnummer: string | null;
+    husbokstav: string | null;
+    adressenavn: string | null;
+    kommunenummer: string | null;
+    postnummer: string | null;
+    bruksenhetsnummer: string | null;
+}
