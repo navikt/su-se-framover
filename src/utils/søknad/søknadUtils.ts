@@ -54,7 +54,10 @@ export function getIverksatteInnvilgedeSøknader(sak: Sak) {
         })
         .map((s) => {
             const behandling = sak.behandlinger.filter(
-                (b) => b.søknad.id === s.id && b.status === SøknadsbehandlingStatus.IVERKSATT_INNVILGET,
+                (b) =>
+                    b.søknad.id === s.id &&
+                    b.status === SøknadsbehandlingStatus.IVERKSATT_INNVILGET &&
+                    !b.omgjøringsgrunn,
             );
 
             if (behandling.length !== 1) {
