@@ -4,6 +4,7 @@ import styles from 'src/pages/søknad/index.module.less';
 import * as routes from '~src/lib/routes.ts';
 import AndreForhold from '~src/pages/kontrollsamtale/steg/andreforhold/AndreForhold.tsx';
 import FullmaktOgLegeerklæring from '~src/pages/kontrollsamtale/steg/fullmakt/FullmaktOgLegeerklæring.tsx';
+import Oppsummering from '~src/pages/kontrollsamtale/steg/oppsummering/Oppsummering.tsx';
 import OriginalPass from '~src/pages/kontrollsamtale/steg/pass/OriginalPass.tsx';
 import PersonligOppmøte from '~src/pages/kontrollsamtale/steg/personligOppmøte/PersonligOppmøte.tsx';
 import SkatteOpplysninger from '~src/pages/kontrollsamtale/steg/skatteopplysninger/SkatteOpplysninger.tsx';
@@ -106,7 +107,7 @@ const ShowSteg = (props: { step: KontrollsamtaleSteg }) => {
             return (
                 <SkatteOpplysninger
                     nesteUrl={routes.kontrollsamtaleUtfylling.createURL({
-                        step: KontrollsamtaleSteg.AndreForhold,
+                        step: KontrollsamtaleSteg.Oppsummering,
                     })}
                     forrigeUrl={routes.kontrollsamtaleUtfylling.createURL({
                         step: KontrollsamtaleSteg.AndreForhold,
@@ -114,8 +115,16 @@ const ShowSteg = (props: { step: KontrollsamtaleSteg }) => {
                     avbrytUrl={avbrytUrl}
                 />
             );
-        default:
-            return null;
+        case KontrollsamtaleSteg.Oppsummering:
+            return (
+                <Oppsummering
+                    forrigeUrl={routes.kontrollsamtaleUtfylling.createURL({
+                        step: KontrollsamtaleSteg.SkatteOpplysninger,
+                    })}
+                    avbrytUrl={avbrytUrl}
+                    nesteUrl={''} //todo lagre skjema
+                />
+            );
     }
 };
 
