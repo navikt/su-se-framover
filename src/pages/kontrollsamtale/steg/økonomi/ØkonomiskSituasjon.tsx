@@ -39,7 +39,7 @@ const ØkonomiskSituasjon = ({ nesteUrl, forrigeUrl, avbrytUrl }: Props) => {
                 render={({ field, fieldState }) => (
                     <BooleanRadioGroup
                         {...field}
-                        legend={formatMessage(' økonomiskSituasjon.label')}
+                        legend={formatMessage('økonomiskSituasjon.label')}
                         error={fieldState.error?.message}
                         onChange={(value: boolean) => {
                             field.onChange(value);
