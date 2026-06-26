@@ -98,17 +98,12 @@ export interface Kontaktinformasjon {
 }
 
 export interface BorPåAdresse {
+    søktAdresse: string;
     treff: PersonPåAdresse[];
 }
 
-interface PersonPåAdresse {
-    etternavn: string;
-    fornavn: string;
-    mellomnavn: string | null;
-    husnummer: string | null;
-    husbokstav: string | null;
-    adressenavn: string | null;
-    kommunenummer: string | null;
-    postnummer: string | null;
-    bruksenhetsnummer: string | null;
+export interface PersonPåAdresse {
+    ident: string;
+    fulltNavn: string;
+    adresse: string;
 }
