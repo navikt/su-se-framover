@@ -82,8 +82,25 @@ const ForhåndsvarsleTilbakekreving = (props: {
             );
             return;
         }
-        const dødsbo = visDødsbo ? dødsboForm.getValues() : null;
-        if (dødsbo && !validateDødsbo(dødsbo)) return;
+        const dødsboData = visDødsbo ? dødsboForm.getValues() : null;
+        if (dødsboData && !validateDødsbo(dødsboData)) return;
+        const dødsbo: Nullable<LagreMottakerRequest> = dødsboData
+            ? {
+                  navn: dødsboData.navn.trim(),
+                  foedselsnummer: dødsboData.foedselsnummer?.trim() || undefined,
+                  orgnummer: dødsboData.orgnummer?.trim() || undefined,
+                  adresse: {
+                      adresselinje1: dødsboData.adresse.adresselinje1.trim(),
+                      adresselinje2: dødsboData.adresse.adresselinje2?.trim() || undefined,
+                      adresselinje3: dødsboData.adresse.adresselinje3?.trim() || undefined,
+                      postnummer: dødsboData.adresse.postnummer.trim(),
+                      poststed: dødsboData.adresse.poststed.trim(),
+                  },
+                  referanseId: '',
+                  referanseType,
+                  brevtype,
+              }
+            : null;
 
         lagreForhåndsvarsel(
             {
