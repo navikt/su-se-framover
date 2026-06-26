@@ -103,7 +103,6 @@ export interface BorPåAdresse {
 }
 
 export interface PersonPåAdresse {
-    ident: string;
     fulltNavn: string;
     adresse: string;
 }

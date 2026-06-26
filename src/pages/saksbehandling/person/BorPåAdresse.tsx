@@ -30,7 +30,6 @@ const BorPåAdresse = () => {
                 {data.treff.map((personSomBorPåAdressse: PersonPåAdresse, index: number) => (
                     <Box key={index} className={styles.box} background="bg-default" padding="6">
                         <VStack gap="4">
-                            <OppsummeringPar label="Ident" retning={'vertikal'} verdi={personSomBorPåAdressse.ident} />
                             <OppsummeringPar
                                 label="Navn"
                                 retning={'vertikal'}
