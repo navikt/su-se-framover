@@ -123,7 +123,7 @@ const KontrollsamtaleOppsummering = () => {
                 </AccordionHeader>
                 <AccordionContent>
                     <Oppsummeringsfelt
-                        label={formatMessage(' økonomiskSituasjon.label')}
+                        label={formatMessage('økonomiskSituasjon.label')}
                         verdi={booleanSvar(kontrollsamtale.økonomiskSituasjon, formatMessage)}
                     />
                     <EndreSvar path={KontrollsamtaleSteg.ØkonomiskSituasjon} />
