@@ -154,6 +154,10 @@ const Sakintro = () => {
                         {formatMessage('link.brev')}
                     </LinkAsButton>
 
+                    <LinkAsButton variant="secondary" href={Routes.borPåAdressePage.createURL({ sakId: props.sak.id })}>
+                        Bor på adresse
+                    </LinkAsButton>
+
                     {dødsbo.length > 0 && (
                         <LinkAsButton variant="secondary" href={Routes.dødsboPage.createURL({ sakId: props.sak.id })}>
                             Dødsbo
