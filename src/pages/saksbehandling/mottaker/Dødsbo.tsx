@@ -64,8 +64,6 @@ const DødsboPage = ({ onVelgKontakt }: DødsboPageProps) => {
                                                 <KontaktinformasjonVisning
                                                     label={kontaktForDødsbo.label}
                                                     kontakt={kontaktForDødsbo.kontakt}
-                                                    onVelgKontakt={onVelgKontakt}
-                                                    adresse={kontaktinfo}
                                                 />
                                             )}
                                             <OppsummeringPar
@@ -93,6 +91,17 @@ const DødsboPage = ({ onVelgKontakt }: DødsboPageProps) => {
                                                 retning={'vertikal'}
                                                 verdi={kontaktinfo.landkode}
                                             />
+                                            {kontaktForDødsbo && onVelgKontakt && (
+                                                <Button
+                                                    type="button"
+                                                    variant="secondary"
+                                                    size="small"
+                                                    className={styles.inlineAction}
+                                                    onClick={() => onVelgKontakt(kontaktForDødsbo.kontakt, kontaktinfo)}
+                                                >
+                                                    Bruk som mottaker
+                                                </Button>
+                                            )}
                                         </VStack>
                                     );
                                 })}
@@ -143,17 +152,7 @@ const DødsboPage = ({ onVelgKontakt }: DødsboPageProps) => {
     );
 };
 
-const KontaktinformasjonVisning = ({
-    label,
-    kontakt,
-    adresse,
-    onVelgKontakt,
-}: {
-    label: string;
-    kontakt: Kontaktinformasjon;
-    adresse: KontaktInfoDødsbo;
-    onVelgKontakt?: (kontakt: Kontaktinformasjon, adresse: KontaktInfoDødsbo) => void;
-}) => (
+const KontaktinformasjonVisning = ({ label, kontakt }: { label: string; kontakt: Kontaktinformasjon }) => (
     <VStack gap="2">
         <Heading level="3" size="small">
             {label}
@@ -169,11 +168,6 @@ const KontaktinformasjonVisning = ({
         )}
         {kontakt.organisasjonsnummer && (
             <OppsummeringPar label="Organisasjonsnummer" retning={'vertikal'} verdi={kontakt.organisasjonsnummer} />
-        )}
-        {onVelgKontakt && (
-            <Button type="button" variant="secondary" size="small" onClick={() => onVelgKontakt(kontakt, adresse)}>
-                Bruk som mottaker
-            </Button>
         )}
     </VStack>
 );
