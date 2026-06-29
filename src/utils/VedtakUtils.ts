@@ -71,6 +71,6 @@ export function erVedtakSomKanRevurderes(vedtak: Vedtak): boolean {
     return vedtakSomKanRevurderesTyper.has(vedtak.type);
 }
 
-export function kanRevurdere(sak: Sak): boolean {
+export function kanRevurdereSak(sak: Sak): boolean {
     return sak.vedtak.some(erVedtakSomKanRevurderes);
 }

@@ -24,7 +24,7 @@ import { erReguleringAvsluttet, erReguleringÅpen } from '~src/utils/ReguleringU
 import { erRevurderingAvsluttet, erRevurderingÅpen } from '~src/utils/revurdering/revurderingUtils';
 import { erSøknadsbehandlingÅpen } from '~src/utils/SøknadsbehandlingUtils';
 import { erSøknadLukket, erSøknadÅpen } from '~src/utils/søknad/søknadUtils';
-import { kanRevurdere } from '~src/utils/VedtakUtils.ts';
+import { kanRevurdereSak } from '~src/utils/VedtakUtils.ts';
 import AvsluttedeBehandlingerTabell from './avsluttedeBehandlingerTabell/AvsluttedeBehandlingerTabell';
 import styles from './sakintro.module.less';
 import messages from './sakintro-nb';
@@ -52,7 +52,7 @@ const Sakintro = () => {
     const { formatMessage } = useI18n({ messages });
     const locationState = useNotificationFromLocation();
 
-    const kanRevurdereSvar = kanRevurdere(props.sak);
+    const kanRevurdereSvar = kanRevurdereSak(props.sak);
     const harUtbetalinger = !isEmpty(props.sak.utbetalinger);
 
     const avsluttedeRevurderinger = props.sak.revurderinger.filter(erRevurderingAvsluttet);
