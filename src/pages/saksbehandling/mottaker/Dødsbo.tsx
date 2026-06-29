@@ -1,6 +1,6 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import { Box, Heading, VStack } from '@navikt/ds-react';
-import { useOutletContext } from 'react-router-dom';
+import { BodyShort, Box, Heading, VStack } from '@navikt/ds-react';
+import { useLocation, useOutletContext } from 'react-router-dom';
 import LinkAsButton from '~src/components/linkAsButton/LinkAsButton.tsx';
 import { OppsummeringPar } from '~src/components/oppsummering/oppsummeringpar/OppsummeringPar';
 import { SaksoversiktContext } from '~src/context/SaksoversiktContext.ts';
@@ -11,94 +11,119 @@ import styles from './Mottaker.module.less';
 
 const DødsboPage = () => {
     const context = useOutletContext<SaksoversiktContext>();
+    const { pathname } = useLocation();
     const { søker } = useAppSelector((s) => ({ søker: s.personopplysninger.søker }));
+    const skalViseTilbakeknapp = pathname.includes('/doedsbo');
 
     if (RemoteData.isSuccess(søker)) {
         const dødsbo = søker.value.dødsbo ?? [];
         return (
             <div className={styles.pageContainer}>
-                {dødsbo.length > 0 ? (
-                    <>
-                        <Heading level="2" size={'large'}>
+                <Box
+                    background="surface-default"
+                    padding="6"
+                    borderWidth="1"
+                    borderRadius="medium"
+                    className={styles.panel}
+                >
+                    <VStack gap="5">
+                        <Heading level="2" size="large">
                             Dødsbo
                         </Heading>
-                        <Box className={styles.box} background="bg-default" padding="6">
-                            {dødsbo.map((kontaktinfo: KontaktInfoDødsbo, index: number) => (
-                                <VStack key={index} gap="4">
-                                    {kontaktinfo.kontaktPerson && (
-                                        <KontaktinformasjonVisning
-                                            label="Kontaktperson"
-                                            kontakt={kontaktinfo.kontaktPerson}
-                                        />
-                                    )}
-                                    {kontaktinfo.kontaktAdvokat && (
-                                        <KontaktinformasjonVisning
-                                            label="Kontaktadvokat"
-                                            kontakt={kontaktinfo.kontaktAdvokat}
-                                        />
-                                    )}
-                                    {kontaktinfo.kontaktOrganisasjon && (
-                                        <KontaktinformasjonVisning
-                                            label="Kontaktorganisasjon"
-                                            kontakt={kontaktinfo.kontaktOrganisasjon}
-                                        />
-                                    )}
-                                    <OppsummeringPar
-                                        label="Adresselinje 1"
-                                        retning={'vertikal'}
-                                        verdi={kontaktinfo.adresselinje1}
-                                    />
-                                    <OppsummeringPar
-                                        label="Adresselinje 2"
-                                        retning={'vertikal'}
-                                        verdi={kontaktinfo.adresselinje2}
-                                    />
-                                    <OppsummeringPar
-                                        label="Postnummer"
-                                        retning={'vertikal'}
-                                        verdi={kontaktinfo.postnummer}
-                                    />
-                                    <OppsummeringPar
-                                        label="Poststedsnavn"
-                                        retning={'vertikal'}
-                                        verdi={kontaktinfo.poststedsnavn}
-                                    />
-                                    <OppsummeringPar
-                                        label="Landkode"
-                                        retning={'vertikal'}
-                                        verdi={kontaktinfo.landkode}
-                                    />
-                                </VStack>
-                            ))}
-                        </Box>
-                    </>
-                ) : (
-                    <div>Ingen dødsbo</div>
-                )}
 
-                <div className={styles.buttonContainer}>
-                    <LinkAsButton
-                        variant="secondary"
-                        href={Routes.saksoversiktValgtSak.createURL({ sakId: context.sak.id })}
-                    >
-                        Tilbake
-                    </LinkAsButton>
-                </div>
+                        {dødsbo.length > 0 ? (
+                            <VStack gap="6" className={styles.box}>
+                                {dødsbo.map((kontaktinfo: KontaktInfoDødsbo, index: number) => (
+                                    <VStack key={index} gap="4">
+                                        {kontaktinfo.kontaktPerson && (
+                                            <KontaktinformasjonVisning
+                                                label="Kontaktperson"
+                                                kontakt={kontaktinfo.kontaktPerson}
+                                            />
+                                        )}
+                                        {kontaktinfo.kontaktAdvokat && (
+                                            <KontaktinformasjonVisning
+                                                label="Kontaktadvokat"
+                                                kontakt={kontaktinfo.kontaktAdvokat}
+                                            />
+                                        )}
+                                        {kontaktinfo.kontaktOrganisasjon && (
+                                            <KontaktinformasjonVisning
+                                                label="Kontaktorganisasjon"
+                                                kontakt={kontaktinfo.kontaktOrganisasjon}
+                                            />
+                                        )}
+                                        <OppsummeringPar
+                                            label="Adresselinje 1"
+                                            retning={'vertikal'}
+                                            verdi={kontaktinfo.adresselinje1}
+                                        />
+                                        <OppsummeringPar
+                                            label="Adresselinje 2"
+                                            retning={'vertikal'}
+                                            verdi={kontaktinfo.adresselinje2}
+                                        />
+                                        <OppsummeringPar
+                                            label="Postnummer"
+                                            retning={'vertikal'}
+                                            verdi={kontaktinfo.postnummer}
+                                        />
+                                        <OppsummeringPar
+                                            label="Poststedsnavn"
+                                            retning={'vertikal'}
+                                            verdi={kontaktinfo.poststedsnavn}
+                                        />
+                                        <OppsummeringPar
+                                            label="Landkode"
+                                            retning={'vertikal'}
+                                            verdi={kontaktinfo.landkode}
+                                        />
+                                    </VStack>
+                                ))}
+                            </VStack>
+                        ) : (
+                            <BodyShort>Ingen dødsbo</BodyShort>
+                        )}
+
+                        {skalViseTilbakeknapp && (
+                            <div className={styles.buttonContainer}>
+                                <LinkAsButton
+                                    variant="secondary"
+                                    href={Routes.saksoversiktValgtSak.createURL({ sakId: context.sak.id })}
+                                >
+                                    Tilbake
+                                </LinkAsButton>
+                            </div>
+                        )}
+                    </VStack>
+                </Box>
             </div>
         );
     }
     return (
-        <>
-            <div>Kunne ikke hente søkers informasjon</div>
-            <div className={styles.buttonContainer}>
-                <LinkAsButton
-                    variant="secondary"
-                    href={Routes.saksoversiktValgtSak.createURL({ sakId: context.sak.id })}
-                >
-                    Tilbake
-                </LinkAsButton>
-            </div>
-        </>
+        <div className={styles.pageContainer}>
+            <Box
+                background="surface-default"
+                padding="6"
+                borderWidth="1"
+                borderRadius="medium"
+                className={styles.panel}
+            >
+                <VStack gap="5">
+                    <BodyShort>Kunne ikke hente søkers informasjon</BodyShort>
+                    {skalViseTilbakeknapp && (
+                        <div className={styles.buttonContainer}>
+                            <LinkAsButton
+                                variant="secondary"
+                                href={Routes.saksoversiktValgtSak.createURL({ sakId: context.sak.id })}
+                            >
+                                Tilbake
+                            </LinkAsButton>
+                        </div>
+                    )}
+                </VStack>
+            </Box>
+        </div>
     );
 };
 
