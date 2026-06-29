@@ -52,7 +52,7 @@ const Sakintro = () => {
     const { formatMessage } = useI18n({ messages });
     const locationState = useNotificationFromLocation();
 
-    const kanRevurderer = kanRevurdere(props.sak);
+    const kanRevurdereSvar = kanRevurdere(props.sak);
     const harUtbetalinger = !isEmpty(props.sak.utbetalinger);
 
     const avsluttedeRevurderinger = props.sak.revurderinger.filter(erRevurderingAvsluttet);
@@ -137,7 +137,7 @@ const Sakintro = () => {
             <SuksessStatuser locationState={locationState} />
             <div className={styles.pageHeader}>
                 <div className={styles.headerKnapper}>
-                    <NyBehandlingVelger sakId={props.sak.id} kanRevurdere={kanRevurderer.length > 0} />
+                    <NyBehandlingVelger sakId={props.sak.id} kanRevurdere={kanRevurdereSvar} />
                     {harUtbetalinger && (
                         <LinkAsButton
                             variant="secondary"
