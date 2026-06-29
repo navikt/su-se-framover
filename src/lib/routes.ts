@@ -332,6 +332,12 @@ export const dødsboPage: Route<{ sakId: string }> = {
     createURL: (args) => `/saksoversikt/${args.sakId}/doedsbo/`,
 };
 
+export const borPåAdressePage: Route<{ sakId: string }> = {
+    path: 'borPaaAdresse/',
+    absPath: '/saksoversikt/:sakId/borPaaAdresse',
+    createURL: (args) => `/saksoversikt/${args.sakId}/borPaaAdresse/`,
+};
+
 //---------------Tilbakekreving-------------------------
 export const tilbakekrevingRoot: Route<{
     sakId: string;
