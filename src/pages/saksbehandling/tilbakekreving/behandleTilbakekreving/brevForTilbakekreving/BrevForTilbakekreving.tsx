@@ -23,6 +23,7 @@ import { useI18n } from '~src/lib/i18n';
 import * as routes from '~src/lib/routes';
 import { Nullable } from '~src/lib/types';
 import { hookFormErrorsTilFeiloppsummering } from '~src/lib/validering';
+import DødsboPage from '~src/pages/saksbehandling/mottaker/Dødsbo.tsx';
 import { Mottaker } from '~src/pages/saksbehandling/mottaker/Mottaker.tsx';
 import { ManuellTilbakekrevingsbehandling, TilbakekrevingSteg } from '~src/types/ManuellTilbakekrevingsbehandling';
 import messages from '../../Tilbakekreving-nb';
@@ -229,6 +230,7 @@ const BrevForTilbakekreving = (props: {
 
                             {skalSendeBrev && (
                                 <div>
+                                    <DødsboPage />
                                     {!visDødsbo && (
                                         <Button variant="secondary" type="button" onClick={() => setVisDødsbo(true)}>
                                             {harDødsbo ? 'Vis dødsbo' : 'Legg til dødsbo'}

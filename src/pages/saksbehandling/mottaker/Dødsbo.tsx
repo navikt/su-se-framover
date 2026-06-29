@@ -17,47 +17,65 @@ const DødsboPage = () => {
         const dødsbo = søker.value.dødsbo ?? [];
         return (
             <div className={styles.pageContainer}>
-                <Heading level="2" size={'large'}>
-                    Dødsbo
-                </Heading>
-                <Box className={styles.box} background="bg-default" padding="6">
-                    {dødsbo.map((kontaktinfo: KontaktInfoDødsbo, index: number) => (
-                        <VStack key={index} gap="4">
-                            {kontaktinfo.kontaktPerson && (
-                                <KontaktinformasjonVisning label="Kontaktperson" kontakt={kontaktinfo.kontaktPerson} />
-                            )}
-                            {kontaktinfo.kontaktAdvokat && (
-                                <KontaktinformasjonVisning
-                                    label="Kontaktadvokat"
-                                    kontakt={kontaktinfo.kontaktAdvokat}
-                                />
-                            )}
-                            {kontaktinfo.kontaktOrganisasjon && (
-                                <KontaktinformasjonVisning
-                                    label="Kontaktorganisasjon"
-                                    kontakt={kontaktinfo.kontaktOrganisasjon}
-                                />
-                            )}
-                            <OppsummeringPar
-                                label="Adresselinje 1"
-                                retning={'vertikal'}
-                                verdi={kontaktinfo.adresselinje1}
-                            />
-                            <OppsummeringPar
-                                label="Adresselinje 2"
-                                retning={'vertikal'}
-                                verdi={kontaktinfo.adresselinje2}
-                            />
-                            <OppsummeringPar label="Postnummer" retning={'vertikal'} verdi={kontaktinfo.postnummer} />
-                            <OppsummeringPar
-                                label="Poststedsnavn"
-                                retning={'vertikal'}
-                                verdi={kontaktinfo.poststedsnavn}
-                            />
-                            <OppsummeringPar label="Landkode" retning={'vertikal'} verdi={kontaktinfo.landkode} />
-                        </VStack>
-                    ))}
-                </Box>
+                {dødsbo.length > 0 ? (
+                    <>
+                        <Heading level="2" size={'large'}>
+                            Dødsbo
+                        </Heading>
+                        <Box className={styles.box} background="bg-default" padding="6">
+                            {dødsbo.map((kontaktinfo: KontaktInfoDødsbo, index: number) => (
+                                <VStack key={index} gap="4">
+                                    {kontaktinfo.kontaktPerson && (
+                                        <KontaktinformasjonVisning
+                                            label="Kontaktperson"
+                                            kontakt={kontaktinfo.kontaktPerson}
+                                        />
+                                    )}
+                                    {kontaktinfo.kontaktAdvokat && (
+                                        <KontaktinformasjonVisning
+                                            label="Kontaktadvokat"
+                                            kontakt={kontaktinfo.kontaktAdvokat}
+                                        />
+                                    )}
+                                    {kontaktinfo.kontaktOrganisasjon && (
+                                        <KontaktinformasjonVisning
+                                            label="Kontaktorganisasjon"
+                                            kontakt={kontaktinfo.kontaktOrganisasjon}
+                                        />
+                                    )}
+                                    <OppsummeringPar
+                                        label="Adresselinje 1"
+                                        retning={'vertikal'}
+                                        verdi={kontaktinfo.adresselinje1}
+                                    />
+                                    <OppsummeringPar
+                                        label="Adresselinje 2"
+                                        retning={'vertikal'}
+                                        verdi={kontaktinfo.adresselinje2}
+                                    />
+                                    <OppsummeringPar
+                                        label="Postnummer"
+                                        retning={'vertikal'}
+                                        verdi={kontaktinfo.postnummer}
+                                    />
+                                    <OppsummeringPar
+                                        label="Poststedsnavn"
+                                        retning={'vertikal'}
+                                        verdi={kontaktinfo.poststedsnavn}
+                                    />
+                                    <OppsummeringPar
+                                        label="Landkode"
+                                        retning={'vertikal'}
+                                        verdi={kontaktinfo.landkode}
+                                    />
+                                </VStack>
+                            ))}
+                        </Box>
+                    </>
+                ) : (
+                    <div>Ingen dødsbo</div>
+                )}
+
                 <div className={styles.buttonContainer}>
                     <LinkAsButton
                         variant="secondary"
@@ -69,7 +87,19 @@ const DødsboPage = () => {
             </div>
         );
     }
-    return <div>Ingen dødsbo</div>;
+    return (
+        <>
+            <div>Kunne ikke hente søkers informasjon</div>
+            <div className={styles.buttonContainer}>
+                <LinkAsButton
+                    variant="secondary"
+                    href={Routes.saksoversiktValgtSak.createURL({ sakId: context.sak.id })}
+                >
+                    Tilbake
+                </LinkAsButton>
+            </div>
+        </>
+    );
 };
 
 const KontaktinformasjonVisning = ({ label, kontakt }: { label: string; kontakt: Kontaktinformasjon }) => (
