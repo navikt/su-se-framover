@@ -57,3 +57,20 @@ export const erDokumentGenerertEllerSenere = (v: Vedtak) =>
 
 export const skalDokumentIkkeGenereres = (v: Vedtak) => v.dokumenttilstand === Dokumenttilstand.SKAL_IKKE_GENERERE;
 export const erDokumentIkkeGenerertEnda = (v: Vedtak) => v.dokumenttilstand === Dokumenttilstand.IKKE_GENERERT_ENDA;
+
+const vedtakSomKanRevurderesTyper = new Set<VedtakType>([
+    VedtakType.SØKNAD,
+    VedtakType.ENDRING,
+    VedtakType.REGULERING,
+    VedtakType.OPPHØR,
+    VedtakType.STANS_AV_YTELSE,
+    VedtakType.GJENOPPTAK_AV_YTELSE,
+]);
+
+export function erVedtakSomKanRevurderes(vedtak: Vedtak): boolean {
+    return vedtakSomKanRevurderesTyper.has(vedtak.type);
+}
+
+export function kanRevurdere(sak: Sak): boolean {
+    return sak.vedtak.some(erVedtakSomKanRevurderes);
+}
