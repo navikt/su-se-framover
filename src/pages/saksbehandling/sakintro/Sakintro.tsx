@@ -23,7 +23,8 @@ import {
 import { erReguleringAvsluttet, erReguleringÅpen } from '~src/utils/ReguleringUtils';
 import { erRevurderingAvsluttet, erRevurderingÅpen } from '~src/utils/revurdering/revurderingUtils';
 import { erSøknadsbehandlingÅpen } from '~src/utils/SøknadsbehandlingUtils';
-import { erSøknadLukket, erSøknadÅpen, getIverksatteInnvilgedeSøknader } from '~src/utils/søknad/søknadUtils';
+import { erSøknadLukket, erSøknadÅpen } from '~src/utils/søknad/søknadUtils';
+import { kanRevurdereSak } from '~src/utils/VedtakUtils.ts';
 import AvsluttedeBehandlingerTabell from './avsluttedeBehandlingerTabell/AvsluttedeBehandlingerTabell';
 import styles from './sakintro.module.less';
 import messages from './sakintro-nb';
@@ -51,7 +52,7 @@ const Sakintro = () => {
     const { formatMessage } = useI18n({ messages });
     const locationState = useNotificationFromLocation();
 
-    const iverksatteInnvilgedeSøknader = getIverksatteInnvilgedeSøknader(props.sak);
+    const kanRevurdereSvar = kanRevurdereSak(props.sak);
     const harUtbetalinger = !isEmpty(props.sak.utbetalinger);
 
     const avsluttedeRevurderinger = props.sak.revurderinger.filter(erRevurderingAvsluttet);
@@ -136,7 +137,7 @@ const Sakintro = () => {
             <SuksessStatuser locationState={locationState} />
             <div className={styles.pageHeader}>
                 <div className={styles.headerKnapper}>
-                    <NyBehandlingVelger sakId={props.sak.id} kanRevurdere={iverksatteInnvilgedeSøknader.length > 0} />
+                    <NyBehandlingVelger sakId={props.sak.id} kanRevurdere={kanRevurdereSvar} />
                     {harUtbetalinger && (
                         <LinkAsButton
                             variant="secondary"
