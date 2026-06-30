@@ -6,4 +6,5 @@ export enum KontrollsamtaleSteg {
     ØkonomiskSituasjon = 'økonomisk-situasjon',
     AndreForhold = 'andre-forhold',
     SkatteOpplysninger = 'skatteopplysninger',
+    Oppsummering = 'oppsummering',
 }
