@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import { useOutletContext } from 'react-router-dom';
 
 import { gjeldendeVedtaksdataTidligerePeriode } from '~src/api/behandlingApi';
+import NotatPanel from '~src/components/notat/NotatPanel';
 import { SaksoversiktContext } from '~src/context/SaksoversiktContext';
 import { SøknadsbehandlingDraftProvider } from '~src/context/søknadsbehandlingDraftContext';
 import { useApiCall } from '~src/lib/hooks';
@@ -10,9 +11,13 @@ import Alderspensjon from '~src/pages/saksbehandling/søknadsbehandling/alderspe
 import Beregning from '~src/pages/saksbehandling/søknadsbehandling/beregning/Beregning';
 import Familieforening from '~src/pages/saksbehandling/søknadsbehandling/familieforening/Familieforening';
 import SendTilAttesteringPage from '~src/pages/saksbehandling/søknadsbehandling/sendTilAttesteringPage/SendTilAttesteringPage.tsx';
+import { ReferanseType } from '~src/types/Notat';
 import { Sakstype } from '~src/types/Sak';
 import { Vilkårtype, VilkårtypeAlder } from '~src/types/Vilkårsvurdering';
-import { erVilkårsvurderingerVurdertAvslag } from '~src/utils/SøknadsbehandlingUtils';
+import {
+    erSøknadsbehandlingTilAttestering,
+    erVilkårsvurderingerVurdertAvslag,
+} from '~src/utils/SøknadsbehandlingUtils';
 import { isAldersøknad, isUføresøknad } from '~src/utils/søknad/søknadUtils';
 import { createVilkårUrl } from '~src/utils/vilkårUtils';
 import Bosituasjon from '../bosituasjon/Bosituasjon';
@@ -65,6 +70,12 @@ const Vilkår = () => {
     return (
         <SøknadsbehandlingDraftProvider>
             <div className={styles.container}>
+                <NotatPanel
+                    sakId={sakId}
+                    referanseId={behandling.id}
+                    referanseType={ReferanseType.SØKNAD}
+                    underAttestering={erSøknadsbehandlingTilAttestering(behandling)}
+                />
                 <SaksbehandlingFramdriftsindikator
                     sakId={props.sak.id}
                     behandling={behandling}

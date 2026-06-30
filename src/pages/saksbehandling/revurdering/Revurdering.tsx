@@ -8,12 +8,14 @@ import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
 import Framdriftsindikator, { Seksjon } from '~src/components/framdriftsindikator/Framdriftsindikator';
 import SpinnerMedTekst from '~src/components/henterInnhold/SpinnerMedTekst';
 import { LinkAsButton } from '~src/components/linkAsButton/LinkAsButton';
+import NotatPanel from '~src/components/notat/NotatPanel';
 import { SaksoversiktContext } from '~src/context/SaksoversiktContext';
 import { pipe } from '~src/lib/fp';
 import { useApiCall } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
 import * as routes from '~src/lib/routes';
 import { GrunnlagsdataOgVilkårsvurderinger } from '~src/types/grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
+import { ReferanseType } from '~src/types/Notat';
 import { Person } from '~src/types/Person.ts';
 import {
     InformasjonSomRevurderes,
@@ -27,6 +29,7 @@ import {
 import { Sakstype } from '~src/types/Sak.ts';
 import {
     erInformasjonsRevurdering,
+    erRevurderingTilAttestering,
     revurderingTilFramdriftsindikatorSeksjoner,
 } from '~src/utils/revurdering/revurderingUtils';
 
@@ -99,6 +102,12 @@ const RevurderingPage = () => {
             <Heading level="1" size="large" className={styles.tittel}>
                 {formatMessage('revurdering.tittel')}
             </Heading>
+            <NotatPanel
+                sakId={sak.id}
+                referanseId={påbegyntRevurdering.id}
+                referanseType={ReferanseType.REVURDERING}
+                underAttestering={erRevurderingTilAttestering(påbegyntRevurdering)}
+            />
             {urlParams.seksjon === RevurderingSeksjoner.Opprettelse && <RevurderingIntroPage />}
             {urlParams.seksjon !== RevurderingSeksjoner.Opprettelse && (
                 <RevurderingSeksjonerWrapper
