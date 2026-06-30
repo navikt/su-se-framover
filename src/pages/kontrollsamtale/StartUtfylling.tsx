@@ -19,6 +19,7 @@ const Startutfylling = () => {
         { step: KontrollsamtaleSteg.ØkonomiskSituasjon },
         { step: KontrollsamtaleSteg.AndreForhold },
         { step: KontrollsamtaleSteg.SkatteOpplysninger },
+        { step: KontrollsamtaleSteg.Oppsummering, hjelpetekst: formatMessage('steg.oppsummering.hjelpetekst') },
     ];
     const aktivtStegIndex = steg.findIndex((s) => s.step === step);
     const aktivtSteg = steg[aktivtStegIndex];
@@ -35,7 +36,7 @@ const Startutfylling = () => {
                         ))}
                     </Stepper>
                 </div>
-                <Steg step={step!} title={formatMessage(aktivtSteg!.step)} />
+                <Steg step={step!} title={formatMessage(aktivtSteg!.step)} hjelpetekst={aktivtSteg?.hjelpetekst} />
             </div>
         </div>
     );
