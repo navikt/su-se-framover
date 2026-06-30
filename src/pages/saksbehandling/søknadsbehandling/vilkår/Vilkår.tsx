@@ -69,182 +69,185 @@ const Vilkår = () => {
 
     return (
         <SøknadsbehandlingDraftProvider>
-            <div className={styles.container}>
+            <div className={styles.pageContainer}>
                 <NotatPanel
                     sakId={sakId}
                     referanseId={behandling.id}
                     referanseType={ReferanseType.SØKNAD}
                     underAttestering={erSøknadsbehandlingTilAttestering(behandling)}
                 />
-                <SaksbehandlingFramdriftsindikator
-                    sakId={props.sak.id}
-                    behandling={behandling}
-                    vilkår={vilkar}
-                    sakstype={props.sak.sakstype}
-                />
-                <div className={styles.content}>
-                    {vilkar === Vilkårtype.Virkningstidspunkt && (
-                        <Virkningstidspunkt
-                            behandling={behandling}
-                            forrigeUrl={saksoversiktUrl}
-                            avsluttUrl={avsluttUrl}
-                            nesteUrl={
-                                props.sak.sakstype === Sakstype.Uføre
-                                    ? vilkårUrl(Vilkårtype.Uførhet)
-                                    : vilkårUrl(Vilkårtype.Familieforening)
-                            }
-                            sakId={sakId}
-                            tidligerePeriodeData={hentGjeldendeVedtaksdataForTidligerePeriodeStatus}
-                        />
-                    )}
-                    {vilkar === VilkårtypeAlder.Familieforening && isAldersøknad(behandling.søknad.søknadInnhold) && (
-                        <Familieforening
-                            behandling={behandling}
-                            forrigeUrl={vilkårUrl(Vilkårtype.Virkningstidspunkt)}
-                            nesteUrl={vilkårUrl(Vilkårtype.Alderspensjon)}
-                            avsluttUrl={avsluttUrl}
-                            søknadInnhold={behandling.søknad.søknadInnhold}
-                            sakId={sakId}
-                            tidligerePeriodeData={hentGjeldendeVedtaksdataForTidligerePeriodeStatus}
-                        />
-                    )}
-                    {vilkar === VilkårtypeAlder.Alderspensjon && isAldersøknad(behandling.søknad.søknadInnhold) && (
-                        <Alderspensjon
-                            behandling={behandling}
-                            forrigeUrl={vilkårUrl(Vilkårtype.Familieforening)}
-                            nesteUrl={vilkårUrl(Vilkårtype.LovligOpphold)}
-                            avsluttUrl={avsluttUrl}
-                            sakId={sakId}
-                            tidligerePeriodeData={hentGjeldendeVedtaksdataForTidligerePeriodeStatus}
-                        />
-                    )}
-                    {vilkar === Vilkårtype.Uførhet && isUføresøknad(behandling.søknad.søknadInnhold) && (
-                        <Uførhet
-                            behandling={behandling}
-                            forrigeUrl={vilkårUrl(Vilkårtype.Virkningstidspunkt)}
-                            nesteUrl={vilkårUrl(Vilkårtype.Flyktning)}
-                            avsluttUrl={avsluttUrl}
-                            søknadInnhold={behandling.søknad.søknadInnhold}
-                            sakId={sakId}
-                            tidligerePeriodeData={hentGjeldendeVedtaksdataForTidligerePeriodeStatus}
-                        />
-                    )}
-                    {vilkar === Vilkårtype.Flyktning && isUføresøknad(behandling.søknad.søknadInnhold) && (
-                        <Flyktning
-                            behandling={behandling}
-                            forrigeUrl={vilkårUrl(Vilkårtype.Uførhet)}
-                            nesteUrl={vilkårUrl(Vilkårtype.LovligOpphold)}
-                            avsluttUrl={avsluttUrl}
-                            søknadInnhold={behandling.søknad.søknadInnhold}
-                            sakId={sakId}
-                            tidligerePeriodeData={hentGjeldendeVedtaksdataForTidligerePeriodeStatus}
-                        />
-                    )}
-                    {vilkar === Vilkårtype.LovligOpphold && (
-                        <LovligOppholdINorge
-                            behandling={behandling}
-                            forrigeUrl={
-                                isAldersøknad(behandling.søknad.søknadInnhold)
-                                    ? vilkårUrl(Vilkårtype.Alderspensjon)
-                                    : vilkårUrl(Vilkårtype.Flyktning)
-                            }
-                            nesteUrl={vilkårUrl(Vilkårtype.FastOppholdINorge)}
-                            avsluttUrl={avsluttUrl}
-                            sakId={sakId}
-                            tidligerePeriodeData={hentGjeldendeVedtaksdataForTidligerePeriodeStatus}
-                        />
-                    )}
-                    {vilkar === Vilkårtype.FastOppholdINorge && (
-                        <FastOppholdINorge
-                            behandling={behandling}
-                            forrigeUrl={vilkårUrl(Vilkårtype.LovligOpphold)}
-                            nesteUrl={vilkårUrl(Vilkårtype.Institusjonsopphold)}
-                            avsluttUrl={avsluttUrl}
-                            sakId={sakId}
-                            tidligerePeriodeData={hentGjeldendeVedtaksdataForTidligerePeriodeStatus}
-                        />
-                    )}
-                    {vilkar === Vilkårtype.Institusjonsopphold && (
-                        <Institusjonsopphold
-                            behandling={behandling}
-                            forrigeUrl={vilkårUrl(Vilkårtype.FastOppholdINorge)}
-                            nesteUrl={vilkårUrl(Vilkårtype.OppholdIUtlandet)}
-                            avsluttUrl={avsluttUrl}
-                            sakId={sakId}
-                            tidligerePeriodeData={hentGjeldendeVedtaksdataForTidligerePeriodeStatus}
-                        />
-                    )}
-                    {vilkar === Vilkårtype.OppholdIUtlandet && (
-                        <OppholdIUtlandet
-                            behandling={behandling}
-                            forrigeUrl={vilkårUrl(Vilkårtype.Institusjonsopphold)}
-                            nesteUrl={vilkårUrl(Vilkårtype.Bosituasjon)}
-                            avsluttUrl={avsluttUrl}
-                            sakId={sakId}
-                            tidligerePeriodeData={hentGjeldendeVedtaksdataForTidligerePeriodeStatus}
-                        />
-                    )}
-                    {vilkar === Vilkårtype.Bosituasjon && (
-                        <Bosituasjon
-                            sakstype={props.sak.sakstype}
-                            behandling={behandling}
-                            forrigeUrl={vilkårUrl(Vilkårtype.OppholdIUtlandet)}
-                            nesteUrl={vilkårUrl(Vilkårtype.Formue)}
-                            avsluttUrl={avsluttUrl}
-                            sakId={sakId}
-                            tidligerePeriodeData={hentGjeldendeVedtaksdataForTidligerePeriodeStatus}
-                            søker={props.søker}
-                        />
-                    )}
-                    {vilkar === Vilkårtype.Formue && (
-                        <Formue
-                            behandling={behandling}
-                            forrigeUrl={vilkårUrl(Vilkårtype.Bosituasjon)}
-                            søker={props.søker}
-                            nesteUrl={vilkårUrl(Vilkårtype.PersonligOppmøte)}
-                            avsluttUrl={avsluttUrl}
-                            sakId={sakId}
-                            tidligerePeriodeData={hentGjeldendeVedtaksdataForTidligerePeriodeStatus}
-                            sakstype={props.sak.sakstype}
-                        />
-                    )}
-                    {vilkar === Vilkårtype.PersonligOppmøte && (
-                        <PersonligOppmøte
-                            behandling={behandling}
-                            forrigeUrl={vilkårUrl(Vilkårtype.Formue)}
-                            nesteUrl={
-                                erVilkårsvurderingerVurdertAvslag(behandling)
-                                    ? vilkårUrl(Vilkårtype.Vedtaksbrev)
-                                    : vilkårUrl(Vilkårtype.Beregning)
-                            }
-                            avsluttUrl={avsluttUrl}
-                            sakstype={props.sak.sakstype}
-                            sakId={sakId}
-                            tidligerePeriodeData={hentGjeldendeVedtaksdataForTidligerePeriodeStatus}
-                        />
-                    )}
-                    {vilkar === Vilkårtype.Beregning && (
-                        <Beregning
-                            behandling={behandling}
-                            forrigeUrl={vilkårUrl(Vilkårtype.PersonligOppmøte)}
-                            nesteUrl={vilkårUrl(Vilkårtype.Vedtaksbrev)}
-                            avsluttUrl={avsluttUrl}
-                            sakId={sakId}
-                            søker={props.søker}
-                            tidligerePeriodeData={hentGjeldendeVedtaksdataForTidligerePeriodeStatus}
-                        />
-                    )}
-                    {vilkar === Vilkårtype.Vedtaksbrev && (
-                        <SendTilAttesteringPage
-                            behandling={behandling}
-                            forrigeUrl={vilkårUrl(Vilkårtype.Beregning)}
-                            nesteUrl={saksoversiktUrl}
-                            avsluttUrl={avsluttUrl}
-                            sakId={sakId}
-                            tidligerePeriodeData={hentGjeldendeVedtaksdataForTidligerePeriodeStatus}
-                            søker={props.søker}
-                        />
-                    )}
+                <div className={styles.container}>
+                    <SaksbehandlingFramdriftsindikator
+                        sakId={props.sak.id}
+                        behandling={behandling}
+                        vilkår={vilkar}
+                        sakstype={props.sak.sakstype}
+                    />
+                    <div className={styles.content}>
+                        {vilkar === Vilkårtype.Virkningstidspunkt && (
+                            <Virkningstidspunkt
+                                behandling={behandling}
+                                forrigeUrl={saksoversiktUrl}
+                                avsluttUrl={avsluttUrl}
+                                nesteUrl={
+                                    props.sak.sakstype === Sakstype.Uføre
+                                        ? vilkårUrl(Vilkårtype.Uførhet)
+                                        : vilkårUrl(Vilkårtype.Familieforening)
+                                }
+                                sakId={sakId}
+                                tidligerePeriodeData={hentGjeldendeVedtaksdataForTidligerePeriodeStatus}
+                            />
+                        )}
+                        {vilkar === VilkårtypeAlder.Familieforening &&
+                            isAldersøknad(behandling.søknad.søknadInnhold) && (
+                                <Familieforening
+                                    behandling={behandling}
+                                    forrigeUrl={vilkårUrl(Vilkårtype.Virkningstidspunkt)}
+                                    nesteUrl={vilkårUrl(Vilkårtype.Alderspensjon)}
+                                    avsluttUrl={avsluttUrl}
+                                    søknadInnhold={behandling.søknad.søknadInnhold}
+                                    sakId={sakId}
+                                    tidligerePeriodeData={hentGjeldendeVedtaksdataForTidligerePeriodeStatus}
+                                />
+                            )}
+                        {vilkar === VilkårtypeAlder.Alderspensjon && isAldersøknad(behandling.søknad.søknadInnhold) && (
+                            <Alderspensjon
+                                behandling={behandling}
+                                forrigeUrl={vilkårUrl(Vilkårtype.Familieforening)}
+                                nesteUrl={vilkårUrl(Vilkårtype.LovligOpphold)}
+                                avsluttUrl={avsluttUrl}
+                                sakId={sakId}
+                                tidligerePeriodeData={hentGjeldendeVedtaksdataForTidligerePeriodeStatus}
+                            />
+                        )}
+                        {vilkar === Vilkårtype.Uførhet && isUføresøknad(behandling.søknad.søknadInnhold) && (
+                            <Uførhet
+                                behandling={behandling}
+                                forrigeUrl={vilkårUrl(Vilkårtype.Virkningstidspunkt)}
+                                nesteUrl={vilkårUrl(Vilkårtype.Flyktning)}
+                                avsluttUrl={avsluttUrl}
+                                søknadInnhold={behandling.søknad.søknadInnhold}
+                                sakId={sakId}
+                                tidligerePeriodeData={hentGjeldendeVedtaksdataForTidligerePeriodeStatus}
+                            />
+                        )}
+                        {vilkar === Vilkårtype.Flyktning && isUføresøknad(behandling.søknad.søknadInnhold) && (
+                            <Flyktning
+                                behandling={behandling}
+                                forrigeUrl={vilkårUrl(Vilkårtype.Uførhet)}
+                                nesteUrl={vilkårUrl(Vilkårtype.LovligOpphold)}
+                                avsluttUrl={avsluttUrl}
+                                søknadInnhold={behandling.søknad.søknadInnhold}
+                                sakId={sakId}
+                                tidligerePeriodeData={hentGjeldendeVedtaksdataForTidligerePeriodeStatus}
+                            />
+                        )}
+                        {vilkar === Vilkårtype.LovligOpphold && (
+                            <LovligOppholdINorge
+                                behandling={behandling}
+                                forrigeUrl={
+                                    isAldersøknad(behandling.søknad.søknadInnhold)
+                                        ? vilkårUrl(Vilkårtype.Alderspensjon)
+                                        : vilkårUrl(Vilkårtype.Flyktning)
+                                }
+                                nesteUrl={vilkårUrl(Vilkårtype.FastOppholdINorge)}
+                                avsluttUrl={avsluttUrl}
+                                sakId={sakId}
+                                tidligerePeriodeData={hentGjeldendeVedtaksdataForTidligerePeriodeStatus}
+                            />
+                        )}
+                        {vilkar === Vilkårtype.FastOppholdINorge && (
+                            <FastOppholdINorge
+                                behandling={behandling}
+                                forrigeUrl={vilkårUrl(Vilkårtype.LovligOpphold)}
+                                nesteUrl={vilkårUrl(Vilkårtype.Institusjonsopphold)}
+                                avsluttUrl={avsluttUrl}
+                                sakId={sakId}
+                                tidligerePeriodeData={hentGjeldendeVedtaksdataForTidligerePeriodeStatus}
+                            />
+                        )}
+                        {vilkar === Vilkårtype.Institusjonsopphold && (
+                            <Institusjonsopphold
+                                behandling={behandling}
+                                forrigeUrl={vilkårUrl(Vilkårtype.FastOppholdINorge)}
+                                nesteUrl={vilkårUrl(Vilkårtype.OppholdIUtlandet)}
+                                avsluttUrl={avsluttUrl}
+                                sakId={sakId}
+                                tidligerePeriodeData={hentGjeldendeVedtaksdataForTidligerePeriodeStatus}
+                            />
+                        )}
+                        {vilkar === Vilkårtype.OppholdIUtlandet && (
+                            <OppholdIUtlandet
+                                behandling={behandling}
+                                forrigeUrl={vilkårUrl(Vilkårtype.Institusjonsopphold)}
+                                nesteUrl={vilkårUrl(Vilkårtype.Bosituasjon)}
+                                avsluttUrl={avsluttUrl}
+                                sakId={sakId}
+                                tidligerePeriodeData={hentGjeldendeVedtaksdataForTidligerePeriodeStatus}
+                            />
+                        )}
+                        {vilkar === Vilkårtype.Bosituasjon && (
+                            <Bosituasjon
+                                sakstype={props.sak.sakstype}
+                                behandling={behandling}
+                                forrigeUrl={vilkårUrl(Vilkårtype.OppholdIUtlandet)}
+                                nesteUrl={vilkårUrl(Vilkårtype.Formue)}
+                                avsluttUrl={avsluttUrl}
+                                sakId={sakId}
+                                tidligerePeriodeData={hentGjeldendeVedtaksdataForTidligerePeriodeStatus}
+                                søker={props.søker}
+                            />
+                        )}
+                        {vilkar === Vilkårtype.Formue && (
+                            <Formue
+                                behandling={behandling}
+                                forrigeUrl={vilkårUrl(Vilkårtype.Bosituasjon)}
+                                søker={props.søker}
+                                nesteUrl={vilkårUrl(Vilkårtype.PersonligOppmøte)}
+                                avsluttUrl={avsluttUrl}
+                                sakId={sakId}
+                                tidligerePeriodeData={hentGjeldendeVedtaksdataForTidligerePeriodeStatus}
+                                sakstype={props.sak.sakstype}
+                            />
+                        )}
+                        {vilkar === Vilkårtype.PersonligOppmøte && (
+                            <PersonligOppmøte
+                                behandling={behandling}
+                                forrigeUrl={vilkårUrl(Vilkårtype.Formue)}
+                                nesteUrl={
+                                    erVilkårsvurderingerVurdertAvslag(behandling)
+                                        ? vilkårUrl(Vilkårtype.Vedtaksbrev)
+                                        : vilkårUrl(Vilkårtype.Beregning)
+                                }
+                                avsluttUrl={avsluttUrl}
+                                sakstype={props.sak.sakstype}
+                                sakId={sakId}
+                                tidligerePeriodeData={hentGjeldendeVedtaksdataForTidligerePeriodeStatus}
+                            />
+                        )}
+                        {vilkar === Vilkårtype.Beregning && (
+                            <Beregning
+                                behandling={behandling}
+                                forrigeUrl={vilkårUrl(Vilkårtype.PersonligOppmøte)}
+                                nesteUrl={vilkårUrl(Vilkårtype.Vedtaksbrev)}
+                                avsluttUrl={avsluttUrl}
+                                sakId={sakId}
+                                søker={props.søker}
+                                tidligerePeriodeData={hentGjeldendeVedtaksdataForTidligerePeriodeStatus}
+                            />
+                        )}
+                        {vilkar === Vilkårtype.Vedtaksbrev && (
+                            <SendTilAttesteringPage
+                                behandling={behandling}
+                                forrigeUrl={vilkårUrl(Vilkårtype.Beregning)}
+                                nesteUrl={saksoversiktUrl}
+                                avsluttUrl={avsluttUrl}
+                                sakId={sakId}
+                                tidligerePeriodeData={hentGjeldendeVedtaksdataForTidligerePeriodeStatus}
+                                søker={props.søker}
+                            />
+                        )}
+                    </div>
                 </div>
             </div>
         </SøknadsbehandlingDraftProvider>

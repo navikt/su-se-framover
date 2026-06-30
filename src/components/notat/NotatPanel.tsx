@@ -1,5 +1,5 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import { Accordion, BodyShort, Box, Button, FileUpload, Heading, Textarea } from '@navikt/ds-react';
+import { Accordion, Alert, BodyShort, Box, Button, FileUpload, Heading, Textarea } from '@navikt/ds-react';
 import { AccordionContent, AccordionHeader, AccordionItem } from '@navikt/ds-react/Accordion';
 import { useEffect, useState } from 'react';
 
@@ -17,6 +17,11 @@ type Props = {
     underAttestering: boolean;
 };
 
+type ActionFeedback =
+    | { type: 'success'; message: string }
+    | { type: 'error'; error: Parameters<typeof ApiErrorAlert>[0]['error'] }
+    | null;
+
 const NotatPanel = (props: Props) => {
     const [notatStatus, hentNotat, resetNotat] = useApiCall(notatApi.hentNotat);
     const [opprettStatus, opprettNotat] = useApiCall((request: { sakId: string; body: OpprettNotatBody }) =>
@@ -28,11 +33,13 @@ const NotatPanel = (props: Props) => {
     const [slettVedleggStatus, slettVedlegg] = useApiCall(notatApi.slettVedlegg);
     const [notatTekst, setNotatTekst] = useState('');
     const [valgtFil, setValgtFil] = useState<File | null>(null);
+    const [feedback, setFeedback] = useState<ActionFeedback>(null);
 
     useEffect(() => {
         resetNotat();
         setValgtFil(null);
         setNotatTekst('');
+        setFeedback(null);
         hentNotat({
             sakId: props.sakId,
             referanseId: props.referanseId,
@@ -47,6 +54,36 @@ const NotatPanel = (props: Props) => {
     useEffect(() => {
         setNotatTekst(notat?.notat ?? '');
     }, [notat?.id, notat?.endret]);
+
+    useEffect(() => {
+        if (RemoteData.isFailure(opprettStatus)) {
+            setFeedback({ type: 'error', error: opprettStatus.error });
+        }
+    }, [opprettStatus]);
+
+    useEffect(() => {
+        if (RemoteData.isFailure(lagreSaksbehandlerStatus)) {
+            setFeedback({ type: 'error', error: lagreSaksbehandlerStatus.error });
+        }
+    }, [lagreSaksbehandlerStatus]);
+
+    useEffect(() => {
+        if (RemoteData.isFailure(lagreAttestantStatus)) {
+            setFeedback({ type: 'error', error: lagreAttestantStatus.error });
+        }
+    }, [lagreAttestantStatus]);
+
+    useEffect(() => {
+        if (RemoteData.isFailure(vedleggStatus)) {
+            setFeedback({ type: 'error', error: vedleggStatus.error });
+        }
+    }, [vedleggStatus]);
+
+    useEffect(() => {
+        if (RemoteData.isFailure(slettVedleggStatus)) {
+            setFeedback({ type: 'error', error: slettVedleggStatus.error });
+        }
+    }, [slettVedleggStatus]);
 
     const refreshNotat = () => {
         hentNotat({
@@ -65,7 +102,10 @@ const NotatPanel = (props: Props) => {
                     referanseType: props.referanseType,
                 },
             },
-            () => refreshNotat(),
+            () => {
+                setFeedback({ type: 'success', message: 'Notat opprettet' });
+                refreshNotat();
+            },
         );
     };
 
@@ -81,7 +121,13 @@ const NotatPanel = (props: Props) => {
                 notatId: notat.id,
                 notat: notatTekst,
             },
-            () => refreshNotat(),
+            () => {
+                setFeedback({
+                    type: 'success',
+                    message: props.underAttestering ? 'Attestantnotat lagret' : 'Saksbehandlernotat lagret',
+                });
+                refreshNotat();
+            },
         );
     };
 
@@ -99,6 +145,7 @@ const NotatPanel = (props: Props) => {
             },
             () => {
                 setValgtFil(null);
+                setFeedback({ type: 'success', message: 'Vedlegg lastet opp' });
                 refreshNotat();
             },
         );
@@ -115,7 +162,10 @@ const NotatPanel = (props: Props) => {
                 notatId: notat.id,
                 vedleggId,
             },
-            () => refreshNotat(),
+            () => {
+                setFeedback({ type: 'success', message: 'Vedlegg slettet' });
+                refreshNotat();
+            },
         );
     };
 
@@ -130,25 +180,34 @@ const NotatPanel = (props: Props) => {
     return (
         <Box className={styles.container} background="bg-default" padding="4">
             <div className={styles.topBar}>
-                <div>
+                <div className={styles.topBarLeft}>
                     <Heading level="2" size="small">
                         Notat
                     </Heading>
-                    <BodyShort>
-                        {props.underAttestering
-                            ? 'Attestant kan redigere notatet'
-                            : 'Saksbehandler kan redigere notatet'}
-                    </BodyShort>
+                    {manglerNotat && (
+                        <Button
+                            type="button"
+                            onClick={handleOpprettNotat}
+                            loading={RemoteData.isPending(opprettStatus)}
+                        >
+                            Lag notat
+                        </Button>
+                    )}
                 </div>
-                {manglerNotat && (
-                    <Button type="button" onClick={handleOpprettNotat} loading={RemoteData.isPending(opprettStatus)}>
-                        Lag notat
-                    </Button>
-                )}
+                <BodyShort>
+                    {props.underAttestering ? 'Attestant kan redigere notatet' : 'Saksbehandler kan redigere notatet'}
+                </BodyShort>
             </div>
 
+            {feedback?.type === 'success' && (
+                <Alert variant="success" className={styles.feedbackBox}>
+                    <BodyShort>{feedback.message}</BodyShort>
+                </Alert>
+            )}
+            {feedback?.type === 'error' && <ApiErrorAlert error={feedback.error} className={styles.feedbackBox} />}
+
             {RemoteData.isFailure(notatStatus) && notatStatus.error.statusCode !== 404 && (
-                <ApiErrorAlert error={notatStatus.error} />
+                <ApiErrorAlert error={notatStatus.error} className={styles.feedbackBox} />
             )}
 
             {notat && (

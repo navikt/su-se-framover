@@ -99,15 +99,15 @@ const RevurderingPage = () => {
 
     return (
         <div className={styles.pageContainer}>
-            <Heading level="1" size="large" className={styles.tittel}>
-                {formatMessage('revurdering.tittel')}
-            </Heading>
             <NotatPanel
                 sakId={sak.id}
                 referanseId={påbegyntRevurdering.id}
                 referanseType={ReferanseType.REVURDERING}
                 underAttestering={erRevurderingTilAttestering(påbegyntRevurdering)}
             />
+            <Heading level="1" size="large" className={styles.tittel}>
+                {formatMessage('revurdering.tittel')}
+            </Heading>
             {urlParams.seksjon === RevurderingSeksjoner.Opprettelse && <RevurderingIntroPage />}
             {urlParams.seksjon !== RevurderingSeksjoner.Opprettelse && (
                 <RevurderingSeksjonerWrapper

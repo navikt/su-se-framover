@@ -28,14 +28,14 @@ export interface SlettVedleggRequest {
 
 export async function hentAlleNotater(sakId: string): Promise<ApiClientResult<Notat[]>> {
     return apiClient({
-        url: `/saker/${sakId}/notater`,
+        url: `/notat/${sakId}`,
         method: 'GET',
     });
 }
 
 export async function opprettNotat(sakId: string, body: OpprettNotatBody): Promise<ApiClientResult<NotatMedVedlegg>> {
     return apiClient({
-        url: `/saker/${sakId}/notater`,
+        url: `/notat/${sakId}`,
         method: 'POST',
         body,
     });
@@ -45,7 +45,7 @@ export async function hentNotat(
     request: HentNotatForReferanseRequest,
 ): Promise<ApiClientResult<NotatMedVedlegg | null>> {
     const res = await apiClient<NotatMedVedlegg>({
-        url: `/saker/${request.sakId}/notater/${request.referanseId}/hentNotat`,
+        url: `/notat/${request.sakId}/${request.referanseId}/hentNotat?referanseType=${request.referanseType}`,
         method: 'GET',
     });
 
@@ -62,14 +62,14 @@ export async function hentNotat(
 
 export async function hentNotatMedVedlegg(sakId: string, notatId: string): Promise<ApiClientResult<NotatMedVedlegg>> {
     return apiClient({
-        url: `/saker/${sakId}/notater/${notatId}`,
+        url: `/notat/${sakId}/${notatId}`,
         method: 'GET',
     });
 }
 
 export async function oppdaterNotatSomSaksbehandler(request: OppdaterNotatRequest): Promise<ApiClientResult<void>> {
     return apiClient({
-        url: `/saker/${request.sakId}/notater/${request.notatId}/saksbehandler`,
+        url: `/notat/${request.sakId}/${request.notatId}/saksbehandler`,
         method: 'POST',
         body: {
             notat: request.notat,
@@ -79,7 +79,7 @@ export async function oppdaterNotatSomSaksbehandler(request: OppdaterNotatReques
 
 export async function oppdaterNotatSomAttestant(request: OppdaterNotatRequest): Promise<ApiClientResult<void>> {
     return apiClient({
-        url: `/saker/${request.sakId}/notater/${request.notatId}/attestant`,
+        url: `/notat/${request.sakId}/${request.notatId}/attestant`,
         method: 'POST',
         body: {
             notat: request.notat,
@@ -93,7 +93,7 @@ export async function leggTilVedlegg(request: LeggTilVedleggRequest): Promise<Ap
     formData.append('fil', request.fil);
 
     return apiClient({
-        url: `/saker/${request.sakId}/notater/${request.notatId}/vedlegg`,
+        url: `/notat/${request.sakId}/${request.notatId}/vedlegg`,
         method: 'POST',
         body: formData,
     });
@@ -101,7 +101,7 @@ export async function leggTilVedlegg(request: LeggTilVedleggRequest): Promise<Ap
 
 export async function slettVedlegg(request: SlettVedleggRequest): Promise<ApiClientResult<void>> {
     return apiClient({
-        url: `/saker/${request.sakId}/notater/${request.notatId}/vedlegg/${request.vedleggId}`,
+        url: `/notat/${request.sakId}/${request.notatId}/vedlegg/${request.vedleggId}`,
         method: 'DELETE',
     });
 }

@@ -4,10 +4,19 @@
 
 .topBar {
     display: flex;
-    align-items: flex-start;
+    align-items: center;
     justify-content: space-between;
     gap: 1rem;
+    padding-bottom: 0.75rem;
     margin-bottom: 1rem;
+    border-bottom: 1px solid #000;
+}
+
+.topBarLeft {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
 }
 
 .content {
@@ -52,4 +61,8 @@
 
 .selectedFileName {
     word-break: break-word;
+}
+
+.feedbackBox {
+    margin-bottom: 1rem;
 }
