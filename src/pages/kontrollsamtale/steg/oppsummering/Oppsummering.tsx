@@ -1,6 +1,6 @@
 import { Button, Modal } from '@navikt/ds-react';
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import KontrollsamtaleOppsummering from 'src/pages/kontrollsamtale/steg/oppsummering/components/Kontrollsamtaleoppsummering/KontrollsamtaleOppsummering.tsx';
 import { sendKontrollsamtaleNotat } from '~src/features/søknad/innsending.slice.ts';
 import { useI18n } from '~src/lib/i18n.ts';
@@ -21,8 +21,14 @@ const Oppsummering = ({ forrigeUrl, nesteUrl, avbrytUrl }: Props) => {
     const dispatch = useAppDispatch();
     const kontrollsamtale = useAppSelector((state) => state.kontrollsamtale);
     const [visModal, setModal] = useState(false);
+    const { sakId } = useParams<{
+        sakId: string;
+    }>();
 
     const onSubmit = async () => {
+        if (!sakId) {
+            throw new Error('Mangler sakId');
+        }
         if (
             kontrollsamtale.personligOppmøte === null ||
             kontrollsamtale.fullmaktOgLegeerklæring === null ||
@@ -39,6 +45,7 @@ const Oppsummering = ({ forrigeUrl, nesteUrl, avbrytUrl }: Props) => {
 
         const resultat = await dispatch(
             sendKontrollsamtaleNotat({
+                sakId: sakId,
                 personligOppmøte: kontrollsamtale.personligOppmøte,
                 fullmaktOgLegeerklæring: kontrollsamtale.fullmaktOgLegeerklæring,
                 originalPass: kontrollsamtale.originalPass,
