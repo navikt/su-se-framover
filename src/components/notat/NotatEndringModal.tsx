@@ -15,7 +15,13 @@ type Props = {
 
 const NotatEndringModal = (props: Props) => {
     const viserAttestantnotat = props.editorType === 'attestant';
-    const tittel = props.kanRedigere ? (viserAttestantnotat ? 'Rediger attestantnotat' : 'Rediger notat') : 'Vis notat';
+    const tittel = props.kanRedigere
+        ? viserAttestantnotat
+            ? 'Rediger attestantnotat'
+            : 'Rediger notat'
+        : viserAttestantnotat
+          ? 'Vis attestantnotat'
+          : 'Vis notat';
 
     return (
         <Modal open={props.open} onClose={props.onClose} aria-label={tittel} width={1000}>
