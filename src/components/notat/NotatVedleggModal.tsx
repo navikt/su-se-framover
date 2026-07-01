@@ -27,6 +27,7 @@ const NotatVedleggModal = (props: Props) => {
             open={props.open}
             onClose={props.onClose}
             aria-label={props.kanRedigere ? 'Administrer vedlegg' : 'Vis vedlegg'}
+            width={1000}
         >
             <Modal.Header>
                 <Heading level="2" size="small">

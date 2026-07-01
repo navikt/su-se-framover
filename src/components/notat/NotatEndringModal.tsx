@@ -18,7 +18,7 @@ const NotatEndringModal = (props: Props) => {
     const tittel = props.kanRedigere ? (viserAttestantnotat ? 'Rediger attestantnotat' : 'Rediger notat') : 'Vis notat';
 
     return (
-        <Modal open={props.open} onClose={props.onClose} aria-label={tittel}>
+        <Modal open={props.open} onClose={props.onClose} aria-label={tittel} width={1000}>
             <Modal.Header>
                 <Heading level="2" size="small">
                     {tittel}
