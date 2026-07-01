@@ -18,7 +18,7 @@ jobs:
       contents: 'read'
       id-token: 'write'
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
         with:
           persist-credentials: false
       - uses: actions/setup-node@v6.2.0
@@ -58,7 +58,7 @@ jobs:
     needs: build-push-docker-image
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - uses: nais/deploy/actions/deploy@v2
         env:
           CLUSTER: dev-gcp
@@ -73,7 +73,7 @@ jobs:
         contents: read
         id-token: write
     steps:
-        - uses: actions/checkout@v6
+        - uses: actions/checkout@v7
         - uses: nais/deploy/actions/deploy@v2
           env:
               #se https://console.cloud.google.com/artifacts/docker/nais-management-233d/europe-north1/supstonad?authuser=1&inv=1&invt=AbybBg&project=supstonad-prod-9599
