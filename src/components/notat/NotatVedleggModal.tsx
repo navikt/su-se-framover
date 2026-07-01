@@ -2,6 +2,7 @@ import { BodyShort, Button, FileUpload, Heading, HStack, Loader, Modal, VStack }
 
 import { ApiError } from '~src/api/apiClient';
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
+import PasteFile from '~src/components/notat/PasteFile';
 import { NotatVedlegg } from '~src/types/Notat';
 
 import { canPreviewVedlegg, downloadVedlegg, formatVedleggBeskrivelse, openVedleggPreview } from './notatPanelUtils';
@@ -38,6 +39,11 @@ const NotatVedleggModal = (props: Props) => {
                 <VStack gap="5">
                     {props.kanRedigere && (
                         <>
+                            <PasteFile
+                                onSelectFile={(file) => props.onSelectFile(file)}
+                                disabled={props.lasterOppVedlegg}
+                            />
+
                             <FileUpload.Dropzone
                                 label="Legg til vedlegg"
                                 description="Last opp ett vedlegg av gangen"
