@@ -102,7 +102,7 @@ const NotatPanel = (props: Props) => {
 
     const notat = lokalNotat;
     const notatMedVedlegg = RemoteData.isSuccess(notatMedVedleggStatus) ? notatMedVedleggStatus.value : null;
-    const manglerNotat = RemoteData.isSuccess(notatStatus) && notatStatus.value === null;
+    const manglerNotat = notat === null && RemoteData.isSuccess(notatStatus) && notatStatus.value === null;
     const saksbehandlerNotat = notat?.notat ?? '';
     const attestantNotat = notat?.attestantNotat ?? '';
     const harAttestantNotat = attestantNotat.length > 0;
@@ -124,17 +124,14 @@ const NotatPanel = (props: Props) => {
     useEffect(() => {
         if (RemoteData.isSuccess(opprettStatus)) {
             const opprettetNotat: NotatResponse = {
-                ...opprettStatus.value.notat,
-                antallVedlegg: opprettStatus.value.vedlegg?.length ?? 0,
+                ...opprettStatus.value,
+                antallVedlegg: 0,
             };
 
             setFeedback({ type: 'success', message: 'Notat opprettet' });
             setLokalNotat(opprettetNotat);
             setSaksbehandlerTekst(opprettetNotat.notat ?? '');
             setAttestantTekst(opprettetNotat.attestantNotat ?? '');
-            if (props.kanRedigere) {
-                setÅpenTekstModal(props.underAttestering ? 'attestant' : 'saksbehandler');
-            }
             resetNotatMedVedlegg();
             resetOpprettStatus();
         }
