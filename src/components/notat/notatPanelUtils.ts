@@ -1,10 +1,14 @@
-export const formatTidspunkt = (tidspunkt: string) =>
-    new Intl.DateTimeFormat('nb-NO', {
-        dateStyle: 'short',
-        timeStyle: 'short',
-    }).format(new Date(tidspunkt));
+import { openPdfBlobInNewTab } from '~src/utils/dokumentUtils';
 
-const createBlobUrlForVedlegg = (mimeType: string, innhold: string) => {
+const REVOKE_FALLBACK_MS = 5_000;
+const tidspunktFormatter = new Intl.DateTimeFormat('nb-NO', {
+    dateStyle: 'short',
+    timeStyle: 'short',
+});
+
+export const formatTidspunkt = (tidspunkt: string) => tidspunktFormatter.format(new Date(tidspunkt));
+
+const createBlobForVedlegg = (mimeType: string, innhold: string) => {
     const byteString = window.atob(innhold);
     const byteArray = new Uint8Array(byteString.length);
 
@@ -12,25 +16,26 @@ const createBlobUrlForVedlegg = (mimeType: string, innhold: string) => {
         byteArray[i] = byteString.charCodeAt(i);
     }
 
-    const blob = new Blob([byteArray], { type: mimeType });
-    return URL.createObjectURL(blob);
+    return new Blob([byteArray], { type: mimeType });
 };
 
+export const canPreviewVedlegg = (mimeType: string) => mimeType === 'application/pdf' || mimeType.startsWith('image/');
+
 export const openVedleggPreview = (mimeType: string, innhold: string) => {
-    const url = createBlobUrlForVedlegg(mimeType, innhold);
-    window.open(url, '_blank', 'noopener,noreferrer');
-    window.setTimeout(() => URL.revokeObjectURL(url), 60_000);
+    const blob = createBlobForVedlegg(mimeType, innhold);
+    openPdfBlobInNewTab(blob);
 };
 
 export const downloadVedlegg = (filnavn: string, mimeType: string, innhold: string) => {
-    const url = createBlobUrlForVedlegg(mimeType, innhold);
+    const blob = createBlobForVedlegg(mimeType, innhold);
+    const url = URL.createObjectURL(blob);
     const lenke = document.createElement('a');
     lenke.href = url;
     lenke.download = filnavn;
     document.body.appendChild(lenke);
     lenke.click();
     lenke.remove();
-    window.setTimeout(() => URL.revokeObjectURL(url), 60_000);
+    window.setTimeout(() => URL.revokeObjectURL(url), REVOKE_FALLBACK_MS);
 };
 
 export const formatVedleggBeskrivelse = (opprettet: string) => `Lastet opp ${formatTidspunkt(opprettet)}`;

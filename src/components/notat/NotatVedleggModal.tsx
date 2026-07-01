@@ -3,7 +3,7 @@ import { ReactNode } from 'react';
 
 import { NotatVedlegg } from '~src/types/Notat';
 
-import { downloadVedlegg, formatVedleggBeskrivelse, openVedleggPreview } from './notatPanelUtils';
+import { canPreviewVedlegg, downloadVedlegg, formatVedleggBeskrivelse, openVedleggPreview } from './notatPanelUtils';
 
 type Props = {
     open: boolean;
@@ -89,11 +89,27 @@ const NotatVedleggModal = (props: Props) => {
                                             file={{ name: vedlegg.filnavn, size: 0 }}
                                             onFileClick={(event) => {
                                                 event.preventDefault();
-                                                openVedleggPreview(vedlegg.mimeType, vedlegg.innhold);
+                                                if (canPreviewVedlegg(vedlegg.mimeType)) {
+                                                    openVedleggPreview(vedlegg.mimeType, vedlegg.innhold);
+                                                } else {
+                                                    downloadVedlegg(vedlegg.filnavn, vedlegg.mimeType, vedlegg.innhold);
+                                                }
                                             }}
                                             description={formatVedleggBeskrivelse(vedlegg.opprettet)}
                                             button={
                                                 <HStack gap="2" align="center">
+                                                    {canPreviewVedlegg(vedlegg.mimeType) && (
+                                                        <Button
+                                                            type="button"
+                                                            size="small"
+                                                            variant="tertiary"
+                                                            onClick={() =>
+                                                                openVedleggPreview(vedlegg.mimeType, vedlegg.innhold)
+                                                            }
+                                                        >
+                                                            Forhåndsvis
+                                                        </Button>
+                                                    )}
                                                     <Button
                                                         type="button"
                                                         size="small"
