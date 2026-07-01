@@ -1,4 +1,4 @@
-import { Notat, NotatMedVedlegg, OpprettNotatBody, ReferanseType } from '~src/types/Notat';
+import { Notat, NotatMedVedlegg, NotatResponse, OpprettNotatBody, ReferanseType } from '~src/types/Notat';
 import apiClient, { ApiClientResult, ErrorCode } from './apiClient';
 
 export interface HentNotatForReferanseRequest {
@@ -41,10 +41,8 @@ export async function opprettNotat(sakId: string, body: OpprettNotatBody): Promi
     });
 }
 
-export async function hentNotat(
-    request: HentNotatForReferanseRequest,
-): Promise<ApiClientResult<NotatMedVedlegg | null>> {
-    const res = await apiClient<NotatMedVedlegg>({
+export async function hentNotat(request: HentNotatForReferanseRequest): Promise<ApiClientResult<NotatResponse | null>> {
+    const res = await apiClient<NotatResponse>({
         url: `/notat/${request.sakId}/${request.referanseId}/hentNotat?referanseType=${request.referanseType}`,
         method: 'GET',
     });
@@ -57,7 +55,7 @@ export async function hentNotat(
         };
     }
 
-    return res as ApiClientResult<NotatMedVedlegg | null>;
+    return res as ApiClientResult<NotatResponse | null>;
 }
 
 export async function hentNotatMedVedlegg(sakId: string, notatId: string): Promise<ApiClientResult<NotatMedVedlegg>> {

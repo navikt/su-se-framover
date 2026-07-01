@@ -1,68 +1,59 @@
 .container {
     margin-bottom: 1.5rem;
+    width: 100%;
+    overflow: hidden;
 }
 
 .topBar {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 1rem;
-    padding-bottom: 0.75rem;
-    margin-bottom: 1rem;
+    margin: -1.25rem;
+    padding: 1.25rem;
     border-bottom: 1px solid #000;
 }
 
-.topBarLeft {
+.topBarContent {
+    width: 100%;
     display: flex;
-    align-items: center;
-    gap: 1rem;
-    flex-wrap: wrap;
-}
-
-.content {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr);
-    gap: 1.25rem;
-}
-
-.mainColumn {
-    min-width: 0;
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-}
-
-.sideColumn {
-    display: flex;
-    flex-direction: column;
-    gap: 0.75rem;
-}
-
-.buttonRow {
-    display: flex;
-    justify-content: flex-start;
-}
-
-.vedleggListe {
-    display: flex;
-    flex-direction: column;
-    gap: 0.75rem;
-    margin-top: 0.25rem;
-}
-
-.vedleggRad {
-    display: flex;
+    align-items: flex-start;
     justify-content: space-between;
-    align-items: center;
-    gap: 1rem;
-    padding-top: 0.5rem;
-    border-top: 1px solid var(--a-border-subtle);
-}
-
-.selectedFileName {
-    word-break: break-word;
+    gap: 1.5rem;
 }
 
 .feedbackBox {
-    margin-bottom: 1rem;
+    width: fit-content;
+    max-width: min(42rem, 100%);
+}
+
+.summaryRow {
+    align-items: flex-start;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    flex: 1 1 auto;
+}
+
+.actionRow {
+    flex-wrap: wrap;
+    flex: 0 1 auto;
+    align-items: center;
+}
+
+.metaBlock {
+    min-width: 11rem;
+    max-width: 22rem;
+    flex: 1 1 11rem;
+}
+
+.metaBlock :global(.navds-label) {
+    margin-bottom: 0.25rem;
+}
+
+.metaBlock :global(.navds-body-short) {
+    word-break: break-word;
+}
+
+.container :global(.navds-modal__body) {
+    padding-top: 0;
+}
+
+.container :global(.navds-file-upload__item) {
+    max-width: 100%;
 }

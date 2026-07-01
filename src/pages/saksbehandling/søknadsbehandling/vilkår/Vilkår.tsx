@@ -15,6 +15,7 @@ import { ReferanseType } from '~src/types/Notat';
 import { Sakstype } from '~src/types/Sak';
 import { Vilkårtype, VilkårtypeAlder } from '~src/types/Vilkårsvurdering';
 import {
+    erIverksatt,
     erSøknadsbehandlingTilAttestering,
     erVilkårsvurderingerVurdertAvslag,
 } from '~src/utils/SøknadsbehandlingUtils';
@@ -75,6 +76,7 @@ const Vilkår = () => {
                     referanseId={behandling.id}
                     referanseType={ReferanseType.SØKNAD}
                     underAttestering={erSøknadsbehandlingTilAttestering(behandling)}
+                    kanRedigere={!erIverksatt(behandling) && !behandling.erLukket}
                 />
                 <div className={styles.container}>
                     <SaksbehandlingFramdriftsindikator

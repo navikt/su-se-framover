@@ -29,6 +29,8 @@ import {
 import { Sakstype } from '~src/types/Sak.ts';
 import {
     erInformasjonsRevurdering,
+    erRevurderingAvsluttet,
+    erRevurderingIverksatt,
     erRevurderingTilAttestering,
     revurderingTilFramdriftsindikatorSeksjoner,
 } from '~src/utils/revurdering/revurderingUtils';
@@ -104,6 +106,9 @@ const RevurderingPage = () => {
                 referanseId={påbegyntRevurdering.id}
                 referanseType={ReferanseType.REVURDERING}
                 underAttestering={erRevurderingTilAttestering(påbegyntRevurdering)}
+                kanRedigere={
+                    !erRevurderingIverksatt(påbegyntRevurdering) && !erRevurderingAvsluttet(påbegyntRevurdering)
+                }
             />
             <Heading level="1" size="large" className={styles.tittel}>
                 {formatMessage('revurdering.tittel')}

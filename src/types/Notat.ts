@@ -32,6 +32,10 @@ export interface Notat {
     hendelser: NotatHendelse[];
 }
 
+export interface NotatResponse extends Notat {
+    antallVedlegg: number;
+}
+
 export interface NotatVedlegg {
     id: UUID;
     notatId: UUID;
