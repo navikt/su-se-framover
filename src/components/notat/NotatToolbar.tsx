@@ -62,23 +62,18 @@ const NotatToolbar = (props: Props) => {
                                     Vis attestantnotat
                                 </Button>
                             )}
+                            <div className={styles.metaBlock}>
+                                <Label size="small">Sist endret</Label>
+                                <BodyShort>{formatTidspunkt(props.notat.endret)}</BodyShort>
+                            </div>
+                            <div className={styles.metaBlock}>
+                                <Label size="small">Opprettet</Label>
+                                <BodyShort>{formatTidspunkt(props.notat.opprettet)}</BodyShort>
+                            </div>
                         </>
                     )}
                     {props.statusElement}
                 </HStack>
-
-                {props.notat && (
-                    <HStack gap="6" className={styles.summaryRow}>
-                        <div className={styles.metaBlock}>
-                            <Label size="small">Sist endret</Label>
-                            <BodyShort>{formatTidspunkt(props.notat.endret)}</BodyShort>
-                        </div>
-                        <div className={styles.metaBlock}>
-                            <Label size="small">Opprettet</Label>
-                            <BodyShort>{formatTidspunkt(props.notat.opprettet)}</BodyShort>
-                        </div>
-                    </HStack>
-                )}
             </div>
         </div>
     );
