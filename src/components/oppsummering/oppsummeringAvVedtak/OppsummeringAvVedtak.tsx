@@ -5,6 +5,7 @@ import { useOutletContext } from 'react-router-dom';
 import * as DokumentApi from '~src/api/dokumentApi';
 import { forhåndsvisVedtaksbrevTilbakekrevingsbehandling } from '~src/api/tilbakekrevingApi';
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
+import NotatPanel from '~src/components/notat/NotatPanel.tsx';
 import { PartialOppsummeringAvKlage } from '~src/components/oppsummering/oppsummeringAvVedtak/PartialOppsummeringAvKlage';
 import { PartialOppsummeringAvRevurdering } from '~src/components/oppsummering/oppsummeringAvVedtak/PartialOppsummeringAvRevurdering';
 import { PartialOppsummeringAvSøknadsbehandling } from '~src/components/oppsummering/oppsummeringAvVedtak/PartialOppsummeringAvSøknadsbehandling';
@@ -20,6 +21,7 @@ import { Behandling } from '~src/types/Behandling';
 import { DokumentIdType } from '~src/types/dokument/Dokument';
 import { Klage } from '~src/types/Klage';
 import { ManuellTilbakekrevingsbehandling } from '~src/types/ManuellTilbakekrevingsbehandling';
+import { ReferanseType } from '~src/types/Notat.ts';
 import { Regulering } from '~src/types/Regulering';
 import { InformasjonsRevurdering, Revurdering } from '~src/types/Revurdering';
 import { Søknadsbehandling } from '~src/types/Søknadsbehandling';
@@ -36,7 +38,6 @@ import {
     getVedtakstype,
     skalDokumentIkkeGenereres,
 } from '~src/utils/VedtakUtils';
-
 import OppsummeringAvBeregningOgSimulering from '../oppsummeringAvBeregningOgsimulering/OppsummeringAvBeregningOgSimulering';
 import OppsummeringAvTilbakekrevingsbehandling, {
     OppsummeringAvTilbakekrevingsbehandlingbrev,
@@ -84,6 +85,17 @@ const OppsummeringAvVedtak = (props: { vedtakId?: string; vedtak?: Vedtak }) => 
 
     return (
         <div className={styles.vedtaksContainer}>
+            {(behandlingstype === 'søknadsbehandling' || behandlingstype === 'revurdering') && (
+                <NotatPanel
+                    sakId={sak.id}
+                    referanseId={vedtaketsBehandling.id}
+                    referanseType={
+                        behandlingstype === 'søknadsbehandling' ? ReferanseType.SØKNAD : ReferanseType.REVURDERING
+                    }
+                    underAttestering={false}
+                    kanRedigere={false}
+                />
+            )}
             <Oppsummeringspanel
                 ikon={Oppsummeringsikon.Liste}
                 farge={Oppsummeringsfarge.Lilla}

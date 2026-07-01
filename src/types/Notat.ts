@@ -50,6 +50,11 @@ export interface NotatMedVedlegg {
     vedlegg: NotatVedlegg[];
 }
 
+export interface OpprettNotatResponse {
+    notat: Notat;
+    vedlegg?: NotatVedlegg[];
+}
+
 export interface OpprettNotatBody {
     referanseId: string;
     referanseType: ReferanseType;

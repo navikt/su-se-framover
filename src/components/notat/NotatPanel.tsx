@@ -125,7 +125,7 @@ const NotatPanel = (props: Props) => {
         if (RemoteData.isSuccess(opprettStatus)) {
             const opprettetNotat: NotatResponse = {
                 ...opprettStatus.value.notat,
-                antallVedlegg: opprettStatus.value.vedlegg.length,
+                antallVedlegg: opprettStatus.value.vedlegg?.length ?? 0,
             };
 
             setFeedback({ type: 'success', message: 'Notat opprettet' });

@@ -1,4 +1,11 @@
-import { Notat, NotatMedVedlegg, NotatResponse, OpprettNotatBody, ReferanseType } from '~src/types/Notat';
+import {
+    Notat,
+    NotatMedVedlegg,
+    NotatResponse,
+    OpprettNotatBody,
+    OpprettNotatResponse,
+    ReferanseType,
+} from '~src/types/Notat';
 import apiClient, { ApiClientResult, ErrorCode } from './apiClient';
 
 export interface HentNotatForReferanseRequest {
@@ -33,7 +40,10 @@ export async function hentAlleNotater(sakId: string): Promise<ApiClientResult<No
     });
 }
 
-export async function opprettNotat(sakId: string, body: OpprettNotatBody): Promise<ApiClientResult<NotatMedVedlegg>> {
+export async function opprettNotat(
+    sakId: string,
+    body: OpprettNotatBody,
+): Promise<ApiClientResult<OpprettNotatResponse>> {
     return apiClient({
         url: `/notat/${sakId}`,
         method: 'POST',
