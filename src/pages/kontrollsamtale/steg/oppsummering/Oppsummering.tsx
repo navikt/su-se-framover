@@ -23,25 +23,39 @@ const Oppsummering = ({ forrigeUrl, nesteUrl, avbrytUrl }: Props) => {
     const [visModal, setModal] = useState(false);
 
     const onSubmit = async () => {
+        if (
+            kontrollsamtale.personligOppmøte === null ||
+            kontrollsamtale.fullmaktOgLegeerklæring === null ||
+            kontrollsamtale.originalPass === null ||
+            kontrollsamtale.harVærtUtenlands === null ||
+            kontrollsamtale.harPlanerOmUtenlandsreise === null ||
+            kontrollsamtale.reisedokumentasjon === null ||
+            kontrollsamtale.økonomiskSituasjon === null ||
+            kontrollsamtale.andreForhold === null ||
+            kontrollsamtale.skatteOpplysninger === null
+        ) {
+            return;
+        }
+
         const resultat = await dispatch(
             sendKontrollsamtaleNotat({
-                personligOppmøte: kontrollsamtale.personligOppmøte!,
-                fullmaktOgLegeerklæring: kontrollsamtale.fullmaktOgLegeerklæring!,
-                originalPass: kontrollsamtale.originalPass!,
-                harVærtUtenlands: kontrollsamtale.harVærtUtenlands!,
+                personligOppmøte: kontrollsamtale.personligOppmøte,
+                fullmaktOgLegeerklæring: kontrollsamtale.fullmaktOgLegeerklæring,
+                originalPass: kontrollsamtale.originalPass,
+                harVærtUtenlands: kontrollsamtale.harVærtUtenlands,
                 utenlandsoppholdDatoer: kontrollsamtale.utenlandsoppholdDatoer.map((dato) => ({
                     utreiseDato: dato.utreisedato,
                     innreiseDato: dato.innreisedato,
                 })),
-                harPlanerOmUtenlandsreise: kontrollsamtale.harPlanerOmUtenlandsreise!,
+                harPlanerOmUtenlandsreise: kontrollsamtale.harPlanerOmUtenlandsreise,
                 planlagteUtenlandsreiseDatoer: kontrollsamtale.planlagteUtenlandsreiseDatoer.map((dato) => ({
                     utreiseDato: dato.utreisedato,
                     innreiseDato: dato.innreisedato,
                 })),
-                reiseDokumentasjon: kontrollsamtale.reisedokumentasjon!,
-                økonomiskSituasjon: kontrollsamtale.økonomiskSituasjon!,
-                andreForhold: kontrollsamtale.andreForhold!,
-                skatteOpplysninger: kontrollsamtale.skatteOpplysninger!,
+                reiseDokumentasjon: kontrollsamtale.reisedokumentasjon,
+                økonomiskSituasjon: kontrollsamtale.økonomiskSituasjon,
+                andreForhold: kontrollsamtale.andreForhold,
+                skatteOpplysninger: kontrollsamtale.skatteOpplysninger,
             }),
         );
 
