@@ -7,7 +7,6 @@ import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
 import SpinnerMedTekst from '~src/components/henterInnhold/SpinnerMedTekst';
 import { useApiCall } from '~src/lib/hooks';
 import { NotatResponse, OpprettNotatBody, ReferanseType } from '~src/types/Notat';
-import AttestantNotatModal from './AttestantNotatModal';
 import NotatEditorModal from './NotatEditorModal';
 import NotatToolbar from './NotatToolbar';
 import NotatVedleggModal from './NotatVedleggModal';
@@ -42,23 +41,23 @@ const NotatPanel = (props: Props) => {
     );
     const [vedleggStatus, leggTilVedlegg, resetVedleggStatus] = useApiCall(notatApi.leggTilVedlegg);
     const [slettVedleggStatus, slettVedlegg, resetSlettVedleggStatus] = useApiCall(notatApi.slettVedlegg);
-    const [notatTekst, setNotatTekst] = useState('');
+    const [saksbehandlerTekst, setSaksbehandlerTekst] = useState('');
+    const [attestantTekst, setAttestantTekst] = useState('');
     const [valgtFil, setValgtFil] = useState<File | null>(null);
     const [feedback, setFeedback] = useState<ActionFeedback>(null);
     const [lokalNotat, setLokalNotat] = useState<NotatResponse | null>(null);
-    const [visRedigerModal, setVisRedigerModal] = useState(false);
+    const [åpenTekstModal, setÅpenTekstModal] = useState<'saksbehandler' | 'attestant' | null>(null);
     const [visVedleggModal, setVisVedleggModal] = useState(false);
-    const [visAttestantModal, setVisAttestantModal] = useState(false);
 
     useEffect(() => {
         resetNotat();
         setValgtFil(null);
-        setNotatTekst('');
+        setSaksbehandlerTekst('');
+        setAttestantTekst('');
         setFeedback(null);
         setLokalNotat(null);
-        setVisRedigerModal(false);
+        setÅpenTekstModal(null);
         setVisVedleggModal(false);
-        setVisAttestantModal(false);
         resetOpprettStatus();
         resetLagreSaksbehandlerStatus();
         resetLagreAttestantStatus();
@@ -104,15 +103,16 @@ const NotatPanel = (props: Props) => {
     const notat = lokalNotat;
     const notatMedVedlegg = RemoteData.isSuccess(notatMedVedleggStatus) ? notatMedVedleggStatus.value : null;
     const manglerNotat = RemoteData.isSuccess(notatStatus) && notatStatus.value === null;
+    const saksbehandlerNotat = notat?.notat ?? '';
     const attestantNotat = notat?.attestantNotat ?? '';
-    const harAttestantNotat = Boolean(attestantNotat.trim());
-    const redigerbartNotat = props.underAttestering ? attestantNotat : (notat?.notat ?? '');
+    const harAttestantNotat = attestantNotat.length > 0;
     const antallVedlegg = notat?.antallVedlegg ?? 0;
     const skalViseVedleggsknapp = props.kanRedigere || antallVedlegg > 0;
-
-    useEffect(() => {
-        setNotatTekst(redigerbartNotat);
-    }, [redigerbartNotat, notat?.id, notat?.endret]);
+    const kanRedigereSaksbehandlernotat = props.kanRedigere && !props.underAttestering;
+    const kanRedigereAttestantnotat = props.kanRedigere && props.underAttestering;
+    const aktivtModalfelt = åpenTekstModal === 'attestant' ? attestantTekst : saksbehandlerTekst;
+    const kanRedigereAktivtModalfelt =
+        åpenTekstModal === 'attestant' ? kanRedigereAttestantnotat : kanRedigereSaksbehandlernotat;
 
     useEffect(() => {
         if (RemoteData.isFailure(opprettStatus)) {
@@ -130,16 +130,23 @@ const NotatPanel = (props: Props) => {
 
             setFeedback({ type: 'success', message: 'Notat opprettet' });
             setLokalNotat(opprettetNotat);
-            setNotatTekst(
-                props.underAttestering ? (opprettetNotat.attestantNotat ?? '') : (opprettetNotat.notat ?? ''),
-            );
+            setSaksbehandlerTekst(opprettetNotat.notat ?? '');
+            setAttestantTekst(opprettetNotat.attestantNotat ?? '');
             if (props.kanRedigere) {
-                setVisRedigerModal(true);
+                setÅpenTekstModal(props.underAttestering ? 'attestant' : 'saksbehandler');
             }
             resetNotatMedVedlegg();
             resetOpprettStatus();
         }
     }, [opprettStatus, props.underAttestering, props.kanRedigere, resetNotatMedVedlegg, resetOpprettStatus]);
+
+    useEffect(() => {
+        setSaksbehandlerTekst(saksbehandlerNotat);
+    }, [saksbehandlerNotat, notat?.id, notat?.endret]);
+
+    useEffect(() => {
+        setAttestantTekst(attestantNotat);
+    }, [attestantNotat, notat?.id, notat?.endret]);
 
     useEffect(() => {
         if (RemoteData.isFailure(lagreSaksbehandlerStatus)) {
@@ -155,15 +162,15 @@ const NotatPanel = (props: Props) => {
                 gjeldendeNotat
                     ? {
                           ...gjeldendeNotat,
-                          notat: notatTekst,
+                          notat: saksbehandlerTekst,
                           endret: new Date().toISOString(),
                       }
                     : gjeldendeNotat,
             );
-            setVisRedigerModal(false);
+            setÅpenTekstModal(null);
             resetLagreSaksbehandlerStatus();
         }
-    }, [lagreSaksbehandlerStatus, notatTekst, resetLagreSaksbehandlerStatus]);
+    }, [lagreSaksbehandlerStatus, saksbehandlerTekst, resetLagreSaksbehandlerStatus]);
 
     useEffect(() => {
         if (RemoteData.isFailure(lagreAttestantStatus)) {
@@ -179,15 +186,15 @@ const NotatPanel = (props: Props) => {
                 gjeldendeNotat
                     ? {
                           ...gjeldendeNotat,
-                          attestantNotat: notatTekst,
+                          attestantNotat: attestantTekst,
                           endret: new Date().toISOString(),
                       }
                     : gjeldendeNotat,
             );
-            setVisRedigerModal(false);
+            setÅpenTekstModal(null);
             resetLagreAttestantStatus();
         }
-    }, [lagreAttestantStatus, notatTekst, resetLagreAttestantStatus]);
+    }, [lagreAttestantStatus, attestantTekst, resetLagreAttestantStatus]);
 
     useEffect(() => {
         if (RemoteData.isFailure(vedleggStatus)) {
@@ -266,15 +273,23 @@ const NotatPanel = (props: Props) => {
     };
 
     const handleLagreNotat = () => {
-        if (!notat) {
+        if (!notat || !åpenTekstModal) {
             return;
         }
 
-        const lagre = props.underAttestering ? lagreAttestantNotat : lagreSaksbehandlerNotat;
-        lagre({
+        if (åpenTekstModal === 'attestant') {
+            lagreAttestantNotat({
+                sakId: props.sakId,
+                notatId: notat.id,
+                notat: attestantTekst,
+            });
+            return;
+        }
+
+        lagreSaksbehandlerNotat({
             sakId: props.sakId,
             notatId: notat.id,
-            notat: notatTekst,
+            notat: saksbehandlerTekst,
         });
     };
 
@@ -336,30 +351,38 @@ const NotatPanel = (props: Props) => {
                     underAttestering={props.underAttestering}
                     kanRedigere={props.kanRedigere}
                     harAttestantNotat={harAttestantNotat}
+                    kanRedigereSaksbehandlernotat={kanRedigereSaksbehandlernotat}
+                    kanRedigereAttestantnotat={kanRedigereAttestantnotat}
                     skalViseVedleggsknapp={skalViseVedleggsknapp}
                     antallVedlegg={antallVedlegg}
                     lasterNotat={RemoteData.isPending(notatStatus)}
                     oppretterNotat={RemoteData.isPending(opprettStatus)}
                     statusElement={statusElement}
                     onOpprettNotat={handleOpprettNotat}
-                    onOpenEditor={() => setVisRedigerModal(true)}
+                    onOpenEditor={() => setÅpenTekstModal('saksbehandler')}
                     onOpenVedlegg={handleÅpneVedleggModal}
-                    onOpenAttestant={() => setVisAttestantModal(true)}
+                    onOpenAttestant={() => setÅpenTekstModal('attestant')}
                 />
             </VStack>
 
             {notat && (
                 <>
                     <NotatEditorModal
-                        open={visRedigerModal}
-                        kanRedigere={props.kanRedigere}
-                        underAttestering={props.underAttestering}
-                        notatTekst={notatTekst}
+                        open={åpenTekstModal !== null}
+                        editorType={åpenTekstModal ?? 'saksbehandler'}
+                        kanRedigere={kanRedigereAktivtModalfelt}
+                        notatTekst={aktivtModalfelt}
                         lagrer={
                             RemoteData.isPending(lagreSaksbehandlerStatus) || RemoteData.isPending(lagreAttestantStatus)
                         }
-                        onClose={() => setVisRedigerModal(false)}
-                        onNotatTekstChange={setNotatTekst}
+                        onClose={() => setÅpenTekstModal(null)}
+                        onNotatTekstChange={(value) => {
+                            if (åpenTekstModal === 'attestant') {
+                                setAttestantTekst(value);
+                                return;
+                            }
+                            setSaksbehandlerTekst(value);
+                        }}
                         onSave={handleLagreNotat}
                     />
 
@@ -380,12 +403,6 @@ const NotatPanel = (props: Props) => {
                         onSelectFile={setValgtFil}
                         onUpload={handleLastOppVedlegg}
                         onDelete={handleSlettVedlegg}
-                    />
-
-                    <AttestantNotatModal
-                        open={visAttestantModal}
-                        attestantNotat={attestantNotat}
-                        onClose={() => setVisAttestantModal(false)}
                     />
                 </>
             )}

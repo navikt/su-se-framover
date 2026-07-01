@@ -11,6 +11,8 @@ type Props = {
     underAttestering: boolean;
     kanRedigere: boolean;
     harAttestantNotat: boolean;
+    kanRedigereSaksbehandlernotat: boolean;
+    kanRedigereAttestantnotat: boolean;
     skalViseVedleggsknapp: boolean;
     antallVedlegg: number;
     lasterNotat: boolean;
@@ -44,11 +46,7 @@ const NotatToolbar = (props: Props) => {
                     {props.notat && (
                         <>
                             <Button type="button" size="small" onClick={props.onOpenEditor}>
-                                {props.kanRedigere
-                                    ? props.underAttestering
-                                        ? 'Rediger attestantnotat'
-                                        : 'Rediger notat'
-                                    : 'Vis notat'}
+                                {props.kanRedigereSaksbehandlernotat ? 'Rediger notat' : 'Vis notat'}
                             </Button>
                             {props.skalViseVedleggsknapp && (
                                 <Button type="button" size="small" variant="secondary" onClick={props.onOpenVedlegg}>
@@ -57,9 +55,9 @@ const NotatToolbar = (props: Props) => {
                                         : `Vis vedlegg (${props.antallVedlegg})`}
                                 </Button>
                             )}
-                            {props.harAttestantNotat && (
+                            {(props.kanRedigereAttestantnotat || props.harAttestantNotat) && (
                                 <Button type="button" size="small" variant="tertiary" onClick={props.onOpenAttestant}>
-                                    Vis attestantnotat
+                                    {props.kanRedigereAttestantnotat ? 'Rediger attestantnotat' : 'Vis attestantnotat'}
                                 </Button>
                             )}
                             <div className={styles.metaBlock}>
