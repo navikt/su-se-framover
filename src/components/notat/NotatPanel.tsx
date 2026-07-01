@@ -1,18 +1,5 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import {
-    Alert,
-    BodyShort,
-    Box,
-    Button,
-    FileUpload,
-    Heading,
-    HStack,
-    Label,
-    Loader,
-    Modal,
-    Textarea,
-    VStack,
-} from '@navikt/ds-react';
+import { Alert, BodyShort, Box, VStack } from '@navikt/ds-react';
 import { useEffect, useState } from 'react';
 
 import * as notatApi from '~src/api/notatApi';
@@ -20,6 +7,10 @@ import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
 import SpinnerMedTekst from '~src/components/henterInnhold/SpinnerMedTekst';
 import { useApiCall } from '~src/lib/hooks';
 import { NotatResponse, OpprettNotatBody, ReferanseType } from '~src/types/Notat';
+import AttestantNotatModal from './AttestantNotatModal';
+import NotatEditorModal from './NotatEditorModal';
+import NotatToolbar from './NotatToolbar';
+import NotatVedleggModal from './NotatVedleggModal';
 import styles from './notatPanel.module.less';
 
 type Props = {
@@ -264,35 +255,6 @@ const NotatPanel = (props: Props) => {
         refreshVedlegg();
     };
 
-    const lagBlobUrlForVedlegg = (mimeType: string, innhold: string) => {
-        const byteString = window.atob(innhold);
-        const byteArray = new Uint8Array(byteString.length);
-
-        for (let i = 0; i < byteString.length; i++) {
-            byteArray[i] = byteString.charCodeAt(i);
-        }
-
-        const blob = new Blob([byteArray], { type: mimeType });
-        return URL.createObjectURL(blob);
-    };
-
-    const åpneVedleggForhåndsvisning = (mimeType: string, innhold: string) => {
-        const url = lagBlobUrlForVedlegg(mimeType, innhold);
-        window.open(url, '_blank', 'noopener,noreferrer');
-        window.setTimeout(() => URL.revokeObjectURL(url), 60_000);
-    };
-
-    const lastNedVedlegg = (filnavn: string, mimeType: string, innhold: string) => {
-        const url = lagBlobUrlForVedlegg(mimeType, innhold);
-        const lenke = document.createElement('a');
-        lenke.href = url;
-        lenke.download = filnavn;
-        document.body.appendChild(lenke);
-        lenke.click();
-        lenke.remove();
-        window.setTimeout(() => URL.revokeObjectURL(url), 60_000);
-    };
-
     const handleOpprettNotat = () => {
         opprettNotat({
             sakId: props.sakId,
@@ -349,306 +311,86 @@ const NotatPanel = (props: Props) => {
         );
     }
 
+    const statusElement = (
+        <>
+            {feedback?.type === 'success' && (
+                <Alert variant="success" size="small" contentMaxWidth={false} className={styles.feedbackBox}>
+                    <BodyShort>{feedback.message}</BodyShort>
+                </Alert>
+            )}
+            {feedback?.type === 'error' && (
+                <ApiErrorAlert error={feedback.error} className={styles.feedbackBox} size="small" />
+            )}
+            {RemoteData.isFailure(notatStatus) && notatStatus.error.statusCode !== 404 && (
+                <ApiErrorAlert error={notatStatus.error} className={styles.feedbackBox} size="small" />
+            )}
+        </>
+    );
+
     return (
         <Box background="surface-default" padding="5" borderRadius="medium" className={styles.container}>
             <VStack gap="4">
-                <div className={styles.topBar}>
-                    <div className={styles.topBarContent}>
-                        <HStack gap="3" align="center" className={styles.actionRow}>
-                            <Heading level="2" size="small">
-                                Notat
-                            </Heading>
-                            {RemoteData.isPending(notatStatus) && <Loader size="small" title="Henter notat" />}
-                            {manglerNotat && props.kanRedigere && (
-                                <Button
-                                    type="button"
-                                    size="small"
-                                    onClick={handleOpprettNotat}
-                                    loading={RemoteData.isPending(opprettStatus)}
-                                >
-                                    Lag notat
-                                </Button>
-                            )}
-                            {notat && (
-                                <>
-                                    <Button type="button" size="small" onClick={() => setVisRedigerModal(true)}>
-                                        {props.kanRedigere
-                                            ? props.underAttestering
-                                                ? 'Rediger attestantnotat'
-                                                : 'Rediger notat'
-                                            : 'Vis notat'}
-                                    </Button>
-                                    {skalViseVedleggsknapp && (
-                                        <Button
-                                            type="button"
-                                            size="small"
-                                            variant="secondary"
-                                            onClick={handleÅpneVedleggModal}
-                                        >
-                                            {props.kanRedigere && antallVedlegg === 0
-                                                ? 'Legg til vedlegg'
-                                                : `Vis vedlegg (${antallVedlegg})`}
-                                        </Button>
-                                    )}
-                                    {harAttestantNotat && (
-                                        <Button
-                                            type="button"
-                                            size="small"
-                                            variant="tertiary"
-                                            onClick={() => setVisAttestantModal(true)}
-                                        >
-                                            Vis attestantnotat
-                                        </Button>
-                                    )}
-                                </>
-                            )}
-                            {feedback?.type === 'success' && (
-                                <Alert
-                                    variant="success"
-                                    size="small"
-                                    contentMaxWidth={false}
-                                    className={styles.feedbackBox}
-                                >
-                                    <BodyShort>{feedback.message}</BodyShort>
-                                </Alert>
-                            )}
-                            {feedback?.type === 'error' && (
-                                <ApiErrorAlert error={feedback.error} className={styles.feedbackBox} size="small" />
-                            )}
-                            {RemoteData.isFailure(notatStatus) && notatStatus.error.statusCode !== 404 && (
-                                <ApiErrorAlert error={notatStatus.error} className={styles.feedbackBox} size="small" />
-                            )}
-                        </HStack>
-
-                        {notat && (
-                            <HStack gap="6" className={styles.summaryRow}>
-                                <div className={styles.metaBlock}>
-                                    <Label size="small">Sist endret</Label>
-                                    <BodyShort>{formatTidspunkt(notat.endret)}</BodyShort>
-                                </div>
-                                <div className={styles.metaBlock}>
-                                    <Label size="small">Opprettet</Label>
-                                    <BodyShort>{formatTidspunkt(notat.opprettet)}</BodyShort>
-                                </div>
-                            </HStack>
-                        )}
-                    </div>
-                </div>
+                <NotatToolbar
+                    notat={notat}
+                    manglerNotat={manglerNotat}
+                    underAttestering={props.underAttestering}
+                    kanRedigere={props.kanRedigere}
+                    harAttestantNotat={harAttestantNotat}
+                    skalViseVedleggsknapp={skalViseVedleggsknapp}
+                    antallVedlegg={antallVedlegg}
+                    lasterNotat={RemoteData.isPending(notatStatus)}
+                    oppretterNotat={RemoteData.isPending(opprettStatus)}
+                    statusElement={statusElement}
+                    onOpprettNotat={handleOpprettNotat}
+                    onOpenEditor={() => setVisRedigerModal(true)}
+                    onOpenVedlegg={handleÅpneVedleggModal}
+                    onOpenAttestant={() => setVisAttestantModal(true)}
+                />
             </VStack>
 
             {notat && (
                 <>
-                    <Modal
+                    <NotatEditorModal
                         open={visRedigerModal}
-                        onClose={() => setVisRedigerModal(false)}
-                        aria-label={
-                            props.kanRedigere
-                                ? props.underAttestering
-                                    ? 'Rediger attestantnotat'
-                                    : 'Rediger notat'
-                                : 'Vis notat'
+                        kanRedigere={props.kanRedigere}
+                        underAttestering={props.underAttestering}
+                        notatTekst={notatTekst}
+                        lagrer={
+                            RemoteData.isPending(lagreSaksbehandlerStatus) || RemoteData.isPending(lagreAttestantStatus)
                         }
-                    >
-                        <Modal.Header>
-                            <Heading level="2" size="small">
-                                {props.kanRedigere
-                                    ? props.underAttestering
-                                        ? 'Rediger attestantnotat'
-                                        : 'Rediger notat'
-                                    : 'Vis notat'}
-                            </Heading>
-                        </Modal.Header>
-                        <Modal.Body>
-                            <VStack gap="4">
-                                <Textarea
-                                    label={props.underAttestering ? 'Attestantnotat' : 'Saksbehandlernotat'}
-                                    value={notatTekst}
-                                    onChange={(event) => setNotatTekst(event.target.value)}
-                                    readOnly={!props.kanRedigere}
-                                    resize
-                                    minRows={8}
-                                />
-                                <HStack gap="3">
-                                    {props.kanRedigere ? (
-                                        <>
-                                            <Button
-                                                type="button"
-                                                onClick={handleLagreNotat}
-                                                loading={
-                                                    RemoteData.isPending(lagreSaksbehandlerStatus) ||
-                                                    RemoteData.isPending(lagreAttestantStatus)
-                                                }
-                                            >
-                                                Lagre
-                                            </Button>
-                                            <Button
-                                                type="button"
-                                                variant="secondary"
-                                                onClick={() => setVisRedigerModal(false)}
-                                            >
-                                                Avbryt
-                                            </Button>
-                                        </>
-                                    ) : (
-                                        <Button
-                                            type="button"
-                                            variant="secondary"
-                                            onClick={() => setVisRedigerModal(false)}
-                                        >
-                                            Lukk
-                                        </Button>
-                                    )}
-                                </HStack>
-                            </VStack>
-                        </Modal.Body>
-                    </Modal>
+                        onClose={() => setVisRedigerModal(false)}
+                        onNotatTekstChange={setNotatTekst}
+                        onSave={handleLagreNotat}
+                    />
 
-                    <Modal
+                    <NotatVedleggModal
                         open={visVedleggModal}
+                        kanRedigere={props.kanRedigere}
+                        valgtFil={valgtFil}
+                        vedlegg={notatMedVedlegg?.vedlegg ?? []}
+                        lasterVedlegg={RemoteData.isPending(notatMedVedleggStatus)}
+                        lasterOppVedlegg={RemoteData.isPending(vedleggStatus)}
+                        sletterVedlegg={RemoteData.isPending(slettVedleggStatus)}
+                        vedleggError={
+                            RemoteData.isFailure(notatMedVedleggStatus) ? (
+                                <ApiErrorAlert error={notatMedVedleggStatus.error} size="small" />
+                            ) : undefined
+                        }
                         onClose={() => setVisVedleggModal(false)}
-                        aria-label={props.kanRedigere ? 'Administrer vedlegg' : 'Vis vedlegg'}
-                    >
-                        <Modal.Header>
-                            <Heading level="2" size="small">
-                                {props.kanRedigere ? 'Administrer vedlegg' : 'Vis vedlegg'}
-                            </Heading>
-                        </Modal.Header>
-                        <Modal.Body>
-                            <VStack gap="5">
-                                {props.kanRedigere && (
-                                    <>
-                                        <FileUpload.Dropzone
-                                            label="Legg til vedlegg"
-                                            description="Last opp ett vedlegg av gangen"
-                                            fileLimit={{ max: 1, current: valgtFil ? 1 : 0 }}
-                                            onSelect={(files) =>
-                                                setValgtFil(files.find((file) => !file.error)?.file ?? null)
-                                            }
-                                        />
+                        onSelectFile={setValgtFil}
+                        onUpload={handleLastOppVedlegg}
+                        onDelete={handleSlettVedlegg}
+                    />
 
-                                        {valgtFil && (
-                                            <VStack gap="3">
-                                                <FileUpload.Item
-                                                    file={valgtFil}
-                                                    button={{
-                                                        action: 'delete',
-                                                        onClick: () => setValgtFil(null),
-                                                    }}
-                                                />
-                                                <HStack gap="3">
-                                                    <Button
-                                                        type="button"
-                                                        onClick={handleLastOppVedlegg}
-                                                        loading={RemoteData.isPending(vedleggStatus)}
-                                                    >
-                                                        Last opp vedlegg
-                                                    </Button>
-                                                    <Button
-                                                        type="button"
-                                                        variant="secondary"
-                                                        onClick={() => setValgtFil(null)}
-                                                    >
-                                                        Fjern valgt fil
-                                                    </Button>
-                                                </HStack>
-                                            </VStack>
-                                        )}
-                                    </>
-                                )}
-
-                                <VStack gap="3">
-                                    <Heading level="3" size="xsmall">
-                                        Eksisterende vedlegg
-                                    </Heading>
-                                    {RemoteData.isPending(notatMedVedleggStatus) ? (
-                                        <Loader size="small" title="Henter vedlegg" />
-                                    ) : RemoteData.isFailure(notatMedVedleggStatus) ? (
-                                        <ApiErrorAlert error={notatMedVedleggStatus.error} size="small" />
-                                    ) : notatMedVedlegg?.vedlegg.length ? (
-                                        <FileUpload>
-                                            <VStack gap="3" as="ul">
-                                                {notatMedVedlegg.vedlegg.map((vedlegg) => (
-                                                    <FileUpload.Item
-                                                        key={vedlegg.id}
-                                                        as="li"
-                                                        file={{ name: vedlegg.filnavn, size: 0 }}
-                                                        onFileClick={(event) => {
-                                                            event.preventDefault();
-                                                            åpneVedleggForhåndsvisning(
-                                                                vedlegg.mimeType,
-                                                                vedlegg.innhold,
-                                                            );
-                                                        }}
-                                                        description={formatVedleggBeskrivelse(vedlegg.opprettet)}
-                                                        button={
-                                                            <HStack gap="2" align="center">
-                                                                <Button
-                                                                    type="button"
-                                                                    size="small"
-                                                                    variant="tertiary"
-                                                                    onClick={() =>
-                                                                        lastNedVedlegg(
-                                                                            vedlegg.filnavn,
-                                                                            vedlegg.mimeType,
-                                                                            vedlegg.innhold,
-                                                                        )
-                                                                    }
-                                                                >
-                                                                    Last ned
-                                                                </Button>
-                                                                {props.kanRedigere && (
-                                                                    <Button
-                                                                        type="button"
-                                                                        size="small"
-                                                                        variant="tertiary"
-                                                                        onClick={() => handleSlettVedlegg(vedlegg.id)}
-                                                                        loading={RemoteData.isPending(
-                                                                            slettVedleggStatus,
-                                                                        )}
-                                                                    >
-                                                                        Slett
-                                                                    </Button>
-                                                                )}
-                                                            </HStack>
-                                                        }
-                                                    />
-                                                ))}
-                                            </VStack>
-                                        </FileUpload>
-                                    ) : (
-                                        <BodyShort>Ingen vedlegg enda.</BodyShort>
-                                    )}
-                                </VStack>
-                            </VStack>
-                        </Modal.Body>
-                    </Modal>
-
-                    <Modal
+                    <AttestantNotatModal
                         open={visAttestantModal}
+                        attestantNotat={attestantNotat}
                         onClose={() => setVisAttestantModal(false)}
-                        aria-label="Attestantnotat"
-                    >
-                        <Modal.Header>
-                            <Heading level="2" size="small">
-                                Attestantnotat
-                            </Heading>
-                        </Modal.Header>
-                        <Modal.Body>
-                            <BodyShort>{attestantNotat || 'Attestantnotatet er ikke fylt ut enda.'}</BodyShort>
-                        </Modal.Body>
-                    </Modal>
+                    />
                 </>
             )}
         </Box>
     );
 };
-
-const formatTidspunkt = (tidspunkt: string) =>
-    new Intl.DateTimeFormat('nb-NO', {
-        dateStyle: 'short',
-        timeStyle: 'short',
-    }).format(new Date(tidspunkt));
-
-const formatVedleggBeskrivelse = (opprettet: string) => `Lastet opp ${formatTidspunkt(opprettet)}`;
 
 export default NotatPanel;
