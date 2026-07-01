@@ -8,7 +8,6 @@ import { formatTidspunkt } from './notatPanelUtils';
 type Props = {
     notat: NotatResponse | null;
     manglerNotat: boolean;
-    underAttestering: boolean;
     kanRedigere: boolean;
     harAttestantNotat: boolean;
     kanRedigereSaksbehandlernotat: boolean;
@@ -19,7 +18,7 @@ type Props = {
     oppretterNotat: boolean;
     statusElement?: ReactNode;
     onOpprettNotat: () => void;
-    onOpenEditor: () => void;
+    onOpenSaksbehandler: () => void;
     onOpenVedlegg: () => void;
     onOpenAttestant: () => void;
 };
@@ -45,7 +44,7 @@ const NotatToolbar = (props: Props) => {
                     )}
                     {props.notat && (
                         <>
-                            <Button type="button" size="small" onClick={props.onOpenEditor}>
+                            <Button type="button" size="small" onClick={props.onOpenSaksbehandler}>
                                 {props.kanRedigereSaksbehandlernotat ? 'Rediger notat' : 'Vis notat'}
                             </Button>
                             {props.skalViseVedleggsknapp && (

@@ -1,6 +1,7 @@
 import { BodyShort, Button, FileUpload, Heading, HStack, Loader, Modal, VStack } from '@navikt/ds-react';
-import { ReactNode } from 'react';
 
+import { ApiError } from '~src/api/apiClient';
+import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
 import { NotatVedlegg } from '~src/types/Notat';
 
 import { canPreviewVedlegg, downloadVedlegg, formatVedleggBeskrivelse, openVedleggPreview } from './notatPanelUtils';
@@ -13,7 +14,7 @@ type Props = {
     lasterVedlegg: boolean;
     lasterOppVedlegg: boolean;
     sletterVedlegg: boolean;
-    vedleggError?: ReactNode;
+    vedleggError: ApiError | null;
     onClose: () => void;
     onSelectFile: (file: File | null) => void;
     onUpload: () => void;
@@ -78,7 +79,7 @@ const NotatVedleggModal = (props: Props) => {
                         {props.lasterVedlegg ? (
                             <Loader size="small" title="Henter vedlegg" />
                         ) : props.vedleggError ? (
-                            props.vedleggError
+                            <ApiErrorAlert error={props.vedleggError} size="small" />
                         ) : props.vedlegg.length ? (
                             <FileUpload>
                                 <VStack gap="3" as="ul">

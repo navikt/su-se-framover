@@ -1,8 +1,10 @@
 import { Button, Heading, HStack, Modal, Textarea, VStack } from '@navikt/ds-react';
 
+import { TekstModalType } from './notatPanelTypes';
+
 type Props = {
     open: boolean;
-    editorType: 'saksbehandler' | 'attestant';
+    editorType: TekstModalType;
     kanRedigere: boolean;
     notatTekst: string;
     lagrer: boolean;
@@ -11,9 +13,9 @@ type Props = {
     onSave: () => void;
 };
 
-const NotatEditorModal = (props: Props) => {
-    const erTilAttestering = props.editorType === 'attestant';
-    const tittel = props.kanRedigere ? (erTilAttestering ? 'Rediger attestantnotat' : 'Rediger notat') : 'Vis notat';
+const NotatEndringModal = (props: Props) => {
+    const viserAttestantnotat = props.editorType === 'attestant';
+    const tittel = props.kanRedigere ? (viserAttestantnotat ? 'Rediger attestantnotat' : 'Rediger notat') : 'Vis notat';
 
     return (
         <Modal open={props.open} onClose={props.onClose} aria-label={tittel}>
@@ -25,7 +27,7 @@ const NotatEditorModal = (props: Props) => {
             <Modal.Body>
                 <VStack gap="4">
                     <Textarea
-                        label={erTilAttestering ? 'Attestantnotat' : 'Saksbehandlernotat'}
+                        label={viserAttestantnotat ? 'Attestantnotat' : 'Saksbehandlernotat'}
                         value={props.notatTekst}
                         onChange={(event) => props.onNotatTekstChange(event.target.value)}
                         readOnly={!props.kanRedigere}
@@ -54,4 +56,4 @@ const NotatEditorModal = (props: Props) => {
     );
 };
 
-export default NotatEditorModal;
+export default NotatEndringModal;
