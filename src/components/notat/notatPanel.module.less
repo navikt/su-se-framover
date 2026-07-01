@@ -1,0 +1,47 @@
+@import '@styles/variables.less';
+
+.container {
+    margin-bottom: 1.5rem;
+    width: 100%;
+    overflow: hidden;
+}
+
+.topBar {
+    margin: -1.25rem;
+    padding: 1.25rem;
+    border-bottom: 1px solid @navBorder;
+}
+
+.topBarContent {
+    width: 100%;
+}
+
+.feedbackBox {
+    width: fit-content;
+    max-width: min(42rem, 100%);
+}
+
+.actionRow {
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+.metaBlock {
+    min-width: 9rem;
+}
+
+.metaBlock :global(.navds-label) {
+    margin-bottom: 0.25rem;
+}
+
+.metaBlock :global(.navds-body-short) {
+    word-break: break-word;
+}
+
+.container :global(.navds-modal__body) {
+    padding-top: 0;
+}
+
+.container :global(.navds-file-upload__item) {
+    max-width: 100%;
+}
