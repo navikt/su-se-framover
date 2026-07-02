@@ -64,7 +64,7 @@ const InngangKontrollnotat = () => {
                             navigate(
                                 routes.kontrollsamtaleUtfylling.createURL({
                                     step: KontrollsamtaleSteg.PersonligOppmøte,
-                                    sakId: RemoteData.isSuccess(hentSakStatus) ? hentSakStatus.value[0].id : '',
+                                    sakId: hentSakStatus.value[0].id,
                                 }),
                             );
                         }}

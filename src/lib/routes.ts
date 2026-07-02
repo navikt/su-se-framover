@@ -304,7 +304,7 @@ export const kontrollsamtaleUtfylling: Route<{
     step: KontrollsamtaleSteg;
     sakId: string;
 }> = {
-    path: '/kontrollsamtale/saker/:sakId/kontrollsamtaler/notat/utfylling/:step',
+    path: 'saker/:sakId/kontrollsamtaler/notat/utfylling/:step',
     absPath: '/kontrollsamtale/saker/:sakId/kontrollsamtaler/notat/utfylling/:step',
     createURL: (args) => `/kontrollsamtale/saker/${args.sakId}/kontrollsamtaler/notat/utfylling/${args.step}`,
 };

@@ -48,9 +48,11 @@ export const annullerKontrollsamtale = (arg: AnnullerKontrollsamtaleRequest) =>
         method: 'DELETE',
     });
 
-export const lagreKontrollsamtaleNotat = (arg: LagreKontrollsamtaleNotatRequest) =>
-    apiClient({
-        url: `/saker/${arg.sakId}/kontrollsamtaler/notat`,
+export const lagreKontrollsamtaleNotat = (arg: LagreKontrollsamtaleNotatRequest) => {
+    const { sakId, ...body } = arg;
+    return apiClient({
+        url: `/saker/${sakId}/kontrollsamtaler/notat`,
         method: 'POST',
-        body: arg,
+        body,
     });
+};
