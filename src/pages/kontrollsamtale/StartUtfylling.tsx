@@ -9,7 +9,7 @@ import { KontrollsamtaleSteg } from '~src/pages/kontrollsamtale/types.ts';
 const Startutfylling = () => {
     const { formatMessage } = useI18n({ messages });
 
-    const { step } = useRouteParams<typeof kontrollsamtaleUtfylling>();
+    const { step, sakId } = useRouteParams<typeof kontrollsamtaleUtfylling>();
 
     const steg = [
         { step: KontrollsamtaleSteg.PersonligOppmøte },
@@ -36,7 +36,12 @@ const Startutfylling = () => {
                         ))}
                     </Stepper>
                 </div>
-                <Steg step={step!} title={formatMessage(aktivtSteg!.step)} hjelpetekst={aktivtSteg?.hjelpetekst} />
+                <Steg
+                    step={step!}
+                    sakId={sakId!}
+                    title={formatMessage(aktivtSteg!.step)}
+                    hjelpetekst={aktivtSteg?.hjelpetekst}
+                />
             </div>
         </div>
     );

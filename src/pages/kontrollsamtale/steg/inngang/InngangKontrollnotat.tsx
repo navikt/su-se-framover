@@ -64,6 +64,7 @@ const InngangKontrollnotat = () => {
                             navigate(
                                 routes.kontrollsamtaleUtfylling.createURL({
                                     step: KontrollsamtaleSteg.PersonligOppmøte,
+                                    sakId: hentSakStatus.value[0].id,
                                 }),
                             );
                         }}
