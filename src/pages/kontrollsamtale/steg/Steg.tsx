@@ -122,7 +122,7 @@ const ShowSteg = (props: { step: KontrollsamtaleSteg }) => {
                         step: KontrollsamtaleSteg.SkatteOpplysninger,
                     })}
                     avbrytUrl={avbrytUrl}
-                    nesteUrl={''} //todo lagre skjema
+                    nesteUrl={avbrytUrl} //todo: viderefør til kvittering (annen pr)
                 />
             );
     }

@@ -1,6 +1,7 @@
 import {
     AnnullerKontrollsamtaleRequest,
     Kontrollsamtale,
+    LagreKontrollsamtaleNotatRequest,
     OppdaterKontrollsamtaleInnkallingsdatoRequest,
     OppdaterKontrollsamtaleStatusOgJournalpostRequest,
 } from '~src/types/Kontrollsamtale';
@@ -45,4 +46,11 @@ export const annullerKontrollsamtale = (arg: AnnullerKontrollsamtaleRequest) =>
     apiClient<Kontrollsamtale>({
         url: `/saker/${arg.sakId}/kontrollsamtaler/${arg.kontrollsamtaleId}`,
         method: 'DELETE',
+    });
+
+export const lagreKontrollsamtaleNotat = (request: LagreKontrollsamtaleNotatRequest) =>
+    apiClient({
+        url: '/kontrollsamtale/notat',
+        method: 'POST',
+        body: request,
     });
