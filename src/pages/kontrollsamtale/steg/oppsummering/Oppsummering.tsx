@@ -27,7 +27,6 @@ const Oppsummering = ({ forrigeUrl, nesteUrl, avbrytUrl }: Props) => {
     }>();
 
     const onSubmit = async () => {
-        console.log('submit trykket');
         if (!sakId) {
             throw new Error('Mangler sakId');
         }
@@ -42,7 +41,6 @@ const Oppsummering = ({ forrigeUrl, nesteUrl, avbrytUrl }: Props) => {
             kontrollsamtale.andreForhold === null ||
             kontrollsamtale.skatteOpplysninger === null
         ) {
-            console.log('skjema mangler felt,', kontrollsamtale);
             return;
         }
 
@@ -88,7 +86,7 @@ const Oppsummering = ({ forrigeUrl, nesteUrl, avbrytUrl }: Props) => {
                 <div style={{ marginTop: '2rem' }}>
                     <Textarea
                         label="Kommentarer"
-                        description="Har du andre opplysninger som er relevant for kontrollsamtalen?"
+                        description={formatMessage('kommentar.label')}
                         value={kontrollsamtale.fritekst ?? ''}
                         onChange={(e) => {
                             dispatch(fritekstUpdated(e.target.value));
