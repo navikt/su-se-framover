@@ -1,7 +1,8 @@
-import { Button, Modal } from '@navikt/ds-react';
+import { Button, Modal, Textarea } from '@navikt/ds-react';
 import { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import KontrollsamtaleOppsummering from 'src/pages/kontrollsamtale/steg/oppsummering/components/Kontrollsamtaleoppsummering/KontrollsamtaleOppsummering.tsx';
+import { fritekstUpdated } from '~src/features/kontrollsamtale/kontrollsamtale.slice.ts';
 import { sendKontrollsamtaleNotat } from '~src/features/søknad/innsending.slice.ts';
 import { useI18n } from '~src/lib/i18n.ts';
 import messages from '~src/pages/kontrollsamtale/steg/oppsummering/oppsummering-nb.ts';
@@ -26,6 +27,7 @@ const Oppsummering = ({ forrigeUrl, nesteUrl, avbrytUrl }: Props) => {
     }>();
 
     const onSubmit = async () => {
+        console.log('submit trykket');
         if (!sakId) {
             throw new Error('Mangler sakId');
         }
@@ -40,6 +42,7 @@ const Oppsummering = ({ forrigeUrl, nesteUrl, avbrytUrl }: Props) => {
             kontrollsamtale.andreForhold === null ||
             kontrollsamtale.skatteOpplysninger === null
         ) {
+            console.log('skjema mangler felt,', kontrollsamtale);
             return;
         }
 
@@ -63,6 +66,7 @@ const Oppsummering = ({ forrigeUrl, nesteUrl, avbrytUrl }: Props) => {
                 økonomiskSituasjon: kontrollsamtale.økonomiskSituasjon,
                 andreForhold: kontrollsamtale.andreForhold,
                 skatteOpplysninger: kontrollsamtale.skatteOpplysninger,
+                fritekst: kontrollsamtale.fritekst?.trim() ? kontrollsamtale.fritekst.trim() : null,
             }),
         );
 
@@ -81,6 +85,17 @@ const Oppsummering = ({ forrigeUrl, nesteUrl, avbrytUrl }: Props) => {
                 className={sharedStyles.container}
             >
                 <KontrollsamtaleOppsummering />
+                <div style={{ marginTop: '2rem' }}>
+                    <Textarea
+                        label="Kommentarer"
+                        description="Har du andre opplysninger som er relevant for kontrollsamtalen?"
+                        value={kontrollsamtale.fritekst ?? ''}
+                        onChange={(e) => {
+                            dispatch(fritekstUpdated(e.target.value));
+                        }}
+                        minRows={5}
+                    />
+                </div>
                 <div style={{ marginTop: '2rem' }}>
                     <Bunnknapper
                         previous={{
