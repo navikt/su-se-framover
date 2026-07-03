@@ -56,4 +56,5 @@ export interface LagreKontrollsamtaleNotatRequest {
     økonomiskSituasjon: boolean;
     andreForhold: boolean;
     skatteOpplysninger: boolean;
+    fritekst: string | null;
 }

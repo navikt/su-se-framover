@@ -21,6 +21,7 @@ export interface KontrollsamtaleState {
     økonomiskSituasjon: Nullable<boolean>;
     andreForhold: Nullable<boolean>;
     skatteOpplysninger: Nullable<boolean>;
+    fritekst: Nullable<string>;
 }
 
 const initialState: KontrollsamtaleState = {
@@ -38,6 +39,7 @@ const initialState: KontrollsamtaleState = {
     økonomiskSituasjon: null,
     andreForhold: null,
     skatteOpplysninger: null,
+    fritekst: null,
 };
 
 const kontrollsamtaleSlice = createSlice({
@@ -84,6 +86,9 @@ const kontrollsamtaleSlice = createSlice({
         skatteOpplysningerUpdated(state, action: PayloadAction<boolean | null>) {
             state.skatteOpplysninger = action.payload;
         },
+        fritekstUpdated(state, action: PayloadAction<string | null>) {
+            state.fritekst = action.payload;
+        },
     },
 });
 
@@ -99,6 +104,7 @@ export const {
     økonomiskSituasjonUpdated,
     andreForholdUpdated,
     skatteOpplysningerUpdated,
+    fritekstUpdated,
 } = kontrollsamtaleSlice.actions;
 
 export default kontrollsamtaleSlice;
