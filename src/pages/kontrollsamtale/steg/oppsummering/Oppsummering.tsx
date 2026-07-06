@@ -34,6 +34,7 @@ const Oppsummering = ({ forrigeUrl, nesteUrl, avbrytUrl }: Props) => {
             kontrollsamtale.personligOppmøte === null ||
             kontrollsamtale.fullmaktOgLegeerklæring === null ||
             kontrollsamtale.originalPass === null ||
+            kontrollsamtale.gyldigPass === null ||
             kontrollsamtale.harVærtUtenlands === null ||
             kontrollsamtale.harPlanerOmUtenlandsreise === null ||
             kontrollsamtale.reisedokumentasjon === null ||
@@ -50,6 +51,7 @@ const Oppsummering = ({ forrigeUrl, nesteUrl, avbrytUrl }: Props) => {
                 personligOppmøte: kontrollsamtale.personligOppmøte,
                 fullmaktOgLegeerklæring: kontrollsamtale.fullmaktOgLegeerklæring,
                 originalPass: kontrollsamtale.originalPass,
+                gyldigPass: kontrollsamtale.gyldigPass,
                 harVærtUtenlands: kontrollsamtale.harVærtUtenlands,
                 utenlandsoppholdDatoer: kontrollsamtale.utenlandsoppholdDatoer.map((dato) => ({
                     utreiseDato: dato.utreisedato,

@@ -48,6 +48,7 @@ export interface LagreKontrollsamtaleNotatRequest {
     personligOppmøte: boolean;
     fullmaktOgLegeerklæring: boolean;
     originalPass: boolean;
+    gyldigPass: boolean;
     harVærtUtenlands: boolean;
     utenlandsoppholdDatoer: KontrollsamtaleReiseDato[];
     harPlanerOmUtenlandsreise: boolean;
