@@ -1,7 +1,6 @@
 export default {
     'fullmaktOgLegeerklæring.label':
-        'Dersom bruker ikke møter selv, foreligger det fullmakt og legeerklæring på sykdom som gjør at det ikke er mulig å møte?',
-
+        'Foreligger det fullmakt og legeerklæring som bekrefter at sykdom gjør at bruker ikke kan møte personlig?',
     'fullmaktOgLegeerklæring.hjelpetekst':
-        'Det må være en riktig grunn til at det foreligger en fullmakt og legeerklæring',
+        'Det må foreligge en gyldig grunn for at bruker leverer fullmakt og legeerklæring.',
 };

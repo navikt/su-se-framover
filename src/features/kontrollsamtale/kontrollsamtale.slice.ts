@@ -10,6 +10,7 @@ export interface KontrollsamtaleState {
     personligOppmøte: Nullable<boolean>;
     fullmaktOgLegeerklæring: Nullable<boolean>;
     originalPass: Nullable<boolean>;
+    gyldigPass: Nullable<boolean>;
 
     harVærtUtenlands: Nullable<boolean>;
     utenlandsoppholdDatoer: ReiseDato[];
@@ -28,6 +29,7 @@ const initialState: KontrollsamtaleState = {
     personligOppmøte: null,
     fullmaktOgLegeerklæring: null,
     originalPass: null,
+    gyldigPass: null,
 
     harVærtUtenlands: null,
     utenlandsoppholdDatoer: [],
@@ -54,6 +56,9 @@ const kontrollsamtaleSlice = createSlice({
         },
         originalPassUpdated(state, action: PayloadAction<boolean | null>) {
             state.originalPass = action.payload;
+        },
+        gyldigPassUpdated(state, action: PayloadAction<boolean | null>) {
+            state.gyldigPass = action.payload;
         },
         harVærtUtenlandsUpdated(state, action: PayloadAction<boolean | null>) {
             state.harVærtUtenlands = action.payload;
@@ -96,6 +101,7 @@ export const {
     personligOppmøteUpdated,
     fullmaktOgLegeerklæringUpdated,
     originalPassUpdated,
+    gyldigPassUpdated,
     harVærtUtenlandsUpdated,
     utenlandsoppholdDatoerUpdated,
     harPlanerOmUtenlandsreiseUpdated,
