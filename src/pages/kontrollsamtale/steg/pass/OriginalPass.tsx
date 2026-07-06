@@ -62,7 +62,7 @@ const OriginalPass = ({ nesteUrl, forrigeUrl, avbrytUrl }: Props) => {
                         <BooleanRadioGroup
                             {...field}
                             legend={formatMessage('gyldigPass.label')}
-                            description={formatMessage('gyldigPass,hjelpetekst')}
+                            description={formatMessage('gyldigPass.hjelpetekst')}
                             error={fieldState.error?.message}
                             labels={{
                                 true: formatMessage('gyldigPass.radio.label.ja'),
@@ -78,6 +78,7 @@ const OriginalPass = ({ nesteUrl, forrigeUrl, avbrytUrl }: Props) => {
                     previous={{
                         onClick: () => {
                             dispatch(originalPassUpdated(form.getValues().originalPass));
+                            dispatch(gyldigPassUpdated(form.getValues().gyldigPass));
                             navigate(forrigeUrl);
                         },
                     }}
