@@ -1,4 +1,5 @@
 import { Stepper } from '@navikt/ds-react';
+import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styles from 'src/pages/søknad/index.module.less';
 import { useI18n } from '~src/lib/i18n.ts';
@@ -6,12 +7,14 @@ import { kontrollsamtaleUtfylling, useRouteParams } from '~src/lib/routes.ts';
 import messages from '~src/pages/kontrollsamtale/nb.ts';
 import Steg from '~src/pages/kontrollsamtale/steg/Steg.tsx';
 import { KontrollsamtaleSteg } from '~src/pages/kontrollsamtale/types.ts';
+import { useAppSelector } from '~src/redux/Store.ts';
 
 const Startutfylling = () => {
     const { formatMessage } = useI18n({ messages });
     const navigate = useNavigate();
 
     const { step, sakId } = useRouteParams<typeof kontrollsamtaleUtfylling>();
+    const personligOppmøte = useAppSelector((state) => state.kontrollsamtale.personligOppmøte);
 
     if (!sakId) {
         throw new Error('Mangler sakId');
@@ -19,7 +22,8 @@ const Startutfylling = () => {
 
     const steg = [
         { step: KontrollsamtaleSteg.PersonligOppmøte },
-        { step: KontrollsamtaleSteg.FullmaktOgLegeerklæring },
+        ...(personligOppmøte === false ? [{ step: KontrollsamtaleSteg.FullmaktOgLegeerklæring }] : []),
+
         { step: KontrollsamtaleSteg.OriginalPass },
         { step: KontrollsamtaleSteg.ReisetilUtlandet },
         { step: KontrollsamtaleSteg.ØkonomiskSituasjon },
@@ -28,6 +32,21 @@ const Startutfylling = () => {
         { step: KontrollsamtaleSteg.Oppsummering, hjelpetekst: formatMessage('steg.oppsummering.hjelpetekst') },
     ];
     const aktivtStegIndex = steg.findIndex((s) => s.step === step);
+    useEffect(() => {
+        if (aktivtStegIndex === -1) {
+            navigate(
+                kontrollsamtaleUtfylling.createURL({
+                    sakId,
+                    step: KontrollsamtaleSteg.PersonligOppmøte,
+                }),
+                { replace: true },
+            );
+        }
+    }, [aktivtStegIndex, navigate, sakId]);
+
+    if (aktivtStegIndex === -1) {
+        return null;
+    }
     const aktivtSteg = steg[aktivtStegIndex];
 
     return (

@@ -38,15 +38,7 @@ const ShowSteg = (props: { step: KontrollsamtaleSteg; sakId: string }) => {
     }
     switch (props.step) {
         case KontrollsamtaleSteg.PersonligOppmøte:
-            return (
-                <PersonligOppmøte
-                    nesteUrl={routes.kontrollsamtaleUtfylling.createURL({
-                        step: KontrollsamtaleSteg.FullmaktOgLegeerklæring,
-                        sakId: props.sakId,
-                    })}
-                    avbrytUrl={avbrytUrl}
-                />
-            );
+            return <PersonligOppmøte sakId={props.sakId} avbrytUrl={avbrytUrl} />;
         case KontrollsamtaleSteg.FullmaktOgLegeerklæring:
             return (
                 <FullmaktOgLegeerklæring

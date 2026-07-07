@@ -30,9 +30,10 @@ const Oppsummering = ({ forrigeUrl, nesteUrl, avbrytUrl }: Props) => {
         if (!sakId) {
             throw new Error('Mangler sakId');
         }
+
         if (
             kontrollsamtale.personligOppmøte === null ||
-            kontrollsamtale.fullmaktOgLegeerklæring === null ||
+            (kontrollsamtale.personligOppmøte === false && kontrollsamtale.fullmaktOgLegeerklæring === null) ||
             kontrollsamtale.originalPass === null ||
             kontrollsamtale.gyldigPass === null ||
             kontrollsamtale.harVærtUtenlands === null ||
