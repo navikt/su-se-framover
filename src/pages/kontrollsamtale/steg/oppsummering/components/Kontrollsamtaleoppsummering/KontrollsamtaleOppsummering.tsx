@@ -61,22 +61,23 @@ const KontrollsamtaleOppsummering = () => {
                     <EndreSvar path={KontrollsamtaleSteg.PersonligOppmøte} />
                 </Accordion.Content>
             </AccordionItem>
-
-            <AccordionItem>
-                <AccordionHeader type="button">
-                    <div className={styles.headerContent}>
-                        <FileTextIcon fontSize={'25px'} /> {formatMessage(KontrollsamtaleSteg.FullmaktOgLegeerklæring)}
-                    </div>
-                </AccordionHeader>
-                <AccordionContent>
-                    <Oppsummeringsfelt
-                        label={formatMessage('fullmaktOgLegeerklæring.label')}
-                        verdi={booleanSvar(kontrollsamtale.fullmaktOgLegeerklæring, formatMessage)}
-                    />
-                    <EndreSvar path={KontrollsamtaleSteg.FullmaktOgLegeerklæring} />
-                </AccordionContent>
-            </AccordionItem>
-
+            {kontrollsamtale.personligOppmøte === false && (
+                <AccordionItem>
+                    <AccordionHeader type="button">
+                        <div className={styles.headerContent}>
+                            <FileTextIcon fontSize={'25px'} />{' '}
+                            {formatMessage(KontrollsamtaleSteg.FullmaktOgLegeerklæring)}
+                        </div>
+                    </AccordionHeader>
+                    <AccordionContent>
+                        <Oppsummeringsfelt
+                            label={formatMessage('fullmaktOgLegeerklæring.label')}
+                            verdi={booleanSvar(kontrollsamtale.fullmaktOgLegeerklæring, formatMessage)}
+                        />
+                        <EndreSvar path={KontrollsamtaleSteg.FullmaktOgLegeerklæring} />
+                    </AccordionContent>
+                </AccordionItem>
+            )}
             <AccordionItem>
                 <AccordionHeader type="button">
                     <div className={styles.headerContent}>

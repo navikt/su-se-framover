@@ -46,7 +46,7 @@ export interface KontrollsamtaleReiseDato {
 export interface LagreKontrollsamtaleNotatRequest {
     sakId: string;
     personligOppmøte: boolean;
-    fullmaktOgLegeerklæring: boolean;
+    fullmaktOgLegeerklæring: boolean | null;
     originalPass: boolean;
     gyldigPass: boolean;
     harVærtUtenlands: boolean;
