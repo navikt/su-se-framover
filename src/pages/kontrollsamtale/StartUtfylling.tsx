@@ -1,4 +1,5 @@
 import { Stepper } from '@navikt/ds-react';
+import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styles from 'src/pages/søknad/index.module.less';
 import { useI18n } from '~src/lib/i18n.ts';
@@ -31,13 +32,19 @@ const Startutfylling = () => {
         { step: KontrollsamtaleSteg.Oppsummering, hjelpetekst: formatMessage('steg.oppsummering.hjelpetekst') },
     ];
     const aktivtStegIndex = steg.findIndex((s) => s.step === step);
+    useEffect(() => {
+        if (aktivtStegIndex === -1) {
+            navigate(
+                kontrollsamtaleUtfylling.createURL({
+                    sakId,
+                    step: KontrollsamtaleSteg.PersonligOppmøte,
+                }),
+                { replace: true },
+            );
+        }
+    }, [aktivtStegIndex, navigate, sakId]);
+
     if (aktivtStegIndex === -1) {
-        navigate(
-            kontrollsamtaleUtfylling.createURL({
-                sakId,
-                step: KontrollsamtaleSteg.PersonligOppmøte,
-            }),
-        );
         return null;
     }
     const aktivtSteg = steg[aktivtStegIndex];
