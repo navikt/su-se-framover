@@ -15,6 +15,7 @@ import Bunnknapper from '~src/pages/søknad/bunnknapper/Bunnknapper.tsx';
 import { useAppDispatch, useAppSelector } from '~src/redux/Store.ts';
 
 type Props = {
+    sakId: string;
     avbrytUrl: string;
 };
 
