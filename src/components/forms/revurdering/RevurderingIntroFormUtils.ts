@@ -21,7 +21,7 @@ export interface RevurderingIntroFormData {
     omgjøringGrunn: Nullable<OmgjøringsGrunn>;
     klageId: Nullable<string>;
     informasjonSomRevurderes: InformasjonSomRevurderes[];
-    begrunnelse: Nullable<string>;
+    begrunnelse: Nullable<string>; //TODO: rm ifbm notat
 }
 
 export const revurderingIntroFormDataTilOpprettRequest = (args: {
@@ -69,7 +69,7 @@ export const revurderingIntroFormSchema = yup.object<RevurderingIntroFormData>({
             ? yup.string().nullable().required('Du må velge en omgjøringsgrunn')
             : yup.string().nullable();
     }),
-    begrunnelse: yup.string().nullable().required(),
+    begrunnelse: yup.mixed<Nullable<string>>().nullable(),
     informasjonSomRevurderes: yup
         .array<InformasjonSomRevurderes>(
             yup.mixed<InformasjonSomRevurderes>().oneOf(Object.values(InformasjonSomRevurderes)),
