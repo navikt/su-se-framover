@@ -1,6 +1,9 @@
 import { MinusIcon, PlusIcon, XMarkIcon } from '@navikt/aksel-icons';
-import { Button, Heading, HStack, Textarea, VStack } from '@navikt/ds-react';
+import { Alert, BodyShort, Button, Heading, HStack, Textarea, VStack } from '@navikt/ds-react';
 import { useCallback, useEffect, useRef, useState } from 'react';
+
+import { ApiError } from '~src/api/apiClient';
+import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
 
 import styles from './notatEndringPanel.module.less';
 import { TekstModalType } from './notatPanelTypes';
@@ -11,6 +14,8 @@ type Props = {
     kanRedigere: boolean;
     notatTekst: string;
     lagrer: boolean;
+    successMessage?: string | null;
+    actionError?: ApiError | null;
     onClose: () => void;
     onNotatTekstChange: (value: string) => void;
     onSave: () => void;
@@ -106,7 +111,7 @@ const NotatEndringModal = (props: Props) => {
 
     return (
         <section
-            className={minimert ? `${styles.panel} ${styles.minimert}` : styles.panel}
+            className={styles.panel}
             style={{ left: posisjon.x, top: posisjon.y }}
             role="dialog"
             aria-label={tittel}
@@ -136,35 +141,39 @@ const NotatEndringModal = (props: Props) => {
                     />
                 </div>
             </div>
-            {!minimert && (
-                <div className={styles.body}>
-                    <VStack gap="4">
-                        <Textarea
-                            label={viserAttestantnotat ? 'Attestantnotat' : 'Saksbehandlernotat'}
-                            value={props.notatTekst}
-                            onChange={(event) => props.onNotatTekstChange(event.target.value)}
-                            readOnly={!props.kanRedigere}
-                            minRows={8}
-                        />
-                        <HStack gap="3">
-                            {props.kanRedigere ? (
-                                <>
-                                    <Button type="button" onClick={props.onSave} loading={props.lagrer}>
-                                        Lagre
-                                    </Button>
-                                    <Button type="button" variant="secondary" onClick={props.onClose}>
-                                        Avbryt
-                                    </Button>
-                                </>
-                            ) : (
-                                <Button type="button" variant="secondary" onClick={props.onClose}>
-                                    Lukk
+            <div className={minimert ? `${styles.body} ${styles.bodySkjult}` : styles.body}>
+                <VStack gap="4">
+                    {props.successMessage && (
+                        <Alert variant="success" size="small" contentMaxWidth={false}>
+                            <BodyShort>{props.successMessage}</BodyShort>
+                        </Alert>
+                    )}
+                    {props.actionError && <ApiErrorAlert error={props.actionError} size="small" />}
+                    <Textarea
+                        label={viserAttestantnotat ? 'Attestantnotat' : 'Saksbehandlernotat'}
+                        value={props.notatTekst}
+                        onChange={(event) => props.onNotatTekstChange(event.target.value)}
+                        readOnly={!props.kanRedigere}
+                        minRows={8}
+                    />
+                    <HStack gap="3">
+                        {props.kanRedigere ? (
+                            <>
+                                <Button type="button" onClick={props.onSave} loading={props.lagrer}>
+                                    Lagre
                                 </Button>
-                            )}
-                        </HStack>
-                    </VStack>
-                </div>
-            )}
+                                <Button type="button" variant="secondary" onClick={props.onClose}>
+                                    Avbryt
+                                </Button>
+                            </>
+                        ) : (
+                            <Button type="button" variant="secondary" onClick={props.onClose}>
+                                Lukk
+                            </Button>
+                        )}
+                    </HStack>
+                </VStack>
+            </div>
         </section>
     );
 };
