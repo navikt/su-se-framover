@@ -76,7 +76,11 @@ const NotatPanel = (props: NotatPanelProps) => {
 
             {notatHook.notat && (
                 <>
-                    <NotatEndringModal {...editor.tekstModal} />
+                    <NotatEndringModal
+                        {...editor.tekstModal}
+                        successMessage={feedback.successMessage}
+                        actionError={feedback.actionError}
+                    />
                     <NotatVedleggModal {...vedlegg.vedleggModal} />
                 </>
             )}
