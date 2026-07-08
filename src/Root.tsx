@@ -20,6 +20,7 @@ import UmamiTracker from './utils/UmamiTracker';
 
 const Attestering = lazy(() => import('./pages/saksbehandling/attestering/Attestering'));
 const Kvittering = lazy(() => import('./pages/søknad/kvittering/Kvittering'));
+const KvitteringKontrollnotat = lazy(() => import('src/pages/kontrollsamtale/kvittering/KvitteringKontrollnotat'));
 const Infoside = lazy(() => import('./pages/søknad/steg/infoside/Infoside'));
 const Inngang = lazy(() => import('./pages/søknad/steg/inngang/Inngang'));
 const InngangKontrollnotat = lazy(() => import('./pages/kontrollsamtale/steg/inngang/InngangKontrollnotat'));
@@ -105,6 +106,7 @@ const AppRoutes = () => (
         </Route>
         <Route path={routes.kontrollsamtale.path} element={<WithDocTitle title="Kontrollsamtale" Page={Index} />}>
             <Route path={routes.kontrollsamtaleUtfylling.path} element={<Startutfylling />} />
+            <Route path={routes.kontrollsamtaleKvittering.path} element={<KvitteringKontrollnotat />} />
         </Route>
         <Route
             path={routes.saksoversiktValgtSak.path}

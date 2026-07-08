@@ -309,6 +309,14 @@ export const kontrollsamtaleUtfylling: Route<{
     createURL: (args) => `/kontrollsamtale/saker/${args.sakId}/kontrollsamtaler/notat/utfylling/${args.step}`,
 };
 
+export const kontrollsamtaleKvittering: Route<{
+    sakId: string;
+}> = {
+    path: 'saker/:sakId/kontrollsamtaler/notat/kvittering',
+    absPath: '/kontrollsamtale/saker/:sakId/kontrollsamtaler/notat/kvittering',
+    createURL: (args) => `/kontrollsamtale/saker/${args.sakId}/kontrollsamtaler/notat/kvittering`,
+};
+
 export const kontrollsamtalePersonSok: Route<Record<string, never>> = {
     path: 'kontrollsamtale/personsok',
     absPath: '/kontrollsamtale/personsok',
