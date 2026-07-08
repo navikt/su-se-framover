@@ -1,0 +1,52 @@
+@import '@styles/variables.less';
+
+.panel {
+    position: fixed;
+    z-index: 20;
+    width: 500px;
+    height: 520px;
+    min-width: 125px;
+    min-height: 130px;
+    max-width: calc(100vw - 2rem);
+    max-height: calc(100vh - 2rem);
+    resize: both;
+    display: flex;
+    flex-direction: column;
+    background: @navBakgrunn;
+    border: 1px solid @navBorder;
+    border-radius: @border-radius-base;
+    box-shadow: var(--a-shadow-dialog);
+    overflow: hidden;
+}
+
+.minimert {
+    height: auto;
+    min-height: 0;
+    resize: none;
+}
+
+.header {
+    flex: 0 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: @spacing-xs;
+    padding: @spacing-xs @spacing-s;
+    border-bottom: 1px solid @navBorder;
+    background: var(--a-surface-subtle);
+    cursor: move;
+    user-select: none;
+}
+
+.headerButtons {
+    display: flex;
+    align-items: center;
+    gap: @spacing-xxs;
+}
+
+.body {
+    flex: 1 1 auto;
+    min-height: 0;
+    padding: @spacing-s;
+    overflow: auto;
+}
