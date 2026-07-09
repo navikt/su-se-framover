@@ -131,7 +131,9 @@ const ShowSteg = (props: { step: KontrollsamtaleSteg; sakId: string }) => {
                         sakId: props.sakId,
                     })}
                     avbrytUrl={avbrytUrl}
-                    nesteUrl={avbrytUrl} //todo: viderefør til kvittering (annen pr)
+                    nesteUrl={routes.kontrollsamtaleKvittering.createURL({
+                        sakId: props.sakId,
+                    })}
                 />
             );
     }
