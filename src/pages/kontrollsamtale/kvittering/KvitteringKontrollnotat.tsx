@@ -9,6 +9,7 @@ import { useI18n } from '~src/lib/i18n.ts';
 import messages from '~src/pages/kontrollsamtale/kvittering/kvittering-nb.ts';
 import styles from '~src/pages/søknad/kvittering/kvittering.module.less';
 import { useAppDispatch, useAppSelector } from '~src/redux/Store.ts';
+import { openPdfBlobInNewTab } from '~src/utils/dokumentUtils.ts';
 import { showName } from '~src/utils/person/personUtils.ts';
 
 export const KvitteringKontrollnotat = () => {
@@ -22,7 +23,7 @@ export const KvitteringKontrollnotat = () => {
         if (sakId) {
             dispatch(fetchSakByIdEllerNummer({ sakId }));
         }
-    }, [sakId]);
+    }, [sakId, dispatch]);
 
     const handleSkrivUt = async () => {
         if (!sakId) {
@@ -31,7 +32,9 @@ export const KvitteringKontrollnotat = () => {
         const res = await fetchKontrollsamtaleNotatUtskrift(sakId);
 
         if (res.status === 'ok') {
-            window.open(URL.createObjectURL(res.data));
+            openPdfBlobInNewTab(res.data);
+        } else {
+            throw new Error('Kunne ikke hente kontrollnotat PDF');
         }
     };
     return (

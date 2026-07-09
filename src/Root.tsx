@@ -20,7 +20,7 @@ import UmamiTracker from './utils/UmamiTracker';
 
 const Attestering = lazy(() => import('./pages/saksbehandling/attestering/Attestering'));
 const Kvittering = lazy(() => import('./pages/søknad/kvittering/Kvittering'));
-const KvitteringKontrollnotat = lazy(() => import('src/pages/kontrollsamtale/kvittering/KvitteringKontrollnotat'));
+const KvitteringKontrollnotat = lazy(() => import('./pages/kontrollsamtale/kvittering/KvitteringKontrollnotat'));
 const Infoside = lazy(() => import('./pages/søknad/steg/infoside/Infoside'));
 const Inngang = lazy(() => import('./pages/søknad/steg/inngang/Inngang'));
 const InngangKontrollnotat = lazy(() => import('./pages/kontrollsamtale/steg/inngang/InngangKontrollnotat'));
