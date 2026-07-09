@@ -1,4 +1,4 @@
-import { Alert, Checkbox, CheckboxGroup, Heading, Select, Textarea } from '@navikt/ds-react';
+import { Alert, Checkbox, CheckboxGroup, Heading, Select } from '@navikt/ds-react';
 import { useEffect } from 'react';
 import { Controller, FieldErrors } from 'react-hook-form';
 import { useOutletContext } from 'react-router-dom';
@@ -190,23 +190,6 @@ const RevurderingIntroForm = (props: RevurderingIntroFormProps) => {
                             </>
                         )}
                     />
-
-                    <div className={styles.begrunnelseContainer}>
-                        <Controller
-                            control={form.control}
-                            name={'begrunnelse'}
-                            render={({ field: { value, ...field }, fieldState }) => (
-                                <Textarea
-                                    id={field.name}
-                                    label={formatMessage('input.begrunnelse.label')}
-                                    error={fieldState.error?.message}
-                                    value={value ?? ''}
-                                    {...field}
-                                    description={formatMessage('revurdering.begrunnelse.description')}
-                                />
-                            )}
-                        />
-                    </div>
                 </div>
             </>
         </FormWrapper>
