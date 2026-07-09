@@ -80,7 +80,6 @@ export const useNotatEditor = (props: Props) => {
                         }),
                     );
                     props.onSuccess('Attestantnotat lagret');
-                    lukkTekstModal();
                 },
                 props.onError,
             );
@@ -101,7 +100,6 @@ export const useNotatEditor = (props: Props) => {
                     }),
                 );
                 props.onSuccess('Saksbehandlernotat lagret');
-                lukkTekstModal();
             },
             props.onError,
         );
