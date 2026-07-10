@@ -87,3 +87,12 @@ export async function brevutkastForAvslagPgaManglendeDokumentasjon(arg: {
         bodyTransformer: (res) => res.blob(),
     });
 }
+
+export async function fetchKontrollsamtaleNotatUtskrift(sakId: string): Promise<ApiClientResult<Blob>> {
+    return apiClient({
+        url: `/saker/${sakId}/kontrollsamtaler/notat/pdf`,
+        method: 'GET',
+        request: { headers: new Headers({ Accept: 'application/pdf' }) },
+        bodyTransformer: (res) => res.blob(),
+    });
+}
