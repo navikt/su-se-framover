@@ -4,7 +4,6 @@ import { opprettRevurderingÅrsakTekstMapper } from '~src/typeMappinger/OpprettR
 export default {
     'revurdering.årsak': 'Årsak for revurdering',
     'revurdering.begrunnelse': 'Begrunnelse',
-    'revurdering.begrunnelse.description': 'Unngå personsensitive opplysninger',
 
     'feiloppsummering.title': 'For å gå videre må du rette opp følgende:',
 
