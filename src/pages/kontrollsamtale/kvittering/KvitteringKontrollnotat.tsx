@@ -56,6 +56,9 @@ export const KvitteringKontrollnotat = () => {
                     </span>
                 </Heading>
             </Panel>
+            <Heading level="2" size="medium" spacing>
+                <strong>{formatMessage('info.skjema')}</strong>
+            </Heading>
             <Button onClick={handleSkrivUt}>Skriv ut kontrollnotat</Button>
         </div>
     );

@@ -1,5 +1,4 @@
-import { Button, Modal, Textarea } from '@navikt/ds-react';
-import { useState } from 'react';
+import { Textarea } from '@navikt/ds-react';
 import { useNavigate, useParams } from 'react-router-dom';
 import KontrollsamtaleOppsummering from 'src/pages/kontrollsamtale/steg/oppsummering/components/Kontrollsamtaleoppsummering/KontrollsamtaleOppsummering.tsx';
 import { fritekstUpdated } from '~src/features/kontrollsamtale/kontrollsamtale.slice.ts';
@@ -21,7 +20,6 @@ const Oppsummering = ({ forrigeUrl, nesteUrl, avbrytUrl }: Props) => {
     const { formatMessage } = useI18n({ messages: { ...messages } });
     const dispatch = useAppDispatch();
     const kontrollsamtale = useAppSelector((state) => state.kontrollsamtale);
-    const [visModal, setModal] = useState(false);
     const { sakId } = useParams<{
         sakId: string;
     }>();
@@ -71,71 +69,46 @@ const Oppsummering = ({ forrigeUrl, nesteUrl, avbrytUrl }: Props) => {
             }),
         );
 
-        //Todo: Midlertidig visning med modal, skal endres i annen pr
         if (sendKontrollsamtaleNotat.fulfilled.match(resultat)) {
-            setModal(true);
+            navigate(nesteUrl);
         }
     };
     return (
-        <>
-            <form
-                onSubmit={(event) => {
-                    event.preventDefault();
-                    onSubmit();
-                }}
-                className={sharedStyles.container}
-            >
-                <KontrollsamtaleOppsummering />
-                <div style={{ marginTop: '2rem' }}>
-                    <Textarea
-                        label="Kommentarer"
-                        description={formatMessage('kommentar.label')}
-                        value={kontrollsamtale.fritekst ?? ''}
-                        onChange={(e) => {
-                            dispatch(fritekstUpdated(e.target.value));
-                        }}
-                        minRows={5}
-                    />
-                </div>
-                <div style={{ marginTop: '2rem' }}>
-                    <Bunnknapper
-                        previous={{
-                            onClick: () => {
-                                navigate(forrigeUrl);
-                            },
-                        }}
-                        next={{
-                            label: formatMessage('sendInnSkjema'),
-                        }}
-                        avbryt={{
-                            toRoute: avbrytUrl,
-                        }}
-                    />
-                </div>
-            </form>
-            <Modal
-                open={visModal}
-                onClose={() => {
-                    setModal(false);
-                    navigate(nesteUrl);
-                }}
-                header={{
-                    heading: 'Skjemaet er lagret',
-                }}
-            >
-                <Modal.Body>Kontrollsamtalenotatet er lagret.</Modal.Body>
-                <Modal.Footer>
-                    <Button
-                        onClick={() => {
-                            setModal(false);
-                            navigate(nesteUrl);
-                        }}
-                    >
-                        Ok
-                    </Button>
-                </Modal.Footer>
-            </Modal>
-        </>
+        <form
+            onSubmit={(event) => {
+                event.preventDefault();
+                onSubmit();
+            }}
+            className={sharedStyles.container}
+        >
+            <KontrollsamtaleOppsummering />
+            <div style={{ marginTop: '2rem' }}>
+                <Textarea
+                    label="Kommentarer"
+                    description={formatMessage('kommentar.label')}
+                    value={kontrollsamtale.fritekst ?? ''}
+                    onChange={(e) => {
+                        dispatch(fritekstUpdated(e.target.value));
+                    }}
+                    minRows={5}
+                />
+            </div>
+            <div style={{ marginTop: '2rem' }}>
+                <Bunnknapper
+                    previous={{
+                        onClick: () => {
+                            navigate(forrigeUrl);
+                        },
+                    }}
+                    next={{
+                        label: formatMessage('sendInnSkjema'),
+                    }}
+                    avbryt={{
+                        toRoute: avbrytUrl,
+                    }}
+                />
+            </div>
+        </form>
     );
 };
 export default Oppsummering;
