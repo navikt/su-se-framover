@@ -302,10 +302,19 @@ export const kontrollsamtale: Route<{
 
 export const kontrollsamtaleUtfylling: Route<{
     step: KontrollsamtaleSteg;
+    sakId: string;
 }> = {
-    path: 'utfylling/:step',
-    absPath: '/kontrollsamtale/utfylling/:step',
-    createURL: (args) => `/kontrollsamtale/utfylling/${args.step}`,
+    path: 'saker/:sakId/kontrollsamtaler/notat/utfylling/:step',
+    absPath: '/kontrollsamtale/saker/:sakId/kontrollsamtaler/notat/utfylling/:step',
+    createURL: (args) => `/kontrollsamtale/saker/${args.sakId}/kontrollsamtaler/notat/utfylling/${args.step}`,
+};
+
+export const kontrollsamtaleKvittering: Route<{
+    sakId: string;
+}> = {
+    path: 'saker/:sakId/kontrollsamtaler/notat/kvittering',
+    absPath: '/kontrollsamtale/saker/:sakId/kontrollsamtaler/notat/kvittering',
+    createURL: (args) => `/kontrollsamtale/saker/${args.sakId}/kontrollsamtaler/notat/kvittering`,
 };
 
 export const kontrollsamtalePersonSok: Route<Record<string, never>> = {

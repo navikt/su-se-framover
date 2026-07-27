@@ -23,6 +23,7 @@ interface MottakerFormProps {
     brevtype: Brevtype;
     onClose?: () => void;
     onDelete?: () => void;
+    initialValues?: Partial<LagreMottakerRequest>;
 }
 
 type FormValues = LagreMottakerRequest;
@@ -34,24 +35,43 @@ interface MottakerFormExtendedProps extends MottakerFormProps {
     form: UseFormReturn<FormValues>;
     kunForm?: boolean; // kun brukes som form og ikke gjøre noen requests mot backend
 }
+
+const buildEmptyFormValues = ({
+    brevtype,
+    referanseId,
+    referanseType,
+    initialValues,
+}: {
+    brevtype: Brevtype;
+    referanseId: string;
+    referanseType: ReferanseType;
+    initialValues?: Partial<LagreMottakerRequest>;
+}): FormValues => ({
+    navn: initialValues?.navn ?? '',
+    foedselsnummer: initialValues?.foedselsnummer ?? '',
+    orgnummer: initialValues?.orgnummer ?? '',
+    adresse: {
+        adresselinje1: initialValues?.adresse?.adresselinje1 ?? '',
+        adresselinje2: initialValues?.adresse?.adresselinje2 ?? '',
+        adresselinje3: initialValues?.adresse?.adresselinje3 ?? '',
+        postnummer: initialValues?.adresse?.postnummer ?? '',
+        poststed: initialValues?.adresse?.poststed ?? '',
+    },
+    referanseType,
+    referanseId,
+    brevtype,
+});
+
 export function Mottaker(props: MottakerFormProps) {
     const emptyFormValues = useMemo<FormValues>(
-        () => ({
-            navn: '',
-            foedselsnummer: '',
-            orgnummer: '',
-            adresse: {
-                adresselinje1: '',
-                adresselinje2: '',
-                adresselinje3: '',
-                postnummer: '',
-                poststed: '',
-            },
-            referanseType: props.referanseType,
-            referanseId: props.referanseId,
-            brevtype: props.brevtype,
-        }),
-        [props.brevtype, props.referanseId, props.referanseType, props.sakId],
+        () =>
+            buildEmptyFormValues({
+                brevtype: props.brevtype,
+                referanseId: props.referanseId,
+                referanseType: props.referanseType,
+                initialValues: props.initialValues,
+            }),
+        [props.brevtype, props.initialValues, props.referanseId, props.referanseType],
     );
 
     const form = useForm<FormValues>({
@@ -74,25 +94,18 @@ export function MottakerForm({
     brevtype,
     onClose,
     onDelete,
+    initialValues,
     kunForm = false,
 }: MottakerFormExtendedProps) {
     const emptyFormValues = useMemo<FormValues>(
-        () => ({
-            navn: '',
-            foedselsnummer: '',
-            orgnummer: '',
-            adresse: {
-                adresselinje1: '',
-                adresselinje2: '',
-                adresselinje3: '',
-                postnummer: '',
-                poststed: '',
-            },
-            referanseType,
-            referanseId,
-            brevtype,
-        }),
-        [brevtype, referanseId, referanseType, sakId],
+        () =>
+            buildEmptyFormValues({
+                brevtype,
+                referanseId,
+                referanseType,
+                initialValues,
+            }),
+        [brevtype, initialValues, referanseId, referanseType],
     );
 
     const { register, handleSubmit, reset, formState, setError, clearErrors, watch } = form;
@@ -183,7 +196,20 @@ export function MottakerForm({
         };
 
         hentOgFyll();
-    }, [referanseId, referanseType, brevtype]);
+    }, [brevtype, kunForm, referanseId, referanseType, emptyFormValues]);
+
+    useEffect(() => {
+        if (!initialValues) return;
+
+        skipClearOnChangeRef.current = true;
+        reset({
+            ...emptyFormValues,
+            adresse: { ...emptyFormValues.adresse },
+        });
+        setFeedback(null);
+        setSaveState('idle');
+        setDeleteState('idle');
+    }, [emptyFormValues, initialValues, reset]);
 
     const onSubmit = async (data: FormValues) => {
         if (kunForm) return;

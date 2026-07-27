@@ -26,7 +26,6 @@ const OpprettRevurdering = (props: { sakId: string; minOgMaxPeriode: Periode }) 
             årsak: null,
             omgjøringGrunn: null,
             informasjonSomRevurderes: [],
-            begrunnelse: null,
         },
         resolver: yupResolver(revurderingIntroFormSchema),
     });

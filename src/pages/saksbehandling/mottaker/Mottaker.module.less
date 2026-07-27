@@ -40,6 +40,11 @@
     margin-top: @spacing;
 }
 
+.embeddedPageContainer {
+    margin-left: 0;
+    width: 100%;
+}
+
 .box {
     display: flex;
     flex-direction: column;
@@ -53,8 +58,18 @@
     }
 }
 
+.embeddedBox {
+    width: 100%;
+    max-width: 35rem;
+}
+
 .buttonContainer {
     display: flex;
     gap: @spacing;
     justify-content: flex-start;
+}
+
+.inlineAction {
+    align-self: flex-start;
+    max-width: 100%;
 }

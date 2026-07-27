@@ -2,10 +2,11 @@ import * as RemoteData from '@devexperts/remote-data-ts';
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 
 import { ApiError } from '~src/api/apiClient';
+import * as kontrollsamtaleApi from '~src/api/kontrollsamtaleApi';
 import * as søknadApi from '~src/api/søknadApi';
 import { handleAsyncThunk, simpleRejectedActionToRemoteData } from '~src/redux/utils';
+import { LagreKontrollsamtaleNotatRequest } from '~src/types/Kontrollsamtale.ts';
 import { Person } from '~src/types/Person';
-
 import { AlderssøknadState, UføresøknadState } from './søknad.slice';
 import { toAldersinnsending, toUføreinnsending } from './utils';
 
@@ -37,11 +38,26 @@ export const sendAldersøknad = createAsyncThunk<
     return thunkApi.rejectWithValue(res.error);
 });
 
+export const sendKontrollsamtaleNotat = createAsyncThunk<
+    void,
+    LagreKontrollsamtaleNotatRequest,
+    { rejectValue: ApiError }
+>('innsending/sendKontrollsamtaleNotat', async (request, thunkApi) => {
+    const res = await kontrollsamtaleApi.lagreKontrollsamtaleNotat(request);
+
+    if (res.status === 'ok') {
+        return; //todo: endre når den oppdaterer kontrollsamtalene
+    }
+    return thunkApi.rejectWithValue(res.error);
+});
+
 export interface InnsendingState {
     søknad: RemoteData.RemoteData<ApiError, søknadApi.OpprettetSøknad>;
+    kontrollsamtaleNotat: RemoteData.RemoteData<ApiError, void>;
 }
 const initialState: InnsendingState = {
     søknad: RemoteData.initial,
+    kontrollsamtaleNotat: RemoteData.initial,
 };
 export default createSlice({
     name: 'innsending',
@@ -70,6 +86,18 @@ export default createSlice({
             },
             rejected: (state, action) => {
                 state.søknad = simpleRejectedActionToRemoteData(action);
+            },
+        });
+
+        handleAsyncThunk(builder, sendKontrollsamtaleNotat, {
+            pending: (state) => {
+                state.kontrollsamtaleNotat = RemoteData.pending;
+            },
+            fulfilled: (state, action) => {
+                state.kontrollsamtaleNotat = RemoteData.success(action.payload);
+            },
+            rejected: (state, action) => {
+                state.kontrollsamtaleNotat = simpleRejectedActionToRemoteData(action);
             },
         });
     },

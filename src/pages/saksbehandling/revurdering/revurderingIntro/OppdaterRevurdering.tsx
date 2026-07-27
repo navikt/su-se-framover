@@ -35,8 +35,8 @@ const OppdaterRevurdering = (props: {
         årsak: props.revurdering.årsak,
         omgjøringsgrunn: null,
         informasjonSomRevurderes: Object.keys(props.revurdering.informasjonSomRevurderes) as InformasjonSomRevurderes[],
-        begrunnelse: props.revurdering.begrunnelse,
     };
+
     const form = useForm<RevurderingIntroFormData>({
         defaultValues: initialValues,
         resolver: yupResolver(revurderingIntroFormSchema),
