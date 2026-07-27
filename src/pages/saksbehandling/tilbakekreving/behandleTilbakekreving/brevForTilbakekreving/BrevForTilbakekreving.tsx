@@ -135,7 +135,9 @@ const BrevForTilbakekreving = (props: {
                 form.resetField('fritekst', { defaultValue: res.data.fritekst ?? '' });
                 return;
             }
-            form.setError('fritekst', { message: 'Kunne ikke hente fritekst' });
+            if (res.status === 'error' && res.error.statusCode !== 404) {
+                form.setError('fritekst', { message: 'Kunne ikke hente fritekst' });
+            }
         });
     }, [skalSendeBrev, props.tilbakekreving.id, props.sakId]);
 
@@ -155,7 +157,7 @@ const BrevForTilbakekreving = (props: {
                 }
                 return;
             } else {
-                if (res.error.statusCode) {
+                if (res.error.statusCode !== 404) {
                     setMottakerFetchError(toMottakerAlert(res.error, 'Kan ikke hente mottaker'));
                 }
             }
