@@ -1,5 +1,5 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import { Alert, BodyShort, Box, Heading, HStack, Label, Loader, Table, VStack } from '@navikt/ds-react';
+import { BodyShort, Box, Heading, HStack, Label, Loader, Table, VStack } from '@navikt/ds-react';
 import { useEffect } from 'react';
 import {
     AapFradragResponse,
@@ -12,6 +12,7 @@ import {
     ResponseDtoUføre,
     UføreBeregningsperiode,
 } from '~src/api/EksterneFradragApi.ts';
+import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
 import { ApiResult, useApiCall } from '~src/lib/hooks.ts';
 import { formatDate } from '~src/utils/date/dateUtils.ts';
 
@@ -191,11 +192,7 @@ const EksternSeksjon = ({
                 <Heading size="xsmall">{tittel}</Heading>
                 {RemoteData.isPending(resultat) && <Loader size="xsmall" title={`Henter ${tittel}`} />}
             </HStack>
-            {RemoteData.isFailure(resultat) && (
-                <Alert variant="error" size="small" inline>
-                    Kunne ikke hente {tittel.toLowerCase()}
-                </Alert>
-            )}
+            {RemoteData.isFailure(resultat) && <ApiErrorAlert error={resultat.error} size="small" />}
             {children}
         </VStack>
     </Box>

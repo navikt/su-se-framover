@@ -33,7 +33,6 @@ export async function opprettRevurdering(
             årsak: arg.årsak,
             omgjøringsgrunn: arg.omgjøringsgrunn,
             informasjonSomRevurderes: arg.informasjonSomRevurderes,
-            begrunnelse: arg.begrunnelse,
             klageId: arg.klageId,
         },
     });
@@ -136,7 +135,6 @@ export async function oppdaterRevurdering(
             tilOgMed: formatISO(arg.periode.tilOgMed, { representation: 'date' }),
             årsak: arg.årsak,
             informasjonSomRevurderes: arg.informasjonSomRevurderes,
-            begrunnelse: arg.begrunnelse,
             omgjøringsgrunn: arg.omgjøringsgrunn,
         },
     });

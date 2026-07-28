@@ -1,10 +1,17 @@
 import { Alert, Heading } from '@navikt/ds-react';
 import { Link, useOutletContext } from 'react-router-dom';
-
+import NotatPanel from '~src/components/notat/NotatPanel.tsx';
 import { SaksoversiktContext } from '~src/context/SaksoversiktContext';
 import { useI18n } from '~src/lib/i18n';
 import * as Routes from '~src/lib/routes';
+import { ReferanseType } from '~src/types/Notat.ts';
 import { erInformasjonsRevurdering } from '~src/utils/revurdering/revurderingUtils';
+import {
+    erRevurderingAvsluttet,
+    erRevurderingIverksatt,
+    erRevurderingTilAttestering,
+} from '~src/utils/revurdering/revurderingUtils.ts';
+import { erIverksatt, erSøknadsbehandlingTilAttestering } from '~src/utils/SøknadsbehandlingUtils.ts';
 import styles from './Attestering.module.less';
 import messages from './Attestering-nb';
 import AttesterKlage from './attesterKlage/AttesterKlage';
@@ -41,6 +48,24 @@ const Attestering = () => {
 
     return (
         <div className={styles.pageContainer}>
+            {søknadsbehandling && (
+                <NotatPanel
+                    sakId={sak.id}
+                    referanseId={søknadsbehandling.id}
+                    referanseType={ReferanseType.SØKNAD}
+                    underAttestering={erSøknadsbehandlingTilAttestering(søknadsbehandling)}
+                    kanRedigere={!erIverksatt(søknadsbehandling) && !søknadsbehandling.erLukket}
+                />
+            )}
+            {revurdering && (
+                <NotatPanel
+                    sakId={sak.id}
+                    referanseId={revurdering.id}
+                    referanseType={ReferanseType.REVURDERING}
+                    underAttestering={erRevurderingTilAttestering(revurdering)}
+                    kanRedigere={!erRevurderingIverksatt(revurdering) && !erRevurderingAvsluttet(revurdering)}
+                />
+            )}
             <div className={styles.headingContainer}>
                 <Heading level="1" size="large" className={styles.heading}>
                     {formatMessage('page.tittel')}

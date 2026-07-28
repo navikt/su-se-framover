@@ -9,9 +9,7 @@ import {
 import { Dokumenttilstand } from '~src/types/Vedtak';
 import { formatDate, formatDateTime } from '~src/utils/date/dateUtils';
 
-import { Sak } from '../../types/Sak';
 import { Lukket, Søknad } from '../../types/Søknad';
-import { SøknadsbehandlingStatus } from '../../types/Søknadsbehandling';
 
 export const isUføresøknad = (søknadInnhold: SøknadInnhold): søknadInnhold is SøknadInnholdUføre =>
     'uførevedtak' in søknadInnhold;
@@ -41,57 +39,6 @@ export const erPapirSøknad = (
 const erSøknadInnholdPapirSøknad = (s: SøknadInnhold): s is SøknadInnhold & { forNav: ForNavPapirsøknad } =>
     erForNavPapirSøknad(s.forNav);
 const erForNavPapirSøknad = (f: ForNav): f is ForNavPapirsøknad => f.type === Søknadstype.Papirsøknad;
-
-export function getIverksatteInnvilgedeSøknader(sak: Sak) {
-    return sak.søknader
-        .filter((søknad) => {
-            const behandlinger = sak.behandlinger.filter((b) => b.søknad.id === søknad.id);
-
-            return (
-                søknad.lukket === null &&
-                behandlinger.some((b) => b.status === SøknadsbehandlingStatus.IVERKSATT_INNVILGET)
-            );
-        })
-        .map((s) => {
-            const behandling = sak.behandlinger.filter(
-                (b) =>
-                    b.søknad.id === s.id &&
-                    b.status === SøknadsbehandlingStatus.IVERKSATT_INNVILGET &&
-                    !b.omgjøringsgrunn,
-            );
-
-            if (behandling.length !== 1) {
-                throw new Error('Forventet at en søknad kun har 1 iverksatt innvilget behandling');
-            }
-
-            const vedtakForBehandling = sak.vedtak.find((v) => v.behandlingId === behandling[0].id);
-
-            return {
-                iverksattDato: vedtakForBehandling?.opprettet,
-                søknadensBehandlingsId: behandling[0]?.id,
-                søknad: s,
-            };
-        });
-}
-
-export function getIverksatteAvslåtteSøknader(sak: Sak) {
-    return sak.søknader
-        .filter((søknad) => {
-            const behandling = sak.behandlinger.find((b) => b.søknad.id === søknad.id);
-
-            return søknad.lukket === null && behandling?.status === SøknadsbehandlingStatus.IVERKSATT_AVSLAG;
-        })
-        .map((s) => {
-            const behandling = sak.behandlinger.find((b) => b.søknad.id === s.id);
-            const vedtakForBehandling = sak.vedtak.find((v) => v.behandlingId === behandling?.id);
-
-            return {
-                iverksattDato: vedtakForBehandling?.opprettet,
-                søknadensBehandlingsId: behandling?.id,
-                søknad: s,
-            };
-        });
-}
 
 export const skalDokumentIkkeGenereres = (s: Søknad) =>
     s.lukket?.dokumenttilstand === Dokumenttilstand.SKAL_IKKE_GENERERE;
