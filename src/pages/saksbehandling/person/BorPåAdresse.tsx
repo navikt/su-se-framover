@@ -9,6 +9,7 @@ import { SaksoversiktContext } from '~src/context/SaksoversiktContext.ts';
 import { useApiCall } from '~src/lib/hooks.ts';
 import * as Routes from '~src/lib/routes';
 import { PersonPåAdresse } from '~src/types/Person.ts';
+import { formatDate } from '~src/utils/date/dateUtils.ts';
 import styles from './BorPåAdresse.module.less';
 
 const BorPåAdresse = () => {
@@ -30,6 +31,9 @@ const BorPåAdresse = () => {
                 {data.treff.map((personSomBorPåAdressse: PersonPåAdresse, index: number) => (
                     <Box key={index} className={styles.box} background="bg-default" padding="6">
                         <VStack gap="4">
+                            {personSomBorPåAdressse.identer.map((ident, i) => (
+                                <OppsummeringPar key={i} label={ident.type} retning={'vertikal'} verdi={ident.ident} />
+                            ))}
                             <OppsummeringPar
                                 label="Navn"
                                 retning={'vertikal'}
@@ -39,6 +43,23 @@ const BorPåAdresse = () => {
                                 label="Adresse"
                                 retning={'vertikal'}
                                 verdi={personSomBorPåAdressse.adresse}
+                            />
+                            <OppsummeringPar
+                                label="Gyldig fra og med"
+                                retning={'vertikal'}
+                                verdi={formatDate(personSomBorPåAdressse.gyldigFraOgMed)}
+                            />
+                            {personSomBorPåAdressse.gyldigTilOgMed && (
+                                <OppsummeringPar
+                                    label="Gyldig til og med"
+                                    retning={'vertikal'}
+                                    verdi={formatDate(personSomBorPåAdressse.gyldigTilOgMed)}
+                                />
+                            )}
+                            <OppsummeringPar
+                                label="MatrikkelId"
+                                retning={'vertikal'}
+                                verdi={personSomBorPåAdressse.matrikkelId}
                             />
                         </VStack>
                     </Box>
