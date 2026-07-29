@@ -156,7 +156,7 @@ const Sakintro = () => {
                     </LinkAsButton>
 
                     <LinkAsButton variant="secondary" href={Routes.borPåAdressePage.createURL({ sakId: props.sak.id })}>
-                        Bor på adresse
+                        Adressesjekk
                     </LinkAsButton>
 
                     {dødsbo.length > 0 && (

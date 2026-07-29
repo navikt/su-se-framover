@@ -105,4 +105,13 @@ export interface BorPåAdresse {
 export interface PersonPåAdresse {
     fulltNavn: string;
     adresse: string;
+    gyldigFraOgMed: Date;
+    gyldigTilOgMed: Nullable<Date>;
+    matrikkelId: string;
+    identer: IdentJson[];
+}
+
+export interface IdentJson {
+    ident: string;
+    type: string;
 }
