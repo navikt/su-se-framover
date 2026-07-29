@@ -26,7 +26,7 @@ const BorPåAdresse = () => {
         return (
             <div className={styles.pageContainer}>
                 <Heading level="2" size={'large'}>
-                    Bor på adresse: {data.søktAdresse}
+                    Personer registrert på brukers adresse: {data.søktAdresse}
                 </Heading>
                 {data.treff.map((personSomBorPåAdressse: PersonPåAdresse, index: number) => (
                     <Box key={index} className={styles.box} background="bg-default" padding="6">
