@@ -1,6 +1,7 @@
-import { BodyShort, Box, Button } from '@navikt/ds-react';
+import { BodyShort, Box, Button, TextField } from '@navikt/ds-react';
 import type { ClipboardEvent } from 'react';
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { Nullable } from '~src/lib/types.ts';
 
 type Props = {
     disabled?: boolean;
@@ -42,6 +43,8 @@ const getFirstPastedFile = (event: ClipboardEvent<HTMLTextAreaElement>) => {
 export default function PasteFile(props: Props) {
     const pasteTargetRef = useRef<HTMLTextAreaElement | null>(null);
     const [venterPåPaste, setVenterPåPaste] = useState(false);
+    const [navnPåUtklipp, setNavnPåUtklipp] = useState('');
+    const [feilNavnPåUtklipp, setFeilNavnPåUtklipp] = useState<Nullable<string>>(null);
 
     const handleButtonClick = useCallback(async () => {
         if (props.disabled) {
@@ -51,8 +54,17 @@ export default function PasteFile(props: Props) {
         try {
             const file = await readClipboardFile();
             if (file) {
+                if (navnPåUtklipp.length < 1) {
+                    setFeilNavnPåUtklipp('Mangler navn på utklipp');
+                    return;
+                }
+                setFeilNavnPåUtklipp(null);
+                const renamedFile = new File([file], `${navnPåUtklipp}.png`, {
+                    type: file.type,
+                    lastModified: file.lastModified,
+                });
                 setVenterPåPaste(false);
-                props.onSelectFile(file);
+                props.onSelectFile(renamedFile);
                 return;
             }
         } catch {
@@ -63,7 +75,7 @@ export default function PasteFile(props: Props) {
         window.requestAnimationFrame(() => {
             pasteTargetRef.current?.focus();
         });
-    }, [props.disabled, props.onSelectFile]);
+    }, [props.disabled, props.onSelectFile, navnPåUtklipp, feilNavnPåUtklipp]);
 
     useEffect(() => {
         if (!venterPåPaste || props.disabled) {
@@ -95,11 +107,22 @@ export default function PasteFile(props: Props) {
                 return;
             }
 
+            if (navnPåUtklipp.length < 1) {
+                setFeilNavnPåUtklipp('Mangler navn på utklipp');
+                return;
+            }
+            setFeilNavnPåUtklipp(null);
+
+            const renamedFile = new File([file], `${navnPåUtklipp}.png`, {
+                type: file.type,
+                lastModified: file.lastModified,
+            });
+
             event.preventDefault();
             setVenterPåPaste(false);
-            props.onSelectFile(file);
+            props.onSelectFile(renamedFile);
         },
-        [props.disabled, props.onSelectFile],
+        [props.disabled, props.onSelectFile, navnPåUtklipp, feilNavnPåUtklipp],
     );
 
     return (
@@ -115,7 +138,18 @@ export default function PasteFile(props: Props) {
                 Lim inn vedlegg fra utklippstavlen. Knappen prøver direkte først, og hvis nettleseren trenger det, åpner
                 vi en paste-flyt etterpå.
             </BodyShort>
-            <Button type="button" variant="secondary" disabled={props.disabled} onClick={handleButtonClick}>
+            <TextField
+                label={'Navn på utklipp'}
+                error={feilNavnPåUtklipp}
+                onChange={(e) => setNavnPåUtklipp(e.target.value)}
+            />
+            <Button
+                type="button"
+                variant="secondary"
+                style={{ marginTop: '0.75rem' }}
+                disabled={props.disabled}
+                onClick={handleButtonClick}
+            >
                 Lim inn fra utklippstavle
             </Button>
             <BodyShort as="p" style={{ marginTop: '0.75rem' }}>
