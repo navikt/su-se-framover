@@ -59,12 +59,8 @@ export default function PasteFile(props: Props) {
                     return;
                 }
                 setFeilNavnPåUtklipp(null);
-                const renamedFile = new File([file], `${navnPåUtklipp}.png`, {
-                    type: file.type,
-                    lastModified: file.lastModified,
-                });
                 setVenterPåPaste(false);
-                props.onSelectFile(renamedFile);
+                props.onSelectFile(navngiUtklipp(file, navnPåUtklipp));
                 return;
             }
         } catch {
@@ -113,17 +109,20 @@ export default function PasteFile(props: Props) {
             }
             setFeilNavnPåUtklipp(null);
 
-            const renamedFile = new File([file], `${navnPåUtklipp}.png`, {
-                type: file.type,
-                lastModified: file.lastModified,
-            });
-
             event.preventDefault();
             setVenterPåPaste(false);
-            props.onSelectFile(renamedFile);
+            props.onSelectFile(navngiUtklipp(file, navnPåUtklipp));
         },
         [props.disabled, props.onSelectFile, navnPåUtklipp, feilNavnPåUtklipp],
     );
+
+    const navngiUtklipp = (file: File, nyttNavn: string) => {
+        const extension = file.type.split('/')[1] ?? '';
+        return new File([file], `${nyttNavn}.${extension}`, {
+            type: file.type,
+            lastModified: file.lastModified,
+        });
+    };
 
     return (
         <Box
@@ -141,7 +140,7 @@ export default function PasteFile(props: Props) {
             <TextField
                 label={'Navn på utklipp'}
                 error={feilNavnPåUtklipp}
-                onChange={(e) => setNavnPåUtklipp(e.target.value)}
+                onChange={(e) => setNavnPåUtklipp(e.target.value.trim())}
             />
             <Button
                 type="button"
