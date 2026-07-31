@@ -1,5 +1,5 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import { Box, Heading, VStack } from '@navikt/ds-react';
+import { Box, Heading } from '@navikt/ds-react';
 import { useEffect } from 'react';
 import { useOutletContext } from 'react-router-dom';
 import { fetchBorPåAdresse } from '~src/api/personApi.ts';
@@ -30,38 +30,35 @@ const BorPåAdresse = () => {
                 </Heading>
                 {data.treff.map((personSomBorPåAdressse: PersonPåAdresse, index: number) => (
                     <Box key={index} className={styles.box} background="bg-default" padding="6">
-                        <VStack gap="4">
-                            {personSomBorPåAdressse.identer.map((ident, i) => (
-                                <OppsummeringPar key={i} label={ident.type} retning={'vertikal'} verdi={ident.ident} />
-                            ))}
+                        {personSomBorPåAdressse.identer.map((ident, i) => (
+                            <OppsummeringPar key={i} label={ident.type} retning={'vertikal'} verdi={ident.ident} />
+                        ))}
+                        <OppsummeringPar
+                            label="Navn"
+                            retning={'vertikal'}
+                            textSomSmall={true}
+                            verdi={personSomBorPåAdressse.fulltNavn}
+                        />
+                        <OppsummeringPar
+                            label="Adresse"
+                            retning={'vertikal'}
+                            textSomSmall={true}
+                            verdi={personSomBorPåAdressse.adresse}
+                        />
+                        <OppsummeringPar
+                            label="Gyldig fra og med"
+                            retning={'vertikal'}
+                            textSomSmall={true}
+                            verdi={formatDate(personSomBorPåAdressse.gyldigFraOgMed)}
+                        />
+                        {personSomBorPåAdressse.gyldigTilOgMed && (
                             <OppsummeringPar
-                                label="Navn"
+                                label="Gyldig til og med"
                                 retning={'vertikal'}
-                                verdi={personSomBorPåAdressse.fulltNavn}
+                                textSomSmall={true}
+                                verdi={formatDate(personSomBorPåAdressse.gyldigTilOgMed)}
                             />
-                            <OppsummeringPar
-                                label="Adresse"
-                                retning={'vertikal'}
-                                verdi={personSomBorPåAdressse.adresse}
-                            />
-                            <OppsummeringPar
-                                label="Gyldig fra og med"
-                                retning={'vertikal'}
-                                verdi={formatDate(personSomBorPåAdressse.gyldigFraOgMed)}
-                            />
-                            {personSomBorPåAdressse.gyldigTilOgMed && (
-                                <OppsummeringPar
-                                    label="Gyldig til og med"
-                                    retning={'vertikal'}
-                                    verdi={formatDate(personSomBorPåAdressse.gyldigTilOgMed)}
-                                />
-                            )}
-                            <OppsummeringPar
-                                label="MatrikkelId"
-                                retning={'vertikal'}
-                                verdi={personSomBorPåAdressse.matrikkelId}
-                            />
-                        </VStack>
+                        )}
                     </Box>
                 ))}
                 <div className={styles.buttonContainer}>
