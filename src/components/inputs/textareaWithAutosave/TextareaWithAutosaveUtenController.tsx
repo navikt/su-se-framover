@@ -14,6 +14,7 @@ const TextareaWithAutosaveUtenController = <U extends FieldValues>(props: {
         description?: string[];
         onChange: (value: string) => void;
         readonly: boolean;
+        minRows: number;
     };
     save: {
         handleSave: () => void;
@@ -51,7 +52,7 @@ const TextareaWithAutosaveUtenController = <U extends FieldValues>(props: {
                         </div>
                     )
                 }
-                minRows={5}
+                minRows={props.textarea.minRows}
                 label={
                     <div className={styles.textareaLabel}>
                         {props.textarea.label}

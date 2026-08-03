@@ -158,6 +158,7 @@ const NotatEndringModal = (props: Props) => {
                             value: props.notatTekst,
                             onChange: (value) => props.onNotatTekstChange(value),
                             readonly: !props.kanRedigere,
+                            minRows: 8,
                         }}
                         save={{
                             handleSave: () => props.onSave(),
