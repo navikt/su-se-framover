@@ -117,6 +117,7 @@ export const useNotatEditor = (props: Props) => {
             kanRedigere: kanRedigereAktivtModalfelt,
             notatTekst,
             lagrer: RemoteData.isPending(lagreSaksbehandlerStatus) || RemoteData.isPending(lagreAttestantStatus),
+            status: åpenTekstModal === 'attestant' ? lagreAttestantStatus : lagreSaksbehandlerStatus,
             onClose: lukkTekstModal,
             onNotatTekstChange: setNotatTekst,
             onSave: handleLagreNotat,

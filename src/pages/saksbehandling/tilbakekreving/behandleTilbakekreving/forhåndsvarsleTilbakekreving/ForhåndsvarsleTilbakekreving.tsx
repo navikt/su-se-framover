@@ -10,7 +10,7 @@ import { FritekstTyper, hentFritekst, redigerFritekst } from '~src/api/fritekstA
 import { LagreMottakerRequest } from '~src/api/mottakerClient.ts';
 import { forhåndsvisForhåndsvarsel, visUtsendtForhåndsvarsel } from '~src/api/tilbakekrevingApi';
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
-import TextareaWithAutosave from '~src/components/inputs/textareaWithAutosave/TextareaWithAutosave.tsx';
+import TextareaWithAutosaveRhf from '~src/components/inputs/textareaWithAutosave/TextareaWithAutosaveRhf.tsx';
 import Navigasjonsknapper from '~src/components/navigasjonsknapper/Navigasjonsknapper';
 import Feiloppsummering from '~src/components/oppsummering/feiloppsummering/Feiloppsummering';
 import OppsummeringAvKravgrunnlag from '~src/components/oppsummering/kravgrunnlag/OppsummeringAvKravgrunnlag';
@@ -225,7 +225,7 @@ const ForhåndsvarsleTilbakekreving = (props: {
                         />
 
                         {form.watch('skalForhåndsvarsle') && (
-                            <TextareaWithAutosave
+                            <TextareaWithAutosaveRhf
                                 textarea={{
                                     name: 'fritekst',
                                     label: formatMessage('forhåndsvarsleTilbakekreving.fritekst.label'),

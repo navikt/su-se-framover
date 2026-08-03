@@ -8,7 +8,7 @@ import { FritekstTyper, hentFritekst, redigerFritekst } from '~src/api/fritekstA
 import { hentMottaker } from '~src/api/mottakerClient.ts';
 import * as PdfApi from '~src/api/pdfApi';
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
-import TextareaWithAutosave from '~src/components/inputs/textareaWithAutosave/TextareaWithAutosave.tsx';
+import TextareaWithAutosaveRhf from '~src/components/inputs/textareaWithAutosave/TextareaWithAutosaveRhf.tsx';
 import LinkAsButton from '~src/components/linkAsButton/LinkAsButton';
 import { AdresseOppslag } from '~src/components/mottaker/AdresseOppslag.tsx';
 import { MottakerAlert, toMottakerAlert } from '~src/components/mottaker/mottakerUtils';
@@ -213,7 +213,7 @@ const SendTilAttesteringPage = (props: Props) => {
                                 <div className={styles.fritekstareaContainer}>
                                     {valg === Valg.SEND && <AdresseOppslag sakId={props.sakId} fnr={props.søker.fnr} />}
                                     {valg === Valg.SEND && (
-                                        <TextareaWithAutosave
+                                        <TextareaWithAutosaveRhf
                                             textarea={{
                                                 name: 'fritekst',
                                                 label: formatMessage('input.fritekst.label'),
