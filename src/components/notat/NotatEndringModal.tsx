@@ -4,7 +4,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 
 import { ApiError } from '~src/api/apiClient';
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
-import TextareaWithAutosaveUtenController from '~src/components/inputs/textareaWithAutosave/TextareaWithAutosaveUtenController.tsx';
+import TextareaWithAutosave from '~src/components/inputs/textareaWithAutosave/TextareaWithAutosave.tsx';
 import { ApiResult } from '~src/lib/hooks.ts';
 import styles from './notatEndringPanel.module.less';
 import { TekstModalType } from './notatPanelTypes';
@@ -151,7 +151,7 @@ const NotatEndringModal = (props: Props) => {
                         </Alert>
                     )}
                     {props.actionError && <ApiErrorAlert error={props.actionError} size="small" />}
-                    <TextareaWithAutosaveUtenController
+                    <TextareaWithAutosave
                         textarea={{
                             label: viserAttestantnotat ? 'Attestantnotat' : 'Saksbehandlernotat',
                             value: props.notatTekst,
