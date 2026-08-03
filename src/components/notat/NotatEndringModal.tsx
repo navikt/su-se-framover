@@ -153,7 +153,6 @@ const NotatEndringModal = (props: Props) => {
                     {props.actionError && <ApiErrorAlert error={props.actionError} size="small" />}
                     <TextareaWithAutosaveUtenController
                         textarea={{
-                            name: 'fritekst',
                             label: viserAttestantnotat ? 'Attestantnotat' : 'Saksbehandlernotat',
                             value: props.notatTekst,
                             onChange: (value) => props.onNotatTekstChange(value),

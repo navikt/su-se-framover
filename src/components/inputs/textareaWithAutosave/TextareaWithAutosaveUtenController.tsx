@@ -1,14 +1,12 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { BodyShort, Loader, Textarea } from '@navikt/ds-react';
-import { FieldValues, Path } from 'react-hook-form';
 import { ErrorIcon, SuccessIcon } from '~src/assets/Icons';
 import { ApiResult, useAutosaveOnUpdate } from '~src/lib/hooks';
 import { fjernOverflødigLinjeskift } from '~src/utils/fritekst/fritekstUtil.ts';
 import styles from './TextareaWithAutosave.module.less';
 
-const TextareaWithAutosaveUtenController = <U extends FieldValues>(props: {
+const TextareaWithAutosaveUtenController = (props: {
     textarea: {
-        name: Path<U>;
         label: string;
         value: string;
         description?: string[];
