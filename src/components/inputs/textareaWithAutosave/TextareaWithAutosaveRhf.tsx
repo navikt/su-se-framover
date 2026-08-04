@@ -1,5 +1,5 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import { Alert, BodyShort, Button, Loader, Textarea } from '@navikt/ds-react';
+import { BodyShort, Button, Loader, Textarea } from '@navikt/ds-react';
 import { Control, Controller, FieldValues, Path } from 'react-hook-form';
 
 import { ErrorIcon, SuccessIcon } from '~src/assets/Icons';
@@ -93,7 +93,7 @@ const TextareaWithAutosaveRhf = <T extends object, U extends FieldValues>(props:
                 )}
             />
             {!isSaving && RemoteData.isFailure(props.save.status) && (
-                <Alert variant="error">{props.save.status.error.body.message}</Alert>
+                <ApiErrorAlert variant="error" error={props.save.status.error} />
             )}
             {props.brev && (
                 <div className={styles.buttonOgApiErrorContainer}>
