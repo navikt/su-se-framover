@@ -92,6 +92,9 @@ const TextareaWithAutosaveRhf = <T extends object, U extends FieldValues>(props:
                     />
                 )}
             />
+            {!isSaving && RemoteData.isFailure(props.save.status) && (
+                <ApiErrorAlert variant="error" error={props.save.status.error} />
+            )}
             {props.brev && (
                 <div className={styles.buttonOgApiErrorContainer}>
                     <Button

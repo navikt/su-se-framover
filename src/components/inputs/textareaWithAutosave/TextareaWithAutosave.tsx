@@ -1,6 +1,7 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { BodyShort, Loader, Textarea } from '@navikt/ds-react';
 import { ErrorIcon, SuccessIcon } from '~src/assets/Icons';
+import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert.tsx';
 import { ApiResult, useAutosaveOnUpdate } from '~src/lib/hooks';
 import { fjernOverflødigLinjeskift } from '~src/utils/fritekst/fritekstUtil.ts';
 import styles from './TextareaWithAutosave.module.less';
@@ -68,6 +69,9 @@ const TextareaWithAutosave = (props: {
                 onChange={(e) => props.textarea.onChange(e.target.value)}
                 value={props.textarea.value ?? ''}
             />
+            {!isSaving && RemoteData.isFailure(props.save.status) && (
+                <ApiErrorAlert variant="error" error={props.save.status.error} />
+            )}
         </div>
     );
 };
