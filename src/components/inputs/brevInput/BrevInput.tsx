@@ -7,6 +7,7 @@ import { ApiClientResult, ApiError } from '~src/api/apiClient';
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
 import { useI18n } from '~src/lib/i18n';
 import { Nullable } from '~src/lib/types';
+import { fjernOverflødigLinjeskift } from '~src/utils/fritekst/fritekstUtil.ts';
 import styles from './brevInput.module.less';
 import messages from './brevInput-nb';
 
@@ -55,6 +56,14 @@ export function BrevInput(props: BrevInputProps) {
                     placeholder={props.placeholder}
                     value={props.tekst ?? ''}
                     onChange={props.onChange}
+                    onPaste={(clipBoardEvent) => {
+                        clipBoardEvent.preventDefault();
+                        const rensetTekst = fjernOverflødigLinjeskift(clipBoardEvent, props.tekst ?? '');
+                        props.onChange({
+                            target: { value: rensetTekst },
+                            currentTarget: { value: rensetTekst },
+                        } as ChangeEvent<HTMLTextAreaElement>);
+                    }}
                     error={props.feil?.message}
                 />
             </div>
