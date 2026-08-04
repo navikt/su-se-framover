@@ -56,13 +56,15 @@ export function BrevInput(props: BrevInputProps) {
                     placeholder={props.placeholder}
                     value={props.tekst ?? ''}
                     onChange={props.onChange}
-                    onPaste={(clipBoardEvent) => {
-                        clipBoardEvent.preventDefault();
-                        const rensetTekst = fjernOverflødigLinjeskift(clipBoardEvent, props.tekst ?? '');
+                    onPaste={(e) => {
+                        e.preventDefault();
+                        const rensetTekst = fjernOverflødigLinjeskift(e, props.tekst ?? '');
+                        const target = e.currentTarget;
+                        target.value = rensetTekst;
                         props.onChange({
-                            target: { value: rensetTekst },
-                            currentTarget: { value: rensetTekst },
-                        } as ChangeEvent<HTMLTextAreaElement>);
+                            target,
+                            currentTarget: target,
+                        } as unknown as ChangeEvent<HTMLTextAreaElement>);
                     }}
                     error={props.feil?.message}
                 />
