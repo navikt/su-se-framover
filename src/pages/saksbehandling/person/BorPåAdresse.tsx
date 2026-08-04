@@ -1,10 +1,9 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import { Box, Heading } from '@navikt/ds-react';
+import { Heading, Table } from '@navikt/ds-react';
 import { useEffect } from 'react';
 import { useOutletContext } from 'react-router-dom';
 import { fetchBorPåAdresse } from '~src/api/personApi.ts';
 import LinkAsButton from '~src/components/linkAsButton/LinkAsButton.tsx';
-import { OppsummeringPar } from '~src/components/oppsummering/oppsummeringpar/OppsummeringPar.tsx';
 import { SaksoversiktContext } from '~src/context/SaksoversiktContext.ts';
 import { useApiCall } from '~src/lib/hooks.ts';
 import * as Routes from '~src/lib/routes';
@@ -28,39 +27,33 @@ const BorPåAdresse = () => {
                 <Heading level="2" size={'large'}>
                     Personer registrert på brukers adresse: {data.søktAdresse}
                 </Heading>
-                {data.treff.map((personSomBorPåAdressse: PersonPåAdresse, index: number) => (
-                    <Box key={index} className={styles.box} background="bg-default" padding="6">
-                        {personSomBorPåAdressse.identer.map((ident, i) => (
-                            <OppsummeringPar key={i} label={ident.type} retning={'vertikal'} verdi={ident.ident} />
+                <Table className={styles.tabell} size="small">
+                    <Table.Header>
+                        <Table.Row>
+                            <Table.HeaderCell scope="col">Identer</Table.HeaderCell>
+                            <Table.HeaderCell scope="col">Navn</Table.HeaderCell>
+                            <Table.HeaderCell scope="col">Adresse</Table.HeaderCell>
+                            <Table.HeaderCell scope="col">Gyldig fra og med</Table.HeaderCell>
+                            <Table.HeaderCell scope="col">Gyldig til og med</Table.HeaderCell>
+                        </Table.Row>
+                    </Table.Header>
+                    <Table.Body>
+                        {data.treff.map((personSomBorPåAdressse: PersonPåAdresse, index: number) => (
+                            <Table.Row key={index}>
+                                <Table.DataCell>
+                                    {personSomBorPåAdressse.identer.map((ident) => `${ident.type}: ${ident.ident}`)}
+                                </Table.DataCell>
+                                <Table.DataCell>{personSomBorPåAdressse.fulltNavn}</Table.DataCell>
+                                <Table.DataCell>{personSomBorPåAdressse.adresse}</Table.DataCell>
+                                <Table.DataCell>{formatDate(personSomBorPåAdressse.gyldigFraOgMed)}</Table.DataCell>
+                                <Table.DataCell>
+                                    {personSomBorPåAdressse.gyldigTilOgMed &&
+                                        formatDate(personSomBorPåAdressse.gyldigTilOgMed)}
+                                </Table.DataCell>
+                            </Table.Row>
                         ))}
-                        <OppsummeringPar
-                            label="Navn"
-                            retning={'vertikal'}
-                            textSomSmall={true}
-                            verdi={personSomBorPåAdressse.fulltNavn}
-                        />
-                        <OppsummeringPar
-                            label="Adresse"
-                            retning={'vertikal'}
-                            textSomSmall={true}
-                            verdi={personSomBorPåAdressse.adresse}
-                        />
-                        <OppsummeringPar
-                            label="Gyldig fra og med"
-                            retning={'vertikal'}
-                            textSomSmall={true}
-                            verdi={formatDate(personSomBorPåAdressse.gyldigFraOgMed)}
-                        />
-                        {personSomBorPåAdressse.gyldigTilOgMed && (
-                            <OppsummeringPar
-                                label="Gyldig til og med"
-                                retning={'vertikal'}
-                                textSomSmall={true}
-                                verdi={formatDate(personSomBorPåAdressse.gyldigTilOgMed)}
-                            />
-                        )}
-                    </Box>
-                ))}
+                    </Table.Body>
+                </Table>
                 <div className={styles.buttonContainer}>
                     <LinkAsButton variant="secondary" href={Routes.saksoversiktValgtSak.createURL({ sakId: sak.id })}>
                         Tilbake
