@@ -21,7 +21,8 @@ const Saksoversikt = () => {
     const urlParams = routes.useRouteParams<typeof routes.saksoversiktValgtSak>();
     const navigate = useNavigate();
 
-    const { søker, sak } = useAppSelector((s) => ({ søker: s.personopplysninger.søker, sak: s.sak.sak }));
+    const søker = useAppSelector((s) => s.personopplysninger.søker);
+    const sak = useAppSelector((s) => s.sak.sak);
     const dispatch = useAppDispatch();
 
     useEffect(() => {
