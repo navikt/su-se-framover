@@ -1,7 +1,7 @@
 import { v4 as uuid } from 'uuid';
 
 import { ApiErrorCode } from '~src/components/apiErrorAlert/apiErrorCode';
-
+import { BackendValideringsfeil } from '~src/pages/søknad/steg/oppsummering/backendValidationUtils.ts';
 import { LOGIN_URL } from './authUrl';
 
 export enum ErrorCode {
@@ -21,6 +21,7 @@ export interface ApiError {
 export interface ErrorMessage {
     message: string;
     code: ApiErrorCode;
+    errors?: BackendValideringsfeil[];
 }
 
 export type ApiClientResult<TSuccess> = ApiClientSuccessResult<TSuccess> | ApiClientFailureResult;
