@@ -8,7 +8,7 @@ import { FritekstTyper, hentFritekst } from '~src/api/fritekstApi.ts';
 import { hentMottaker, LagreMottakerRequest } from '~src/api/mottakerClient.ts';
 import { forhåndsvisVedtaksbrevTilbakekrevingsbehandling } from '~src/api/tilbakekrevingApi';
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
-import TextareaWithAutosave from '~src/components/inputs/textareaWithAutosave/TextareaWithAutosave';
+import TextareaWithAutosaveRhf from '~src/components/inputs/textareaWithAutosave/TextareaWithAutosaveRhf.tsx';
 import { MottakerAlert, toMottakerAlert } from '~src/components/mottaker/mottakerUtils.ts';
 import Navigasjonsknapper from '~src/components/navigasjonsknapper/Navigasjonsknapper';
 import Feiloppsummering from '~src/components/oppsummering/feiloppsummering/Feiloppsummering';
@@ -154,7 +154,9 @@ const BrevForTilbakekreving = (props: {
                 form.resetField('fritekst', { defaultValue: res.data.fritekst ?? '' });
                 return;
             }
-            form.setError('fritekst', { message: 'Kunne ikke hente fritekst' });
+            if (res.status === 'error' && res.error.statusCode !== 404) {
+                form.setError('fritekst', { message: 'Kunne ikke hente fritekst' });
+            }
         });
     }, [skalSendeBrev, props.tilbakekreving.id, props.sakId]);
 
@@ -175,7 +177,7 @@ const BrevForTilbakekreving = (props: {
                 }
                 return;
             } else {
-                if (res.error.statusCode) {
+                if (res.error.statusCode !== 404) {
                     setMottakerFetchError(toMottakerAlert(res.error, 'Kan ikke hente mottaker'));
                 }
             }
@@ -213,7 +215,7 @@ const BrevForTilbakekreving = (props: {
                         />
                         <div className={styles.textareaContainer}>
                             {skalSendeBrev && (
-                                <TextareaWithAutosave
+                                <TextareaWithAutosaveRhf
                                     textarea={{
                                         name: 'fritekst',
                                         label: formatMessage('brevForTilbakekreving.fritekst.label'),
@@ -293,7 +295,7 @@ const BrevForTilbakekreving = (props: {
                                 </div>
                             )}
 
-                            <TextareaWithAutosave
+                            <TextareaWithAutosaveRhf
                                 textarea={{
                                     name: 'notat',
                                     label: formatMessage('brevForTilbakekreving.behandlingsnotat.label'),

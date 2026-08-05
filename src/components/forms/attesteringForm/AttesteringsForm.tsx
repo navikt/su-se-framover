@@ -8,7 +8,7 @@ import { FritekstTyper, hentFritekst, redigerFritekst } from '~src/api/fritekstA
 import { Brevtype } from '~src/api/mottakerClient.ts';
 import * as PdfApi from '~src/api/pdfApi.ts';
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
-import TextareaWithAutosave from '~src/components/inputs/textareaWithAutosave/TextareaWithAutosave.tsx';
+import TextareaWithAutosaveRhf from '~src/components/inputs/textareaWithAutosave/TextareaWithAutosaveRhf.tsx';
 import LinkAsButton from '~src/components/linkAsButton/LinkAsButton.tsx';
 import EkstraMottakerPanel from '~src/components/mottaker/EkstraMottakerPanel';
 import Oppsummeringspanel, {
@@ -262,7 +262,7 @@ export const AttesteringsForm = (props: Props) => {
                                             {RemoteData.isPending(seBrevStatus) && <Loader />}
                                         </Button>
                                     ) : (
-                                        <TextareaWithAutosave
+                                        <TextareaWithAutosaveRhf
                                             textarea={{
                                                 name: 'fritekst',
                                                 label: formatMessage('input.fritekst.label'),
