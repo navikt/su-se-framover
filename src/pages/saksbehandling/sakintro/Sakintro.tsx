@@ -129,7 +129,7 @@ const Sakintro = () => {
         ...åpneTilbakekrevingsbehandlinger,
     ];
 
-    const { søker } = useAppSelector((s) => ({ søker: s.personopplysninger.søker }));
+    const søker = useAppSelector((s) => s.personopplysninger.søker);
     const dødsbo = RemoteData.isSuccess(søker) && søker.value.dødsbo ? søker.value.dødsbo : [];
 
     return (
