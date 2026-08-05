@@ -33,10 +33,9 @@ const konstruerMeldingForAlert = (formatMessage: MessageFormatter<typeof message
         if (Array.isArray(error.body)) {
             return error.body.map((err) => formatMessage(err.code));
         } else {
-            if (error.body.errors) {
-                return error.body.errors.map(
-                    (backendValideringsFeil) => `${backendValideringsFeil.felt} ${backendValideringsFeil.begrunnelse}`,
-                );
+            const errors = Array.isArray(error.body.errors) ? error.body.errors : [];
+            if (errors.length > 0) {
+                return errors.map(({ felt, begrunnelse }) => `${felt}: ${begrunnelse}`);
             }
             return `${formatMessage(error.body.code)} \n melding: ${error.body.message}`;
         }
