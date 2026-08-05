@@ -25,7 +25,7 @@
         "express-http-proxy": "2.1.2",
         "express-session": "1.19.0",
         "https-proxy-agent": "7.0.6",
-        "openid-client": "5.7.1",
+        "openid-client": "6.8.4",
         "passport": "0.7.0",
         "pino": "10.3.1",
         "pino-http": "11.0.0",
