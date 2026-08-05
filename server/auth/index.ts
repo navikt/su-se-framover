@@ -2,7 +2,8 @@ import RedisStore from 'connect-redis';
 import { Express } from 'express';
 import session from 'express-session';
 import http from 'http';
-import * as OpenIdClient from 'openid-client';
+import * as client from 'openid-client';
+import { Strategy } from 'openid-client/passport';
 import passport from 'passport';
 import { createClient } from 'redis';
 import * as Config from '../config.js';
@@ -52,49 +53,45 @@ async function setupSession(app: Express) {
     );
 }
 
-async function getStrategy(authClient: OpenIdClient.Client) {
-    return new OpenIdClient.Strategy(
+async function getStrategy(config: client.Configuration) {
+    return new Strategy(
         {
-            client: authClient,
-            params: {
-                response_type: Config.auth.responseType,
-                response_mode: Config.auth.responseMode,
-                scope: `openid offline_access ${Config.auth.clientId}/.default`,
-            },
-            extras: { clientAssertionPayload: { aud: authClient.issuer.metadata['token_endpoint'] } },
-            usePKCE: 'S256',
+            config,
+            callbackURL: Config.auth.loginRedirectUri,
+            scope: `openid offline_access ${Config.auth.clientId}/.default`,
             passReqToCallback: true,
         },
         (
             req: http.IncomingMessage,
-            tokenSet: OpenIdClient.TokenSet,
+            tokenSet: client.TokenEndpointResponse & client.TokenEndpointResponseHelpers,
             done: (err: null, user?: Express.User) => void,
         ) => {
-            if (!tokenSet.expired()) {
-                req.log.debug('OpenIdClient.Strategy: Mapping tokenSet to User.');
+            const expiresIn = tokenSet.expiresIn();
+            if (expiresIn === undefined || expiresIn > 0) {
+                req.log.debug('Strategy: Mapping tokenSet to User.');
+                // Strip helper methods before storing — TokenEndpointResponseHelpers are not serializable
+                const plainToken: client.TokenEndpointResponse = tokenSet;
                 return done(null, {
                     tokenSets: {
-                        [AuthUtils.tokenSetSelfId]: tokenSet,
+                        [AuthUtils.tokenSetSelfId]: AuthUtils.withExpiresAt(plainToken),
                     },
                 });
             }
             // Passport kaller bare denne funksjonen for å mappe en ny innlogging til et User-objekt, så man skal ikke havne her.
-            req.log.error(
-                'OpenIdClient.Strategy: Failed to map tokenSet to User because the tokenSet has already expired.',
-            );
+            req.log.error('Strategy: Failed to map tokenSet to User because the tokenSet has already expired.');
             done(null, undefined);
         },
     );
 }
 
-export default async function setupAuth(app: Express, authClient: OpenIdClient.Client) {
+export default async function setupAuth(app: Express, config: client.Configuration) {
     await setupSession(app);
 
     app.use(passport.initialize());
     app.use(passport.session());
 
     const authName = Config.isDev ? 'localAuth' : 'aad';
-    const authStrategy = await getStrategy(authClient);
+    const authStrategy = await getStrategy(config);
 
     passport.use(authName, authStrategy);
     passport.serializeUser((user, done) => {
@@ -119,9 +116,11 @@ export default async function setupAuth(app: Express, authClient: OpenIdClient.C
         req.logout(() => req.log.warn('Utlogging av bruker feilet.'));
         req.session.destroy(() => {
             res.clearCookie(Config.server.sessionCookieName);
-            const endSessionUrl = authClient.endSessionUrl({ post_logout_redirect_uri: Config.auth.logoutRedirectUri });
+            const endSessionUrl = client.buildEndSessionUrl(config, {
+                post_logout_redirect_uri: Config.auth.logoutRedirectUri,
+            });
             req.log.debug(`Redirecting user via Azure's end_session_endpoint: ${endSessionUrl}`);
-            res.redirect(endSessionUrl);
+            res.redirect(endSessionUrl.href);
         });
     });
     app.get('/oauth2/callback', passport.authenticate(authName, { failureRedirect: '/login-failed' }), (req, res) => {

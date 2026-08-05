@@ -1,6 +1,6 @@
 import express from 'express';
 import expressHttpProxy from 'express-http-proxy';
-import * as OpenIdClient from 'openid-client';
+import * as client from 'openid-client';
 import { Logger } from 'pino';
 
 import * as AuthUtils from './auth/utils.js';
@@ -21,7 +21,7 @@ function isTokenRefreshOrOboError(error: unknown): boolean {
     );
 }
 
-export default function setup(authClient: OpenIdClient.Client) {
+export default function setup(authClient: client.Configuration) {
     const router = express.Router();
 
     const proxy = (log: Logger, accessToken?: string) =>
