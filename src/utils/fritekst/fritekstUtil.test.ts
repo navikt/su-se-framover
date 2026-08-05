@@ -59,6 +59,16 @@ describe('fjernOverflødigLinjeskift', () => {
         expect(fjernOverflødigLinjeskift(e, '')).toBe('a\n\nb');
     });
 
+    it('erstatter smalt hardt mellomrom (U+202F) med vanlig mellomrom', () => {
+        const e = createMockEvent('a\u202fb');
+        expect(fjernOverflødigLinjeskift(e, '')).toBe('a b');
+    });
+
+    it('erstatter hardt mellomrom (U+00A0) med vanlig mellomrom', () => {
+        const e = createMockEvent('a\u00a0b');
+        expect(fjernOverflødigLinjeskift(e, '')).toBe('a b');
+    });
+
     it('håndterer tom verdi', () => {
         const e = createMockEvent('tekst');
         expect(fjernOverflødigLinjeskift(e, '')).toBe('tekst');

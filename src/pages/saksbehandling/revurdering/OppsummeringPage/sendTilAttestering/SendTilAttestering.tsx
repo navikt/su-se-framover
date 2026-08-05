@@ -8,7 +8,7 @@ import { FritekstTyper, hentFritekst, redigerFritekst } from '~src/api/fritekstA
 import { Brevtype, hentMottaker } from '~src/api/mottakerClient.ts';
 import * as pdfApi from '~src/api/pdfApi';
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
-import TextareaWithAutosave from '~src/components/inputs/textareaWithAutosave/TextareaWithAutosave';
+import TextareaWithAutosaveRhf from '~src/components/inputs/textareaWithAutosave/TextareaWithAutosaveRhf.tsx';
 import { AdresseOppslag } from '~src/components/mottaker/AdresseOppslag.tsx';
 import { MottakerAlert, toMottakerAlert } from '~src/components/mottaker/mottakerUtils';
 import OppsummeringAvInformasjonsrevurdering from '~src/components/oppsummering/oppsummeringAvRevurdering/informasjonsrevurdering/OppsummeringAvInformasjonsrevurdering';
@@ -254,7 +254,7 @@ const SendTilAttestering = (props: {
                                     <AdresseOppslag sakId={props.sakId} fnr={props.søker.fnr} />
                                 )}
                                 {watch.valg === Valg.SEND && (
-                                    <TextareaWithAutosave
+                                    <TextareaWithAutosaveRhf
                                         textarea={{
                                             name: 'fritekst',
                                             label: formatMessage('brevtekst'),

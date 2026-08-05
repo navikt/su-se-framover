@@ -1,109 +1,76 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import { BodyShort, Button, Loader, Textarea } from '@navikt/ds-react';
-import { Control, Controller, FieldValues, Path } from 'react-hook-form';
-
+import { BodyShort, Loader, Textarea } from '@navikt/ds-react';
 import { ErrorIcon, SuccessIcon } from '~src/assets/Icons';
-import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
+import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert.tsx';
 import { ApiResult, useAutosaveOnUpdate } from '~src/lib/hooks';
-import { useI18n } from '~src/lib/i18n';
 import { fjernOverflødigLinjeskift } from '~src/utils/fritekst/fritekstUtil.ts';
 import styles from './TextareaWithAutosave.module.less';
 
-const messages = {
-    'knapp.seBrev': 'Se brev',
-};
-
-const TextareaWithAutosave = <T extends object, U extends FieldValues>(props: {
+const TextareaWithAutosave = (props: {
     textarea: {
-        name: Path<U>;
         label: string;
-        control: Control<U>;
         value: string;
         description?: string[];
+        onChange: (value: string) => void;
+        readonly: boolean;
+        minRows: number;
     };
     save: {
         handleSave: () => void;
-        status: ApiResult<T>;
-    };
-    brev?: {
-        handleSeBrev: () => void;
-        status: ApiResult<Blob>;
+        status: ApiResult<void>;
     };
 }) => {
-    const { formatMessage } = useI18n({ messages });
-
     const { isSaving } = useAutosaveOnUpdate(props.textarea.value, () => {
         return props.save.handleSave();
     });
 
     return (
         <div className={styles.fritesktOgVisBrevContainer}>
-            <Controller
-                control={props.textarea.control}
-                name={props.textarea.name}
-                render={({ field, fieldState }) => (
-                    <Textarea
-                        className={styles.textarea}
-                        {...field}
-                        onPaste={(e) => {
-                            e.preventDefault();
-                            field.onChange(fjernOverflødigLinjeskift(e, field.value ?? ''));
-                        }}
-                        description={
-                            props.textarea.description && (
-                                <div className={styles.textareaLabel}>
-                                    <div>
-                                        {props.textarea.description.map((desc) => (
-                                            <BodyShort key={desc}>{desc}</BodyShort>
-                                        ))}
-                                    </div>
-                                    <div>
-                                        {isSaving ? <Loader size="small" /> : null}
-                                        {!isSaving && RemoteData.isSuccess(props.save.status) ? (
-                                            <SuccessIcon width={20} />
-                                        ) : null}
-                                        {!isSaving && RemoteData.isFailure(props.save.status) ? (
-                                            <ErrorIcon width={20} />
-                                        ) : null}
-                                    </div>
-                                </div>
-                            )
-                        }
-                        minRows={5}
-                        label={
-                            <div className={styles.textareaLabel}>
-                                {props.textarea.label}
-                                {!props.textarea.description && (
-                                    <div>
-                                        {isSaving ? <Loader size="small" /> : null}
-                                        {!isSaving && RemoteData.isSuccess(props.save.status) ? (
-                                            <SuccessIcon width={20} />
-                                        ) : null}
-                                        {!isSaving && RemoteData.isFailure(props.save.status) ? (
-                                            <ErrorIcon width={20} />
-                                        ) : null}
-                                    </div>
-                                )}
+            <Textarea
+                className={styles.textarea}
+                readOnly={props.textarea.readonly}
+                onPaste={(e) => {
+                    e.preventDefault();
+                    props.textarea.onChange(fjernOverflødigLinjeskift(e, props.textarea.value));
+                }}
+                description={
+                    props.textarea.description && (
+                        <div className={styles.textareaLabel}>
+                            <div>
+                                {props.textarea.description.map((desc) => (
+                                    <BodyShort key={desc}>{desc}</BodyShort>
+                                ))}
                             </div>
-                        }
-                        value={field.value ?? ''}
-                        error={fieldState.error?.message}
-                    />
-                )}
+                            <div>
+                                {isSaving ? <Loader size="small" /> : null}
+                                {!isSaving && RemoteData.isSuccess(props.save.status) ? (
+                                    <SuccessIcon width={20} />
+                                ) : null}
+                                {!isSaving && RemoteData.isFailure(props.save.status) ? <ErrorIcon width={20} /> : null}
+                            </div>
+                        </div>
+                    )
+                }
+                minRows={props.textarea.minRows}
+                label={
+                    <div className={styles.textareaLabel}>
+                        {props.textarea.label}
+                        {!props.textarea.description && (
+                            <div>
+                                {isSaving ? <Loader size="small" /> : null}
+                                {!isSaving && RemoteData.isSuccess(props.save.status) ? (
+                                    <SuccessIcon width={20} />
+                                ) : null}
+                                {!isSaving && RemoteData.isFailure(props.save.status) ? <ErrorIcon width={20} /> : null}
+                            </div>
+                        )}
+                    </div>
+                }
+                onChange={(e) => props.textarea.onChange(e.target.value)}
+                value={props.textarea.value ?? ''}
             />
-            {props.brev && (
-                <div className={styles.buttonOgApiErrorContainer}>
-                    <Button
-                        type="button"
-                        className={styles.seBrevButton}
-                        variant="secondary"
-                        onClick={props.brev?.handleSeBrev}
-                        loading={props.brev && (RemoteData.isPending(props.brev.status) || isSaving)}
-                    >
-                        {formatMessage('knapp.seBrev')}
-                    </Button>
-                    {RemoteData.isFailure(props.brev.status) && <ApiErrorAlert error={props.brev.status.error} />}
-                </div>
+            {!isSaving && RemoteData.isFailure(props.save.status) && (
+                <ApiErrorAlert variant="error" error={props.save.status.error} />
             )}
         </div>
     );
