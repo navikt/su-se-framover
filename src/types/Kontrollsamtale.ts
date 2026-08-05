@@ -38,3 +38,24 @@ export interface AnnullerKontrollsamtaleRequest {
     sakId: string;
     kontrollsamtaleId: string;
 }
+
+export interface KontrollsamtaleReiseDato {
+    utreiseDato: string;
+    innreiseDato: string;
+}
+export interface LagreKontrollsamtaleNotatRequest {
+    sakId: string;
+    personligOppmøte: boolean;
+    fullmaktOgLegeerklæring: boolean | null;
+    originalPass: boolean;
+    gyldigPass: boolean;
+    harVærtUtenlands: boolean;
+    utenlandsoppholdDatoer: KontrollsamtaleReiseDato[];
+    harPlanerOmUtenlandsreise: boolean;
+    planlagteUtenlandsreiseDatoer: KontrollsamtaleReiseDato[];
+    reiseDokumentasjon: boolean;
+    økonomiskSituasjon: boolean;
+    andreForhold: boolean;
+    skatteOpplysninger: boolean;
+    fritekst: string | null;
+}

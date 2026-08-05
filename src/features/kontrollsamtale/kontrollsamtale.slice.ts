@@ -10,6 +10,7 @@ export interface KontrollsamtaleState {
     personligOppmøte: Nullable<boolean>;
     fullmaktOgLegeerklæring: Nullable<boolean>;
     originalPass: Nullable<boolean>;
+    gyldigPass: Nullable<boolean>;
 
     harVærtUtenlands: Nullable<boolean>;
     utenlandsoppholdDatoer: ReiseDato[];
@@ -21,12 +22,14 @@ export interface KontrollsamtaleState {
     økonomiskSituasjon: Nullable<boolean>;
     andreForhold: Nullable<boolean>;
     skatteOpplysninger: Nullable<boolean>;
+    fritekst: Nullable<string>;
 }
 
 const initialState: KontrollsamtaleState = {
     personligOppmøte: null,
     fullmaktOgLegeerklæring: null,
     originalPass: null,
+    gyldigPass: null,
 
     harVærtUtenlands: null,
     utenlandsoppholdDatoer: [],
@@ -38,6 +41,7 @@ const initialState: KontrollsamtaleState = {
     økonomiskSituasjon: null,
     andreForhold: null,
     skatteOpplysninger: null,
+    fritekst: null,
 };
 
 const kontrollsamtaleSlice = createSlice({
@@ -52,6 +56,9 @@ const kontrollsamtaleSlice = createSlice({
         },
         originalPassUpdated(state, action: PayloadAction<boolean | null>) {
             state.originalPass = action.payload;
+        },
+        gyldigPassUpdated(state, action: PayloadAction<boolean | null>) {
+            state.gyldigPass = action.payload;
         },
         harVærtUtenlandsUpdated(state, action: PayloadAction<boolean | null>) {
             state.harVærtUtenlands = action.payload;
@@ -84,6 +91,9 @@ const kontrollsamtaleSlice = createSlice({
         skatteOpplysningerUpdated(state, action: PayloadAction<boolean | null>) {
             state.skatteOpplysninger = action.payload;
         },
+        fritekstUpdated(state, action: PayloadAction<string | null>) {
+            state.fritekst = action.payload;
+        },
     },
 });
 
@@ -91,6 +101,7 @@ export const {
     personligOppmøteUpdated,
     fullmaktOgLegeerklæringUpdated,
     originalPassUpdated,
+    gyldigPassUpdated,
     harVærtUtenlandsUpdated,
     utenlandsoppholdDatoerUpdated,
     harPlanerOmUtenlandsreiseUpdated,
@@ -99,6 +110,7 @@ export const {
     økonomiskSituasjonUpdated,
     andreForholdUpdated,
     skatteOpplysningerUpdated,
+    fritekstUpdated,
 } = kontrollsamtaleSlice.actions;
 
 export default kontrollsamtaleSlice;

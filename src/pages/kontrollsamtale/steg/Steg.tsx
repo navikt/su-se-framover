@@ -12,7 +12,7 @@ import Utenlandsopphold from '~src/pages/kontrollsamtale/steg/utenlandsopphold/U
 import ØkonomiskSituasjon from '~src/pages/kontrollsamtale/steg/økonomi/ØkonomiskSituasjon.tsx';
 import { KontrollsamtaleSteg } from '~src/pages/kontrollsamtale/types.ts';
 
-const Steg = (props: { step: KontrollsamtaleSteg; title: string; hjelpetekst?: string }) => {
+const Steg = (props: { step: KontrollsamtaleSteg; title: string; hjelpetekst?: string; sakId: string }) => {
     const sectionRef = useRef<HTMLDivElement>(null);
     useEffect(() => {
         sectionRef.current?.focus();
@@ -26,31 +26,29 @@ const Steg = (props: { step: KontrollsamtaleSteg; title: string; hjelpetekst?: s
                 </Heading>
                 {props.hjelpetekst && <Ingress>{props.hjelpetekst}</Ingress>}
             </div>
-            <ShowSteg step={props.step} />
+            <ShowSteg step={props.step} sakId={props.sakId} />
         </section>
     );
 };
-const ShowSteg = (props: { step: KontrollsamtaleSteg }) => {
+const ShowSteg = (props: { step: KontrollsamtaleSteg; sakId: string }) => {
     const avbrytUrl = routes.soknad.createURL();
 
+    if (!props.sakId) {
+        throw new Error('Mangler sakId');
+    }
     switch (props.step) {
         case KontrollsamtaleSteg.PersonligOppmøte:
-            return (
-                <PersonligOppmøte
-                    nesteUrl={routes.kontrollsamtaleUtfylling.createURL({
-                        step: KontrollsamtaleSteg.FullmaktOgLegeerklæring,
-                    })}
-                    avbrytUrl={avbrytUrl}
-                />
-            );
+            return <PersonligOppmøte sakId={props.sakId} avbrytUrl={avbrytUrl} />;
         case KontrollsamtaleSteg.FullmaktOgLegeerklæring:
             return (
                 <FullmaktOgLegeerklæring
                     nesteUrl={routes.kontrollsamtaleUtfylling.createURL({
                         step: KontrollsamtaleSteg.OriginalPass,
+                        sakId: props.sakId,
                     })}
                     forrigeUrl={routes.kontrollsamtaleUtfylling.createURL({
                         step: KontrollsamtaleSteg.PersonligOppmøte,
+                        sakId: props.sakId,
                     })}
                     avbrytUrl={avbrytUrl}
                 />
@@ -60,9 +58,11 @@ const ShowSteg = (props: { step: KontrollsamtaleSteg }) => {
                 <OriginalPass
                     nesteUrl={routes.kontrollsamtaleUtfylling.createURL({
                         step: KontrollsamtaleSteg.ReisetilUtlandet,
+                        sakId: props.sakId,
                     })}
                     forrigeUrl={routes.kontrollsamtaleUtfylling.createURL({
                         step: KontrollsamtaleSteg.FullmaktOgLegeerklæring,
+                        sakId: props.sakId,
                     })}
                     avbrytUrl={avbrytUrl}
                 />
@@ -72,9 +72,11 @@ const ShowSteg = (props: { step: KontrollsamtaleSteg }) => {
                 <Utenlandsopphold
                     nesteUrl={routes.kontrollsamtaleUtfylling.createURL({
                         step: KontrollsamtaleSteg.ØkonomiskSituasjon,
+                        sakId: props.sakId,
                     })}
                     forrigeUrl={routes.kontrollsamtaleUtfylling.createURL({
                         step: KontrollsamtaleSteg.OriginalPass,
+                        sakId: props.sakId,
                     })}
                     avbrytUrl={avbrytUrl}
                 />
@@ -84,9 +86,11 @@ const ShowSteg = (props: { step: KontrollsamtaleSteg }) => {
                 <ØkonomiskSituasjon
                     nesteUrl={routes.kontrollsamtaleUtfylling.createURL({
                         step: KontrollsamtaleSteg.AndreForhold,
+                        sakId: props.sakId,
                     })}
                     forrigeUrl={routes.kontrollsamtaleUtfylling.createURL({
                         step: KontrollsamtaleSteg.ReisetilUtlandet,
+                        sakId: props.sakId,
                     })}
                     avbrytUrl={avbrytUrl}
                 />
@@ -96,9 +100,11 @@ const ShowSteg = (props: { step: KontrollsamtaleSteg }) => {
                 <AndreForhold
                     nesteUrl={routes.kontrollsamtaleUtfylling.createURL({
                         step: KontrollsamtaleSteg.SkatteOpplysninger,
+                        sakId: props.sakId,
                     })}
                     forrigeUrl={routes.kontrollsamtaleUtfylling.createURL({
                         step: KontrollsamtaleSteg.ØkonomiskSituasjon,
+                        sakId: props.sakId,
                     })}
                     avbrytUrl={avbrytUrl}
                 />
@@ -108,9 +114,11 @@ const ShowSteg = (props: { step: KontrollsamtaleSteg }) => {
                 <SkatteOpplysninger
                     nesteUrl={routes.kontrollsamtaleUtfylling.createURL({
                         step: KontrollsamtaleSteg.Oppsummering,
+                        sakId: props.sakId,
                     })}
                     forrigeUrl={routes.kontrollsamtaleUtfylling.createURL({
                         step: KontrollsamtaleSteg.AndreForhold,
+                        sakId: props.sakId,
                     })}
                     avbrytUrl={avbrytUrl}
                 />
@@ -120,9 +128,12 @@ const ShowSteg = (props: { step: KontrollsamtaleSteg }) => {
                 <Oppsummering
                     forrigeUrl={routes.kontrollsamtaleUtfylling.createURL({
                         step: KontrollsamtaleSteg.SkatteOpplysninger,
+                        sakId: props.sakId,
                     })}
                     avbrytUrl={avbrytUrl}
-                    nesteUrl={''} //todo lagre skjema
+                    nesteUrl={routes.kontrollsamtaleKvittering.createURL({
+                        sakId: props.sakId,
+                    })}
                 />
             );
     }
