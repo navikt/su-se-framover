@@ -25,7 +25,7 @@ const TextareaWithAutosave = (props: {
     });
 
     return (
-        <div className={styles.fritesktOgVisBrevContainer}>
+        <div className={styles.fritekstOgVisBrevContainer}>
             <Textarea
                 className={styles.textarea}
                 readOnly={props.textarea.readonly}

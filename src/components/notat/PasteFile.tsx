@@ -6,6 +6,10 @@ import { Nullable } from '~src/lib/types.ts';
 type Props = {
     disabled?: boolean;
     onSelectFile: (file: File) => void;
+    navnPåUtklipp: string;
+    feilNavnPåUtklipp: Nullable<string>;
+    onNavnPåUtklippChange: (navn: string) => void;
+    onFeilNavnPåUtklippChange: (feil: Nullable<string>) => void;
 };
 
 const readClipboardFile = async () => {
@@ -43,8 +47,6 @@ const getFirstPastedFile = (event: ClipboardEvent<HTMLTextAreaElement>) => {
 export default function PasteFile(props: Props) {
     const pasteTargetRef = useRef<HTMLTextAreaElement | null>(null);
     const [venterPåPaste, setVenterPåPaste] = useState(false);
-    const [navnPåUtklipp, setNavnPåUtklipp] = useState('');
-    const [feilNavnPåUtklipp, setFeilNavnPåUtklipp] = useState<Nullable<string>>(null);
 
     const handleButtonClick = useCallback(async () => {
         if (props.disabled) {
@@ -54,13 +56,13 @@ export default function PasteFile(props: Props) {
         try {
             const file = await readClipboardFile();
             if (file) {
-                if (navnPåUtklipp.length < 1) {
-                    setFeilNavnPåUtklipp('Mangler navn på utklipp');
+                if (props.navnPåUtklipp.length < 1) {
+                    props.onFeilNavnPåUtklippChange('Mangler navn på utklipp');
                     return;
                 }
-                setFeilNavnPåUtklipp(null);
+                props.onFeilNavnPåUtklippChange(null);
                 setVenterPåPaste(false);
-                props.onSelectFile(navngiUtklipp(file, navnPåUtklipp));
+                props.onSelectFile(navngiUtklipp(file, props.navnPåUtklipp));
                 return;
             }
         } catch {
@@ -71,7 +73,7 @@ export default function PasteFile(props: Props) {
         window.requestAnimationFrame(() => {
             pasteTargetRef.current?.focus();
         });
-    }, [props.disabled, props.onSelectFile, navnPåUtklipp, feilNavnPåUtklipp]);
+    }, [props.disabled, props.onSelectFile, props.navnPåUtklipp, props.onFeilNavnPåUtklippChange]);
 
     useEffect(() => {
         if (!venterPåPaste || props.disabled) {
@@ -103,17 +105,17 @@ export default function PasteFile(props: Props) {
                 return;
             }
 
-            if (navnPåUtklipp.length < 1) {
-                setFeilNavnPåUtklipp('Mangler navn på utklipp');
+            if (props.navnPåUtklipp.length < 1) {
+                props.onFeilNavnPåUtklippChange('Mangler navn på utklipp');
                 return;
             }
-            setFeilNavnPåUtklipp(null);
+            props.onFeilNavnPåUtklippChange(null);
 
             event.preventDefault();
             setVenterPåPaste(false);
-            props.onSelectFile(navngiUtklipp(file, navnPåUtklipp));
+            props.onSelectFile(navngiUtklipp(file, props.navnPåUtklipp));
         },
-        [props.disabled, props.onSelectFile, navnPåUtklipp, feilNavnPåUtklipp],
+        [props.disabled, props.onSelectFile, props.navnPåUtklipp, props.onFeilNavnPåUtklippChange],
     );
 
     const navngiUtklipp = (file: File, nyttNavn: string) => {
@@ -139,8 +141,9 @@ export default function PasteFile(props: Props) {
             </BodyShort>
             <TextField
                 label={'Navn på utklipp'}
-                error={feilNavnPåUtklipp}
-                onChange={(e) => setNavnPåUtklipp(e.target.value.trim())}
+                error={props.feilNavnPåUtklipp}
+                value={props.navnPåUtklipp}
+                onChange={(e) => props.onNavnPåUtklippChange(e.target.value.trim())}
             />
             <Button
                 type="button"
