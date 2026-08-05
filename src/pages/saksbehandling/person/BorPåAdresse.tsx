@@ -9,6 +9,7 @@ import { useApiCall } from '~src/lib/hooks.ts';
 import * as Routes from '~src/lib/routes';
 import { PersonPåAdresse } from '~src/types/Person.ts';
 import { formatDate } from '~src/utils/date/dateUtils.ts';
+import { loggUmamiEvent } from '~src/utils/umami.ts';
 import styles from './BorPåAdresse.module.less';
 
 const BorPåAdresse = () => {
@@ -16,7 +17,16 @@ const BorPåAdresse = () => {
     const [borPåAdresse, hentBorPåAdresse] = useApiCall(fetchBorPåAdresse);
 
     useEffect(() => {
-        hentBorPåAdresse({ fnr: sak.fnr, sakstype: sak.sakstype });
+        loggUmamiEvent('hent-bor-på-adresse-forsøk', {
+            sakstype: sak.sakstype,
+        });
+        hentBorPåAdresse({ fnr: sak.fnr, sakstype: sak.sakstype }, (data) => {
+            data.treff;
+            loggUmamiEvent('hent-bor-på-adresse-fullført', {
+                sakstype: sak.sakstype,
+                antallTreff: data.treff.length,
+            });
+        });
     }, []);
 
     if (RemoteData.isSuccess(borPåAdresse)) {
