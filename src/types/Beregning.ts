@@ -1,5 +1,4 @@
-// biome-ignore lint: Shadowing Array intentionally
-import * as Array from 'fp-ts/lib/Array';
+import * as FpArray from 'fp-ts/lib/Array';
 import { Eq, struct } from 'fp-ts/lib/Eq';
 import * as N from 'fp-ts/lib/number';
 import * as S from 'fp-ts/lib/string';
@@ -36,8 +35,8 @@ export const eqMånedsberegningBortsettFraPeriode: Eq<Månedsberegning> = struct
 >({
     beløp: N.Eq,
     epsFribeløp: N.Eq,
-    epsInputFradrag: Array.getEq(eqFradragBortsettFraPeriode),
-    fradrag: Array.getEq(eqFradragBortsettFraPeriode),
+    epsInputFradrag: FpArray.getEq(eqFradragBortsettFraPeriode),
+    fradrag: FpArray.getEq(eqFradragBortsettFraPeriode),
     grunnbeløp: N.Eq,
     sats: S.Eq,
     satsbeløp: N.Eq,
