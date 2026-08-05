@@ -12,6 +12,7 @@ const config: Config = {
     transform: {
         '^.+\\.tsx?$': 'ts-jest',
     },
+    transformIgnorePatterns: ['node_modules/(?!(react-intl|@formatjs/intl|@formatjs/icu-messageformat-parser|@formatjs/icu-skeleton-parser|@formatjs/fast-memoize|intl-messageformat|date-fns)/)'],
 };
 
 export default config;
