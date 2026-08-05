@@ -141,7 +141,7 @@ const AvvistKlage = (props: { sakId: string; klage: Klage }) => {
                 left: (
                     <form onSubmit={handleSubmit(handleBekreftOgFortsettSubmit)}>
                         <Label className={styles.resultatLabel}>{formatMessage('avvistKlage.resultat')}</Label>
-                        <div className={styles.fritesktOgVisBrevContainer}>
+                        <div className={styles.fritekstOgVisBrevContainer}>
                             <Controller
                                 control={control}
                                 name={'fritekstTilBrev'}

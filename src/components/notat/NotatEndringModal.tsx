@@ -145,11 +145,6 @@ const NotatEndringModal = (props: Props) => {
             </div>
             <div className={minimert ? `${styles.body} ${styles.bodySkjult}` : styles.body}>
                 <VStack gap="4">
-                    {props.successMessage && (
-                        <Alert variant="success" size="small" contentMaxWidth={false}>
-                            <BodyShort>{props.successMessage}</BodyShort>
-                        </Alert>
-                    )}
                     {props.actionError && <ApiErrorAlert error={props.actionError} size="small" />}
                     <TextareaWithAutosave
                         textarea={{
@@ -180,6 +175,11 @@ const NotatEndringModal = (props: Props) => {
                             </Button>
                         )}
                     </HStack>
+                    {props.successMessage && (
+                        <Alert variant="success" size="small" contentMaxWidth={false}>
+                            <BodyShort>{props.successMessage}</BodyShort>
+                        </Alert>
+                    )}
                 </VStack>
             </div>
         </section>
