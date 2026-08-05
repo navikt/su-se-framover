@@ -1,10 +1,11 @@
 import { MinusIcon, PlusIcon, XMarkIcon } from '@navikt/aksel-icons';
-import { Alert, BodyShort, Button, Heading, HStack, Textarea, VStack } from '@navikt/ds-react';
+import { Alert, BodyShort, Button, Heading, HStack, VStack } from '@navikt/ds-react';
 import { useCallback, useEffect, useRef, useState } from 'react';
 
 import { ApiError } from '~src/api/apiClient';
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
-
+import TextareaWithAutosave from '~src/components/inputs/textareaWithAutosave/TextareaWithAutosave.tsx';
+import { ApiResult } from '~src/lib/hooks.ts';
 import styles from './notatEndringPanel.module.less';
 import { TekstModalType } from './notatPanelTypes';
 
@@ -19,6 +20,7 @@ type Props = {
     onClose: () => void;
     onNotatTekstChange: (value: string) => void;
     onSave: () => void;
+    status: ApiResult<void>;
 };
 
 type Position = { x: number; y: number };
@@ -143,18 +145,19 @@ const NotatEndringModal = (props: Props) => {
             </div>
             <div className={minimert ? `${styles.body} ${styles.bodySkjult}` : styles.body}>
                 <VStack gap="4">
-                    {props.successMessage && (
-                        <Alert variant="success" size="small" contentMaxWidth={false}>
-                            <BodyShort>{props.successMessage}</BodyShort>
-                        </Alert>
-                    )}
                     {props.actionError && <ApiErrorAlert error={props.actionError} size="small" />}
-                    <Textarea
-                        label={viserAttestantnotat ? 'Attestantnotat' : 'Saksbehandlernotat'}
-                        value={props.notatTekst}
-                        onChange={(event) => props.onNotatTekstChange(event.target.value)}
-                        readOnly={!props.kanRedigere}
-                        minRows={8}
+                    <TextareaWithAutosave
+                        textarea={{
+                            label: viserAttestantnotat ? 'Attestantnotat' : 'Saksbehandlernotat',
+                            value: props.notatTekst,
+                            onChange: (value) => props.onNotatTekstChange(value),
+                            readonly: !props.kanRedigere,
+                            minRows: 8,
+                        }}
+                        save={{
+                            handleSave: () => props.onSave(),
+                            status: props.status,
+                        }}
                     />
                     <HStack gap="3">
                         {props.kanRedigere ? (
@@ -172,6 +175,11 @@ const NotatEndringModal = (props: Props) => {
                             </Button>
                         )}
                     </HStack>
+                    {props.successMessage && (
+                        <Alert variant="success" size="small" contentMaxWidth={false}>
+                            <BodyShort>{props.successMessage}</BodyShort>
+                        </Alert>
+                    )}
                 </VStack>
             </div>
         </section>

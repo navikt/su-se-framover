@@ -10,10 +10,9 @@ export type FormData = Pick<
     | 'planlagteUtenlandsreiseDatoer'
 >;
 
-//todo: fiks dato schema
 const reiseDatoSchema = yup.object({
-    utreisedato: yup.string(),
-    innreisedato: yup.string(),
+    utreisedato: yup.string().required('Velg utreisedato'),
+    innreisedato: yup.string().required('Velg innreisedato'),
 });
 export const schema = yup.object({
     harVærtUtenlands: yup.boolean().nullable().required('Du må svare'),

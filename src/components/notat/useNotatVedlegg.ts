@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import { ApiError } from '~src/api/apiClient';
 import * as notatApi from '~src/api/notatApi';
 import { useApiCall } from '~src/lib/hooks';
+import { Nullable } from '~src/lib/types';
 import { NotatResponse } from '~src/types/Notat';
 
 import { NotatOppdatering } from './notatPanelTypes';
@@ -29,10 +30,14 @@ export const useNotatVedlegg = (props: Props) => {
     const [slettVedleggStatus, slettVedlegg, resetSlettVedleggStatus] = useApiCall(notatApi.slettVedlegg);
     const [visVedleggModal, setVisVedleggModal] = useState(false);
     const [valgtFil, setValgtFil] = useState<File | null>(null);
+    const [navnPåUtklipp, setNavnPåUtklipp] = useState('');
+    const [feilNavnPåUtklipp, setFeilNavnPåUtklipp] = useState<Nullable<string>>(null);
 
     useEffect(() => {
         setVisVedleggModal(false);
         setValgtFil(null);
+        setNavnPåUtklipp('');
+        setFeilNavnPåUtklipp(null);
         resetNotatMedVedlegg();
         resetVedleggStatus();
         resetSlettVedleggStatus();
@@ -65,6 +70,9 @@ export const useNotatVedlegg = (props: Props) => {
     const lukkVedleggModal = () => {
         setVisVedleggModal(false);
         setValgtFil(null);
+        console.log('ahhlo');
+        setNavnPåUtklipp('');
+        setFeilNavnPåUtklipp(null);
     };
 
     const handleLastOppVedlegg = () => {
@@ -134,6 +142,10 @@ export const useNotatVedlegg = (props: Props) => {
             vedleggError: RemoteData.isFailure(notatMedVedleggStatus) ? notatMedVedleggStatus.error : null,
             onClose: lukkVedleggModal,
             onSelectFile: setValgtFil,
+            navnPåUtklipp,
+            feilNavnPåUtklipp,
+            onNavnPåUtklippChange: setNavnPåUtklipp,
+            onFeilNavnPåUtklippChange: setFeilNavnPåUtklipp,
             onUpload: handleLastOppVedlegg,
             onDelete: handleSlettVedlegg,
         },
