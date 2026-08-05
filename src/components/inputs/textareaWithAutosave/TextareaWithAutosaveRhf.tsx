@@ -38,7 +38,7 @@ const TextareaWithAutosaveRhf = <T extends object, U extends FieldValues>(props:
     });
 
     return (
-        <div className={styles.fritesktOgVisBrevContainer}>
+        <div className={styles.fritekstOgVisBrevContainer}>
             <Controller
                 control={props.textarea.control}
                 name={props.textarea.name}

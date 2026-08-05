@@ -377,7 +377,7 @@ const VurderingAvKlage = (props: { sakId: string; klage: Klage }) => {
                         {ikkeMedhold && (
                             <>
                                 <OpprettholdVedtakForm control={control} />
-                                <div className={styles.fritesktOgVisBrevContainer}>
+                                <div className={styles.fritekstOgVisBrevContainer}>
                                     <Controller
                                         control={control}
                                         name={'fritekstTilBrev'}
