@@ -3,6 +3,7 @@ import { BodyShort, Button, FileUpload, Heading, HStack, Loader, Modal, VStack }
 import { ApiError } from '~src/api/apiClient';
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
 import PasteFile from '~src/components/notat/PasteFile';
+import { Nullable } from '~src/lib/types';
 import { NotatVedlegg } from '~src/types/Notat';
 
 import { canPreviewVedlegg, downloadVedlegg, formatVedleggBeskrivelse, openVedleggPreview } from './notatPanelUtils';
@@ -18,6 +19,10 @@ type Props = {
     vedleggError: ApiError | null;
     onClose: () => void;
     onSelectFile: (file: File | null) => void;
+    navnPåUtklipp: string;
+    feilNavnPåUtklipp: Nullable<string>;
+    onNavnPåUtklippChange: (navn: string) => void;
+    onFeilNavnPåUtklippChange: (feil: Nullable<string>) => void;
     onUpload: () => void;
     onDelete: (vedleggId: string) => void;
 };
@@ -42,6 +47,10 @@ const NotatVedleggModal = (props: Props) => {
                             <PasteFile
                                 onSelectFile={(file) => props.onSelectFile(file)}
                                 disabled={props.lasterOppVedlegg}
+                                navnPåUtklipp={props.navnPåUtklipp}
+                                feilNavnPåUtklipp={props.feilNavnPåUtklipp}
+                                onNavnPåUtklippChange={props.onNavnPåUtklippChange}
+                                onFeilNavnPåUtklippChange={props.onFeilNavnPåUtklippChange}
                             />
 
                             <FileUpload.Dropzone
