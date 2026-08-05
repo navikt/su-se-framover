@@ -96,3 +96,22 @@ export interface Kontaktinformasjon {
     organisasjonsnavn: Nullable<string>;
     organisasjonsnummer: Nullable<string>;
 }
+
+export interface BorPåAdresse {
+    søktAdresse: string;
+    treff: PersonPåAdresse[];
+}
+
+export interface PersonPåAdresse {
+    fulltNavn: string;
+    adresse: string;
+    gyldigFraOgMed: Date;
+    gyldigTilOgMed: Nullable<Date>;
+    matrikkelId: string;
+    identer: IdentJson[];
+}
+
+export interface IdentJson {
+    ident: string;
+    type: string;
+}

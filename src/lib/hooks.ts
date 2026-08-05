@@ -78,32 +78,48 @@ export function useAsyncActionCreator<Params, Returned>(
 
 export function useApiCall<T, U>(
     fn: (req: T) => Promise<ApiClientResult<U>>,
-): [ApiResult<U>, (args: T, onSuccess?: (result: U) => void) => void, () => void] {
+): [
+    ApiResult<U>,
+    (args: T, onSuccess?: (result: U) => void, onFailure?: (error: ApiError) => void) => void,
+    () => void,
+] {
     const [apiResult, setApiResult] = useState<ApiResult<U>>(RemoteData.initial);
+    const apiResultRef = useRef(apiResult);
+
+    useEffect(() => {
+        apiResultRef.current = apiResult;
+    }, [apiResult]);
 
     const callFn = useCallback(
-        async (args: T, onSuccess?: (result: U) => void) => {
-            if (!RemoteData.isPending(apiResult)) {
+        async (args: T, onSuccess?: (result: U) => void, onFailure?: (error: ApiError) => void) => {
+            if (!RemoteData.isPending(apiResultRef.current)) {
                 setApiResult(RemoteData.pending);
+                apiResultRef.current = RemoteData.pending;
 
                 const res = await fn(args).then(
                     (res) => res,
                     (res) => res,
                 );
                 if (res.status === 'ok') {
-                    setApiResult(RemoteData.success(res.data));
+                    const successResult = RemoteData.success(res.data);
+                    apiResultRef.current = successResult;
+                    setApiResult(successResult);
                     onSuccess?.(res.data);
                 } else {
-                    setApiResult(RemoteData.failure(res.error));
+                    const failureResult = RemoteData.failure(res.error);
+                    apiResultRef.current = failureResult;
+                    setApiResult(failureResult);
+                    onFailure?.(res.error);
                 }
             }
         },
-        [apiResult, fn],
+        [fn],
     );
 
     const resetToInitial = useCallback(() => {
+        apiResultRef.current = RemoteData.initial;
         setApiResult(RemoteData.initial);
-    }, [setApiResult]);
+    }, []);
 
     return [apiResult, callFn, resetToInitial];
 }

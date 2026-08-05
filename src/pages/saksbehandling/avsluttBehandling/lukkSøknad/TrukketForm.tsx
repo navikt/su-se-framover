@@ -2,6 +2,7 @@ import * as RemoteData from '@devexperts/remote-data-ts';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Controller, useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
+import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert.tsx';
 import * as SøknadActions from '~src/features/søknad/SøknadActions.ts';
 import { useAsyncActionCreator } from '~src/lib/hooks.ts';
 import { useI18n } from '~src/lib/i18n.ts';
@@ -68,6 +69,7 @@ export const TrukketForm = (props: { søknad: Søknad; sakId: string }) => {
                     />
                 )}
             />
+            {RemoteData.isFailure(søknadLukketStatus) && <ApiErrorAlert error={søknadLukketStatus.error} />}
             <AvsluttBehandlingBunnknapper
                 sakId={sakId}
                 submitButtonText={formatMessage('knapp.lukkSøknad')}

@@ -14,14 +14,17 @@ import Vilkår from './pages/saksbehandling/søknadsbehandling/vilkår/Vilkår';
 import Store from './redux/Store';
 import './externalStyles';
 import DødsboPage from '~src/pages/saksbehandling/mottaker/Dødsbo.tsx';
+import BorPåAdresse from '~src/pages/saksbehandling/person/BorPåAdresse.tsx';
 import { SakInngang } from '~src/pages/søknad/steg/inngang/SakInngang.tsx';
 import { ContentWrapper } from './utils/router/ContentWrapper';
 import UmamiTracker from './utils/UmamiTracker';
 
 const Attestering = lazy(() => import('./pages/saksbehandling/attestering/Attestering'));
 const Kvittering = lazy(() => import('./pages/søknad/kvittering/Kvittering'));
+const KvitteringKontrollnotat = lazy(() => import('./pages/kontrollsamtale/kvittering/KvitteringKontrollnotat'));
 const Infoside = lazy(() => import('./pages/søknad/steg/infoside/Infoside'));
 const Inngang = lazy(() => import('./pages/søknad/steg/inngang/Inngang'));
+const InngangKontrollnotat = lazy(() => import('./pages/kontrollsamtale/steg/inngang/InngangKontrollnotat'));
 const Søknadsvelger = lazy(() => import('./pages/søknad/Søknadsvelger'));
 const StartUtfylling = lazy(() => import('./pages/søknad/steg/start-utfylling/StartUtfylling'));
 const Startutfylling = lazy(() => import('./pages/kontrollsamtale/StartUtfylling'));
@@ -96,8 +99,15 @@ const AppRoutes = () => (
                 <Route path={routes.søknadskvittering.path} element={<Kvittering />} />
             </Route>
         </Route>
+        <Route
+            path={routes.kontrollsamtalePersonSok.path}
+            element={<WithDocTitle title="Kontrollsamtale" Page={Index} />}
+        >
+            <Route index element={<InngangKontrollnotat />} />
+        </Route>
         <Route path={routes.kontrollsamtale.path} element={<WithDocTitle title="Kontrollsamtale" Page={Index} />}>
             <Route path={routes.kontrollsamtaleUtfylling.path} element={<Startutfylling />} />
+            <Route path={routes.kontrollsamtaleKvittering.path} element={<KvitteringKontrollnotat />} />
         </Route>
         <Route
             path={routes.saksoversiktValgtSak.path}
@@ -127,6 +137,7 @@ const AppRoutes = () => (
             <Route path={routes.utenlandsopphold.path} element={<Utenlandsopphold />} />
             <Route path={routes.brevPage.path} element={<BrevPage />} />
             <Route path={routes.dødsboPage.path} element={<DødsboPage />} />
+            <Route path={routes.borPåAdressePage.path} element={<BorPåAdresse />} />
 
             <Route path={routes.tilbakekrevingRoot.path} element={<Tilbakekreving />} />
         </Route>

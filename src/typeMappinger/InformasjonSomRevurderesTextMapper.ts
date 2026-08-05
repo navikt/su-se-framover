@@ -9,7 +9,7 @@ export const InformasjonSomRevurderesTextMapper: { [key in InformasjonSomRevurde
     [InformasjonSomRevurderes.Flyktning]: 'Flyktingsstatus',
     [InformasjonSomRevurderes.FastOpphold]: 'Opphold i Norge',
     [InformasjonSomRevurderes.Opplysningsplikt]: 'Opplysningsplikt',
-    [InformasjonSomRevurderes.Oppholdstillatelse]: 'Oppholdstillatelse',
+    [InformasjonSomRevurderes.Oppholdstillatelse]: 'Lovlig opphold',
     [InformasjonSomRevurderes.PersonligOppmøte]: 'Personlig oppmøte',
     [InformasjonSomRevurderes.Institusjonsopphold]: 'Institusjonsopphold',
     [InformasjonSomRevurderes.Familiegjenforening]: 'Familiegjenforening',

@@ -10,6 +10,7 @@ export function fjernOverflødigLinjeskift(e: ClipboardEvent<HTMLTextAreaElement
     const paste = e.clipboardData
         .getData('text')
         .replace(/\r\n?/g, '\n')
+        .replace(/[\u202f\u00a0]/g, ' ')
         .replace(/\n{3,}/g, '\n\n')
         .replace(/([^.\n])\n(?!\n)(?!o\s|o$|-\s|-$)(?=[^A-ZÆØÅ])/g, '$1 ');
 

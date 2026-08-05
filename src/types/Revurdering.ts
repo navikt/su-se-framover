@@ -296,7 +296,6 @@ export interface OpprettRevurderingRequest {
     omgjøringsgrunn: Nullable<OmgjøringsGrunn>;
     klageId: Nullable<string>;
     informasjonSomRevurderes: InformasjonSomRevurderes[];
-    begrunnelse: string;
 }
 
 export interface OppdaterRevurderingRequest extends OpprettRevurderingRequest {

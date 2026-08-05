@@ -10,7 +10,7 @@ import { FritekstTyper, hentFritekst, redigerFritekst } from '~src/api/fritekstA
 import { LagreMottakerRequest } from '~src/api/mottakerClient.ts';
 import { forhåndsvisForhåndsvarsel, visUtsendtForhåndsvarsel } from '~src/api/tilbakekrevingApi';
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
-import TextareaWithAutosave from '~src/components/inputs/textareaWithAutosave/TextareaWithAutosave.tsx';
+import TextareaWithAutosaveRhf from '~src/components/inputs/textareaWithAutosave/TextareaWithAutosaveRhf.tsx';
 import Navigasjonsknapper from '~src/components/navigasjonsknapper/Navigasjonsknapper';
 import Feiloppsummering from '~src/components/oppsummering/feiloppsummering/Feiloppsummering';
 import OppsummeringAvKravgrunnlag from '~src/components/oppsummering/kravgrunnlag/OppsummeringAvKravgrunnlag';
@@ -82,8 +82,25 @@ const ForhåndsvarsleTilbakekreving = (props: {
             );
             return;
         }
-        const dødsbo = visDødsbo ? dødsboForm.getValues() : null;
-        if (dødsbo && !validateDødsbo(dødsbo)) return;
+        const dødsboData = visDødsbo ? dødsboForm.getValues() : null;
+        if (dødsboData && !validateDødsbo(dødsboData)) return;
+        const dødsbo: Nullable<LagreMottakerRequest> = dødsboData
+            ? {
+                  navn: dødsboData.navn.trim(),
+                  foedselsnummer: dødsboData.foedselsnummer?.trim() || undefined,
+                  orgnummer: dødsboData.orgnummer?.trim() || undefined,
+                  adresse: {
+                      adresselinje1: dødsboData.adresse.adresselinje1.trim(),
+                      adresselinje2: dødsboData.adresse.adresselinje2?.trim() || undefined,
+                      adresselinje3: dødsboData.adresse.adresselinje3?.trim() || undefined,
+                      postnummer: dødsboData.adresse.postnummer.trim(),
+                      poststed: dødsboData.adresse.poststed.trim(),
+                  },
+                  referanseId: '',
+                  referanseType,
+                  brevtype,
+              }
+            : null;
 
         lagreForhåndsvarsel(
             {
@@ -208,7 +225,7 @@ const ForhåndsvarsleTilbakekreving = (props: {
                         />
 
                         {form.watch('skalForhåndsvarsle') && (
-                            <TextareaWithAutosave
+                            <TextareaWithAutosaveRhf
                                 textarea={{
                                     name: 'fritekst',
                                     label: formatMessage('forhåndsvarsleTilbakekreving.fritekst.label'),

@@ -5,10 +5,10 @@ import { useEffect, useRef, useState } from 'react';
 import { Controller, UseFormTrigger, useForm, useWatch } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import { FritekstTyper, hentFritekst } from '~src/api/fritekstApi.ts';
-import { hentMottaker } from '~src/api/mottakerClient.ts';
+import { hentMottaker, LagreMottakerRequest } from '~src/api/mottakerClient.ts';
 import { forhåndsvisVedtaksbrevTilbakekrevingsbehandling } from '~src/api/tilbakekrevingApi';
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
-import TextareaWithAutosave from '~src/components/inputs/textareaWithAutosave/TextareaWithAutosave';
+import TextareaWithAutosaveRhf from '~src/components/inputs/textareaWithAutosave/TextareaWithAutosaveRhf.tsx';
 import { MottakerAlert, toMottakerAlert } from '~src/components/mottaker/mottakerUtils.ts';
 import Navigasjonsknapper from '~src/components/navigasjonsknapper/Navigasjonsknapper';
 import Feiloppsummering from '~src/components/oppsummering/feiloppsummering/Feiloppsummering';
@@ -23,14 +23,33 @@ import { useI18n } from '~src/lib/i18n';
 import * as routes from '~src/lib/routes';
 import { Nullable } from '~src/lib/types';
 import { hookFormErrorsTilFeiloppsummering } from '~src/lib/validering';
+import DødsboPage from '~src/pages/saksbehandling/mottaker/Dødsbo.tsx';
 import { Mottaker } from '~src/pages/saksbehandling/mottaker/Mottaker.tsx';
 import { ManuellTilbakekrevingsbehandling, TilbakekrevingSteg } from '~src/types/ManuellTilbakekrevingsbehandling';
+import { KontaktInfoDødsbo, Kontaktinformasjon } from '~src/types/Person';
 import messages from '../../Tilbakekreving-nb';
 import styles from './BrevForTilbakekreving.module.less';
 import { BrevForTilbakekrevingFormData, brevForTilbakekrevingSchema } from './BrevForTilbakekrevingUtils';
 
 type HandleBrevtekstSave = { skalSendeBrev: boolean; fritekst: Nullable<string> };
 type HandleNotatSave = { notat: Nullable<string> };
+
+const mapDødsboKontaktTilMottaker = (
+    kontakt: Kontaktinformasjon,
+    adresse: KontaktInfoDødsbo,
+): Partial<LagreMottakerRequest> => ({
+    navn:
+        kontakt.organisasjonsnavn ?? [kontakt.fornavn, kontakt.mellomnavn, kontakt.etternavn].filter(Boolean).join(' '),
+    foedselsnummer: kontakt.identifikasjonsnummer ?? '',
+    orgnummer: kontakt.organisasjonsnummer ?? '',
+    adresse: {
+        adresselinje1: adresse.adresselinje1 ?? '',
+        adresselinje2: adresse.adresselinje2 ?? '',
+        adresselinje3: '',
+        postnummer: adresse.postnummer ?? '',
+        poststed: adresse.poststedsnavn ?? '',
+    },
+});
 
 const BrevForTilbakekreving = (props: {
     sakId: string;
@@ -135,13 +154,16 @@ const BrevForTilbakekreving = (props: {
                 form.resetField('fritekst', { defaultValue: res.data.fritekst ?? '' });
                 return;
             }
-            form.setError('fritekst', { message: 'Kunne ikke hente fritekst' });
+            if (res.status === 'error' && res.error.statusCode !== 404) {
+                form.setError('fritekst', { message: 'Kunne ikke hente fritekst' });
+            }
         });
     }, [skalSendeBrev, props.tilbakekreving.id, props.sakId]);
 
     const [harDødsbo, setHarDødsbo] = useState(false);
     const [mottakerFetchError, setMottakerFetchError] = useState<MottakerAlert | null>(null);
     const [visDødsbo, setVisDødsbo] = useState(false);
+    const [prefillMottaker, setPrefillMottaker] = useState<Partial<LagreMottakerRequest> | undefined>(undefined);
     const referanseType = 'DØDSBO_TILBAKEKREVING';
     const brevtype = 'VEDTAK';
     const referanseId = props.tilbakekreving.id;
@@ -155,13 +177,18 @@ const BrevForTilbakekreving = (props: {
                 }
                 return;
             } else {
-                if (res.error.statusCode) {
+                if (res.error.statusCode !== 404) {
                     setMottakerFetchError(toMottakerAlert(res.error, 'Kan ikke hente mottaker'));
                 }
             }
         };
         sjekkMottaker();
     }, []);
+
+    const handleBrukDødsboKontaktSomMottaker = (kontakt: Kontaktinformasjon, adresse: KontaktInfoDødsbo) => {
+        setPrefillMottaker(mapDødsboKontaktTilMottaker(kontakt, adresse));
+        setVisDødsbo(true);
+    };
 
     return (
         <ToKolonner tittel={formatMessage('brevForTilbakekreving.tittel')}>
@@ -188,7 +215,7 @@ const BrevForTilbakekreving = (props: {
                         />
                         <div className={styles.textareaContainer}>
                             {skalSendeBrev && (
-                                <TextareaWithAutosave
+                                <TextareaWithAutosaveRhf
                                     textarea={{
                                         name: 'fritekst',
                                         label: formatMessage('brevForTilbakekreving.fritekst.label'),
@@ -229,8 +256,16 @@ const BrevForTilbakekreving = (props: {
 
                             {skalSendeBrev && (
                                 <div>
+                                    <DødsboPage onVelgKontakt={handleBrukDødsboKontaktSomMottaker} />
                                     {!visDødsbo && (
-                                        <Button variant="secondary" type="button" onClick={() => setVisDødsbo(true)}>
+                                        <Button
+                                            variant="secondary"
+                                            type="button"
+                                            onClick={() => {
+                                                setPrefillMottaker(undefined);
+                                                setVisDødsbo(true);
+                                            }}
+                                        >
                                             {harDødsbo ? 'Vis dødsbo' : 'Legg til dødsbo'}
                                         </Button>
                                     )}
@@ -242,7 +277,11 @@ const BrevForTilbakekreving = (props: {
                                                 referanseId={referanseId}
                                                 referanseType={referanseType}
                                                 brevtype={brevtype}
-                                                onClose={() => setVisDødsbo(false)}
+                                                initialValues={prefillMottaker}
+                                                onClose={() => {
+                                                    setPrefillMottaker(undefined);
+                                                    setVisDødsbo(false);
+                                                }}
                                                 onDelete={() => setHarDødsbo(false)}
                                             />
 
@@ -256,7 +295,7 @@ const BrevForTilbakekreving = (props: {
                                 </div>
                             )}
 
-                            <TextareaWithAutosave
+                            <TextareaWithAutosaveRhf
                                 textarea={{
                                     name: 'notat',
                                     label: formatMessage('brevForTilbakekreving.behandlingsnotat.label'),
