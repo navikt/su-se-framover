@@ -8,12 +8,15 @@ import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
 import Framdriftsindikator, { Seksjon } from '~src/components/framdriftsindikator/Framdriftsindikator';
 import SpinnerMedTekst from '~src/components/henterInnhold/SpinnerMedTekst';
 import { LinkAsButton } from '~src/components/linkAsButton/LinkAsButton';
+import NotatPanel from '~src/components/notat/NotatPanel';
 import { SaksoversiktContext } from '~src/context/SaksoversiktContext';
 import { pipe } from '~src/lib/fp';
 import { useApiCall } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
 import * as routes from '~src/lib/routes';
 import { GrunnlagsdataOgVilkårsvurderinger } from '~src/types/grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
+import { ReferanseType } from '~src/types/Notat';
+import { Person } from '~src/types/Person.ts';
 import {
     InformasjonSomRevurderes,
     InformasjonsRevurdering,
@@ -26,6 +29,9 @@ import {
 import { Sakstype } from '~src/types/Sak.ts';
 import {
     erInformasjonsRevurdering,
+    erRevurderingAvsluttet,
+    erRevurderingIverksatt,
+    erRevurderingTilAttestering,
     revurderingTilFramdriftsindikatorSeksjoner,
 } from '~src/utils/revurdering/revurderingUtils';
 
@@ -53,7 +59,7 @@ const AlderspensjonPage = lazy(() => import('~src/pages/saksbehandling/revurderi
 const FamiliegjenforeningPage = lazy(() => import('./familiegjenforening/Familiegjenforening'));
 
 const RevurderingPage = () => {
-    const { sak } = useOutletContext<SaksoversiktContext>();
+    const { sak, søker } = useOutletContext<SaksoversiktContext>();
     const props = {
         sakId: sak.id,
         utbetalinger: sak.utbetalinger,
@@ -95,6 +101,15 @@ const RevurderingPage = () => {
 
     return (
         <div className={styles.pageContainer}>
+            <NotatPanel
+                sakId={sak.id}
+                referanseId={påbegyntRevurdering.id}
+                referanseType={ReferanseType.REVURDERING}
+                underAttestering={erRevurderingTilAttestering(påbegyntRevurdering)}
+                kanRedigere={
+                    !erRevurderingIverksatt(påbegyntRevurdering) && !erRevurderingAvsluttet(påbegyntRevurdering)
+                }
+            />
             <Heading level="1" size="large" className={styles.tittel}>
                 {formatMessage('revurdering.tittel')}
             </Heading>
@@ -103,6 +118,7 @@ const RevurderingPage = () => {
                 <RevurderingSeksjonerWrapper
                     sakId={sak.id}
                     sakstype={sak.sakstype}
+                    søker={søker}
                     revurdering={påbegyntRevurdering}
                     seksjonOgSteg={{ seksjon: urlParams.seksjon!, steg: urlParams.steg! }}
                     harUteståendeKravgrunnlag={harUteståendeKravgrunnlag}
@@ -115,6 +131,7 @@ const RevurderingPage = () => {
 const RevurderingSeksjonerWrapper = (props: {
     sakId: string;
     sakstype: Sakstype;
+    søker: Person;
     revurdering: InformasjonsRevurdering;
     seksjonOgSteg: {
         seksjon: RevurderingSeksjoner;
@@ -180,6 +197,7 @@ const RevurderingSeksjonerWrapper = (props: {
                         <RevurderingOppsummeringPage
                             sakId={props.sakId}
                             sakstype={props.sakstype}
+                            søker={props.søker}
                             revurdering={props.revurdering}
                             aktivSeksjonOgSteg={props.seksjonOgSteg}
                             seksjoner={seksjoner}
@@ -325,7 +343,7 @@ const GrunnlagOgVilkårSteg = (props: {
                 <BosituasjonPage {...stegProps} søker={søker} sakstype={props.sakstype} />
             )}
             {props.seksjonOgSteg.steg === RevurderingGrunnlagOgVilkårSteg.EndringAvFradrag && (
-                <EndringAvFradrag {...stegProps} />
+                <EndringAvFradrag {...stegProps} søker={søker} />
             )}
             {props.seksjonOgSteg.steg === RevurderingGrunnlagOgVilkårSteg.Pensjon && (
                 <AlderspensjonPage {...stegProps} />

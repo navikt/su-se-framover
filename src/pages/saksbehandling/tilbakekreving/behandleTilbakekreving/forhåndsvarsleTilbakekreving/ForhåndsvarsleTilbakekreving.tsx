@@ -1,14 +1,16 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
+
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Button, Heading, Radio, RadioGroup } from '@navikt/ds-react';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 
 import { FritekstTyper, hentFritekst, redigerFritekst } from '~src/api/fritekstApi.ts';
+import { LagreMottakerRequest } from '~src/api/mottakerClient.ts';
 import { forhåndsvisForhåndsvarsel, visUtsendtForhåndsvarsel } from '~src/api/tilbakekrevingApi';
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
-import TextareaWithAutosave from '~src/components/inputs/textareaWithAutosave/TextareaWithAutosave.tsx';
+import TextareaWithAutosaveRhf from '~src/components/inputs/textareaWithAutosave/TextareaWithAutosaveRhf.tsx';
 import Navigasjonsknapper from '~src/components/navigasjonsknapper/Navigasjonsknapper';
 import Feiloppsummering from '~src/components/oppsummering/feiloppsummering/Feiloppsummering';
 import OppsummeringAvKravgrunnlag from '~src/components/oppsummering/kravgrunnlag/OppsummeringAvKravgrunnlag';
@@ -19,15 +21,14 @@ import { useI18n } from '~src/lib/i18n';
 import * as Routes from '~src/lib/routes';
 import { Nullable } from '~src/lib/types.ts';
 import { hookFormErrorsTilFeiloppsummering } from '~src/lib/validering';
+import { MottakerForm } from '~src/pages/saksbehandling/mottaker/Mottaker.tsx';
 import {
     ForhåndsvarselsInfo,
     ManuellTilbakekrevingsbehandling,
     TilbakekrevingSteg,
 } from '~src/types/ManuellTilbakekrevingsbehandling';
 import { formatDateTime } from '~src/utils/date/dateUtils';
-
 import messages from '../../Tilbakekreving-nb';
-
 import styles from './ForhåndsvarsleTilbakekreving.module.less';
 import {
     ForhåndsvarsleTilbakekrevingFormData,
@@ -81,6 +82,25 @@ const ForhåndsvarsleTilbakekreving = (props: {
             );
             return;
         }
+        const dødsboData = visDødsbo ? dødsboForm.getValues() : null;
+        if (dødsboData && !validateDødsbo(dødsboData)) return;
+        const dødsbo: Nullable<LagreMottakerRequest> = dødsboData
+            ? {
+                  navn: dødsboData.navn.trim(),
+                  foedselsnummer: dødsboData.foedselsnummer?.trim() || undefined,
+                  orgnummer: dødsboData.orgnummer?.trim() || undefined,
+                  adresse: {
+                      adresselinje1: dødsboData.adresse.adresselinje1.trim(),
+                      adresselinje2: dødsboData.adresse.adresselinje2?.trim() || undefined,
+                      adresselinje3: dødsboData.adresse.adresselinje3?.trim() || undefined,
+                      postnummer: dødsboData.adresse.postnummer.trim(),
+                      poststed: dødsboData.adresse.poststed.trim(),
+                  },
+                  referanseId: '',
+                  referanseType,
+                  brevtype,
+              }
+            : null;
 
         lagreForhåndsvarsel(
             {
@@ -88,6 +108,7 @@ const ForhåndsvarsleTilbakekreving = (props: {
                 saksversjon: props.saksversjon,
                 behandlingId: props.tilbakekreving.id,
                 fritekst: data.fritekst,
+                dødsbo: dødsbo,
             },
             () => {
                 navigate(Routes.saksoversiktValgtSak.createURL({ sakId: props.sakId }));
@@ -108,6 +129,76 @@ const ForhåndsvarsleTilbakekreving = (props: {
             },
             onSuccess,
         );
+    };
+
+    const [visDødsbo, setVisDødsbo] = useState(false);
+    const referanseType = 'DØDSBO_TILBAKEKREVING';
+    const brevtype = 'FORHANDSVARSEL';
+
+    // referanseId skal bli hendelseId, men den blir til først i backend
+    const emptyFormValues: LagreMottakerRequest = {
+        navn: '',
+        foedselsnummer: '',
+        orgnummer: '',
+        adresse: {
+            adresselinje1: '',
+            adresselinje2: '',
+            adresselinje3: '',
+            postnummer: '',
+            poststed: '',
+        },
+        referanseType: 'DØDSBO_TILBAKEKREVING',
+        brevtype: 'FORHANDSVARSEL',
+        referanseId: '',
+    };
+
+    const dødsboForm = useForm<LagreMottakerRequest>({
+        defaultValues: emptyFormValues,
+    });
+
+    const validateDødsbo = (dødsbo: LagreMottakerRequest): boolean => {
+        dødsboForm.clearErrors();
+        let isValid = true;
+
+        const harFnr = Boolean(dødsbo.foedselsnummer?.trim());
+        const harOrgnr = Boolean(dødsbo.orgnummer?.trim());
+
+        if (harFnr && harOrgnr) {
+            dødsboForm.setError('foedselsnummer', {
+                message: 'Kan ikke ha både fødselsnummer og organisasjonsnummer.',
+            });
+            dødsboForm.setError('orgnummer', {
+                message: 'Kan ikke ha både fødselsnummer og organisasjonsnummer.',
+            });
+            isValid = false;
+        } else if (!harFnr && !harOrgnr) {
+            dødsboForm.setError('foedselsnummer', {
+                message: 'Du må fylle ut enten fødselsnummer eller organisasjonsnummer.',
+            });
+            dødsboForm.setError('orgnummer', {
+                message: 'Du må fylle ut enten fødselsnummer eller organisasjonsnummer.',
+            });
+            isValid = false;
+        }
+
+        if (!dødsbo.navn.trim()) {
+            dødsboForm.setError('navn', { message: 'Navn er påkrevd.' });
+            isValid = false;
+        }
+        if (!dødsbo.adresse.adresselinje1.trim()) {
+            dødsboForm.setError('adresse.adresselinje1', { message: 'Adresselinje 1 er påkrevd.' });
+            isValid = false;
+        }
+        if (!dødsbo.adresse.postnummer.trim()) {
+            dødsboForm.setError('adresse.postnummer', { message: 'Postnummer er påkrevd.' });
+            isValid = false;
+        }
+        if (!dødsbo.adresse.poststed.trim()) {
+            dødsboForm.setError('adresse.poststed', { message: 'Poststed er påkrevd.' });
+            isValid = false;
+        }
+
+        return isValid;
     };
 
     return (
@@ -134,7 +225,7 @@ const ForhåndsvarsleTilbakekreving = (props: {
                         />
 
                         {form.watch('skalForhåndsvarsle') && (
-                            <TextareaWithAutosave
+                            <TextareaWithAutosaveRhf
                                 textarea={{
                                     name: 'fritekst',
                                     label: formatMessage('forhåndsvarsleTilbakekreving.fritekst.label'),
@@ -162,10 +253,31 @@ const ForhåndsvarsleTilbakekreving = (props: {
                                             behandlingId: props.tilbakekreving.id,
                                             saksversjon: props.saksversjon,
                                             brevtekst: form.getValues('fritekst'),
+                                            dødsbo: visDødsbo,
                                         }),
                                     status: forhåndsvisStatus,
                                 }}
                             />
+                        )}
+
+                        {form.watch('skalForhåndsvarsle') && (
+                            <div>
+                                {!visDødsbo ? (
+                                    <Button variant="secondary" type="button" onClick={() => setVisDødsbo(true)}>
+                                        legg til dødsbo
+                                    </Button>
+                                ) : (
+                                    <MottakerForm
+                                        sakId={props.sakId}
+                                        referanseId={''}
+                                        referanseType={referanseType}
+                                        brevtype={brevtype}
+                                        onClose={() => setVisDødsbo(false)}
+                                        form={dødsboForm}
+                                        kunForm={true}
+                                    />
+                                )}
+                            </div>
                         )}
 
                         <div>

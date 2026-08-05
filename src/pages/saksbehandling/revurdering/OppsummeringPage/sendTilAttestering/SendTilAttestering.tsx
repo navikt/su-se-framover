@@ -8,7 +8,8 @@ import { FritekstTyper, hentFritekst, redigerFritekst } from '~src/api/fritekstA
 import { Brevtype, hentMottaker } from '~src/api/mottakerClient.ts';
 import * as pdfApi from '~src/api/pdfApi';
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
-import TextareaWithAutosave from '~src/components/inputs/textareaWithAutosave/TextareaWithAutosave';
+import TextareaWithAutosaveRhf from '~src/components/inputs/textareaWithAutosave/TextareaWithAutosaveRhf.tsx';
+import { AdresseOppslag } from '~src/components/mottaker/AdresseOppslag.tsx';
 import { MottakerAlert, toMottakerAlert } from '~src/components/mottaker/mottakerUtils';
 import OppsummeringAvInformasjonsrevurdering from '~src/components/oppsummering/oppsummeringAvRevurdering/informasjonsrevurdering/OppsummeringAvInformasjonsrevurdering';
 import ToKolonner from '~src/components/toKolonner/ToKolonner';
@@ -18,9 +19,10 @@ import { useI18n } from '~src/lib/i18n';
 import * as Routes from '~src/lib/routes';
 import { Nullable } from '~src/lib/types';
 import yup from '~src/lib/validering';
-import { MottakerForm } from '~src/pages/saksbehandling/mottaker/Mottaker.tsx';
+import { Mottaker } from '~src/pages/saksbehandling/mottaker/Mottaker.tsx';
 import { FormWrapper } from '~src/pages/saksbehandling/søknadsbehandling/FormWrapper';
 import { GrunnlagsdataOgVilkårsvurderinger } from '~src/types/grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
+import { Person } from '~src/types/Person.ts';
 import {
     InformasjonsRevurdering,
     RevurderingOppsummeringSteg,
@@ -73,6 +75,7 @@ const brevvalgSchema = (revurdering: InformasjonsRevurdering) =>
 const SendTilAttestering = (props: {
     sakId: string;
     sakstype: Sakstype;
+    søker: Person;
     revurdering: InformasjonsRevurdering;
     gjeldendeGrunnlagOgVilkår: GrunnlagsdataOgVilkårsvurderinger;
 }) => {
@@ -248,7 +251,10 @@ const SendTilAttestering = (props: {
 
                             <div className={styles.textareaContainer}>
                                 {watch.valg === Valg.SEND && (
-                                    <TextareaWithAutosave
+                                    <AdresseOppslag sakId={props.sakId} fnr={props.søker.fnr} />
+                                )}
+                                {watch.valg === Valg.SEND && (
+                                    <TextareaWithAutosaveRhf
                                         textarea={{
                                             name: 'fritekst',
                                             label: formatMessage('brevtekst'),
@@ -304,7 +310,7 @@ const SendTilAttestering = (props: {
                                             )}
                                         </Button>
                                         {skalLeggeTilMottaker && (
-                                            <MottakerForm
+                                            <Mottaker
                                                 sakId={props.sakId}
                                                 referanseId={props.revurdering.id}
                                                 referanseType={'REVURDERING'}

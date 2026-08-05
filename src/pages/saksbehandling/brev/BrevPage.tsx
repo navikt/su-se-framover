@@ -19,7 +19,7 @@ import { FritekstTyper, hentFritekst, redigerFritekst } from '~src/api/fritekstA
 import * as SakApi from '~src/api/sakApi';
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
 import DokumentDistribusjonForm from '~src/components/forms/dokument/distribusjon/DokumentDistribusjonForm';
-import TextareaWithAutosave from '~src/components/inputs/textareaWithAutosave/TextareaWithAutosave.tsx';
+import TextareaWithAutosaveRhf from '~src/components/inputs/textareaWithAutosave/TextareaWithAutosaveRhf.tsx';
 import LinkAsButton from '~src/components/linkAsButton/LinkAsButton';
 import { SaksoversiktContext } from '~src/context/SaksoversiktContext';
 import { useApiCall, useBrevForhåndsvisning } from '~src/lib/hooks';
@@ -167,7 +167,7 @@ const BrevPage = () => {
                 />
 
                 {!form.watch('vilHellerLasteOppPdf') && (
-                    <TextareaWithAutosave
+                    <TextareaWithAutosaveRhf
                         textarea={{
                             name: 'fritekst',
                             label: 'Fritekst til brev',

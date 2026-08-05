@@ -1,6 +1,7 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
+import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert.tsx';
 import * as SøknadActions from '~src/features/søknad/SøknadActions.ts';
 import { useAsyncActionCreator } from '~src/lib/hooks.ts';
 import { useI18n } from '~src/lib/i18n.ts';
@@ -36,6 +37,7 @@ export const BortfaltForm = (props: { søknad: Søknad; sakId: string }) => {
 
     return (
         <form onSubmit={form.handleSubmit(handleSubmit)} className={styles.formContainer}>
+            {RemoteData.isFailure(søknadLukketStatus) && <ApiErrorAlert error={søknadLukketStatus.error} />}
             <AvsluttBehandlingBunnknapper
                 sakId={sakId}
                 submitButtonText={formatMessage('knapp.lukkSøknad')}

@@ -1,5 +1,5 @@
 import { NavigateFunction, useParams } from 'react-router-dom';
-
+import { KontrollsamtaleSteg } from '~src/pages/kontrollsamtale/types.ts';
 import { Søknadssteg } from '~src/pages/søknad/types';
 import { KlageSteg } from '~src/types/Klage';
 import { TilbakekrevingSteg } from '~src/types/ManuellTilbakekrevingsbehandling';
@@ -300,6 +300,29 @@ export const kontrollsamtale: Route<{
     createURL: (args) => `/saksoversikt/${args.sakId}/kontrollsamtale/`,
 };
 
+export const kontrollsamtaleUtfylling: Route<{
+    step: KontrollsamtaleSteg;
+    sakId: string;
+}> = {
+    path: 'saker/:sakId/kontrollsamtaler/notat/utfylling/:step',
+    absPath: '/kontrollsamtale/saker/:sakId/kontrollsamtaler/notat/utfylling/:step',
+    createURL: (args) => `/kontrollsamtale/saker/${args.sakId}/kontrollsamtaler/notat/utfylling/${args.step}`,
+};
+
+export const kontrollsamtaleKvittering: Route<{
+    sakId: string;
+}> = {
+    path: 'saker/:sakId/kontrollsamtaler/notat/kvittering',
+    absPath: '/kontrollsamtale/saker/:sakId/kontrollsamtaler/notat/kvittering',
+    createURL: (args) => `/kontrollsamtale/saker/${args.sakId}/kontrollsamtaler/notat/kvittering`,
+};
+
+export const kontrollsamtalePersonSok: Route<Record<string, never>> = {
+    path: 'kontrollsamtale/personsok',
+    absPath: '/kontrollsamtale/personsok',
+    createURL: () => `/kontrollsamtale/personsok`,
+};
+
 export const utenlandsopphold: Route<{ sakId: string }> = {
     path: 'utenlandsopphold/',
     absPath: '/saksoversikt/:sakId/utenlandsopphold',
@@ -310,6 +333,18 @@ export const brevPage: Route<{ sakId: string }> = {
     path: 'brev/',
     absPath: '/saksoversikt/:sakId/brev',
     createURL: (args) => `/saksoversikt/${args.sakId}/brev/`,
+};
+
+export const dødsboPage: Route<{ sakId: string }> = {
+    path: 'doedsbo/',
+    absPath: '/saksoversikt/:sakId/doedsbo',
+    createURL: (args) => `/saksoversikt/${args.sakId}/doedsbo/`,
+};
+
+export const borPåAdressePage: Route<{ sakId: string }> = {
+    path: 'borPaaAdresse/',
+    absPath: '/saksoversikt/:sakId/borPaaAdresse',
+    createURL: (args) => `/saksoversikt/${args.sakId}/borPaaAdresse/`,
 };
 
 //---------------Tilbakekreving-------------------------

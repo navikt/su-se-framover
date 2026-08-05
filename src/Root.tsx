@@ -3,6 +3,7 @@ import { createHead, UnheadProvider } from '@unhead/react/client';
 import { lazy, Suspense, useEffect } from 'react';
 import { Provider } from 'react-redux';
 import { BrowserRouter, Outlet, Route, Routes, useLocation } from 'react-router-dom';
+import Index from '~src/pages/kontrollsamtale';
 
 import ErrorBoundary from './components/errorBoundary/ErrorBoundary';
 import Toaster from './components/toast/Toaster';
@@ -12,16 +13,21 @@ import BrevPage from './pages/saksbehandling/brev/BrevPage';
 import Vilkår from './pages/saksbehandling/søknadsbehandling/vilkår/Vilkår';
 import Store from './redux/Store';
 import './externalStyles';
+import DødsboPage from '~src/pages/saksbehandling/mottaker/Dødsbo.tsx';
+import BorPåAdresse from '~src/pages/saksbehandling/person/BorPåAdresse.tsx';
 import { SakInngang } from '~src/pages/søknad/steg/inngang/SakInngang.tsx';
 import { ContentWrapper } from './utils/router/ContentWrapper';
 import UmamiTracker from './utils/UmamiTracker';
 
 const Attestering = lazy(() => import('./pages/saksbehandling/attestering/Attestering'));
 const Kvittering = lazy(() => import('./pages/søknad/kvittering/Kvittering'));
+const KvitteringKontrollnotat = lazy(() => import('./pages/kontrollsamtale/kvittering/KvitteringKontrollnotat'));
 const Infoside = lazy(() => import('./pages/søknad/steg/infoside/Infoside'));
 const Inngang = lazy(() => import('./pages/søknad/steg/inngang/Inngang'));
+const InngangKontrollnotat = lazy(() => import('./pages/kontrollsamtale/steg/inngang/InngangKontrollnotat'));
 const Søknadsvelger = lazy(() => import('./pages/søknad/Søknadsvelger'));
 const StartUtfylling = lazy(() => import('./pages/søknad/steg/start-utfylling/StartUtfylling'));
+const Startutfylling = lazy(() => import('./pages/kontrollsamtale/StartUtfylling'));
 const Drift = lazy(() => import('./pages/drift'));
 const DevTools = lazy(() => import('./pages/dev/DevToolsPage'));
 const HomePage = lazy(() => import('./pages/HomePage'));
@@ -94,6 +100,16 @@ const AppRoutes = () => (
             </Route>
         </Route>
         <Route
+            path={routes.kontrollsamtalePersonSok.path}
+            element={<WithDocTitle title="Kontrollsamtale" Page={Index} />}
+        >
+            <Route index element={<InngangKontrollnotat />} />
+        </Route>
+        <Route path={routes.kontrollsamtale.path} element={<WithDocTitle title="Kontrollsamtale" Page={Index} />}>
+            <Route path={routes.kontrollsamtaleUtfylling.path} element={<Startutfylling />} />
+            <Route path={routes.kontrollsamtaleKvittering.path} element={<KvitteringKontrollnotat />} />
+        </Route>
+        <Route
             path={routes.saksoversiktValgtSak.path}
             element={<WithDocTitle title="Saksbehandling" Page={Saksoversikt} />}
         >
@@ -120,6 +136,8 @@ const AppRoutes = () => (
             <Route path={routes.opprettRegulering.path} element={<OpprettReguleringPage />} />
             <Route path={routes.utenlandsopphold.path} element={<Utenlandsopphold />} />
             <Route path={routes.brevPage.path} element={<BrevPage />} />
+            <Route path={routes.dødsboPage.path} element={<DødsboPage />} />
+            <Route path={routes.borPåAdressePage.path} element={<BorPåAdresse />} />
 
             <Route path={routes.tilbakekrevingRoot.path} element={<Tilbakekreving />} />
         </Route>

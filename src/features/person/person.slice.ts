@@ -62,4 +62,5 @@ const localPersonStub = () =>
         kontaktinfo: null,
         vergemål: null,
         dødsdato: null,
+        dødsbo: [],
     });

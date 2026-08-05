@@ -8,8 +8,9 @@ import { FritekstTyper, hentFritekst, redigerFritekst } from '~src/api/fritekstA
 import { hentMottaker } from '~src/api/mottakerClient.ts';
 import * as PdfApi from '~src/api/pdfApi';
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
-import TextareaWithAutosave from '~src/components/inputs/textareaWithAutosave/TextareaWithAutosave.tsx';
+import TextareaWithAutosaveRhf from '~src/components/inputs/textareaWithAutosave/TextareaWithAutosaveRhf.tsx';
 import LinkAsButton from '~src/components/linkAsButton/LinkAsButton';
+import { AdresseOppslag } from '~src/components/mottaker/AdresseOppslag.tsx';
 import { MottakerAlert, toMottakerAlert } from '~src/components/mottaker/mottakerUtils';
 import OppsummeringAvSøknadsbehandling from '~src/components/oppsummering/søknadsbehandlingoppsummering/OppsummeringAvSøknadsbehandling';
 import ToKolonner from '~src/components/toKolonner/ToKolonner';
@@ -18,8 +19,9 @@ import * as SøknadsbehandlingActions from '~src/features/SøknadsbehandlingActi
 import { ApiResult, useApiCall, useAsyncActionCreator, useBrevForhåndsvisning } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
 import * as Routes from '~src/lib/routes';
-import { MottakerForm } from '~src/pages/saksbehandling/mottaker/Mottaker.tsx';
+import { Mottaker } from '~src/pages/saksbehandling/mottaker/Mottaker.tsx';
 import { VilkårsvurderingBaseProps } from '~src/pages/saksbehandling/søknadsbehandling/types.ts';
+import { Person } from '~src/types/Person.ts';
 import { Sakstype } from '~src/types/Sak';
 import { EksisterendeVedtaksinformasjonTidligerePeriodeResponse, Valg } from '~src/types/Søknadsbehandling.ts';
 import { Vilkårtype, VilkårVurderingStatus } from '~src/types/Vilkårsvurdering';
@@ -40,6 +42,7 @@ interface FormData {
 }
 type Props = VilkårsvurderingBaseProps & {
     tidligerePeriodeData: ApiResult<EksisterendeVedtaksinformasjonTidligerePeriodeResponse>;
+    søker: Person;
 };
 const SendTilAttesteringPage = (props: Props) => {
     const { formatMessage } = useI18n({ messages });
@@ -208,8 +211,9 @@ const SendTilAttesteringPage = (props: Props) => {
                             </div>
                             <div className={styles.fritekstareaOuterContainer}>
                                 <div className={styles.fritekstareaContainer}>
+                                    {valg === Valg.SEND && <AdresseOppslag sakId={props.sakId} fnr={props.søker.fnr} />}
                                     {valg === Valg.SEND && (
-                                        <TextareaWithAutosave
+                                        <TextareaWithAutosaveRhf
                                             textarea={{
                                                 name: 'fritekst',
                                                 label: formatMessage('input.fritekst.label'),
@@ -279,7 +283,7 @@ const SendTilAttesteringPage = (props: Props) => {
                                               : formatMessage('knapp.leggtilmottaker')}
                                     </Button>
                                     {skalLeggeTilMottaker && (
-                                        <MottakerForm
+                                        <Mottaker
                                             sakId={props.sakId}
                                             referanseId={props.behandling.id}
                                             referanseType={'SØKNAD'}

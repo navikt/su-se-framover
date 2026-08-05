@@ -33,7 +33,7 @@ import { useI18n } from '~src/lib/i18n';
 import * as Routes from '~src/lib/routes';
 import { eqNullable, Nullable } from '~src/lib/types';
 import yup from '~src/lib/validering';
-import { MottakerForm } from '~src/pages/saksbehandling/mottaker/Mottaker.tsx';
+import { Mottaker } from '~src/pages/saksbehandling/mottaker/Mottaker.tsx';
 import { KabalVedtakHjemmel, Klage, KlageStatus, KlageSteg, KlageVurderingType } from '~src/types/Klage';
 import { OmgjøringsGrunn } from '~src/types/Revurdering';
 import { fjernOverflødigLinjeskift } from '~src/utils/fritekst/fritekstUtil.ts';
@@ -443,7 +443,7 @@ const VurderingAvKlage = (props: { sakId: string; klage: Klage }) => {
                                         )}
                                     </Button>
                                     {skalLeggeTilMottaker && (
-                                        <MottakerForm
+                                        <Mottaker
                                             sakId={props.sakId}
                                             referanseId={props.klage.id}
                                             referanseType={'KLAGE'}

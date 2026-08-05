@@ -30,3 +30,46 @@
 .actionRow {
     width: 100%;
 }
+
+
+.pageContainer {
+    display: flex;
+    flex-direction: column;
+    gap: @spacing;
+    margin-left: 10vw;
+    margin-top: @spacing;
+}
+
+.embeddedPageContainer {
+    margin-left: 0;
+    width: 100%;
+}
+
+.box {
+    display: flex;
+    flex-direction: column;
+    gap: @spacing-s;
+    width: 35rem;
+
+    //tvinger frem hr til å vises i en flex-container
+    hr {
+        margin-left: 0;
+        margin-right: 0;
+    }
+}
+
+.embeddedBox {
+    width: 100%;
+    max-width: 35rem;
+}
+
+.buttonContainer {
+    display: flex;
+    gap: @spacing;
+    justify-content: flex-start;
+}
+
+.inlineAction {
+    align-self: flex-start;
+    max-width: 100%;
+}

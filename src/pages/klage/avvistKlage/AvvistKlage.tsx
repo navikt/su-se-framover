@@ -16,7 +16,7 @@ import { useAsyncActionCreator, useBrevForhåndsvisning } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
 import * as Routes from '~src/lib/routes';
 import yup from '~src/lib/validering';
-import { MottakerForm } from '~src/pages/saksbehandling/mottaker/Mottaker.tsx';
+import { Mottaker } from '~src/pages/saksbehandling/mottaker/Mottaker.tsx';
 import { Klage, KlageStatus, KlageSteg } from '~src/types/Klage';
 import { erKlageAvvist } from '~src/utils/klage/klageUtils';
 
@@ -198,7 +198,7 @@ const AvvistKlage = (props: { sakId: string; klage: Klage }) => {
                                 {mottakerFinnes === null && <Loader size="small" className={styles.buttonSpinner} />}
                             </Button>
                             {skalLeggeTilMottaker && (
-                                <MottakerForm
+                                <Mottaker
                                     sakId={props.sakId}
                                     referanseId={props.klage.id}
                                     referanseType={'KLAGE'}

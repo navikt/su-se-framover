@@ -1,7 +1,7 @@
 import { CheckmarkCircleFillIcon } from '@navikt/aksel-icons';
 import { Alert, BodyShort, Box, Button, Heading, HStack, Label, Loader, TextField, VStack } from '@navikt/ds-react';
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { useForm } from 'react-hook-form';
+import { UseFormReturn, useForm } from 'react-hook-form';
 import {
     Brevtype,
     hentMottaker,
@@ -22,6 +22,8 @@ interface MottakerFormProps {
     referanseType: ReferanseType;
     brevtype: Brevtype;
     onClose?: () => void;
+    onDelete?: () => void;
+    initialValues?: Partial<LagreMottakerRequest>;
 }
 
 type FormValues = LagreMottakerRequest;
@@ -29,31 +31,87 @@ type FeedbackVariant = 'success' | 'error' | 'info' | 'warning';
 type Feedback = { text: string; variant: FeedbackVariant };
 type ActionState = 'idle' | 'loading' | 'success' | 'error';
 
-export function MottakerForm({ sakId, referanseId, referanseType, brevtype, onClose }: MottakerFormProps) {
+interface MottakerFormExtendedProps extends MottakerFormProps {
+    form: UseFormReturn<FormValues>;
+    kunForm?: boolean; // kun brukes som form og ikke gjøre noen requests mot backend
+}
+
+const buildEmptyFormValues = ({
+    brevtype,
+    referanseId,
+    referanseType,
+    initialValues,
+}: {
+    brevtype: Brevtype;
+    referanseId: string;
+    referanseType: ReferanseType;
+    initialValues?: Partial<LagreMottakerRequest>;
+}): FormValues => ({
+    navn: initialValues?.navn ?? '',
+    foedselsnummer: initialValues?.foedselsnummer ?? '',
+    orgnummer: initialValues?.orgnummer ?? '',
+    adresse: {
+        adresselinje1: initialValues?.adresse?.adresselinje1 ?? '',
+        adresselinje2: initialValues?.adresse?.adresselinje2 ?? '',
+        adresselinje3: initialValues?.adresse?.adresselinje3 ?? '',
+        postnummer: initialValues?.adresse?.postnummer ?? '',
+        poststed: initialValues?.adresse?.poststed ?? '',
+    },
+    referanseType,
+    referanseId,
+    brevtype,
+});
+
+export function Mottaker(props: MottakerFormProps) {
     const emptyFormValues = useMemo<FormValues>(
-        () => ({
-            navn: '',
-            foedselsnummer: '',
-            orgnummer: '',
-            adresse: {
-                adresselinje1: '',
-                adresselinje2: '',
-                adresselinje3: '',
-                postnummer: '',
-                poststed: '',
-            },
-            referanseType,
-            referanseId,
-            brevtype,
-        }),
-        [brevtype, referanseId, referanseType, sakId],
+        () =>
+            buildEmptyFormValues({
+                brevtype: props.brevtype,
+                referanseId: props.referanseId,
+                referanseType: props.referanseType,
+                initialValues: props.initialValues,
+            }),
+        [props.brevtype, props.initialValues, props.referanseId, props.referanseType],
     );
 
-    const { register, handleSubmit, reset, formState, setError, clearErrors, watch } = useForm<FormValues>({
+    const form = useForm<FormValues>({
         defaultValues: emptyFormValues,
     });
+
+    const extendedProps = {
+        ...props,
+        form: form,
+    };
+
+    return <MottakerForm {...extendedProps} />;
+}
+
+export function MottakerForm({
+    form,
+    sakId,
+    referanseId,
+    referanseType,
+    brevtype,
+    onClose,
+    onDelete,
+    initialValues,
+    kunForm = false,
+}: MottakerFormExtendedProps) {
+    const emptyFormValues = useMemo<FormValues>(
+        () =>
+            buildEmptyFormValues({
+                brevtype,
+                referanseId,
+                referanseType,
+                initialValues,
+            }),
+        [brevtype, initialValues, referanseId, referanseType],
+    );
+
+    const { register, handleSubmit, reset, formState, setError, clearErrors, watch } = form;
+
     const [feedback, setFeedback] = useState<Feedback | null>(null);
-    const [loading, setLoading] = useState<boolean>(true);
+    const [loading, setLoading] = useState<boolean>(!kunForm);
     const [harEksisterendeMottaker, setHarEksisterendeMottaker] = useState<boolean>(false);
     const [mottakerId, setMottakerId] = useState<string | null>(null);
     const [saveState, setSaveState] = useState<ActionState>('idle');
@@ -108,6 +166,8 @@ export function MottakerForm({ sakId, referanseId, referanseType, brevtype, onCl
 
     useEffect(() => {
         const hentOgFyll = async () => {
+            if (kunForm) return;
+
             setLoading(true);
             setFeedback(null);
             setSaveState('idle');
@@ -136,9 +196,23 @@ export function MottakerForm({ sakId, referanseId, referanseType, brevtype, onCl
         };
 
         hentOgFyll();
-    }, [referanseId, referanseType, brevtype]);
+    }, [brevtype, kunForm, referanseId, referanseType, emptyFormValues]);
+
+    useEffect(() => {
+        if (!initialValues) return;
+
+        skipClearOnChangeRef.current = true;
+        reset({
+            ...emptyFormValues,
+            adresse: { ...emptyFormValues.adresse },
+        });
+        setFeedback(null);
+        setSaveState('idle');
+        setDeleteState('idle');
+    }, [emptyFormValues, initialValues, reset]);
 
     const onSubmit = async (data: FormValues) => {
+        if (kunForm) return;
         setFeedback(null);
         clearErrors();
 
@@ -215,6 +289,7 @@ export function MottakerForm({ sakId, referanseId, referanseType, brevtype, onCl
     };
 
     const handleSlett = async () => {
+        if (kunForm) return;
         setFeedback(null);
         setDeleteState('loading');
 
@@ -226,6 +301,7 @@ export function MottakerForm({ sakId, referanseId, referanseType, brevtype, onCl
             setDeleteState('success');
             resetTilTomtSkjema({ text: 'Mottaker slettet!', variant: 'success' });
             clearErrors();
+            onDelete && onDelete();
         } else {
             const alert = toMottakerAlert(res.error, 'Kunne ikke slette mottaker');
             setFeedback({ text: alert.text, variant: alert.variant });
@@ -333,31 +409,33 @@ export function MottakerForm({ sakId, referanseId, referanseType, brevtype, onCl
                             </HStack>
 
                             <VStack gap="3" className={styles.actions}>
-                                <HStack gap="3" className={styles.actionRow}>
-                                    <Button
-                                        type="button"
-                                        onClick={(event) => {
-                                            event.preventDefault();
-                                            event.stopPropagation();
-                                            handleSubmit(onSubmit)();
-                                        }}
-                                        loading={saveState === 'loading'}
-                                        disabled={erOpptatt}
-                                        icon={lagreIkon}
-                                    >
-                                        {submitLabel}
-                                    </Button>
-                                    <Button
-                                        type="button"
-                                        variant="danger"
-                                        onClick={handleSlett}
-                                        disabled={erOpptatt || !harEksisterendeMottaker}
-                                        loading={deleteState === 'loading'}
-                                        icon={slettIkon}
-                                    >
-                                        Slett mottaker
-                                    </Button>
-                                </HStack>
+                                {!kunForm && (
+                                    <HStack gap="3" className={styles.actionRow}>
+                                        <Button
+                                            type="button"
+                                            onClick={(event) => {
+                                                event.preventDefault();
+                                                event.stopPropagation();
+                                                handleSubmit(onSubmit)();
+                                            }}
+                                            loading={saveState === 'loading'}
+                                            disabled={erOpptatt}
+                                            icon={lagreIkon}
+                                        >
+                                            {submitLabel}
+                                        </Button>
+                                        <Button
+                                            type="button"
+                                            variant="danger"
+                                            onClick={handleSlett}
+                                            disabled={erOpptatt || !harEksisterendeMottaker}
+                                            loading={deleteState === 'loading'}
+                                            icon={slettIkon}
+                                        >
+                                            Slett mottaker
+                                        </Button>
+                                    </HStack>
+                                )}
                                 {typeof onClose === 'function' && (
                                     <Button type="button" variant="secondary" onClick={onClose}>
                                         Lukk

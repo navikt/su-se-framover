@@ -4,8 +4,8 @@ export default {
     'steg.avbryt': 'Avbryt',
     'steg.SøknadSendt': 'Søknaden er sendt inn',
 
-    'modal.tittel': 'Lukk søknaden',
-    'modal.infoTekst.p1': 'Informasjon som du har lagt til i søknaden vil ikke lagres hvis du lukker søknaden.',
-    'modal.infoTekst.p2': 'Ønsker du å lukke søknaden?',
-    'modal.lukkSøknad': 'Lukk søknad',
+    'modal.tittel': 'Lukk',
+    'modal.infoTekst.p1': 'Informasjon som du har lagt til vil ikke lagres hvis du lukker den.',
+    'modal.infoTekst.p2': 'Ønsker du å lukke?',
+    'modal.lukk': 'Lukk',
 };
