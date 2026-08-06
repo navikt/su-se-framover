@@ -1,133 +1,53 @@
-import RedisStore from 'connect-redis';
-import { Express } from 'express';
-import session from 'express-session';
-import http from 'http';
-import * as OpenIdClient from 'openid-client';
-import passport from 'passport';
-import { createClient } from 'redis';
+import { NextFunction, Request, Response } from 'express';
+import { createRemoteJWKSet, jwtVerify } from 'jose';
+
 import * as Config from '../config.js';
 
-import * as AuthUtils from './utils.js';
-
-const SESSION_MAX_AGE_MILLIS = 60 * 60 * 1000 * 2;
-
-async function getRedisStore() {
-    const redisClient = createClient({
-        socket: {
-            host: Config.redis.host,
-            port: Config.redis.port,
-        },
-        password: Config.redis.password,
-        legacyMode: false,
-    });
-    await redisClient.connect();
-
-    return new RedisStore({
-        client: redisClient,
-        prefix: 'su-se-framover',
-    });
+// JWKS caches internt i jose, så vi oppretter settet én gang.
+let jwks: ReturnType<typeof createRemoteJWKSet> | undefined;
+function getJwks() {
+    if (!jwks) {
+        jwks = createRemoteJWKSet(new URL(Config.auth.jwksUri));
+    }
+    return jwks;
 }
 
-async function setupSession(app: Express) {
-    app.set('trust proxy', 1);
-
-    const redisStore = await getRedisStore();
-
-    app.use(
-        session({
-            cookie: {
-                maxAge: SESSION_MAX_AGE_MILLIS,
-                sameSite: 'lax',
-                httpOnly: true,
-                secure: Config.isProd,
-            },
-            secret: Config.server.sessionKey,
-            name: Config.server.sessionCookieName,
-            resave: true,
-            saveUninitialized: false,
-            unset: 'destroy',
-            store: redisStore,
-            rolling: true,
-        }),
-    );
+// Henter bearer-token fra Authorization-headeren som Wonderwall legger på.
+export function getToken(req: Request): string | undefined {
+    const authorization = req.headers.authorization;
+    if (!authorization?.startsWith('Bearer ')) {
+        return undefined;
+    }
+    return authorization.substring('Bearer '.length);
 }
 
-async function getStrategy(authClient: OpenIdClient.Client) {
-    return new OpenIdClient.Strategy(
-        {
-            client: authClient,
-            params: {
-                response_type: Config.auth.responseType,
-                response_mode: Config.auth.responseMode,
-                scope: `openid offline_access ${Config.auth.clientId}/.default`,
-            },
-            extras: { clientAssertionPayload: { aud: authClient.issuer.metadata['token_endpoint'] } },
-            usePKCE: 'S256',
-            passReqToCallback: true,
-        },
-        (
-            req: http.IncomingMessage,
-            tokenSet: OpenIdClient.TokenSet,
-            done: (err: null, user?: Express.User) => void,
-        ) => {
-            if (!tokenSet.expired()) {
-                req.log.debug('OpenIdClient.Strategy: Mapping tokenSet to User.');
-                return done(null, {
-                    tokenSets: {
-                        [AuthUtils.tokenSetSelfId]: tokenSet,
-                    },
-                });
-            }
-            // Passport kaller bare denne funksjonen for å mappe en ny innlogging til et User-objekt, så man skal ikke havne her.
-            req.log.error(
-                'OpenIdClient.Strategy: Failed to map tokenSet to User because the tokenSet has already expired.',
-            );
-            done(null, undefined);
-        },
-    );
-}
-
-export default async function setupAuth(app: Express, authClient: OpenIdClient.Client) {
-    await setupSession(app);
-
-    app.use(passport.initialize());
-    app.use(passport.session());
-
-    const authName = Config.isDev ? 'localAuth' : 'aad';
-    const authStrategy = await getStrategy(authClient);
-
-    passport.use(authName, authStrategy);
-    passport.serializeUser((user, done) => {
-        done(null, user);
-    });
-    passport.deserializeUser((user, done) => {
-        done(null, user as Express.User);
-    });
-
-    app.get(
-        '/login',
-        (req, _res, next) => {
-            if (typeof req.query.redirectTo === 'string') {
-                req.session.redirectTo = req.query.redirectTo;
-            }
-            next();
-        },
-        passport.authenticate(authName, { failureRedirect: '/login-failed' }),
-    );
-
-    app.get('/logout', (req, res) => {
-        req.logout(() => req.log.warn('Utlogging av bruker feilet.'));
-        req.session.destroy(() => {
-            res.clearCookie(Config.server.sessionCookieName);
-            const endSessionUrl = authClient.endSessionUrl({ post_logout_redirect_uri: Config.auth.logoutRedirectUri });
-            req.log.debug(`Redirecting user via Azure's end_session_endpoint: ${endSessionUrl}`);
-            res.redirect(endSessionUrl);
+// Validerer signatur, issuer, audience og utløp på tokenet fra Wonderwall.
+// Wonderwall legger tokenet på headeren, men validerer det ikke selv – det er appens ansvar.
+export async function validateToken(token: string): Promise<boolean> {
+    try {
+        await jwtVerify(token, getJwks(), {
+            issuer: Config.auth.issuer,
+            audience: Config.auth.clientId,
         });
-    });
-    app.get('/oauth2/callback', passport.authenticate(authName, { failureRedirect: '/login-failed' }), (req, res) => {
-        res.redirect(req.session.redirectTo ?? '/');
-    });
-    app.get('/login-failed', (_req, res) => {
-        res.send('login failed');
-    });
+        return true;
+    } catch {
+        return false;
+    }
+}
+
+export async function authenticateUser(req: Request, res: Response, next: NextFunction): Promise<void> {
+    const token = getToken(req);
+    if (!token) {
+        req.log.debug('authenticateUser: Mangler bearer-token fra Wonderwall.');
+        res.status(401).send('Not authenticated');
+        return;
+    }
+
+    if (!(await validateToken(token))) {
+        req.log.warn('authenticateUser: Token er ugyldig.');
+        res.status(401).send('Not authenticated');
+        return;
+    }
+
+    next();
 }

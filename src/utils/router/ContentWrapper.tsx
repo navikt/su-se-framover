@@ -49,7 +49,7 @@ export const ContentWrapper: FC<PropsWithChildren> = (props) => {
                                             ? 'Ikke tilgang'
                                             : 'En feil oppstod'}
                                     </Heading>
-                                    <Link href={`${LOGIN_URL}?redirectTo=${window.location.pathname}`}>
+                                    <Link href={`${LOGIN_URL}?redirect=${window.location.pathname}`}>
                                         Logg inn på nytt
                                     </Link>
                                 </div>

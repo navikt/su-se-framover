@@ -69,13 +69,8 @@ export default async function apiClient<TSuccess>(arg: {
         return success(JSON.parse(text) as TSuccess, res.status);
     }
 
-    const authenticateChallengeHeader = res.headers.get('WWW-Authenticate');
-    if (
-        res.status === ErrorCode.NotAuthenticated &&
-        authenticateChallengeHeader &&
-        authenticateChallengeHeader.includes('realm=su-se-framover')
-    ) {
-        window.location.href = `${LOGIN_URL}?redirectTo=${window.location.pathname}`;
+    if (res.status === ErrorCode.NotAuthenticated) {
+        window.location.href = `${LOGIN_URL}?redirect=${window.location.pathname}`;
     }
 
     const errorBody: ErrorMessage = await res.json().catch(() => ({}));
