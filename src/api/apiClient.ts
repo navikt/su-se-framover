@@ -70,7 +70,7 @@ export default async function apiClient<TSuccess>(arg: {
     }
 
     if (res.status === ErrorCode.NotAuthenticated) {
-        window.location.href = `${LOGIN_URL}?redirect=${window.location.pathname}`;
+        window.location.href = `${LOGIN_URL}?redirect=${encodeURIComponent(window.location.pathname)}`;
     }
 
     const errorBody: ErrorMessage = await res.json().catch(() => ({}));

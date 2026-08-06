@@ -59,18 +59,24 @@ export const frontend = {
     },
 };
 
-// Auth-config. Verdiene injiseres av NAIS (azure.application) i dev/prod, og av
-// mock-oauth2-server lokalt (se docker-compose.yml + .env).
+// Auth-config. Verdiene injiseres av NAIS (azure.application) i dev/prod. Lokalt har de
+// defaults som peker på docker-compose-stacken (mock-oauth2-server), så oppsettet er plug-and-play.
 export const auth = {
     // Appens egen client-id. Brukt som forventet audience ved validering av innkommende token.
-    clientId: envVar({ name: 'AZURE_APP_CLIENT_ID' }),
+    clientId: envVar({ name: 'AZURE_APP_CLIENT_ID', defaultValue: { dev: 'supstonad' } }),
     // Client-secret for OBO-veksling mot Azure sitt token-endpoint.
-    clientSecret: envVar({ name: 'AZURE_APP_CLIENT_SECRET' }),
+    clientSecret: envVar({ name: 'AZURE_APP_CLIENT_SECRET', defaultValue: { dev: 'supstonad-secret' } }),
     // Forventet issuer og JWKS for signaturvalidering av innkommende token.
-    issuer: envVar({ name: 'AZURE_OPENID_CONFIG_ISSUER' }),
-    jwksUri: envVar({ name: 'AZURE_OPENID_CONFIG_JWKS_URI' }),
+    issuer: envVar({ name: 'AZURE_OPENID_CONFIG_ISSUER', defaultValue: { dev: 'http://localhost:4321/default' } }),
+    jwksUri: envVar({
+        name: 'AZURE_OPENID_CONFIG_JWKS_URI',
+        defaultValue: { dev: 'http://localhost:4321/default/jwks' },
+    }),
     // Azure sitt token-endpoint, brukt til OBO-veksling (on-behalf-of).
-    tokenEndpoint: envVar({ name: 'AZURE_OPENID_CONFIG_TOKEN_ENDPOINT' }),
+    tokenEndpoint: envVar({
+        name: 'AZURE_OPENID_CONFIG_TOKEN_ENDPOINT',
+        defaultValue: { dev: 'http://localhost:4321/default/token' },
+    }),
     // su-se-bakover sin app-identifikator (cluster.namespace.app), brukt til å bygge OBO-scope.
-    suSeBakoverUri: envVar({ name: 'SU_SE_BAKOVER_AAD_APP_NAME' }),
+    suSeBakoverUri: envVar({ name: 'SU_SE_BAKOVER_AAD_APP_NAME', defaultValue: { dev: 'su-se-bakover' } }),
 };

@@ -23,13 +23,14 @@ services:
     # Åpne appen lokalt på http://localhost:3000 (ikke lenger :1234 direkte).
     wonderwall:
         container_name: wonderwall
-        image: ghcr.io/nais/wonderwall:latest
+        image: ghcr.io/nais/wonderwall@sha256:45b4e861776f7b0980cadb8d3fbe7e5a4a586c870d36dff00d090d9caa36e015
         depends_on:
             - mock-oauth2-server
         ports:
             - 3000:3000
         environment:
-            WONDERWALL_ENCRYPTION_KEY: YWJjZGVmZ2hpajEyMzQ1Njc4OTBhYmNkZWZnaGlqMTI=
+            # Lokal dev-nøkkel (kun for docker-compose, ikke prod). Kan overstyres via .env ved behov.
+            WONDERWALL_ENCRYPTION_KEY: ${WONDERWALL_ENCRYPTION_KEY:-YWJjZGVmZ2hpajEyMzQ1Njc4OTBhYmNkZWZnaGlqMTI=}
         command: >
             --auto-login=true
             --openid.client-id=supstonad

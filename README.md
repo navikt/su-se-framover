@@ -86,6 +86,14 @@ AZURE_OPENID_CONFIG_TOKEN_ENDPOINT=http://localhost:4321/default/token
 SU_SE_BAKOVER_AAD_APP_NAME=su-se-bakover
 ```
 
+I tillegg trenger Wonderwall (docker-compose) en krypteringsnøkkel for session-cookies. Den er
+**ikke** sjekket inn – sett den i `.env` (Docker Compose leser `.env` automatisk). Generer én med
+`openssl rand -base64 32`:
+
+```sh
+WONDERWALL_ENCRYPTION_KEY=<output fra openssl rand -base64 32>
+```
+
 ## Bygge prod-versjon
 
 ### Frontend
