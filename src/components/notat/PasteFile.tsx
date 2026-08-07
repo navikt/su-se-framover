@@ -120,7 +120,7 @@ export default function PasteFile(props: Props) {
 
     const navngiUtklipp = (file: File, nyttNavn: string) => {
         const extension = file.type.split('/')[1] ?? '';
-        return new File([file], `${nyttNavn}.${extension}`, {
+        return new File([file], `${nyttNavn.trim()}.${extension}`, {
             type: file.type,
             lastModified: file.lastModified,
         });
@@ -143,7 +143,7 @@ export default function PasteFile(props: Props) {
                 label={'Navn på utklipp'}
                 error={props.feilNavnPåUtklipp}
                 value={props.navnPåUtklipp}
-                onChange={(e) => props.onNavnPåUtklippChange(e.target.value.trim())}
+                onChange={(e) => props.onNavnPåUtklippChange(e.target.value)}
             />
             <Button
                 type="button"
