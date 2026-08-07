@@ -2,7 +2,7 @@ import express from 'express';
 import expressHttpProxy from 'express-http-proxy';
 import { Logger } from 'pino';
 
-import { authenticateUser, getToken } from './auth/index.js';
+import { authenticateUser, getToken, LOGIN_REQUIRED_HEADER } from './auth/index.js';
 import { requestOboToken } from './auth/obo.js';
 import * as Config from './config.js';
 
@@ -35,14 +35,24 @@ export default function setup() {
         // authenticateUser har allerede validert at token finnes og er gyldig.
         const token = getToken(req)!;
 
-        const oboToken = await requestOboToken(token, suSeBakoverScope, req.log);
-        if (!oboToken) {
-            req.log.warn('proxy: Klarte ikke å hente on-behalf-of-token, returnerer 401.');
-            res.status(401).send('Not authenticated');
+        const obo = await requestOboToken(token, suSeBakoverScope, req.log);
+        if (!obo.ok) {
+            if (obo.reason === 'invalid_grant') {
+                // Brukerens assertion er ugyldig/utløpt -> BFF-auth-utfordring: 401 + header
+                // slik at frontend redirecter til ny innlogging.
+                req.log.warn('proxy: OBO-veksling avvist (invalid_grant), returnerer 401.');
+                res.setHeader(LOGIN_REQUIRED_HEADER, 'true');
+                res.status(401).send('Not authenticated');
+                return;
+            }
+            // Operasjonell feil (nettverk/timeout/5xx/feilkonfig) -> 502, IKKE 401, for å unngå
+            // at en forbigående Azure-feil ser ut som utløpt innlogging og trigger re-login-loop.
+            req.log.error('proxy: OBO-veksling feilet (upstream_error), returnerer 502.');
+            res.status(502).send({ message: 'Kunne ikke hente on-behalf-of-token fra Azure' });
             return;
         }
 
-        return proxy(req.log, oboToken)(req, res, next);
+        return proxy(req.log, obo.accessToken)(req, res, next);
     });
 
     return router;
