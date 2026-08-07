@@ -29,19 +29,18 @@ services:
         ports:
             - 3000:3000
         environment:
+            WONDERWALL_AUTO_LOGIN: "true"
+            WONDERWALL_OPENID_CLIENT_ID: supstonad
+            WONDERWALL_OPENID_CLIENT_SECRET: not-so-secret
+            WONDERWALL_OPENID_WELL_KNOWN_URL: http://localhost:4321/default/.well-known/openid-configuration
+            WONDERWALL_INGRESS: http://localhost:3000
+            WONDERWALL_BIND_ADDRESS: 0.0.0.0:3000
+            WONDERWALL_UPSTREAM_HOST: host.docker.internal:1234
+            WONDERWALL_COOKIE_SECURE: "false"
+            WONDERWALL_LOG_LEVEL: info
+            WONDERWALL_LOG_FORMAT: text
             # Lokal dev-nøkkel (kun for docker-compose, ikke prod). Kan overstyres via .env ved behov.
             WONDERWALL_ENCRYPTION_KEY: ${WONDERWALL_ENCRYPTION_KEY:-YWJjZGVmZ2hpajEyMzQ1Njc4OTBhYmNkZWZnaGlqMTI=}
-        command: >
-            --auto-login=true
-            --openid.client-id=supstonad
-            --openid.client-secret=not-so-secret
-            --openid.well-known-url=http://localhost:4321/default/.well-known/openid-configuration
-            --ingress=http://localhost:3000
-            --bind-address=0.0.0.0:3000
-            --upstream-host=host.docker.internal:1234
-            --cookie.secure=false
-            --log-level=info
-            --log-format=text
         restart: on-failure
         extra_hosts:
             # Wonderwall må nå mock-oauth2-server på 'localhost:4321' (samme URL som
