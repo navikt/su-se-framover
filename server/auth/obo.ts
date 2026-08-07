@@ -10,11 +10,18 @@ type OnBehalfOfTokenResponse = {
 };
 
 // Resultat av en OBO-veksling. Vi skiller bevisst mellom auth-feil og driftsfeil:
-// - `invalid_grant`: brukerens assertion (token fra Wonderwall) er ugyldig/utløpt. Kallet
-//   bør svare 401 slik at frontend sender brukeren til ny innlogging.
+// - `invalid_grant`: selve assertion-en (brukerens token fra Wonderwall) er ugyldig/utløpt.
+//   Kallet bør svare 401 slik at frontend sender brukeren til ny innlogging.
 // - `upstream_error`: operasjonell feil (nettverk, timeout, 5xx, feilkonfigurert klient,
 //   uventet/malformed svar). Kallet bør svare 5xx – IKKE 401 – ellers ser en forbigående
 //   Azure-feil ut som en utløpt innlogging og trigger unødige (potensielt endeløse) redirects.
+//
+// VIKTIG: Azure returnerer `invalid_grant` for langt mer enn en ugyldig assertion – f.eks.
+// manglende samtykke (consent), Conditional Access og claims-challenge (MFA-step-up).
+// Assertion-en har allerede passert `validateToken`, så en ny Wonderwall-innlogging gir samme
+// assertion og dermed samme OBO-feil -> endeløs login-loop. Derfor mapper vi KUN
+// assertion-spesifikke Azure-signaler til `invalid_grant`; alle andre `invalid_grant`-svar
+// (interaction/consent/CA/claims) behandles som `upstream_error` (502) for å bryte loopen.
 export type OboResult =
     | { ok: true; accessToken: string }
     | { ok: false; reason: 'invalid_grant' }
@@ -60,18 +67,58 @@ function pruneExpired(now: number): void {
     }
 }
 
-// Klassifiserer en ikke-ok respons fra token-endpointet. Kun et ekte OAuth `invalid_grant`
-// (ugyldig/utløpt assertion) regnes som en auth-feil; alt annet (f.eks. `invalid_client`
-// ved feil client_secret, eller 5xx) er operasjonelt og skal ikke gi 401.
-function classifyErrorResponse(body: string): 'invalid_grant' | 'upstream_error' {
+// Azure `suberror`-verdier på et `invalid_grant`-svar som betyr at selve assertion-en er
+// problemet (ugyldig/utløpt token) – en ny innlogging via Wonderwall kan faktisk løse dette.
+// Andre suberror-verdier (consent_required, basic_action, additional_action, message_only,
+// protection_policy_required, ...) betyr at det kreves interaksjon/samtykke/CA/claims-challenge,
+// som en ren re-login IKKE løser.
+const ASSERTION_SUBERRORS = new Set<string>(['bad_token', 'token_expired']);
+
+// AADSTS-koder som betyr at assertion-en er utløpt/ugyldig (ny innlogging hjelper).
+// 50013: assertion validation/-signatur/-utløp feilet.
+const ASSERTION_ERROR_CODES = new Set<number>([50013]);
+
+type AzureTokenError = {
+    error?: string;
+    suberror?: string;
+    error_codes?: number[];
+    error_description?: string;
+};
+
+// Klassifiserer en ikke-ok respons fra token-endpointet.
+//
+// Kun et `invalid_grant` med et assertion-spesifikt signal (suberror `bad_token`/`token_expired`,
+// eller AADSTS-kode 50013) regnes som en auth-feil (401 + ny innlogging). Et `invalid_grant` uten
+// slikt signal er typisk consent/Conditional Access/claims-challenge – siden assertion-en allerede
+// er validert ville en re-login loope, så det behandles som operasjonelt (502). Alt annet
+// (`invalid_client` ved feil secret, 5xx, ikke-JSON) er også operasjonelt.
+function classifyErrorResponse(body: string, log: Logger): 'invalid_grant' | 'upstream_error' {
+    let parsed: AzureTokenError;
     try {
-        const parsed = JSON.parse(body) as { error?: string };
-        if (parsed.error === 'invalid_grant') {
-            return 'invalid_grant';
-        }
+        parsed = JSON.parse(body) as AzureTokenError;
     } catch {
         // Ikke JSON -> behandles som operasjonell feil.
+        return 'upstream_error';
     }
+
+    if (parsed.error !== 'invalid_grant') {
+        return 'upstream_error';
+    }
+
+    const codes = parsed.error_codes ?? [];
+    const isAssertionProblem =
+        (parsed.suberror !== undefined && ASSERTION_SUBERRORS.has(parsed.suberror)) ||
+        codes.some((code) => ASSERTION_ERROR_CODES.has(code));
+
+    if (isAssertionProblem) {
+        return 'invalid_grant';
+    }
+
+    log.warn(
+        { suberror: parsed.suberror, error_codes: codes, error_description: parsed.error_description },
+        'requestOboToken: invalid_grant uten assertion-spesifikk årsak (consent/Conditional Access/claims-challenge?). ' +
+            'Behandles som operasjonell feil (502) for å unngå login-loop – en ren re-login løser ikke dette.',
+    );
     return 'upstream_error';
 }
 
@@ -101,7 +148,7 @@ async function fetchOboToken(assertion: string, scope: string, key: string, log:
 
     if (!response.ok) {
         const errorBody = await response.text().catch(() => '');
-        const reason = classifyErrorResponse(errorBody);
+        const reason = classifyErrorResponse(errorBody, log);
         log.warn({ status: response.status, error: errorBody, reason }, 'requestOboToken: OBO-veksling feilet.');
         return { ok: false, reason };
     }

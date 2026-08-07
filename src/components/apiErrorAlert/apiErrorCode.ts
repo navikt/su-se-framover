@@ -4,6 +4,7 @@ export enum ApiErrorCode {
     ALDERSVURDERING_GIR_IKKE_RETT_PÅ_ALDER = 'aldersvurdering_gir_ikke_rett_på_alder',
     ATTESTANT_OG_SAKSBEHANDLER_KAN_IKKE_VÆRE_SAMME_PERSON = 'attestant_og_saksbehandler_kan_ikke_være_samme_person',
     ATTESTANT_SAMME_SOM_SAKSBEHANDLER = 'attestant_samme_som_saksbehandler',
+    AUTENTISERING_MOT_AZURE_FEILET = 'autentisering_mot_azure_feilet',
     AVSTEMMING_FEILET = 'avstemming_feilet',
 
     //B

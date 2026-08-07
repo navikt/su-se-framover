@@ -9,6 +9,12 @@ import * as Config from '../config.js';
 // MERK: samme streng må brukes i frontend (src/api/authUrl.ts -> LOGIN_REQUIRED_HEADER).
 export const LOGIN_REQUIRED_HEADER = 'x-login-required';
 
+// Feilkode som BFF-en setter på sine EGNE 502-svar når auth-infrastruktur svikter (JWKS/Azure
+// utilgjengelig, eller OBO-veksling feiler operasjonelt). Frontend mapper denne til en
+// brukervennlig melding via body.code – IKKE på statuskoden 502, som også kan komme transparent
+// fra su-se-bakover. MERK: samme streng må finnes i frontend (ApiErrorCode.AUTENTISERING_MOT_AZURE_FEILET).
+export const AUTH_ERROR_CODE = 'autentisering_mot_azure_feilet';
+
 // Resultat av token-validering. Vi skiller bevisst auth-feil fra driftsfeil:
 // - `invalid`: tokenet er ugyldig (feil signatur, utløpt, feil issuer/audience) -> 401.
 // - `verification_error`: JWKS-en kunne ikke hentes (timeout/nettverk mot Azure) -> 5xx.
@@ -85,7 +91,7 @@ export async function authenticateUser(req: Request, res: Response, next: NextFu
                 { code: result.code, error: result.message },
                 'authenticateUser: Klarte ikke å verifisere token (JWKS/nettverksfeil), returnerer 502.',
             );
-            res.status(502).send('Kunne ikke verifisere token');
+            res.status(502).json({ code: AUTH_ERROR_CODE, message: 'Kunne ikke verifisere token mot Azure' });
             return;
         }
         req.log.warn({ code: result.code, error: result.message }, 'authenticateUser: Token er ugyldig.');

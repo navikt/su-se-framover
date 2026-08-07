@@ -8,6 +8,8 @@ const messages: { [key in ApiErrorCode]: string } = {
         'Systemet kan ikke garantere at angitt stønadsperiode og aldersvurdering henger sammen. Dette kan være fordi søker er under 67 ved angitt stønadsperiode, eller mangler fødslesinformasjon for å kunne gi et definitivt svar. Mulighet for å overstyre vurdering åpnes',
     [ApiErrorCode.ATTESTANT_OG_SAKSBEHANDLER_KAN_IKKE_VÆRE_SAMME_PERSON]: 'Kan ikke attestere egen saksbehandling',
     [ApiErrorCode.ATTESTANT_SAMME_SOM_SAKSBEHANDLER]: 'Attestant er samme som saksbehandler',
+    [ApiErrorCode.AUTENTISERING_MOT_AZURE_FEILET]:
+        'Klarte ikke å autentisere mot Azure. Last siden på nytt, og ta kontakt med utviklingsteamet dersom feilen vedvarer.',
     [ApiErrorCode.AVSTEMMING_FEILET]: 'Avstemming feilet',
 
     //B
