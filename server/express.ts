@@ -2,8 +2,6 @@ import compression from 'compression';
 import cors from 'cors';
 import express from 'express';
 
-import setupAuth from './auth/index.js';
-import * as AuthUtils from './auth/utils.js';
 import * as Config from './config.js';
 import { httpLogger, logger } from './logger.js';
 import setupProxy from './proxy.js';
@@ -50,10 +48,8 @@ export default async function expressStart() {
             },
         }),
     );
-    const authClient = await AuthUtils.getOpenIdClient(Config.auth.discoverUrl);
-    await setupAuth(app, authClient);
 
-    app.use(setupProxy(authClient));
+    app.use(setupProxy());
 
     app.use(await routes());
 

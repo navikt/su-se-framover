@@ -1,0 +1,45 @@
+{
+    "interactiveLogin": false,
+    "tokenCallbacks": [
+        {
+            "issuerId": "default",
+            "tokenExpiry": 3600,
+            "requestMappings": [
+                {
+                    "requestParam": "requested_token_use",
+                    "match": "on_behalf_of",
+                    "claims": {
+                        "sub": "lokal.utvikler@nav.no",
+                        "aud": ["su-se-bakover"],
+                        "NAVident": "Z990000",
+                        "preferred_username": "lokal.utvikler@nav.no",
+                        "name": "Lokal Utvikler",
+                        "groups": [
+                            "d75164fa-39e6-4149-956e-8404bc9080b6",
+                            "0ba009c4-d148-4a51-b501-4b1cf906889d",
+                            "062d4814-8538-4f3a-bcb9-32821af7909a",
+                            "5ccd88bd-58d6-41a7-9652-5e0597b00f9b"
+                        ]
+                    }
+                },
+                {
+                    "requestParam": "grant_type",
+                    "match": "*",
+                    "claims": {
+                        "sub": "lokal.utvikler@nav.no",
+                        "aud": ["supstonad"],
+                        "NAVident": "Z990000",
+                        "preferred_username": "lokal.utvikler@nav.no",
+                        "name": "Lokal Utvikler",
+                        "groups": [
+                            "d75164fa-39e6-4149-956e-8404bc9080b6",
+                            "0ba009c4-d148-4a51-b501-4b1cf906889d",
+                            "062d4814-8538-4f3a-bcb9-32821af7909a",
+                            "5ccd88bd-58d6-41a7-9652-5e0597b00f9b"
+                        ]
+                    }
+                }
+            ]
+        }
+    ]
+}

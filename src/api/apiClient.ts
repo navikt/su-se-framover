@@ -2,7 +2,7 @@ import { v4 as uuid } from 'uuid';
 
 import { ApiErrorCode } from '~src/components/apiErrorAlert/apiErrorCode';
 import { BackendValideringsfeil } from '~src/pages/søknad/steg/oppsummering/backendValidationUtils.ts';
-import { LOGIN_URL } from './authUrl';
+import { LOGIN_REQUIRED_HEADER, LOGIN_URL } from './authUrl';
 
 export enum ErrorCode {
     Unauthorized = 403,
@@ -69,13 +69,11 @@ export default async function apiClient<TSuccess>(arg: {
         return success(JSON.parse(text) as TSuccess, res.status);
     }
 
-    const authenticateChallengeHeader = res.headers.get('WWW-Authenticate');
-    if (
-        res.status === ErrorCode.NotAuthenticated &&
-        authenticateChallengeHeader &&
-        authenticateChallengeHeader.includes('realm=su-se-framover')
-    ) {
-        window.location.href = `${LOGIN_URL}?redirectTo=${window.location.pathname}`;
+    // Kun BFF-ens egen auth-utfordring (utløpt/ugyldig Wonderwall-session) skal trigge
+    // redirect til innlogging. En 401 proxet fra su-se-bakover mangler denne headeren, og
+    // håndteres videre som en vanlig feil for å unngå en endeløs re-login-loop.
+    if (res.status === ErrorCode.NotAuthenticated && res.headers.get(LOGIN_REQUIRED_HEADER) === 'true') {
+        window.location.href = `${LOGIN_URL}?redirect=${encodeURIComponent(window.location.pathname)}`;
     }
 
     const errorBody: ErrorMessage = await res.json().catch(() => ({}));

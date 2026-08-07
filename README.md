@@ -43,51 +43,57 @@ Kan overstyres lokalt ved å kjøre npm install --min-release-age 5 feks(dager).
 
 Starte for lokal utvikling:
 ```sh
-$ docker compose up # starter Redis og mock-oauth2-server (se under for mer info)
+$ docker compose up # starter mock-oauth2-server og Wonderwall (se under)
 $ npm start
 ```
 
-`docker compose up` kjører opp Redis og [#mock-oauth2-server](#mock-oauth2-server).
+`docker compose up` kjører opp [mock-oauth2-server](#mock-oauth2-server) og [Wonderwall](#innlogging-wonderwall) (login-proxy).
 
-`npm start` starter opp `express`-serveren med `vite`-middleware som ordner med bygging av frontenden.
+`npm start` starter opp `express`-serveren (BFF, port 5678) som igjen starter `vite` (frontend, port 1234).
 
-## Redis
+**Åpne appen på http://localhost:3000** (gjennom Wonderwall) — ikke `:1234` direkte. Wonderwall auto-logger deg inn mot mock-oauth2-server og proxer videre til Vite. `:1234` er kun frontend uten innlogging.
 
-Brukes for å cache bruker-sessions.
-Lokalt oppsett ligger i [./docker-compose.yml](), mens nais-oppsettet ligger i [.nais/{dev|prod}.yml]().
+I tillegg må `su-se-bakover` kjøres lokalt (validerer tokenene mot den samme mock-oauth2-server på `http://localhost:4321/default`).
 
-### Koble til
+## Innlogging (Wonderwall)
 
-Vi har erfart at det er lettere å bruke et GUI-verktøy når det kommer til Redis.
+Autentisering skjer med [Wonderwall](https://doc.nais.io/auth/explanations/#login-proxy) (login-proxy), i tråd med NAIS `azure.sidecar`.
 
-- Linux: https://docs.redisdesktop.com/en/latest/install/
-- Mac: brew install --cask redisinsight
+- I dev/prod kjører Wonderwall som en sidecar (konfigurert via `azure.sidecar` i [.nais/{dev,prod}-gcp.yaml]()). NAIS auto-provisjonerer klienten — **ingen egne secrets kreves**.
+- Wonderwall håndterer `/oauth2/login`, `/oauth2/logout` og session, og legger brukerens `access_token` på `Authorization`-headeren mot appen. Wonderwall **validerer ikke** tokenet — det er appens ansvar.
+- Vi bruker `azure.sidecar.autoLogin: true`, så uinnloggede GET-navigasjoner sendes automatisk til `/oauth2/login` før appen lastes. For ikke-GET-forespørsler (og XHR) uten gyldig session svarer BFF-en `401`, og frontend redirecter da selv til `/oauth2/login` (se [src/api/apiClient.ts]()). Ved utlogging går brukeren til `/oauth2/logout` (global logout hos Entra) og sendes tilbake til innlogging. Økten fornyes server-side med refresh tokens (Azure) og varer inntil 10 timer fra første innlogging.
+- BFF-en validerer tokenets signatur, issuer, audience og utløp med [`jose`](https://github.com/panva/jose) (`jwtVerify` mot Azure JWKS), og veksler det så til et OBO-token for `su-se-bakover` ved å kalle Azure sitt token-endpoint direkte (grant `jwt-bearer`), se [server/auth/index.ts]() og [server/auth/obo.ts]().
 
-#### Lokalt
-
-- Antar at du har kjørt `docker compose up` og at docker-containeren kjører lokalt.
-- Start opp RedisInsight. Koble til med hostname: `localhost` eller `127.0.0.1`. port: `6379`, username: `default` og passord: `subar` (ligger i docker-compose.yml)
-
-#### Via naisdevice i preprod
-
-- kubectx dev-gcp
-- kubectl --namespace=supstonad get pods # kopier ut redis pod-navnet
-- kubectl --namespace=supstonad port-forward <pod> 6379:6379 # din_port:nais_port
-- Kobler til med hostname: localhost, port: <din_port>, default username og passord finner du ved å kjøre `env` inne i podden.
+Lokalt kjøres Wonderwall i docker-compose og OBO-vekslingen går mot mock-oauth2-server, slik at app-koden er identisk i alle miljøer (ingen egne kodegrener for lokal utvikling).
 
 ## Mock oauth2 server
 
-For autentisering lokalt så bruker vi https://github.com/navikt/mock-oauth2-server.
+For autentisering lokalt bruker vi [mock-oauth2-server](https://github.com/navikt/mock-oauth2-server), startet via [./docker-compose.yml]().
+Konfigurasjonen ligger i [./.docker/mock-oauth2-config.json]() og legger på `aud`, `NAVident` og `groups`
+(både på innloggingstokenet og OBO-tokenet) slik at `su-se-framover` og `su-se-bakover` får de claims-ene de trenger.
 
-Vi bruker Docker for å kjøre den, konfigurert i [./docker-copmpose.yml]().
+Issuer er `http://localhost:4321/default`. `su-se-bakover` må peke sin `AZURE_APP_WELL_KNOWN_URL` mot den samme serveren.
 
-## Azure
+### Nødvendige `.env`-variabler (auth)
 
-Dersom man har behov for å gå direkte mot Azure kan man legge inn inn verdiene fra `.env.azure.template` (og hente resterende verdier fra Kubernetes).
-Merk at `AZURE_APP_CLIENT_JWKS` roteres for hver deploy/restart.
-En må legge inn `AZURE_APP_WELL_KNOWN_URL` i `su-se-bakover` sin .env fil.
+`.env.template` inneholder verdiene under. De settes automatisk av NAIS i dev/prod; lokalt peker de på docker-compose-stacken:
 
-Dersom en får `The reply URL specified in the request does not match the reply URLs configured for the application` bør man dobbeltsjekke i Azure Portal at localhost er registrert som en gyldig reply URL.
+```sh
+AZURE_APP_CLIENT_ID=supstonad
+AZURE_APP_CLIENT_SECRET=supstonad-secret
+AZURE_OPENID_CONFIG_ISSUER=http://localhost:4321/default
+AZURE_OPENID_CONFIG_JWKS_URI=http://localhost:4321/default/jwks
+AZURE_OPENID_CONFIG_TOKEN_ENDPOINT=http://localhost:4321/default/token
+SU_SE_BAKOVER_AAD_APP_NAME=su-se-bakover
+```
+
+I tillegg trenger Wonderwall (docker-compose) en krypteringsnøkkel for session-cookies. Den er
+**ikke** sjekket inn – sett den i `.env` (Docker Compose leser `.env` automatisk). Generer én med
+`openssl rand -base64 32`:
+
+```sh
+WONDERWALL_ENCRYPTION_KEY=<output fra openssl rand -base64 32>
+```
 
 ## Bygge prod-versjon
 
@@ -121,19 +127,13 @@ Disse styres gjennom `.env` lokalt og på vanlig måte i miljøene.
 
 ### Legge til ny variabel
 
-1. Legg den til i [./.env]() (og [./.env.template]()), [./.nais/dev.yaml]() og [./.nais/prod.yaml]()
+1. Legg den til i [./.env]() (og [./.env.template]()), [./.nais/dev-gcp.yaml]() og [./.nais/prod-gcp.yaml]()
     - **Merk**: Hvis verdien er hemmelig så må man heller legge den inn i `Vault` enn i `nais`-filene
 2. Legg den til i [./server/config.ts](); enten i `server`- eller `client`-verdien, avhengig av hvor den skal brukes
 
 ### Hemmelige variabler
 
 https://doc.nais.io/security/secrets/kubernetes-secrets/
-
-#### SESSION_KEY
-
-Brukes for å signere session-cookies. Se: http://expressjs.com/en/resources/middleware/session.html#secret
-
-1. kubectl create secret generic su-se-framover-session-key --from-literal=SESSION_KEY=<super-secret>
 
 ### Miljøvariabler for frontend (teknisk)
 
