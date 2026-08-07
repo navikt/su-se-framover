@@ -56,13 +56,14 @@ export default function PasteFile(props: Props) {
         try {
             const file = await readClipboardFile();
             if (file) {
-                if (props.navnPåUtklipp.length < 1) {
+                const nyttNavn = props.navnPåUtklipp.trim();
+                if (nyttNavn.length < 1) {
                     props.onFeilNavnPåUtklippChange('Mangler navn på utklipp');
                     return;
                 }
                 props.onFeilNavnPåUtklippChange(null);
                 setVenterPåPaste(false);
-                props.onSelectFile(navngiUtklipp(file, props.navnPåUtklipp));
+                props.onSelectFile(navngiUtklipp(file, nyttNavn));
                 return;
             }
         } catch {
@@ -104,8 +105,8 @@ export default function PasteFile(props: Props) {
             if (!file) {
                 return;
             }
-
-            if (props.navnPåUtklipp.length < 1) {
+            const nyttNavn = props.navnPåUtklipp.trim();
+            if (nyttNavn.length < 1) {
                 props.onFeilNavnPåUtklippChange('Mangler navn på utklipp');
                 return;
             }
@@ -113,14 +114,14 @@ export default function PasteFile(props: Props) {
 
             event.preventDefault();
             setVenterPåPaste(false);
-            props.onSelectFile(navngiUtklipp(file, props.navnPåUtklipp));
+            props.onSelectFile(navngiUtklipp(file, nyttNavn));
         },
         [props.disabled, props.onSelectFile, props.navnPåUtklipp, props.onFeilNavnPåUtklippChange],
     );
 
     const navngiUtklipp = (file: File, nyttNavn: string) => {
         const extension = file.type.split('/')[1] ?? '';
-        return new File([file], `${nyttNavn.trim()}.${extension}`, {
+        return new File([file], `${nyttNavn}.${extension}`, {
             type: file.type,
             lastModified: file.lastModified,
         });
