@@ -48,8 +48,8 @@ const SuHeader = (props: Props) => {
                         />
                         <Dropdown.Menu>
                             <Dropdown.Menu.List>
-                                <Dropdown.Menu.List.Item>
-                                    <a href={LOGOUT_URL}>Logg ut</a>
+                                <Dropdown.Menu.List.Item as="a" href={LOGOUT_URL}>
+                                    Logg ut
                                 </Dropdown.Menu.List.Item>
                             </Dropdown.Menu.List>
                         </Dropdown.Menu>

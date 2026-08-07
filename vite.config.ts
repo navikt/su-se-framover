@@ -35,15 +35,6 @@ export default defineConfig({
             '/frontend-config': {
                 target: 'http://localhost:5678',
             },
-            '/login': {
-                target: 'http://localhost:5678',
-            },
-            '/logout': {
-                target: 'http://localhost:5678',
-            },
-            '/oauth2': {
-                target: 'http://localhost:5678',
-            },
         },
         port: 1234,
         hmr: {

@@ -1,39 +1,21 @@
 import express from 'express';
 import expressHttpProxy from 'express-http-proxy';
-import * as OpenIdClient from 'openid-client';
 import { Logger } from 'pino';
 
-import * as AuthUtils from './auth/utils.js';
+import { AUTH_ERROR_CODE, authenticateUser, getToken, LOGIN_REQUIRED_HEADER } from './auth/index.js';
+import { requestOboToken } from './auth/obo.js';
 import * as Config from './config.js';
 
-//AADSTS500133(Assertion isn't within its valid time range) -> https://learn.microsoft.com/en-us/entra/identity-platform/reference-error-codes
-function isTokenRefreshOrOboError(error: unknown): boolean {
-    if (!error || typeof error !== 'object') {
-        return false;
-    }
+// OBO-token veksles til su-se-bakover sin audience. På Azure har scope formatet api://<cluster>.<namespace>.<app>/.default.
+const suSeBakoverScope = `api://${Config.auth.suSeBakoverUri}/.default`;
 
-    const openIdError = error as { error?: string; error_description?: string; message?: string };
-
-    return (
-        openIdError.error === 'invalid_grant' ||
-        openIdError.error_description?.includes('AADSTS500133') === true ||
-        openIdError.message?.includes('AADSTS500133') === true
-    );
-}
-
-export default function setup(authClient: OpenIdClient.Client) {
+export default function setup() {
     const router = express.Router();
 
-    const proxy = (log: Logger, accessToken?: string) =>
+    const proxy = (log: Logger, accessToken: string) =>
         expressHttpProxy(Config.server.suSeBakoverUrl, {
             parseReqBody: false,
             proxyReqOptDecorator: async (options) => {
-                if (!accessToken) {
-                    return options;
-                }
-                if (!options.headers) {
-                    options.headers = {};
-                }
                 options.headers = {
                     ...options.headers,
                     authorization: `Bearer ${accessToken}`,
@@ -48,37 +30,31 @@ export default function setup(authClient: OpenIdClient.Client) {
                 next(err);
             },
         });
-    router.use('/api', (req, res, next) => {
-        const user = req.user;
-        if (!user) {
-            req.log.debug('Missing user in route, waiting for middleware authentication');
-            res.status(401)
-                .header('WWW-Authenticate', 'OAuth realm=su-se-framover, charset="UTF-8"')
-                .send('Not authenticated');
+
+    router.use('/api', authenticateUser, async (req, res, next) => {
+        // authenticateUser har allerede validert at token finnes og er gyldig.
+        const token = getToken(req)!;
+
+        const obo = await requestOboToken(token, suSeBakoverScope, req.log);
+        if (!obo.ok) {
+            if (obo.reason === 'invalid_grant') {
+                // Assertion-spesifikk avvisning (utløpt/ugyldig token) -> BFF-auth-utfordring:
+                // 401 + header slik at frontend redirecter til ny innlogging. Merk: consent/
+                // Conditional Access/claims-challenge klassifiseres IKKE som invalid_grant (de
+                // ville loopet), men som upstream_error nedenfor.
+                req.log.warn('proxy: OBO-veksling avvist (invalid_grant), returnerer 401.');
+                res.setHeader(LOGIN_REQUIRED_HEADER, 'true');
+                res.status(401).send('Not authenticated');
+                return;
+            }
+            // Operasjonell feil (nettverk/timeout/5xx/feilkonfig) -> 502, IKKE 401, for å unngå
+            // at en forbigående Azure-feil ser ut som utløpt innlogging og trigger re-login-loop.
+            req.log.error('proxy: OBO-veksling feilet (upstream_error), returnerer 502.');
+            res.status(502).json({ code: AUTH_ERROR_CODE, message: 'Kunne ikke hente on-behalf-of-token fra Azure' });
             return;
         }
 
-        AuthUtils.getOrRefreshOnBehalfOfToken(authClient, user.tokenSets, req.log)
-            .then((onBehalfOfToken) => {
-                if (!onBehalfOfToken.access_token) {
-                    res.status(500).send('Failed to fetch access token on behalf of user.');
-                    req.log.error('proxyReqOptDecorator: Got on-behalf-of token, but the access_token was undefined');
-                    return;
-                }
-                return proxy(req.log, onBehalfOfToken.access_token)(req, res, next);
-            })
-            .catch((error) => {
-                if (isTokenRefreshOrOboError(error)) {
-                    req.log.warn({ error }, 'Failed to refresh token(s) or request OBO token, returning 401.');
-                    res.status(401)
-                        .header('WWW-Authenticate', 'OAuth realm=su-se-framover, charset="UTF-8"')
-                        .send('Not authenticated');
-                    return;
-                }
-
-                req.log.error({ error }, 'Failed to renew token(s).');
-                res.status(500).send('Failed to fetch/refresh access tokens on behalf of user');
-            });
+        return proxy(req.log, obo.accessToken)(req, res, next);
     });
 
     return router;

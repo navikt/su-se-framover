@@ -1,22 +1,49 @@
-version: '3.7'
+name: su-se-framover
 services:
+    # Mock av Entra ID (Azure AD). Utsteder tokens lokalt og eksponerer JWKS.
+    # tokenCallbacks legger på aud/NAVident/groups slik at både su-se-framover og
+    # su-se-bakover får de claims-ene de trenger (se .docker/mock-oauth2-config.json).
+    # Merk: su-se-bakover kobler seg mot den samme serveren på http://localhost:4321/default.
     mock-oauth2-server:
         container_name: mock-oauth2-server
-        image: ghcr.io/navikt/mock-oauth2-server:0.5.8
+        image: ghcr.io/navikt/mock-oauth2-server:2.1.2
         ports:
             - 4321:4321
         environment:
+            TZ: Europe/Oslo
             SERVER_PORT: 4321
-            JSON_CONFIG: '{ "interactiveLogin": false }'
-        restart: unless-stopped # Ønsker å starter container ved reboot maskin/docker
+            JSON_CONFIG_PATH: /tmp/mock-oauth2-config.json
+        volumes:
+            - ./.docker/mock-oauth2-config.json:/tmp/mock-oauth2-config.json:ro
+        restart: unless-stopped
         hostname: mock-oauth2-server
-    redis:
-        image: bitnamilegacy/redis:7.0.9
+
+    # Login-proxy (som i NAIS via azure.sidecar). Håndterer /oauth2/* selv,
+    # auto-login, og proxer resten videre til Vite (frontend) med Bearer-token.
+    # Åpne appen lokalt på http://localhost:3000 (ikke lenger :1234 direkte).
+    wonderwall:
+        container_name: wonderwall
+        image: ghcr.io/nais/wonderwall@sha256:45b4e861776f7b0980cadb8d3fbe7e5a4a586c870d36dff00d090d9caa36e015
+        depends_on:
+            - mock-oauth2-server
         ports:
-            - 6379:6379
-        container_name: redis
-        mem_limit: 64m
+            - 3000:3000
         environment:
-            REDIS_PASSWORD: subar
-        restart: unless-stopped # Ønsker å starter container ved reboot maskin/docker
-        hostname: redis
+            WONDERWALL_AUTO_LOGIN: "true"
+            WONDERWALL_OPENID_CLIENT_ID: supstonad
+            WONDERWALL_OPENID_CLIENT_SECRET: not-so-secret
+            WONDERWALL_OPENID_WELL_KNOWN_URL: http://localhost:4321/default/.well-known/openid-configuration
+            WONDERWALL_INGRESS: http://localhost:3000
+            WONDERWALL_BIND_ADDRESS: 0.0.0.0:3000
+            WONDERWALL_UPSTREAM_HOST: host.docker.internal:1234
+            WONDERWALL_COOKIE_SECURE: "false"
+            WONDERWALL_LOG_LEVEL: info
+            WONDERWALL_LOG_FORMAT: text
+            # Lokal dev-nøkkel (kun for docker-compose, ikke prod). Kan overstyres via .env ved behov.
+            WONDERWALL_ENCRYPTION_KEY: ${WONDERWALL_ENCRYPTION_KEY:-YWJjZGVmZ2hpajEyMzQ1Njc4OTBhYmNkZWZnaGlqMTI=}
+        restart: on-failure
+        extra_hosts:
+            # Wonderwall må nå mock-oauth2-server på 'localhost:4321' (samme URL som
+            # brukeren i nettleseren blir redirigert til), og Vite på host.
+            - localhost:host-gateway
+            - host.docker.internal:host-gateway

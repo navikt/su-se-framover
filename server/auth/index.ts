@@ -1,133 +1,112 @@
-import RedisStore from 'connect-redis';
-import { Express } from 'express';
-import session from 'express-session';
-import http from 'http';
-import * as OpenIdClient from 'openid-client';
-import passport from 'passport';
-import { createClient } from 'redis';
+import { NextFunction, Request, Response } from 'express';
+import { createRemoteJWKSet, errors, jwtVerify } from 'jose';
+
 import * as Config from '../config.js';
 
-import * as AuthUtils from './utils.js';
+/*
+ * Header som markerer at 401-svaret er BFF-ens EGEN autentiseringsutfordring (utløpt/ugyldig
+ * Wonderwall-session), i motsetning til en 401 som su-se-bakover returnerer transparent gjennom
+ * proxyen. Frontend gater login-redirecten på denne, slik at en backend-401 ikke gir re-login-loop.
+ * MERK: samme streng må brukes i frontend (src/api/authUrl.ts -> LOGIN_REQUIRED_HEADER).
+ */
+export const LOGIN_REQUIRED_HEADER = 'x-login-required';
 
-const SESSION_MAX_AGE_MILLIS = 60 * 60 * 1000 * 2;
+/*
+ * Feilkode som BFF-en setter på sine EGNE 502-svar når auth-infrastruktur svikter (JWKS/Azure
+ * utilgjengelig, eller OBO-veksling feiler operasjonelt). Frontend mapper denne til en
+ * brukervennlig melding via body.code – IKKE på statuskoden 502, som også kan komme transparent
+ * fra su-se-bakover. MERK: samme streng må finnes i frontend (ApiErrorCode.AUTENTISERING_MOT_AZURE_FEILET).
+ */
+export const AUTH_ERROR_CODE = 'autentisering_mot_azure_feilet';
 
-async function getRedisStore() {
-    const redisClient = createClient({
-        socket: {
-            host: Config.redis.host,
-            port: Config.redis.port,
-        },
-        password: Config.redis.password,
-        legacyMode: false,
-    });
-    await redisClient.connect();
+/*
+ * Resultat av token-validering. Vi skiller bevisst auth-feil fra driftsfeil:
+ * - `invalid`: tokenet er ugyldig (feil signatur, utløpt, feil issuer/audience) -> 401.
+ * - `verification_error`: JWKS-en kunne ikke hentes (timeout/nettverk mot Azure) -> 5xx.
+ *   Å svare 401 her ville fått en JWKS-/Azure-nedetid til å se ut som utløpt innlogging og
+ *   startet en meningsløs Wonderwall-login-loop.
+ */
+export type TokenValidationResult =
+    | { ok: true }
+    | { ok: false; reason: 'invalid' | 'verification_error'; code?: string; message: string };
 
-    return new RedisStore({
-        client: redisClient,
-        prefix: 'su-se-framover',
-    });
+/*
+ * jose-feilkoder som betyr at selve tokenet er ugyldig (i motsetning til at vi ikke klarte
+ * å verifisere det pga. manglende nøkler/nettverk).
+ */
+const INVALID_TOKEN_CODES = new Set<string>([
+    'ERR_JWT_EXPIRED',
+    'ERR_JWT_CLAIM_VALIDATION_FAILED',
+    'ERR_JWS_SIGNATURE_VERIFICATION_FAILED',
+    'ERR_JWS_INVALID',
+    'ERR_JWT_INVALID',
+    'ERR_JWKS_NO_MATCHING_KEY',
+]);
+
+// JWKS caches internt i jose, så vi oppretter settet én gang.
+let jwks: ReturnType<typeof createRemoteJWKSet> | undefined;
+function getJwks() {
+    if (!jwks) {
+        jwks = createRemoteJWKSet(new URL(Config.auth.jwksUri));
+    }
+    return jwks;
 }
 
-async function setupSession(app: Express) {
-    app.set('trust proxy', 1);
-
-    const redisStore = await getRedisStore();
-
-    app.use(
-        session({
-            cookie: {
-                maxAge: SESSION_MAX_AGE_MILLIS,
-                sameSite: 'lax',
-                httpOnly: true,
-                secure: Config.isProd,
-            },
-            secret: Config.server.sessionKey,
-            name: Config.server.sessionCookieName,
-            resave: true,
-            saveUninitialized: false,
-            unset: 'destroy',
-            store: redisStore,
-            rolling: true,
-        }),
-    );
+// Henter bearer-token fra Authorization-headeren som Wonderwall legger på.
+export function getToken(req: Request): string | undefined {
+    const authorization = req.headers.authorization;
+    if (!authorization?.startsWith('Bearer ')) {
+        return undefined;
+    }
+    return authorization.substring('Bearer '.length);
 }
 
-async function getStrategy(authClient: OpenIdClient.Client) {
-    return new OpenIdClient.Strategy(
-        {
-            client: authClient,
-            params: {
-                response_type: Config.auth.responseType,
-                response_mode: Config.auth.responseMode,
-                scope: `openid offline_access ${Config.auth.clientId}/.default`,
-            },
-            extras: { clientAssertionPayload: { aud: authClient.issuer.metadata['token_endpoint'] } },
-            usePKCE: 'S256',
-            passReqToCallback: true,
-        },
-        (
-            req: http.IncomingMessage,
-            tokenSet: OpenIdClient.TokenSet,
-            done: (err: null, user?: Express.User) => void,
-        ) => {
-            if (!tokenSet.expired()) {
-                req.log.debug('OpenIdClient.Strategy: Mapping tokenSet to User.');
-                return done(null, {
-                    tokenSets: {
-                        [AuthUtils.tokenSetSelfId]: tokenSet,
-                    },
-                });
-            }
-            // Passport kaller bare denne funksjonen for å mappe en ny innlogging til et User-objekt, så man skal ikke havne her.
-            req.log.error(
-                'OpenIdClient.Strategy: Failed to map tokenSet to User because the tokenSet has already expired.',
-            );
-            done(null, undefined);
-        },
-    );
-}
-
-export default async function setupAuth(app: Express, authClient: OpenIdClient.Client) {
-    await setupSession(app);
-
-    app.use(passport.initialize());
-    app.use(passport.session());
-
-    const authName = Config.isDev ? 'localAuth' : 'aad';
-    const authStrategy = await getStrategy(authClient);
-
-    passport.use(authName, authStrategy);
-    passport.serializeUser((user, done) => {
-        done(null, user);
-    });
-    passport.deserializeUser((user, done) => {
-        done(null, user as Express.User);
-    });
-
-    app.get(
-        '/login',
-        (req, _res, next) => {
-            if (typeof req.query.redirectTo === 'string') {
-                req.session.redirectTo = req.query.redirectTo;
-            }
-            next();
-        },
-        passport.authenticate(authName, { failureRedirect: '/login-failed' }),
-    );
-
-    app.get('/logout', (req, res) => {
-        req.logout(() => req.log.warn('Utlogging av bruker feilet.'));
-        req.session.destroy(() => {
-            res.clearCookie(Config.server.sessionCookieName);
-            const endSessionUrl = authClient.endSessionUrl({ post_logout_redirect_uri: Config.auth.logoutRedirectUri });
-            req.log.debug(`Redirecting user via Azure's end_session_endpoint: ${endSessionUrl}`);
-            res.redirect(endSessionUrl);
+// Validerer signatur, issuer, audience og utløp på tokenet fra Wonderwall.
+// Wonderwall legger tokenet på headeren, men validerer det ikke selv – det er appens ansvar.
+export async function validateToken(token: string): Promise<TokenValidationResult> {
+    try {
+        await jwtVerify(token, getJwks(), {
+            issuer: Config.auth.issuer,
+            audience: Config.auth.clientId,
         });
-    });
-    app.get('/oauth2/callback', passport.authenticate(authName, { failureRedirect: '/login-failed' }), (req, res) => {
-        res.redirect(req.session.redirectTo ?? '/');
-    });
-    app.get('/login-failed', (_req, res) => {
-        res.send('login failed');
-    });
+        return { ok: true };
+    } catch (error) {
+        const code = error instanceof errors.JOSEError ? error.code : undefined;
+        const message = error instanceof Error ? error.message : String(error);
+        if (code && INVALID_TOKEN_CODES.has(code)) {
+            return { ok: false, reason: 'invalid', code, message };
+        }
+        // Ukjent/JWKS-/nettverksfeil -> vi klarte ikke å verifisere tokenet, ikke at det er ugyldig.
+        return { ok: false, reason: 'verification_error', code, message };
+    }
+}
+
+export async function authenticateUser(req: Request, res: Response, next: NextFunction): Promise<void> {
+    const token = getToken(req);
+    if (!token) {
+        req.log.debug('authenticateUser: Mangler bearer-token fra Wonderwall.');
+        res.setHeader(LOGIN_REQUIRED_HEADER, 'true');
+        res.status(401).send('Not authenticated');
+        return;
+    }
+
+    const result = await validateToken(token);
+    if (!result.ok) {
+        if (result.reason === 'verification_error') {
+            // Kunne ikke verifisere tokenet (JWKS/Azure utilgjengelig) -> 502, IKKE 401, for å
+            // unngå at en forbigående nedetid trigger en meningsløs re-login-loop.
+            req.log.error(
+                { code: result.code, error: result.message },
+                'authenticateUser: Klarte ikke å verifisere token (JWKS/nettverksfeil), returnerer 502.',
+            );
+            res.status(502).json({ code: AUTH_ERROR_CODE, message: 'Kunne ikke verifisere token mot Azure' });
+            return;
+        }
+        req.log.warn({ code: result.code, error: result.message }, 'authenticateUser: Token er ugyldig.');
+        res.setHeader(LOGIN_REQUIRED_HEADER, 'true');
+        res.status(401).send('Not authenticated');
+        return;
+    }
+
+    next();
 }
