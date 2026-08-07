@@ -1,5 +1,5 @@
 {
-    "interactiveLogin": true,
+    "interactiveLogin": false,
     "tokenCallbacks": [
         {
             "issuerId": "default",
