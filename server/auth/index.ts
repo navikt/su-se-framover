@@ -3,29 +3,37 @@ import { createRemoteJWKSet, errors, jwtVerify } from 'jose';
 
 import * as Config from '../config.js';
 
-// Header som markerer at 401-svaret er BFF-ens EGEN autentiseringsutfordring (utløpt/ugyldig
-// Wonderwall-session), i motsetning til en 401 som su-se-bakover returnerer transparent gjennom
-// proxyen. Frontend gater login-redirecten på denne, slik at en backend-401 ikke gir re-login-loop.
-// MERK: samme streng må brukes i frontend (src/api/authUrl.ts -> LOGIN_REQUIRED_HEADER).
+/*
+ * Header som markerer at 401-svaret er BFF-ens EGEN autentiseringsutfordring (utløpt/ugyldig
+ * Wonderwall-session), i motsetning til en 401 som su-se-bakover returnerer transparent gjennom
+ * proxyen. Frontend gater login-redirecten på denne, slik at en backend-401 ikke gir re-login-loop.
+ * MERK: samme streng må brukes i frontend (src/api/authUrl.ts -> LOGIN_REQUIRED_HEADER).
+ */
 export const LOGIN_REQUIRED_HEADER = 'x-login-required';
 
-// Feilkode som BFF-en setter på sine EGNE 502-svar når auth-infrastruktur svikter (JWKS/Azure
-// utilgjengelig, eller OBO-veksling feiler operasjonelt). Frontend mapper denne til en
-// brukervennlig melding via body.code – IKKE på statuskoden 502, som også kan komme transparent
-// fra su-se-bakover. MERK: samme streng må finnes i frontend (ApiErrorCode.AUTENTISERING_MOT_AZURE_FEILET).
+/*
+ * Feilkode som BFF-en setter på sine EGNE 502-svar når auth-infrastruktur svikter (JWKS/Azure
+ * utilgjengelig, eller OBO-veksling feiler operasjonelt). Frontend mapper denne til en
+ * brukervennlig melding via body.code – IKKE på statuskoden 502, som også kan komme transparent
+ * fra su-se-bakover. MERK: samme streng må finnes i frontend (ApiErrorCode.AUTENTISERING_MOT_AZURE_FEILET).
+ */
 export const AUTH_ERROR_CODE = 'autentisering_mot_azure_feilet';
 
-// Resultat av token-validering. Vi skiller bevisst auth-feil fra driftsfeil:
-// - `invalid`: tokenet er ugyldig (feil signatur, utløpt, feil issuer/audience) -> 401.
-// - `verification_error`: JWKS-en kunne ikke hentes (timeout/nettverk mot Azure) -> 5xx.
-//   Å svare 401 her ville fått en JWKS-/Azure-nedetid til å se ut som utløpt innlogging og
-//   startet en meningsløs Wonderwall-login-loop.
+/*
+ * Resultat av token-validering. Vi skiller bevisst auth-feil fra driftsfeil:
+ * - `invalid`: tokenet er ugyldig (feil signatur, utløpt, feil issuer/audience) -> 401.
+ * - `verification_error`: JWKS-en kunne ikke hentes (timeout/nettverk mot Azure) -> 5xx.
+ *   Å svare 401 her ville fått en JWKS-/Azure-nedetid til å se ut som utløpt innlogging og
+ *   startet en meningsløs Wonderwall-login-loop.
+ */
 export type TokenValidationResult =
     | { ok: true }
     | { ok: false; reason: 'invalid' | 'verification_error'; code?: string; message: string };
 
-// jose-feilkoder som betyr at selve tokenet er ugyldig (i motsetning til at vi ikke klarte
-// å verifisere det pga. manglende nøkler/nettverk).
+/*
+ * jose-feilkoder som betyr at selve tokenet er ugyldig (i motsetning til at vi ikke klarte
+ * å verifisere det pga. manglende nøkler/nettverk).
+ */
 const INVALID_TOKEN_CODES = new Set<string>([
     'ERR_JWT_EXPIRED',
     'ERR_JWT_CLAIM_VALIDATION_FAILED',
