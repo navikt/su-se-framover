@@ -93,7 +93,8 @@ const Reguleringsoversikt = () => {
 
     const filtrerteReguleringer = gjenståendeManuelleReguleringer.filter((regulering) => {
         const matchFradragsfilter =
-            fradragsfilterList.size === 0 || fradragsfilterList.isSubsetOf(new Set(regulering.fradragsKategori));
+            fradragsfilterList.size === 0 ||
+            regulering.fradragsKategori.some((fradrag) => fradragsfilterList.has(fradrag));
         const matchStatusfilter = statusfilterList.size === 0 || statusfilterList.has(regulering.status);
         const matchÅrsakTilManuellReguleringFilter =
             årsakTilManuellReguleringFilterList.size === 0 ||
