@@ -97,7 +97,7 @@ const Reguleringsoversikt = () => {
         const matchStatusfilter = statusfilterList.size === 0 || statusfilterList.has(regulering.status);
         const matchÅrsakTilManuellReguleringFilter =
             årsakTilManuellReguleringFilterList.size === 0 ||
-            årsakTilManuellReguleringFilterList.isSubsetOf(new Set(regulering.årsakTilManuellRegulering));
+            regulering.årsakTilManuellRegulering.some((årsak) => årsakTilManuellReguleringFilterList.has(årsak));
 
         return matchFradragsfilter && matchStatusfilter && matchÅrsakTilManuellReguleringFilter;
     });
