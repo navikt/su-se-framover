@@ -55,6 +55,68 @@ $ npm start
 
 I tillegg må `su-se-bakover` kjøres lokalt (validerer tokenene mot den samme mock-oauth2-server på `http://localhost:4321/default`).
 
+### Oppgradering fra gammel versjon (før Wonderwall)
+
+Auth er migrert fra en egen OIDC-stack (`passport`/`openid-client`/`express-session`/`redis`) til
+[Wonderwall](#innlogging-wonderwall) (login-proxy) + manuell token­validering med `jose`. Var du på
+den gamle versjonen må du:
+
+1. **Reinstaller server-avhengigheter** (gammel stack fjernet, `jose` lagt til):
+   ```sh
+   npm run install:all   # eller: npm ci --prefix server
+   ```
+2. **`.env` trengs normalt ikke lokalt.** BFF-en har dev-defaults for alle auth-variablene
+   (peker på docker-compose-stacken, se [server/config.ts]()), og Wonderwall har en innebygd
+   dev-`WONDERWALL_ENCRYPTION_KEY` i `docker-compose.yml`. Har du en gammel `.env` fra før, kan
+   du fjerne utdaterte session-/redis-variabler; sett kun variabler hvis du trenger å overstyre
+   en default.
+3. **Hent nytt docker-image og start Wonderwall** (ny tjeneste i `docker compose`):
+   ```sh
+   docker compose pull && docker compose up
+   ```
+4. **Bruk http://localhost:3000** (gjennom Wonderwall) — ikke `:1234` direkte.
+5. **Slett gamle cookies** for `localhost` (en gammel sesjon fra før merge kan forstyrre).
+
+### Feilsøking lokalt
+
+- **`authenticateUser: Mangler bearer-token fra Wonderwall` / appen looper på `:1234`:**
+  Du har åpnet appen på `http://localhost:1234` (Vite direkte) i stedet for `http://localhost:3000`.
+  Da omgås Wonderwall, og `Authorization: Bearer`-headeren blir aldri lagt på. BFF-en svarer `401`,
+  frontend redirecter til `/oauth2/login` — men på `:1234` finnes ikke det endepunktet (kun i
+  Wonderwall på `:3000`), så SPA-fallbacken serverer appen på nytt og det looper. Dette er ikke en
+  feil, bare feil URL: **åpne `http://localhost:3000`**. På `:3000` (og i dev/prod) etablerer
+  Wonderwall en sesjon, og loopen oppstår ikke.
+- **`Bad Gateway` / Wonderwall-logg: `dial tcp 192.168.5.2:1234: connect: connection refused`:**
+  Skjer når Vite ender opp med å lytte kun på IPv6-loopback (`::1`), mens Wonderwall når Vite via
+  en IPv4-tilkobling. Vite sin default (`host: 'localhost'`) er ikke deterministisk: Node kan resolve
+  `localhost` til enten IPv4 (`127.0.0.1`) eller IPv6 (`::1`) avhengig av Node-versjon og oppsett, og
+  på moderne Node/macOS havner den ofte på `::1`. `::1` og `127.0.0.1` er to helt separate
+  adresser/sockets: en tjener som kun lytter på `::1` kan ikke svare på en IPv4-tilkobling til
+  `127.0.0.1`. Wonderwall kjører inne i Docker/Colima-VM-en og når host-Vite via
+  `host.docker.internal`, som Colima videresender til host-ens **IPv4**-loopback. Treffer den en
+  IPv6-only Vite, svarer OS-et med RST → `connection refused` → `Bad Gateway`.
+
+  ```
+  Nettleser
+     │  http://localhost:3000
+     ▼
+  Wonderwall  (i Colima-VM, lytter :3000)
+     │  proxy til host.docker.internal:1234
+     ▼
+  Colima-broen  ──►  sender en IPv4-tilkobling mot host 127.0.0.1:1234
+     │
+     ▼
+  host 127.0.0.1:1234 (IPv4)  ──►  ingen lytter her  →  RST → "connection refused"
+
+  Vite lytter på  ::1:1234 (IPv6)  ──►  men IPv4-tilkoblingen kommer aldri hit
+  ```
+
+  Fikset er `host: '127.0.0.1'` i `vite.config.ts`: da binder Vite deterministisk IPv4-loopback,
+  uavhengig av Node-/OS-versjon, og uten å eksponere dev-serveren på nettverket. Sjekk med
+  `lsof -i :1234` — det skal stå `127.0.0.1:1234 (LISTEN)`, ikke `[::1]:1234` eller `*:1234`.
+- **Fortsatt token-problemer?** Sjekk at `docker compose up` faktisk har `mock-oauth2-server` og
+  `wonderwall` oppe, at BFF-en lytter på `:5678` og Vite på `:1234`, og slett gamle `localhost`-cookies.
+
 ## Innlogging (Wonderwall)
 
 Autentisering skjer med [Wonderwall](https://doc.nais.io/auth/explanations/#login-proxy) (login-proxy), i tråd med NAIS `azure.sidecar`.
