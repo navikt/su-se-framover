@@ -24,7 +24,7 @@ import {
     IkkeVelgbareFradragskategorier,
     VelgbareFradragskategorier,
 } from '~src/types/Fradrag.ts';
-import { ReguleringOversiktsstatus } from '~src/types/Regulering';
+import { ReguleringOversiktsstatus, Reguleringsstatus, ÅrsakTilManuellReguleringKategori } from '~src/types/Regulering';
 import styles from './regulering.module.less';
 import messages from './regulering-nb';
 
@@ -52,9 +52,31 @@ const Reguleringsoversikt = () => {
         return new Set(lagret ? JSON.parse(lagret) : []);
     });
 
+    const [statusfilterList, setStatusFilter] = useState<Set<Reguleringsstatus>>(() => {
+        const lagret = localStorage.getItem('reguleringStatusfilter');
+        return new Set(lagret ? JSON.parse(lagret) : []);
+    });
+
+    const [årsakTilManuellReguleringFilterList, setÅrsakTilManuellReguleringFilter] = useState<
+        Set<ÅrsakTilManuellReguleringKategori>
+    >(() => {
+        const lagret = localStorage.getItem('reguleringÅrsakTilManuellReguleringFilter');
+        return new Set(lagret ? JSON.parse(lagret) : []);
+    });
+
     const oppdaterFradragsfilter = (fradragskategori: Set<Fradragskategori>) => {
         setfradragsFilter(fradragskategori);
         localStorage.setItem('reguleringFradragsfilter', JSON.stringify(Array.from(fradragskategori)));
+    };
+
+    const oppdaterStatusfilter = (status: Set<Reguleringsstatus>) => {
+        setStatusFilter(status);
+        localStorage.setItem('reguleringStatusfilter', JSON.stringify(Array.from(status)));
+    };
+
+    const oppdaterÅrsakTilManuellReguleringFilter = (årsaker: Set<ÅrsakTilManuellReguleringKategori>) => {
+        setÅrsakTilManuellReguleringFilter(årsaker);
+        localStorage.setItem('reguleringÅrsakTilManuellReguleringFilter', JSON.stringify(Array.from(årsaker)));
     };
 
     if (RemoteData.isFailure(reguleringerOgMerknader)) {
@@ -69,13 +91,16 @@ const Reguleringsoversikt = () => {
         ? reguleringerOgMerknader.value
         : [];
 
-    const filtrerteReguleringer = fradragsfilterList.size
-        ? gjenståendeManuelleReguleringer.filter((regulering) => {
-              return regulering.fradragsKategori.length
-                  ? fradragsfilterList.isSubsetOf(new Set(regulering.fradragsKategori))
-                  : false;
-          })
-        : gjenståendeManuelleReguleringer;
+    const filtrerteReguleringer = gjenståendeManuelleReguleringer.filter((regulering) => {
+        const matchFradragsfilter =
+            fradragsfilterList.size === 0 || fradragsfilterList.isSubsetOf(new Set(regulering.fradragsKategori));
+        const matchStatusfilter = statusfilterList.size === 0 || statusfilterList.has(regulering.status);
+        const matchÅrsakTilManuellReguleringFilter =
+            årsakTilManuellReguleringFilterList.size === 0 ||
+            årsakTilManuellReguleringFilterList.isSubsetOf(new Set(regulering.årsakTilManuellRegulering));
+
+        return matchFradragsfilter && matchStatusfilter && matchÅrsakTilManuellReguleringFilter;
+    });
 
     const sortByFnr = pipe(
         S.Ord,
@@ -194,25 +219,67 @@ const Reguleringsoversikt = () => {
                 <div className={styles.filterKolonne}>
                     <div className={styles.filtreringsStyling}>
                         <Box padding="2">
-                            <Label className={styles.label}>Fradragstyper</Label>
-                            {hentFradragskategorierSortertAlfabetisk().map((value) => (
-                                <Checkbox
-                                    key={value}
-                                    checked={fradragsfilterList.has(value as Fradragskategori)}
-                                    onChange={(e) => {
-                                        const valgtFradrag = value as Fradragskategori;
-                                        const oppdatert = new Set(fradragsfilterList);
-                                        if (e.target.checked) {
-                                            oppdatert.add(valgtFradrag);
-                                        } else {
-                                            oppdatert.delete(valgtFradrag);
-                                        }
-                                        oppdaterFradragsfilter(oppdatert);
-                                    }}
-                                >
-                                    {formatMessage(value as Fradragskategori)}
-                                </Checkbox>
-                            ))}
+                            <div className={styles.filterOverskrift}>
+                                <Label className={styles.label}>Fradragstyper</Label>
+                                {hentFradragskategorierSortertAlfabetisk().map((value) => (
+                                    <Checkbox
+                                        key={value}
+                                        checked={fradragsfilterList.has(value as Fradragskategori)}
+                                        onChange={(e) => {
+                                            const valgtFradrag = value as Fradragskategori;
+                                            const oppdatert = new Set(fradragsfilterList);
+                                            if (e.target.checked) {
+                                                oppdatert.add(valgtFradrag);
+                                            } else {
+                                                oppdatert.delete(valgtFradrag);
+                                            }
+                                            oppdaterFradragsfilter(oppdatert);
+                                        }}
+                                    >
+                                        {formatMessage(value as Fradragskategori)}
+                                    </Checkbox>
+                                ))}
+                            </div>
+                            <div className={styles.filterOverskrift}>
+                                <Label className={styles.label}>Status</Label>
+                                {Object.values(Reguleringsstatus).map((value) => (
+                                    <Checkbox
+                                        key={value}
+                                        checked={statusfilterList.has(value)}
+                                        onChange={(e) => {
+                                            const oppdatert = new Set(statusfilterList);
+                                            if (e.target.checked) {
+                                                oppdatert.add(value);
+                                            } else {
+                                                oppdatert.delete(value);
+                                            }
+                                            oppdaterStatusfilter(oppdatert);
+                                        }}
+                                    >
+                                        {value}
+                                    </Checkbox>
+                                ))}
+                            </div>
+                            <div className={styles.filterOverskrift}>
+                                <Label className={styles.filterLabel}>Årsak til manuell regulering</Label>
+                                {Object.values(ÅrsakTilManuellReguleringKategori).map((value) => (
+                                    <Checkbox
+                                        key={value}
+                                        checked={årsakTilManuellReguleringFilterList.has(value)}
+                                        onChange={(e) => {
+                                            const oppdatert = new Set(årsakTilManuellReguleringFilterList);
+                                            if (e.target.checked) {
+                                                oppdatert.add(value);
+                                            } else {
+                                                oppdatert.delete(value);
+                                            }
+                                            oppdaterÅrsakTilManuellReguleringFilter(oppdatert);
+                                        }}
+                                    >
+                                        {formatMessage(value)}
+                                    </Checkbox>
+                                ))}
+                            </div>
                         </Box>
                     </div>
                     <Reguleringstabell data={filtrerteReguleringer} />
