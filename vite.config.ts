@@ -37,6 +37,14 @@ export default defineConfig({
             },
         },
         port: 1234,
+        /*
+         * Bind eksplisitt til IPv4-loopback. Vite sin default ('localhost') løses på moderne
+         * Node/macOS til IPv6 (::1), og da svarer ikke dev-serveren på IPv4. Wonderwall-containeren
+         * når host-Vite via host.docker.internal, som Colima videresender til host-ens IPv4-loopback
+         * (127.0.0.1) -> en IPv6-only binding gir "connection refused" / Bad Gateway.
+         * 127.0.0.1 er deterministisk IPv4 og eksponerer ikke dev-serveren på nettverket.
+         */
+        host: '127.0.0.1',
         hmr: {
             port: 1234,
         },
