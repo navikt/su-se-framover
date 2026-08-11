@@ -47,22 +47,30 @@ const Reguleringsoversikt = () => {
         hentReguleringerOgMerknader({});
     }, []);
 
-    const [fradragsfilterList, setfradragsFilter] = useState<Set<Fradragskategori>>(() => {
-        const lagret = localStorage.getItem('reguleringFradragsfilter');
-        return new Set(lagret ? JSON.parse(lagret) : []);
-    });
+    const hentFilter = <T,>(key: string): Set<T> => {
+        const lagret = localStorage.getItem(key);
+        if (!lagret) {
+            return new Set();
+        }
+        try {
+            return new Set(JSON.parse(lagret) as T[]);
+        } catch {
+            localStorage.removeItem(key);
+            return new Set();
+        }
+    };
 
-    const [statusfilterList, setStatusFilter] = useState<Set<Reguleringsstatus>>(() => {
-        const lagret = localStorage.getItem('reguleringStatusfilter');
-        return new Set(lagret ? JSON.parse(lagret) : []);
-    });
+    const [fradragsfilterList, setfradragsFilter] = useState<Set<Fradragskategori>>(() =>
+        hentFilter<Fradragskategori>('reguleringFradragsfilter'),
+    );
+
+    const [statusfilterList, setStatusFilter] = useState<Set<Reguleringsstatus>>(() =>
+        hentFilter<Reguleringsstatus>('reguleringStatusfilter'),
+    );
 
     const [årsakTilManuellReguleringFilterList, setÅrsakTilManuellReguleringFilter] = useState<
         Set<ÅrsakTilManuellReguleringKategori>
-    >(() => {
-        const lagret = localStorage.getItem('reguleringÅrsakTilManuellReguleringFilter');
-        return new Set(lagret ? JSON.parse(lagret) : []);
-    });
+    >(() => hentFilter<ÅrsakTilManuellReguleringKategori>('reguleringÅrsakTilManuellReguleringFilter'));
 
     const oppdaterFradragsfilter = (fradragskategori: Set<Fradragskategori>) => {
         setfradragsFilter(fradragskategori);
@@ -91,17 +99,22 @@ const Reguleringsoversikt = () => {
         ? reguleringerOgMerknader.value
         : [];
 
-    const filtrerteReguleringer = gjenståendeManuelleReguleringer.filter((regulering) => {
-        const matchFradragsfilter =
-            fradragsfilterList.size === 0 ||
-            regulering.fradragsKategori.some((fradrag) => fradragsfilterList.has(fradrag));
-        const matchStatusfilter = statusfilterList.size === 0 || statusfilterList.has(regulering.status);
-        const matchÅrsakTilManuellReguleringFilter =
-            årsakTilManuellReguleringFilterList.size === 0 ||
-            regulering.årsakTilManuellRegulering.some((årsak) => årsakTilManuellReguleringFilterList.has(årsak));
+    const filtrerteReguleringer =
+        fradragsfilterList.size === 0 && statusfilterList.size === 0 && årsakTilManuellReguleringFilterList.size === 0
+            ? gjenståendeManuelleReguleringer
+            : gjenståendeManuelleReguleringer.filter((regulering) => {
+                  const matchFradragsfilter =
+                      fradragsfilterList.size === 0 ||
+                      regulering.fradragsKategori.some((fradrag) => fradragsfilterList.has(fradrag));
+                  const matchStatusfilter = statusfilterList.size === 0 || statusfilterList.has(regulering.status);
+                  const matchÅrsakTilManuellReguleringFilter =
+                      årsakTilManuellReguleringFilterList.size === 0 ||
+                      regulering.årsakTilManuellRegulering.some((årsak) =>
+                          årsakTilManuellReguleringFilterList.has(årsak),
+                      );
 
-        return matchFradragsfilter && matchStatusfilter && matchÅrsakTilManuellReguleringFilter;
-    });
+                  return matchFradragsfilter && matchStatusfilter && matchÅrsakTilManuellReguleringFilter;
+              });
 
     const sortByFnr = pipe(
         S.Ord,
@@ -221,7 +234,7 @@ const Reguleringsoversikt = () => {
                     <div className={styles.filtreringsStyling}>
                         <Box padding="2">
                             <div className={styles.filterOverskrift}>
-                                <Label className={styles.label}>Fradragstyper</Label>
+                                <Label>Fradragstyper</Label>
                                 {hentFradragskategorierSortertAlfabetisk().map((value) => (
                                     <Checkbox
                                         key={value}
@@ -242,7 +255,7 @@ const Reguleringsoversikt = () => {
                                 ))}
                             </div>
                             <div className={styles.filterOverskrift}>
-                                <Label className={styles.label}>Status</Label>
+                                <Label>Status</Label>
                                 {Object.values(Reguleringsstatus).map((value) => (
                                     <Checkbox
                                         key={value}
@@ -262,7 +275,7 @@ const Reguleringsoversikt = () => {
                                 ))}
                             </div>
                             <div className={styles.filterOverskrift}>
-                                <Label className={styles.filterLabel}>Årsak til manuell regulering</Label>
+                                <Label>Årsak til manuell regulering</Label>
                                 {Object.values(ÅrsakTilManuellReguleringKategori).map((value) => (
                                     <Checkbox
                                         key={value}
