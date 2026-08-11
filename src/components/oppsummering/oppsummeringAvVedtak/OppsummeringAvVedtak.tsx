@@ -90,7 +90,9 @@ const OppsummeringAvVedtak = (props: { vedtakId?: string; vedtak?: Vedtak }) => 
                     sakId={sak.id}
                     referanseId={vedtaketsBehandling.id}
                     referanseType={
-                        behandlingstype === 'søknadsbehandling' ? ReferanseType.SØKNAD : ReferanseType.REVURDERING
+                        behandlingstype === 'søknadsbehandling'
+                            ? ReferanseType.SØKNADSBEHANDLING
+                            : ReferanseType.REVURDERING
                     }
                     underAttestering={false}
                     kanRedigere={false}

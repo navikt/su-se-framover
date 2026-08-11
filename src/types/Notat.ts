@@ -3,8 +3,8 @@ export type Tidspunkt = string;
 export type NavIdentBruker = string;
 
 export enum ReferanseType {
-    SØKNAD = 'SØKNAD', //Søknadsbehandling
-    INNSENDT_SØKNAD = 'INNSENDT_SØKNAD', //Innsendt søknad uten behandling
+    SØKNADSBEHANDLING = 'SØKNADSBEHANDLING',
+    SØKNAD = 'SØKNAD', //Innsendt søknad uten behandling
     REVURDERING = 'REVURDERING',
 }
 
