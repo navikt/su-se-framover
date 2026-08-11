@@ -24,7 +24,7 @@ import {
     IkkeVelgbareFradragskategorier,
     VelgbareFradragskategorier,
 } from '~src/types/Fradrag.ts';
-import { ReguleringOversiktsstatus } from '~src/types/Regulering';
+import { ReguleringOversiktsstatus, Reguleringsstatus, ÅrsakTilManuellReguleringKategori } from '~src/types/Regulering';
 import styles from './regulering.module.less';
 import messages from './regulering-nb';
 
@@ -47,14 +47,44 @@ const Reguleringsoversikt = () => {
         hentReguleringerOgMerknader({});
     }, []);
 
-    const [fradragsfilterList, setfradragsFilter] = useState<Set<Fradragskategori>>(() => {
-        const lagret = localStorage.getItem('reguleringFradragsfilter');
-        return new Set(lagret ? JSON.parse(lagret) : []);
-    });
+    const hentFilter = <T,>(key: string): Set<T> => {
+        const lagret = localStorage.getItem(key);
+        if (!lagret) {
+            return new Set();
+        }
+        try {
+            return new Set(JSON.parse(lagret) as T[]);
+        } catch {
+            localStorage.removeItem(key);
+            return new Set();
+        }
+    };
+
+    const [fradragsfilterList, setfradragsFilter] = useState<Set<Fradragskategori>>(() =>
+        hentFilter<Fradragskategori>('reguleringFradragsfilter'),
+    );
+
+    const [statusfilterList, setStatusFilter] = useState<Set<Reguleringsstatus>>(() =>
+        hentFilter<Reguleringsstatus>('reguleringStatusfilter'),
+    );
+
+    const [årsakTilManuellReguleringFilterList, setÅrsakTilManuellReguleringFilter] = useState<
+        Set<ÅrsakTilManuellReguleringKategori>
+    >(() => hentFilter<ÅrsakTilManuellReguleringKategori>('reguleringÅrsakTilManuellReguleringFilter'));
 
     const oppdaterFradragsfilter = (fradragskategori: Set<Fradragskategori>) => {
         setfradragsFilter(fradragskategori);
         localStorage.setItem('reguleringFradragsfilter', JSON.stringify(Array.from(fradragskategori)));
+    };
+
+    const oppdaterStatusfilter = (status: Set<Reguleringsstatus>) => {
+        setStatusFilter(status);
+        localStorage.setItem('reguleringStatusfilter', JSON.stringify(Array.from(status)));
+    };
+
+    const oppdaterÅrsakTilManuellReguleringFilter = (årsaker: Set<ÅrsakTilManuellReguleringKategori>) => {
+        setÅrsakTilManuellReguleringFilter(årsaker);
+        localStorage.setItem('reguleringÅrsakTilManuellReguleringFilter', JSON.stringify(Array.from(årsaker)));
     };
 
     if (RemoteData.isFailure(reguleringerOgMerknader)) {
@@ -69,13 +99,22 @@ const Reguleringsoversikt = () => {
         ? reguleringerOgMerknader.value
         : [];
 
-    const filtrerteReguleringer = fradragsfilterList.size
-        ? gjenståendeManuelleReguleringer.filter((regulering) => {
-              return regulering.fradragsKategori.length
-                  ? fradragsfilterList.isSubsetOf(new Set(regulering.fradragsKategori))
-                  : false;
-          })
-        : gjenståendeManuelleReguleringer;
+    const filtrerteReguleringer =
+        fradragsfilterList.size === 0 && statusfilterList.size === 0 && årsakTilManuellReguleringFilterList.size === 0
+            ? gjenståendeManuelleReguleringer
+            : gjenståendeManuelleReguleringer.filter((regulering) => {
+                  const matchFradragsfilter =
+                      fradragsfilterList.size === 0 ||
+                      regulering.fradragsKategori.some((fradrag) => fradragsfilterList.has(fradrag));
+                  const matchStatusfilter = statusfilterList.size === 0 || statusfilterList.has(regulering.status);
+                  const matchÅrsakTilManuellReguleringFilter =
+                      årsakTilManuellReguleringFilterList.size === 0 ||
+                      regulering.årsakTilManuellRegulering.some((årsak) =>
+                          årsakTilManuellReguleringFilterList.has(årsak),
+                      );
+
+                  return matchFradragsfilter && matchStatusfilter && matchÅrsakTilManuellReguleringFilter;
+              });
 
     const sortByFnr = pipe(
         S.Ord,
@@ -194,25 +233,67 @@ const Reguleringsoversikt = () => {
                 <div className={styles.filterKolonne}>
                     <div className={styles.filtreringsStyling}>
                         <Box padding="2">
-                            <Label className={styles.label}>Fradragstyper</Label>
-                            {hentFradragskategorierSortertAlfabetisk().map((value) => (
-                                <Checkbox
-                                    key={value}
-                                    checked={fradragsfilterList.has(value as Fradragskategori)}
-                                    onChange={(e) => {
-                                        const valgtFradrag = value as Fradragskategori;
-                                        const oppdatert = new Set(fradragsfilterList);
-                                        if (e.target.checked) {
-                                            oppdatert.add(valgtFradrag);
-                                        } else {
-                                            oppdatert.delete(valgtFradrag);
-                                        }
-                                        oppdaterFradragsfilter(oppdatert);
-                                    }}
-                                >
-                                    {formatMessage(value as Fradragskategori)}
-                                </Checkbox>
-                            ))}
+                            <div className={styles.filterOverskrift}>
+                                <Label>Fradragstyper</Label>
+                                {hentFradragskategorierSortertAlfabetisk().map((value) => (
+                                    <Checkbox
+                                        key={value}
+                                        checked={fradragsfilterList.has(value as Fradragskategori)}
+                                        onChange={(e) => {
+                                            const valgtFradrag = value as Fradragskategori;
+                                            const oppdatert = new Set(fradragsfilterList);
+                                            if (e.target.checked) {
+                                                oppdatert.add(valgtFradrag);
+                                            } else {
+                                                oppdatert.delete(valgtFradrag);
+                                            }
+                                            oppdaterFradragsfilter(oppdatert);
+                                        }}
+                                    >
+                                        {formatMessage(value as Fradragskategori)}
+                                    </Checkbox>
+                                ))}
+                            </div>
+                            <div className={styles.filterOverskrift}>
+                                <Label>Status</Label>
+                                {Object.values(Reguleringsstatus).map((value) => (
+                                    <Checkbox
+                                        key={value}
+                                        checked={statusfilterList.has(value)}
+                                        onChange={(e) => {
+                                            const oppdatert = new Set(statusfilterList);
+                                            if (e.target.checked) {
+                                                oppdatert.add(value);
+                                            } else {
+                                                oppdatert.delete(value);
+                                            }
+                                            oppdaterStatusfilter(oppdatert);
+                                        }}
+                                    >
+                                        {value}
+                                    </Checkbox>
+                                ))}
+                            </div>
+                            <div className={styles.filterOverskrift}>
+                                <Label>Årsak til manuell regulering</Label>
+                                {Object.values(ÅrsakTilManuellReguleringKategori).map((value) => (
+                                    <Checkbox
+                                        key={value}
+                                        checked={årsakTilManuellReguleringFilterList.has(value)}
+                                        onChange={(e) => {
+                                            const oppdatert = new Set(årsakTilManuellReguleringFilterList);
+                                            if (e.target.checked) {
+                                                oppdatert.add(value);
+                                            } else {
+                                                oppdatert.delete(value);
+                                            }
+                                            oppdaterÅrsakTilManuellReguleringFilter(oppdatert);
+                                        }}
+                                    >
+                                        {formatMessage(value)}
+                                    </Checkbox>
+                                ))}
+                            </div>
                         </Box>
                     </div>
                     <Reguleringstabell data={filtrerteReguleringer} />
