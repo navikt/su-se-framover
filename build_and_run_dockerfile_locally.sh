@@ -14,7 +14,6 @@ docker build -t su-se-framover-lokal .
 # Need to add .env:
 #   NODE_ENV=production
 #   AZURE_APP_WELL_KNOWN_URL=http://mock-oauth2-server:4321/default
-#   REDIS_HOST=redis
 #   HTTP_PROXY=""
 #   AZURE_APP_CLIENT_ID=supstonad
 # TODO jah: Fix:  ERROR (1): Could not discover issuer: http://mock-oauth2-server:4321/default
