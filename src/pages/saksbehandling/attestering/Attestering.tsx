@@ -52,7 +52,7 @@ const Attestering = () => {
                 <NotatPanel
                     sakId={sak.id}
                     referanseId={søknadsbehandling.id}
-                    referanseType={ReferanseType.SØKNAD}
+                    referanseType={ReferanseType.SØKNADSBEHANDLING}
                     underAttestering={erSøknadsbehandlingTilAttestering(søknadsbehandling)}
                     kanRedigere={!erIverksatt(søknadsbehandling) && !søknadsbehandling.erLukket}
                 />
