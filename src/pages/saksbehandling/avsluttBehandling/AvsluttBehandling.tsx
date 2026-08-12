@@ -15,6 +15,12 @@ import AvsluttRevurdering from './avsluttRevurdering/AvsluttRevurdering';
 import AvsluttTilbakekreving from './avsluttTilbakekreving/AvsluttTilbakekreving';
 import LukkSøknadOgAvsluttBehandling from './lukkSøknad/LukkSøknad';
 
+type NotatProps = {
+    referanseId: string;
+    referanseType: ReferanseType;
+    kanRedigere: boolean;
+};
+
 const AvsluttBehandling = () => {
     const props = useOutletContext<SaksoversiktContext>();
     const { formatMessage } = useI18n({ messages });
@@ -47,7 +53,7 @@ const AvsluttBehandling = () => {
         );
     }
 
-    let notatProps = null;
+    let notatProps: NotatProps | null = null;
     if (søknad) {
         notatProps = {
             referanseId: søknad.id,
