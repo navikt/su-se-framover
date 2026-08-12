@@ -17,7 +17,12 @@ const ContextMenu = () => {
     });
 
     const resetContextMenuVariables = () =>
-        setContextMenuVariables({ pos: { x: 0, y: 0 }, toggled: false, onMenuClick: undefined });
+        setContextMenuVariables((current) => {
+            if (!current.toggled) {
+                return current;
+            }
+            return { pos: { x: 0, y: 0 }, toggled: false, onMenuClick: undefined };
+        });
 
     useEffect(() => {
         const eventHandler = () => resetContextMenuVariables();
