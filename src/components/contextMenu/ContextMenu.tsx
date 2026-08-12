@@ -9,19 +9,22 @@ import { ContextMenuVariables } from './ContextMenuUtils';
  *  er avhengig av fra et dypere nivå i komponenttreet. Se for eksempel i Table.DataCell i BehandlingssammendragTabell sin onContextMenu
  *  callback. På denne måten vil man kun ha 1 contextMenu åpen på et tidspunkt
  */
+
+const defaultContextMenuVariables: ContextMenuVariables = {
+    pos: { x: 0, y: 0 },
+    toggled: false,
+    onMenuClick: undefined,
+};
+
 const ContextMenu = () => {
-    const [contextMenuVariables, setContextMenuVariables] = useState<ContextMenuVariables>({
-        pos: { x: 0, y: 0 },
-        toggled: false,
-        onMenuClick: undefined,
-    });
+    const [contextMenuVariables, setContextMenuVariables] = useState<ContextMenuVariables>(defaultContextMenuVariables);
 
     const resetContextMenuVariables = () =>
         setContextMenuVariables((current) => {
             if (!current.toggled) {
                 return current;
             }
-            return { pos: { x: 0, y: 0 }, toggled: false, onMenuClick: undefined };
+            return defaultContextMenuVariables;
         });
 
     useEffect(() => {
