@@ -2,20 +2,23 @@ import { Heading } from '@navikt/ds-react';
 import { useOutletContext } from 'react-router-dom';
 
 import Framdriftsindikator from '~src/components/framdriftsindikator/Framdriftsindikator';
+import NotatPanel from '~src/components/notat/NotatPanel.tsx';
 import { SaksoversiktContext } from '~src/context/SaksoversiktContext';
 import { useI18n } from '~src/lib/i18n';
 import * as Routes from '~src/lib/routes';
 import { FerdigstillOmgjøringKlage } from '~src/pages/klage/sendKlageTilAttestering/FerdigstillOmgjøringKlage';
 import { KlageSteg } from '~src/types/Klage';
+import { ReferanseType } from '~src/types/Notat.ts';
 import {
+    erKlageAvsluttet,
     erKlageDelvisomgjortEgenVedtaksinstans,
     erKlageOmgjort,
+    erKlageTilAttestering,
     erKlageVilkårsvurdertUtfyltEllerSenere,
     getDefaultFramdriftsindikatorLinjer,
     getFramdriftsindikatorLinjer,
     getPartialFramdriftsindikatorLinjeInfo,
 } from '~src/utils/klage/klageUtils';
-
 import AvvistKlage from './avvistKlage/AvvistKlage';
 import styles from './klage.module.less';
 import messages from './klage-nb';
@@ -53,6 +56,13 @@ const Klage = () => {
 
     return (
         <div className={styles.pageContainer}>
+            <NotatPanel
+                sakId={props.sak.id}
+                referanseId={klage.id}
+                referanseType={ReferanseType.KLAGE}
+                underAttestering={erKlageTilAttestering(klage)}
+                kanRedigere={!erKlageAvsluttet(klage)}
+            />
             <Heading level="1" size="large" className={styles.pageTittel}>
                 {formatMessage('page.tittel')}
             </Heading>

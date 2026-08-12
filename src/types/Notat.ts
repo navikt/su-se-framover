@@ -6,6 +6,7 @@ export enum ReferanseType {
     SØKNADSBEHANDLING = 'SØKNADSBEHANDLING',
     SØKNAD = 'SØKNAD', //Innsendt søknad uten behandling
     REVURDERING = 'REVURDERING',
+    KLAGE = 'KLAGE',
 }
 
 export enum NotatHandling {
