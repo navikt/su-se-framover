@@ -1,6 +1,7 @@
 import express from 'express';
 
 import * as Config from './config.js';
+import { logger } from './logger.js';
 
 async function setup() {
     const router = express.Router();
@@ -39,9 +40,30 @@ async function setup() {
         });
         await createServer.listen();
     } else {
-        router.use(express.static(Config.server.frontendDir));
+        router.use(
+            express.static(Config.server.frontendDir, {
+                setHeaders: (res, filePath) => {
+                    if (filePath.endsWith('index.html')) {
+                        res.setHeader('Cache-Control', 'no-store');
+                    }
+                },
+            }),
+        );
+
+        router.get('/assets/{*splat}', (req, res) => {
+            logger.error(
+                {
+                    url: req.originalUrl,
+                    referer: req.headers.referer,
+                    fetchDest: req.headers['sec-fetch-dest'],
+                },
+                'Etterspurt asset finnes ikke. Klienten har sannsynligvis cachet en gammel index.html som refererer til assets fra et tidligere bygg.',
+            );
+            res.sendStatus(404);
+        });
 
         router.get('/{*splat}', (_req, res) => {
+            res.setHeader('Cache-Control', 'no-store');
             res.sendFile(Config.server.frontendDir + '/index.html');
         });
     }
