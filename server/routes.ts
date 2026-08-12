@@ -3,6 +3,17 @@ import express from 'express';
 import * as Config from './config.js';
 import { logger } from './logger.js';
 
+interface UmamiConfig {
+    scriptUrl: string;
+    websiteId: string;
+}
+
+interface FrontendConfig {
+    environment: string;
+    cachebuster: string;
+    umami?: UmamiConfig;
+}
+
 async function setup() {
     const router = express.Router();
 
@@ -16,11 +27,14 @@ async function setup() {
                   }
                 : undefined;
 
-        res.set('Cache-Control', 'no-store');
-        res.json({
+        const response: FrontendConfig = {
             environment: Config.frontend.environment,
+            cachebuster: Config.frontend.cachebuster,
             umami: umamiConfig,
-        });
+        };
+
+        res.set('Cache-Control', 'no-store');
+        res.json(response);
     });
 
     router.get('/isAlive', (_req, res) => {

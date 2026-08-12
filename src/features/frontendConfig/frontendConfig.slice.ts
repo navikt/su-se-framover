@@ -9,6 +9,7 @@ interface State {
 const initialState: State = {
     config: {
         environment: 'unknown',
+        cachebuster: '1',
     },
 };
 

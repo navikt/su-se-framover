@@ -57,6 +57,7 @@ export const frontend = {
         scriptUrl: optionalEnvVar('UMAMI_SCRIPT_URL'),
         websiteId: optionalEnvVar('UMAMI_WEBSITE_ID'),
     },
+    cachebuster: envVar({ name: 'NAIS_APP_IMAGE', defaultValue: '1' }),
 };
 
 // Auth-config. Verdiene injiseres av NAIS (azure.application) i dev/prod. Lokalt har de
