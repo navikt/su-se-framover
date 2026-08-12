@@ -1,5 +1,5 @@
 import { Alert, Button, Modal } from '@navikt/ds-react';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 import { fetchFrontendConfig } from '~src/api/frontendConfigApi';
 import { useAppSelector } from '~src/redux/Store';
@@ -10,6 +10,7 @@ const TO_MINUTTER_MS = 120_000;
 const VersionCheck = () => {
     const cachebuster = useAppSelector((state) => state.frontendConfig.config.cachebuster);
     const [isOutdated, setIsOutdated] = useState(false);
+    const reloadTimeoutRef = useRef<number | null>(null);
 
     useEffect(() => {
         let detected = false;
@@ -21,7 +22,7 @@ const VersionCheck = () => {
                     if (!detected && config.cachebuster !== cachebuster) {
                         detected = true;
                         setIsOutdated(true);
-                        window.setTimeout(() => window.location.reload(), TO_MINUTTER_MS);
+                        reloadTimeoutRef.current = window.setTimeout(() => window.location.reload(), TO_MINUTTER_MS);
                     }
                 })
                 .catch(() => {
@@ -32,6 +33,14 @@ const VersionCheck = () => {
         return () => window.clearInterval(intervalId);
     }, [cachebuster]);
 
+    const onAvbryt = () => {
+        setIsOutdated(false);
+        if (reloadTimeoutRef.current !== null) {
+            window.clearTimeout(reloadTimeoutRef.current);
+            reloadTimeoutRef.current = null;
+        }
+    };
+
     return (
         <Modal
             header={{
@@ -40,7 +49,7 @@ const VersionCheck = () => {
                 closeButton: false,
             }}
             open={isOutdated}
-            onClose={() => setIsOutdated(false)}
+            onClose={onAvbryt}
         >
             <Modal.Body>
                 <Alert variant="warning">
@@ -50,7 +59,7 @@ const VersionCheck = () => {
                 </Alert>
             </Modal.Body>
             <Modal.Footer>
-                <Button variant="secondary" onClick={() => setIsOutdated(false)}>
+                <Button variant="secondary" onClick={onAvbryt}>
                     Avbryt oppdatering
                 </Button>
                 <Button variant="primary" onClick={() => window.location.reload()}>
