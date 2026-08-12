@@ -74,7 +74,7 @@ const Vilkår = () => {
                 <NotatPanel
                     sakId={sakId}
                     referanseId={behandling.id}
-                    referanseType={ReferanseType.SØKNAD}
+                    referanseType={ReferanseType.SØKNADSBEHANDLING}
                     underAttestering={erSøknadsbehandlingTilAttestering(behandling)}
                     kanRedigere={!erIverksatt(behandling) && !behandling.erLukket}
                 />
