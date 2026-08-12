@@ -34,7 +34,7 @@ const ContextMenu = () => {
             document.removeEventListener('click', eventHandler);
             document.removeEventListener('scroll', eventHandler);
         };
-    });
+    }, []);
 
     const Menu = (props: { children: React.ReactNode }) => (
         <menu
