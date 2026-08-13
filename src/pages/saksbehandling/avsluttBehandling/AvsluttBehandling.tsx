@@ -4,6 +4,7 @@ import { useOutletContext } from 'react-router-dom';
 import { SaksoversiktContext } from '~src/context/SaksoversiktContext';
 import { useI18n } from '~src/lib/i18n';
 import * as Routes from '~src/lib/routes';
+import AvsluttRegulering from '~src/pages/saksbehandling/avsluttBehandling/avsluttRegulering/AvsluttRegulering.tsx';
 import styles from './avsluttBehandling.module.less';
 import messages from './avsluttBehandling-nb';
 import AvsluttKlage from './avsluttKlage/AvsluttKlage';
@@ -21,8 +22,9 @@ const AvsluttBehandling = () => {
     const revurdering = props.sak.revurderinger.find((r) => r.id === urlParams.id);
     const klage = props.sak.klager.find((k) => k.id === urlParams.id);
     const tilbakekreving = props.sak.tilbakekrevinger.find((t) => t.id === urlParams.id);
+    const regulering = props.sak.reguleringer.find((r) => r.id === urlParams.id);
 
-    if (!søknad && !søknadsbehandling && !revurdering && !klage && !tilbakekreving) {
+    if (!søknad && !søknadsbehandling && !revurdering && !klage && !tilbakekreving && !regulering) {
         return (
             <div>
                 <Alert variant="error">
@@ -51,6 +53,7 @@ const AvsluttBehandling = () => {
                     {tilbakekreving && (
                         <AvsluttTilbakekreving saksversjon={props.sak.versjon} behandling={tilbakekreving} />
                     )}
+                    {regulering && <AvsluttRegulering sakId={props.sak.id} regulering={regulering} />}
                 </div>
             </Panel>
         </div>
