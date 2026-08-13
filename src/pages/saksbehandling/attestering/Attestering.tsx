@@ -5,6 +5,7 @@ import { SaksoversiktContext } from '~src/context/SaksoversiktContext';
 import { useI18n } from '~src/lib/i18n';
 import * as Routes from '~src/lib/routes';
 import { ReferanseType } from '~src/types/Notat.ts';
+import { erKlageAvsluttet, erKlageTilAttestering } from '~src/utils/klage/klageUtils.ts';
 import { erInformasjonsRevurdering } from '~src/utils/revurdering/revurderingUtils';
 import {
     erRevurderingAvsluttet,
@@ -64,6 +65,15 @@ const Attestering = () => {
                     referanseType={ReferanseType.REVURDERING}
                     underAttestering={erRevurderingTilAttestering(revurdering)}
                     kanRedigere={!erRevurderingIverksatt(revurdering) && !erRevurderingAvsluttet(revurdering)}
+                />
+            )}
+            {klage && (
+                <NotatPanel
+                    sakId={sak.id}
+                    referanseId={klage.id}
+                    referanseType={ReferanseType.KLAGE}
+                    underAttestering={erKlageTilAttestering(klage)}
+                    kanRedigere={!erKlageAvsluttet(klage)}
                 />
             )}
             <div className={styles.headingContainer}>

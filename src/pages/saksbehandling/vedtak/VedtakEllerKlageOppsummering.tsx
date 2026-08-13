@@ -1,11 +1,12 @@
 import { Alert, Button } from '@navikt/ds-react';
 import { useNavigate, useOutletContext } from 'react-router-dom';
-
+import NotatPanel from '~src/components/notat/NotatPanel.tsx';
 import OppsummeringAvKlage from '~src/components/oppsummering/oppsummeringAvKlage/OppsummeringAvKlage';
 import OppsummeringAvVedtak from '~src/components/oppsummering/oppsummeringAvVedtak/OppsummeringAvVedtak';
 import { SaksoversiktContext } from '~src/context/SaksoversiktContext';
 import { useI18n } from '~src/lib/i18n';
 import * as Routes from '~src/lib/routes';
+import { ReferanseType } from '~src/types/Notat.ts';
 import { klageErOversendtEllerFerdigstilt } from '~src/utils/klage/klageUtils';
 import styles from './VedtakEllerOversendtKlageOppsummering.module.less';
 import messages from './VedtakEllerOversendtKlageOppsummering-nb';
@@ -27,9 +28,17 @@ const VedtakEllerKlageOppsummering = (props: {
     const klage = sak.klager.find((k) => k.id === behandlingId);
 
     if (klage && klageErOversendtEllerFerdigstilt(klage)) {
+        //har da ikke vedtak enda
         const klagensVedtak = sak.vedtak.find((v) => v.id === klage.vedtakId)!;
         return (
             <div className={styles.pageContainer}>
+                <NotatPanel
+                    sakId={sak.id}
+                    referanseId={klage.id}
+                    referanseType={ReferanseType.KLAGE}
+                    underAttestering={false}
+                    kanRedigere={false}
+                />
                 <OppsummeringAvKlage klage={klage} klagensVedtak={klagensVedtak} />
                 {!props.ikkeVisTilbakeKnapp && (
                     <Button
