@@ -286,6 +286,9 @@ const SøknadOgSøknadsbehandlingKnapper = (props: {
                             Routes.avsluttBehandling.createURL({
                                 sakId: props.sakId,
                                 id: props.b?.søknadsbehandling?.id ?? props.b.søknad.id,
+                                type: props.b?.søknadsbehandling
+                                    ? Routes.AvsluttBehandlingType.SØKNADSBEHANDLING
+                                    : Routes.AvsluttBehandlingType.SØKNAD,
                             }),
                             { state: { erInnvilget } },
                         );
@@ -369,6 +372,7 @@ const KlageKnapper = (props: { sakId: string; k: Klage }) => {
                 href={Routes.avsluttBehandling.createURL({
                     sakId: props.sakId,
                     id: props.k.id,
+                    type: Routes.AvsluttBehandlingType.KLAGE,
                 })}
             >
                 {formatMessage('datacell.info.knapp.avsluttBehandling')}
@@ -454,6 +458,7 @@ const RevurderingKnapper = (props: { sakId: string; r: Revurdering }) => {
                 href={Routes.avsluttBehandling.createURL({
                     sakId: props.sakId,
                     id: props.r.id,
+                    type: Routes.AvsluttBehandlingType.REVURDERING,
                 })}
             >
                 {formatMessage('datacell.info.knapp.avsluttBehandling')}
@@ -572,6 +577,7 @@ const TilbakekrevingsKnapper = (props: { sakId: string; t: ManuellTilbakekreving
                 href={Routes.avsluttBehandling.createURL({
                     sakId: props.sakId,
                     id: props.t.id,
+                    type: Routes.AvsluttBehandlingType.TILBAKEKREVING,
                 })}
             >
                 {formatMessage('datacell.info.knapp.avsluttBehandling')}

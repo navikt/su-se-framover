@@ -118,13 +118,22 @@ export const vedtakEllerKlageOppsummering: Route<{ sakId: string; vedtakEllerKla
 };
 
 //---------------Søknadsbehandling & revurdering------
+export enum AvsluttBehandlingType {
+    SØKNAD = 'soknad',
+    SØKNADSBEHANDLING = 'soknadsbehandling',
+    REVURDERING = 'revurdering',
+    KLAGE = 'klage',
+    TILBAKEKREVING = 'tilbakekreving',
+}
+
 export const avsluttBehandling: Route<{
     sakId: string;
     id: string;
+    type: AvsluttBehandlingType;
 }> = {
-    path: ':id/avsluttBehandling/',
-    absPath: '/saksoversikt/:sakId/:id/avsluttBehandling/',
-    createURL: (args) => `/saksoversikt/${args.sakId}/${args.id}/avsluttBehandling`,
+    path: ':id/avsluttBehandling/:type',
+    absPath: '/saksoversikt/:sakId/:id/avsluttBehandling/:type',
+    createURL: (args) => `/saksoversikt/${args.sakId}/${args.id}/avsluttBehandling/${args.type}`,
 };
 
 export const saksoversiktValgtBehandling: Route<{

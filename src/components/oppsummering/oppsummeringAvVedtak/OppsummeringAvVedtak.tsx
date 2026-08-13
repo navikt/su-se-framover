@@ -82,16 +82,28 @@ const OppsummeringAvVedtak = (props: { vedtakId?: string; vedtak?: Vedtak }) => 
 
     const vedtaketsBehandling = getVedtaketsbehandling(vedtak, sak);
     const behandlingstype = typeBehandling(vedtaketsBehandling);
+    const getReferanseType = () => {
+        switch (behandlingstype) {
+            case 'søknadsbehandling':
+                return ReferanseType.SØKNADSBEHANDLING;
+            case 'revurdering':
+                return ReferanseType.REVURDERING;
+            case 'klage':
+                return ReferanseType.KLAGE;
+            default:
+                throw new Error(`Ukjent behandlingstype ${behandlingstype}`);
+        }
+    };
 
     return (
         <div className={styles.vedtaksContainer}>
-            {(behandlingstype === 'søknadsbehandling' || behandlingstype === 'revurdering') && (
+            {(behandlingstype === 'søknadsbehandling' ||
+                behandlingstype === 'revurdering' ||
+                behandlingstype === 'klage') && (
                 <NotatPanel
                     sakId={sak.id}
                     referanseId={vedtaketsBehandling.id}
-                    referanseType={
-                        behandlingstype === 'søknadsbehandling' ? ReferanseType.SØKNAD : ReferanseType.REVURDERING
-                    }
+                    referanseType={getReferanseType()}
                     underAttestering={false}
                     kanRedigere={false}
                 />

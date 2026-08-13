@@ -68,10 +68,6 @@ updates:
             - "pino"
             - "pino-http"
             - "@types/pino-http"
-        redis:
-          patterns:
-            - "redis"
-            - "@types/redis"
         typescript-and-node:
           patterns:
             - "typescript"
@@ -95,7 +91,6 @@ updates:
             - "compression"
             - "cors"
             - "https-proxy-agent"
-            - "connect-redis"
             - "@types/compression"
             - "@types/cors"
 
