@@ -3,7 +3,7 @@ import { useEffect } from 'react';
 import { fetchFrontendConfig } from '~src/api/frontendConfigApi';
 import { useAppDispatch } from '~src/redux/Store';
 
-import frontendConfigSlice from './frontendConfig.slice';
+import frontendConfigSlice, { CACHEBUSTER_FETCH_FAILED } from './frontendConfig.slice';
 
 const useFrontendConfig = () => {
     const dispatch = useAppDispatch();
@@ -13,7 +13,12 @@ const useFrontendConfig = () => {
             .then((config) => dispatch(frontendConfigSlice.actions.setFrontendConfig(config)))
             .catch((error) => {
                 console.error('Klarte ikke å hente /frontend-config, faller tilbake til environment "unknown".', error);
-                dispatch(frontendConfigSlice.actions.setFrontendConfig({ cachebuster: '1', environment: 'unknown' }));
+                dispatch(
+                    frontendConfigSlice.actions.setFrontendConfig({
+                        cachebuster: CACHEBUSTER_FETCH_FAILED,
+                        environment: 'unknown',
+                    }),
+                );
             });
     }, []);
 };

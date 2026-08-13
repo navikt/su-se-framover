@@ -4,6 +4,8 @@ import { useEffect, useRef, useState } from 'react';
 import { fetchFrontendConfig } from '~src/api/frontendConfigApi';
 import { useAppSelector } from '~src/redux/Store';
 
+import { CACHEBUSTER_FETCH_FAILED } from './frontendConfig.slice';
+
 const FEM_MINUTTER_MS = 300_000;
 const TO_MINUTTER_MS = 120_000;
 
@@ -17,7 +19,7 @@ const VersionCheck = () => {
             if (reloadTimeoutRef.current !== null) return;
             fetchFrontendConfig()
                 .then((config) => {
-                    if (reloadTimeoutRef.current === null && config.cachebuster !== cachebuster) {
+                    if (cachebuster !== CACHEBUSTER_FETCH_FAILED && config.cachebuster !== cachebuster) {
                         setIsOutdated(true);
                         reloadTimeoutRef.current = window.setTimeout(() => window.location.reload(), TO_MINUTTER_MS);
                     }
