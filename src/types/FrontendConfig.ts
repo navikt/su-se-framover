@@ -5,5 +5,6 @@ export interface UmamiConfig {
 
 export interface FrontendConfig {
     environment: string;
+    cachebuster: string;
     umami?: UmamiConfig;
 }

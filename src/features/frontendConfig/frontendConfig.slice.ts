@@ -2,6 +2,8 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 import type { FrontendConfig } from '~src/types/FrontendConfig';
 
+export const CACHEBUSTER_FETCH_FAILED = 'CACHEBUSTER_FETCH_FAILED';
+
 interface State {
     config: FrontendConfig;
 }
@@ -9,6 +11,7 @@ interface State {
 const initialState: State = {
     config: {
         environment: 'unknown',
+        cachebuster: CACHEBUSTER_FETCH_FAILED,
     },
 };
 
