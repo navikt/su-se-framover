@@ -13,14 +13,11 @@ const VersionCheck = () => {
     const reloadTimeoutRef = useRef<number | null>(null);
 
     useEffect(() => {
-        let detected = false;
-
         const intervalId = window.setInterval(() => {
-            if (detected) return;
+            if (reloadTimeoutRef.current !== null) return;
             fetchFrontendConfig()
                 .then((config) => {
-                    if (!detected && config.cachebuster !== cachebuster) {
-                        detected = true;
+                    if (reloadTimeoutRef.current === null && config.cachebuster !== cachebuster) {
                         setIsOutdated(true);
                         reloadTimeoutRef.current = window.setTimeout(() => window.location.reload(), TO_MINUTTER_MS);
                     }
