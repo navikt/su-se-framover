@@ -40,6 +40,9 @@ const VedtakEllerOversendtKlageOppsummering = lazy(
     () => import('./pages/saksbehandling/vedtak/./VedtakEllerKlageOppsummering'),
 );
 const AvsluttBehandling = lazy(() => import('./pages/saksbehandling/avsluttBehandling/AvsluttBehandling'));
+const AvsluttetBehandlingOppsummering = lazy(
+    () => import('./pages/saksbehandling/avsluttetBehandlingOppsummering/AvsluttetBehandlingOppsummering'),
+);
 const Revurdering = lazy(() => import('./pages/saksbehandling/revurdering/Revurdering'));
 const Sakintro = lazy(() => import('./pages/saksbehandling/sakintro/Sakintro'));
 const DokumenterPage = lazy(() => import('./pages/saksbehandling/dokumenter/DokumenterPage'));
@@ -132,6 +135,10 @@ const AppRoutes = () => {
 
                     <Route path={routes.attestering.path} element={<Attestering />} />
                     <Route path={routes.avsluttBehandling.path} element={<AvsluttBehandling />} />
+                    <Route
+                        path={routes.avsluttetBehandlingOppsummering.path}
+                        element={<AvsluttetBehandlingOppsummering />}
+                    />
                     <Route path={routes.revurderValgtSak.path} element={<RevurderingIntroPage />} />
                     <Route path={routes.revurderingSeksjonSteg.path} element={<Revurdering />} />
                     <Route
