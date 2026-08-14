@@ -22,6 +22,7 @@ import Nøkkeltall from '~src/pages/saksbehandling/behandlingsoversikt/nøkkelta
 import { toIsoDateOnlyString } from '~src/utils/date/dateUtils';
 import DokumentDistribusjon from './components/dokument/DokumentDistribusjon';
 import Fradragssjekk from './components/fradragssjekk/Fradragssjekk';
+import SupstønadHistorisk from './components/historisk/SupstønadHistorisk';
 import Personhendelser from './components/personhendelser/Personhendelser';
 import ResendStatistikk from './components/ResendStatistikk.tsx';
 import Gregulering from './components/regulering/G-regulering';
@@ -224,6 +225,7 @@ const Drift = () => {
                     <Fradragssjekk />
                     <Personhendelser />
                     <Stønadsmottakere />
+                    <SupstønadHistorisk />
                     <DokumentDistribusjon />
 
                     <Button

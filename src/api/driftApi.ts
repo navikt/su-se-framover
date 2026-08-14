@@ -232,6 +232,19 @@ export async function dryRunPersonhendelser(args: {
     });
 }
 
+export async function tellRaderSupstønadHistorisk(args: {
+    tabellnavn: string;
+}): Promise<ApiClientResult<{ antallRader: number }>> {
+    return apiClient({
+        url: `/drift/supstonadhistorisk/tellrader`,
+        method: 'POST',
+        request: { headers: new Headers({ Accept: 'application/json' }) },
+        body: {
+            tabellnavn: args.tabellnavn,
+        },
+    });
+}
+
 export async function kjørFradragssjekk(args: { maaned: string; dryRun: boolean }): Promise<ApiClientResult<void>> {
     return apiClient({
         url: `/drift/fradragssjekk/kjor`,
