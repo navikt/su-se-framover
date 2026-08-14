@@ -1,0 +1,20 @@
+@import '@styles/variables.less';
+
+.pageContainer {
+    margin-left: 7.5vw;
+
+    > :first-child {
+        margin-top: @spacing;
+    }
+}
+
+.infoPanel {
+    margin-top: @spacing;
+    max-width: @container-sm;
+}
+
+.tilbakeKnapp {
+    //override av .navds-button
+    margin-top: @spacing !important;
+    width: @knappBredde;
+}
