@@ -16,6 +16,8 @@ import SuTabell, { AriaSortVerdi } from '~src/components/tabell/SuTabell';
 import {
     getDataCellInfo,
     isKlage,
+    isManuellTilbakekrevingsbehandling,
+    isRevurdering,
     isSøknadMedEllerUtenBehandling,
     TabellBehandling,
     TabellBehandlinger,
@@ -29,6 +31,7 @@ import { KlageStatus } from '~src/types/Klage';
 import { formatDateTime } from '~src/utils/date/dateUtils';
 import { openDokumentInNewTab } from '~src/utils/dokumentUtils';
 import { erKlageOmgjortFerdigstilt } from '~src/utils/klage/klageUtils';
+import { erRevurderingAvsluttet } from '~src/utils/revurdering/revurderingUtils';
 import {
     erDokumentGenerertEllerSenere,
     erDokumentIkkeGenerertEnda,
@@ -144,7 +147,15 @@ const AvsluttedeBehandlingerTabell = (props: { tabellBehandlinger: TabellBehandl
                                         {isKlage(behandling) && (
                                             <>
                                                 {behandling.status === KlageStatus.AVSLUTTET && (
-                                                    <BodyShort>{behandling.avsluttetBegrunnelse}</BodyShort>
+                                                    <Link
+                                                        to={Routes.avsluttetBehandlingOppsummering.createURL({
+                                                            sakId: behandling.sakid,
+                                                            id: behandling.id,
+                                                            type: Routes.AvsluttBehandlingType.KLAGE,
+                                                        })}
+                                                    >
+                                                        {formatMessage('dataCell.seOppsummering')}
+                                                    </Link>
                                                 )}
                                                 {erKlageOmgjortFerdigstilt(behandling) && (
                                                     <>
@@ -163,6 +174,45 @@ const AvsluttedeBehandlingerTabell = (props: { tabellBehandlinger: TabellBehandl
                                                 )}
                                             </>
                                         )}
+
+                                        {isSøknadMedEllerUtenBehandling(behandling) && (
+                                            <Link
+                                                to={Routes.avsluttetBehandlingOppsummering.createURL({
+                                                    sakId: behandling.søknad.sakId,
+                                                    id: behandling.søknadsbehandling?.id ?? behandling.søknad.id,
+                                                    type: behandling.søknadsbehandling
+                                                        ? Routes.AvsluttBehandlingType.SØKNADSBEHANDLING
+                                                        : Routes.AvsluttBehandlingType.SØKNAD,
+                                                })}
+                                            >
+                                                {formatMessage('dataCell.seOppsummering')}
+                                            </Link>
+                                        )}
+
+                                        {isRevurdering(behandling) && erRevurderingAvsluttet(behandling) && (
+                                            <Link
+                                                to={Routes.avsluttetBehandlingOppsummering.createURL({
+                                                    sakId: behandling.sakId,
+                                                    id: behandling.id,
+                                                    type: Routes.AvsluttBehandlingType.REVURDERING,
+                                                })}
+                                            >
+                                                {formatMessage('dataCell.seOppsummering')}
+                                            </Link>
+                                        )}
+
+                                        {isManuellTilbakekrevingsbehandling(behandling) &&
+                                            behandling.avsluttetTidspunkt && (
+                                                <Link
+                                                    to={Routes.avsluttetBehandlingOppsummering.createURL({
+                                                        sakId: behandling.sakId,
+                                                        id: behandling.id,
+                                                        type: Routes.AvsluttBehandlingType.TILBAKEKREVING,
+                                                    })}
+                                                >
+                                                    {formatMessage('dataCell.seOppsummering')}
+                                                </Link>
+                                            )}
 
                                         {isSøknadMedEllerUtenBehandling(behandling) &&
                                             skalDokumentIkkeGenereres(behandling.søknad) && (

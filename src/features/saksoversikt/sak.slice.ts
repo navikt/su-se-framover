@@ -208,7 +208,7 @@ export default createSlice({
                     ),
                     behandlinger: sak.behandlinger.map((b) =>
                         b.id === action.payload.lukketSøknadsbehandling?.id
-                            ? action.payload.lukketSøknadsbehandling
+                            ? { ...action.payload.lukketSøknadsbehandling, søknad: action.payload.lukketSøknad }
                             : b,
                     ),
                 })),
