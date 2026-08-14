@@ -350,27 +350,24 @@ export function MottakerForm({
                             />
 
                             <HStack gap="4" className={styles.row}>
-                                <VStack gap="2">
-                                    <TextField
-                                        label="Fødselsnummer"
-                                        {...register('foedselsnummer', {
-                                            validate: (value) => {
-                                                const trimmed = value?.trim();
-                                                if (!trimmed) return true;
-                                                return /^\d{11}$/.test(trimmed) || 'Fødselsnummer må være 11 siffer.';
-                                            },
-                                            onChange: () => setFnrForOppslag(null),
-                                        })}
-                                        onBlur={(e) => {
-                                            const val = e.target.value.trim();
-                                            setFnrForOppslag(val.length === 11 ? val : null);
-                                        }}
-                                        inputMode="numeric"
-                                        autoComplete="off"
-                                        error={formState.errors.foedselsnummer?.message}
-                                    />
-                                    {fnrForOppslag && <AdresseOppslag sakId={sakId} fnr={fnrForOppslag} />}
-                                </VStack>
+                                <TextField
+                                    label="Fødselsnummer"
+                                    {...register('foedselsnummer', {
+                                        validate: (value) => {
+                                            const trimmed = value?.trim();
+                                            if (!trimmed) return true;
+                                            return /^\d{11}$/.test(trimmed) || 'Fødselsnummer må være 11 siffer.';
+                                        },
+                                        onChange: () => setFnrForOppslag(null),
+                                    })}
+                                    onBlur={(e) => {
+                                        const val = e.target.value.trim();
+                                        setFnrForOppslag(val.length === 11 ? val : null);
+                                    }}
+                                    inputMode="numeric"
+                                    autoComplete="off"
+                                    error={formState.errors.foedselsnummer?.message}
+                                />
                                 <TextField
                                     label="Organisasjonsnummer"
                                     {...register('orgnummer', {
@@ -385,6 +382,7 @@ export function MottakerForm({
                                     error={formState.errors.orgnummer?.message}
                                 />
                             </HStack>
+                            {fnrForOppslag && <AdresseOppslag sakId={sakId} fnr={fnrForOppslag} />}
 
                             <TextField
                                 label="Adresselinje 1"
