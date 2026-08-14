@@ -12,7 +12,6 @@ const TextareaWithAutosave = (props: {
         value: string;
         description?: string[];
         onChange: (value: string) => void;
-        readonly: boolean;
         minRows: number;
     };
     save: {
@@ -28,7 +27,6 @@ const TextareaWithAutosave = (props: {
         <div className={styles.fritekstOgVisBrevContainer}>
             <Textarea
                 className={styles.textarea}
-                readOnly={props.textarea.readonly}
                 onPaste={(e) => {
                     e.preventDefault();
                     props.textarea.onChange(fjernOverflødigLinjeskift(e, props.textarea.value));

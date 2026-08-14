@@ -61,7 +61,7 @@ export const useNotatEditor = (props: Props) => {
     };
 
     const handleLagreNotat = () => {
-        if (!props.notat || !åpenTekstModal) {
+        if (!props.notat || !åpenTekstModal || !kanRedigereAktivtModalfelt || notatTekst.trim() === '') {
             return;
         }
 
