@@ -124,6 +124,7 @@ export enum AvsluttBehandlingType {
     REVURDERING = 'revurdering',
     KLAGE = 'klage',
     TILBAKEKREVING = 'tilbakekreving',
+    REGULERING = 'regulering',
 }
 
 export const avsluttBehandling: Route<{

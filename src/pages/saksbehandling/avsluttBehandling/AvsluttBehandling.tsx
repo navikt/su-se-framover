@@ -4,6 +4,7 @@ import NotatPanel from '~src/components/notat/NotatPanel.tsx';
 import { SaksoversiktContext } from '~src/context/SaksoversiktContext';
 import { useI18n } from '~src/lib/i18n';
 import * as Routes from '~src/lib/routes';
+import AvsluttRegulering from '~src/pages/saksbehandling/avsluttBehandling/avsluttRegulering/AvsluttRegulering.tsx';
 import { ReferanseType } from '~src/types/Notat.ts';
 import { erRevurderingAvsluttet, erRevurderingIverksatt } from '~src/utils/revurdering/revurderingUtils';
 import { erIverksatt } from '~src/utils/SøknadsbehandlingUtils';
@@ -41,8 +42,10 @@ const AvsluttBehandling = () => {
         type === Routes.AvsluttBehandlingType.TILBAKEKREVING
             ? props.sak.tilbakekrevinger.find((t) => t.id === id)
             : undefined;
+    const regulering =
+        type === Routes.AvsluttBehandlingType.REGULERING ? props.sak.reguleringer.find((r) => r.id === id) : undefined;
 
-    const funnet = søknad ?? søknadsbehandling ?? revurdering ?? klage ?? tilbakekreving;
+    const funnet = søknad ?? søknadsbehandling ?? revurdering ?? klage ?? tilbakekreving ?? regulering;
     if (!funnet) {
         return (
             <div>
@@ -102,6 +105,7 @@ const AvsluttBehandling = () => {
                     {tilbakekreving && (
                         <AvsluttTilbakekreving saksversjon={props.sak.versjon} behandling={tilbakekreving} />
                     )}
+                    {regulering && <AvsluttRegulering sakId={props.sak.id} regulering={regulering} />}
                 </div>
             </Panel>
         </div>
