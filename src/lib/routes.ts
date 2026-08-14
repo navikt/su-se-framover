@@ -137,6 +137,16 @@ export const avsluttBehandling: Route<{
     createURL: (args) => `/saksoversikt/${args.sakId}/${args.id}/avsluttBehandling/${args.type}`,
 };
 
+export const avsluttetBehandlingOppsummering: Route<{
+    sakId: string;
+    id: string;
+    type: AvsluttBehandlingType;
+}> = {
+    path: ':id/avsluttetBehandlingOppsummering/:type',
+    absPath: '/saksoversikt/:sakId/:id/avsluttetBehandlingOppsummering/:type',
+    createURL: (args) => `/saksoversikt/${args.sakId}/${args.id}/avsluttetBehandlingOppsummering/${args.type}`,
+};
+
 export const saksoversiktValgtBehandling: Route<{
     sakId: string;
     behandlingId: string;
