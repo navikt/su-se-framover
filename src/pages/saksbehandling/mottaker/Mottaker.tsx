@@ -13,6 +13,7 @@ import {
     ReferanseType,
     slettMottaker,
 } from '~src/api/mottakerClient.ts';
+import { AdresseOppslag } from '~src/components/mottaker/AdresseOppslag.tsx';
 import { toMottakerAlert } from '~src/components/mottaker/mottakerUtils';
 import styles from './Mottaker.module.less';
 
@@ -116,6 +117,7 @@ export function MottakerForm({
     const [mottakerId, setMottakerId] = useState<string | null>(null);
     const [saveState, setSaveState] = useState<ActionState>('idle');
     const [deleteState, setDeleteState] = useState<ActionState>('idle');
+    const [fnrForOppslag, setFnrForOppslag] = useState<string | null>(null);
     const skipClearOnChangeRef = useRef(false);
 
     const resetTilTomtSkjema = (feedbackNeste: Feedback) => {
@@ -356,7 +358,12 @@ export function MottakerForm({
                                             if (!trimmed) return true;
                                             return /^\d{11}$/.test(trimmed) || 'Fødselsnummer må være 11 siffer.';
                                         },
+                                        onChange: () => setFnrForOppslag(null),
                                     })}
+                                    onBlur={(e) => {
+                                        const val = e.target.value.trim();
+                                        setFnrForOppslag(val.length === 11 ? val : null);
+                                    }}
                                     inputMode="numeric"
                                     autoComplete="off"
                                     error={formState.errors.foedselsnummer?.message}
@@ -375,6 +382,7 @@ export function MottakerForm({
                                     error={formState.errors.orgnummer?.message}
                                 />
                             </HStack>
+                            {fnrForOppslag && <AdresseOppslag sakId={sakId} fnr={fnrForOppslag} />}
 
                             <TextField
                                 label="Adresselinje 1"
