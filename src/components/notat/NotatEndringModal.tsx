@@ -1,5 +1,5 @@
 import { MinusIcon, PlusIcon, XMarkIcon } from '@navikt/aksel-icons';
-import { Alert, BodyShort, Button, Heading, HStack, VStack } from '@navikt/ds-react';
+import { Alert, BodyShort, Button, Heading, HStack, Textarea, VStack } from '@navikt/ds-react';
 import { useCallback, useEffect, useRef, useState } from 'react';
 
 import { ApiError } from '~src/api/apiClient';
@@ -146,19 +146,30 @@ const NotatEndringModal = (props: Props) => {
             <div className={minimert ? `${styles.body} ${styles.bodySkjult}` : styles.body}>
                 <VStack gap="4">
                     {props.actionError && <ApiErrorAlert error={props.actionError} size="small" />}
-                    <TextareaWithAutosave
-                        textarea={{
-                            label: viserAttestantnotat ? 'Attestantnotat' : 'Saksbehandlernotat',
-                            value: props.notatTekst,
-                            onChange: (value) => props.onNotatTekstChange(value),
-                            readonly: !props.kanRedigere,
-                            minRows: 8,
-                        }}
-                        save={{
-                            handleSave: () => props.onSave(),
-                            status: props.status,
-                        }}
-                    />
+                    {props.kanRedigere ? (
+                        <TextareaWithAutosave
+                            key={props.editorType}
+                            textarea={{
+                                label: viserAttestantnotat ? 'Attestantnotat' : 'Saksbehandlernotat',
+                                value: props.notatTekst,
+                                onChange: (value) => props.onNotatTekstChange(value),
+                                minRows: 8,
+                            }}
+                            save={{
+                                handleSave: () => props.onSave(),
+                                status: props.status,
+                            }}
+                        />
+                    ) : (
+                        <Textarea
+                            key={props.editorType}
+                            label={viserAttestantnotat ? 'Attestantnotat' : 'Saksbehandlernotat'}
+                            value={props.notatTekst}
+                            readOnly
+                            minRows={8}
+                            onChange={() => void 0}
+                        />
+                    )}
                     <HStack gap="3">
                         {props.kanRedigere ? (
                             <>
