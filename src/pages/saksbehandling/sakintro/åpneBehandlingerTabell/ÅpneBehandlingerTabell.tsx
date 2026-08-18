@@ -7,7 +7,6 @@ import { useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import * as behandlingsApi from '~src/api/behandlingApi';
-import * as reguleringApi from '~src/api/reguleringApi';
 import * as revurderingApi from '~src/api/revurderingApi';
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
 import LinkAsButton from '~src/components/linkAsButton/LinkAsButton';
@@ -509,8 +508,6 @@ const RevurderingKnapper = (props: { sakId: string; r: Revurdering }) => {
 const ReguleringKnapper = (props: { sakId: string; r: Regulering }) => {
     const { formatMessage } = useI18n({ messages });
     const user = useUserContext();
-    const [avsluttReguleringStatus, avsluttRegulering] = useApiCall(reguleringApi.avsluttRegulering);
-    const ref = useRef<HTMLDialogElement>(null);
 
     const underAttestering = props.r.reguleringsstatus === Reguleringsstatus.ATTESTERING;
 
@@ -524,9 +521,17 @@ const ReguleringKnapper = (props: { sakId: string; r: Regulering }) => {
         <div>
             {props.r.reguleringstype === Reguleringstype.MANUELL && (
                 <div className={styles.dataCellButtonsContainer}>
-                    <Button variant="secondary" size="small" onClick={() => ref.current?.showModal()}>
+                    <LinkAsButton
+                        variant="secondary"
+                        size="small"
+                        href={Routes.avsluttBehandling.createURL({
+                            sakId: props.sakId,
+                            id: props.r.id,
+                            type: Routes.AvsluttBehandlingType.REGULERING,
+                        })}
+                    >
                         {formatMessage('datacell.info.knapp.avsluttBehandling')}
-                    </Button>
+                    </LinkAsButton>
                     <LinkAsButton
                         variant="primary"
                         size="small"
@@ -539,27 +544,6 @@ const ReguleringKnapper = (props: { sakId: string; r: Regulering }) => {
                     </LinkAsButton>
                 </div>
             )}
-
-            <Modal ref={ref} header={{ heading: formatMessage('dataCell.info.knapp.regulering.modal.tittel') }}>
-                <Modal.Body>
-                    {RemoteData.isFailure(avsluttReguleringStatus) && (
-                        <ApiErrorAlert error={avsluttReguleringStatus.error} />
-                    )}
-                </Modal.Body>
-                <Modal.Footer className={styles.knapper}>
-                    <Button variant="tertiary" type="button" onClick={() => ref.current?.close()}>
-                        {formatMessage('datacell.info.knapp.avbryt')}
-                    </Button>
-                    <Button
-                        variant="danger"
-                        type="button"
-                        loading={RemoteData.isPending(avsluttReguleringStatus)}
-                        onClick={() => avsluttRegulering({ reguleringId: props.r.id }, () => location.reload())}
-                    >
-                        {formatMessage('datacell.info.knapp.avsluttBehandling')}
-                    </Button>
-                </Modal.Footer>
-            </Modal>
         </div>
     );
 };

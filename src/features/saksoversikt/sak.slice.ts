@@ -290,6 +290,10 @@ export default createSlice({
             state.sak = oppdaterRevurderingISak(state.sak, action.payload);
         });
 
+        builder.addCase(reguleringActions.avsluttRegulering.fulfilled, (state, action) => {
+            state.sak = opprettEllerOppdaterReguleringISak(state.sak, action.payload);
+        });
+
         builder.addCase(klageActions.opprettKlage.fulfilled, (state, action) => {
             state.sak = pipe(
                 state.sak,

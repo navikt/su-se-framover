@@ -101,10 +101,16 @@ export async function hentReguleringsstatusUtestående(): Promise<ApiClientResul
     });
 }
 
-export async function avsluttRegulering({ reguleringId }: { reguleringId: string }): Promise<ApiClientResult<void>> {
-    return apiClient({
-        url: `reguleringer/manuell/${reguleringId}/avslutt`,
+export async function avsluttRegulering(args: {
+    reguleringId: string;
+    begrunnelse: string;
+}): Promise<ApiClientResult<Regulering>> {
+    return apiClient<Regulering>({
+        url: `/reguleringer/manuell/${args.reguleringId}/avslutt`,
         method: 'POST',
+        body: {
+            begrunnelse: args.begrunnelse,
+        },
     });
 }
 
