@@ -245,6 +245,23 @@ export async function tellRaderSupstønadHistorisk(args: {
     });
 }
 
+export async function hentUttrekkSupstønadHistorisk(args: {
+    tabellnavn: string;
+    antallRader: number;
+    iterator?: string;
+}): Promise<ApiClientResult<unknown>> {
+    return apiClient({
+        url: `/drift/supstonadhistorisk/hentuttrekk`,
+        method: 'POST',
+        request: { headers: new Headers({ Accept: 'application/json' }) },
+        body: {
+            tabellnavn: args.tabellnavn,
+            antallRader: args.antallRader,
+            iterator: args.iterator ?? null,
+        },
+    });
+}
+
 export async function kjørFradragssjekk(args: { maaned: string; dryRun: boolean }): Promise<ApiClientResult<void>> {
     return apiClient({
         url: `/drift/fradragssjekk/kjor`,
