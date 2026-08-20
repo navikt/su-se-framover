@@ -3,7 +3,7 @@ export default {
     fantIkkeRegulering: 'En feil skjedde. Vi fant ikke gitt regulering.',
     periode: 'Periode for regulering',
     ieu: 'Inntekt etter uførhet per år for {dato}',
-    'reguler.ieu': 'Endre forventet inntekt etter uførhet',
+    'reguler.ieu': 'Forventet inntekt etter uførhet',
     'reguler.fradrag': 'Endre fradrag',
     'ingen.ieu': 'Bruker har ikke IEU som kan reguleres',
     'ingen.fradrag': 'Bruker har ikke fradrag som kan reguleres',

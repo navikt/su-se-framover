@@ -96,7 +96,7 @@ const AlderPersonTabell = ({ perioder, fnr }: { perioder: AlderBeregningsperiode
     </VStack>
 );
 
-const UforetrygdSeksjon = ({ resultat }: { resultat: ApiResult<ResponseDtoUføre> }) => (
+export const UforetrygdSeksjon = ({ resultat }: { resultat: ApiResult<ResponseDtoUføre> }) => (
     <EksternSeksjon tittel="Uføretrygd" resultat={resultat}>
         {RemoteData.isSuccess(resultat) &&
             (resultat.value.perioder.length === 0 ? (

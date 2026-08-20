@@ -1,10 +1,11 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import { Alert, BodyShort, Button, Heading, Label, Loader, TextField } from '@navikt/ds-react';
+import { Alert, BodyShort, Button, Heading, Label, Loader } from '@navikt/ds-react';
 import { useEffect, useState } from 'react';
-import { Controller, useForm } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import { useNavigate, useOutletContext } from 'react-router-dom';
 import * as reguleringApi from '~src/api/reguleringApi';
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
+import { EksterneFradrag } from '~src/components/forms/vilkårOgGrunnlagForms/fradrag/EksterneFradrag.tsx';
 import FradragForm from '~src/components/forms/vilkårOgGrunnlagForms/fradrag/FradragForm';
 import {
     FradragFormData,
@@ -144,9 +145,7 @@ const ManuellRegulering = () => {
             </div>
         );
     } else {
-        const { uføre, fradrag } = manuellReguleringStatus.value.gjeldendeVedtaksdata;
-        const uføregrunnlag = uføre?.vurderinger.map((v) => v?.grunnlag).filter(filtrerRegulerbarIEU) ?? [];
-        const harRegulerbarIEU = uføregrunnlag.some((v) => v.forventetInntekt > 0);
+        const { fradrag } = manuellReguleringStatus.value.gjeldendeVedtaksdata;
         const harRegulerbarFradrag = fradrag.some((f) => måReguleresManuelt(f.type));
 
         return (
@@ -168,38 +167,12 @@ const ManuellRegulering = () => {
                                     <Heading level="3" size="medium" className={styles.kategoriTittel}>
                                         {formatMessage('reguler.ieu')}
                                     </Heading>
-
-                                    {harRegulerbarIEU ? (
-                                        form
-                                            .getValues('uføre')
-                                            .filter((u) => u.forventetInntekt > 0)
-                                            .map((u, index) => (
-                                                <div key={u.id} className={styles.ieu}>
-                                                    <p>
-                                                        {`${formatMessage('ieu.verdi.tidligere')}: ${
-                                                            uføregrunnlag[index].forventetInntekt
-                                                        } kr`}
-                                                    </p>
-                                                    <Controller
-                                                        control={form.control}
-                                                        name={`uføre.${index}.forventetInntekt`}
-                                                        render={({ field }) => (
-                                                            <TextField
-                                                                disabled={readOnly()}
-                                                                value={field.value.toString()}
-                                                                size="medium"
-                                                                onChange={field.onChange}
-                                                                label={formatMessage('ieu', {
-                                                                    dato: formatPeriode(u.periode),
-                                                                })}
-                                                            />
-                                                        )}
-                                                    />
-                                                </div>
-                                            ))
-                                    ) : (
-                                        <p>{formatMessage('ingen.ieu')}.</p>
-                                    )}
+                                    <EksterneFradrag
+                                        sakId={props.sak.id}
+                                        fnr={props.søker.fnr}
+                                        periode={regulering.periode}
+                                        tittel="Eksterne fradrag"
+                                    />
                                 </div>
 
                                 <div className={styles.regulering}>
