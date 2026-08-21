@@ -9,34 +9,31 @@ spec:
     groups:
         - name: su-se-framover
           rules:
-              - alert: su-se-framover-metrics-scrape-feilet
-                expr: sum(up{app="su-se-framover", job="kubernetes-pods"}) < 1
+              - alert: su-se-framover-ingress-utilgjengelig
+                expr: sum(up{app="su-se-framover", namespace="supstonad", job=~"probe/.*", k8s_cluster_name="{{K8S_CLUSTER_NAME}}"}) < 1
                 for: 1m
                 annotations:
-                    consequence: 'su-se-framover sitt /metrics endepunktet har vært utilgjengelig i minst 1 minutt'
-                    action: '`kubectl describe pod {{ $labels.kubernetes_pod_name }}` for events, og `kubectl logs {{ $labels.kubernetes_pod_name }}` for logger'
+                    consequence: 'su-se-framover sin ingress har vært utilgjengelig i minst 1 minutt'
+                    action: '`kubectl describe deployment su-se-framover -n supstonad` for events, og `kubectl logs -l app=su-se-framover -n supstonad` for logger'
                 labels:
                     namespace: supstonad
                     severity: critical
               - alert: su-se-framover-error-logg
                 expr:
-                    'sum(max_over_time(log_messages_errors{namespace="supstonad",app="su-se-framover",level="Error"}[15m])
-                    or vector(0)) -
-                    sum(max_over_time(log_messages_errors{namespace="supstonad",app="su-se-framover",level="Error"}[15m]
-                    offset 15m) or vector(0)) > 0'
+                    'sum_over_time(loki:service:loglevel:count1m{service_name="su-se-framover",service_namespace="supstonad",k8s_cluster_name="{{K8S_CLUSTER_NAME}}",detected_level="error"}[15m:1m]) > 0'
                 for: 1s
                 annotations:
-                    consequence: 'su-se-framover har fått en ny error i loggen siste 15 min'
+                    consequence: 'su-se-framover har fått error i loggen siste 15 min'
                     action: 'Det er logget en melding med log level ERROR. Sjekk logger her: `{{LOGS_URL_LOKI}}`'
                 labels:
                     namespace: supstonad
                     severity: critical
               - alert: su-se-framover-pods-available
-                expr: sum(kube_deployment_status_replicas_available{deployment="su-se-framover"}) < 1
+                expr: (sum(kube_deployment_status_replicas_available{deployment="su-se-framover", k8s_cluster_name="{{K8S_CLUSTER_NAME}}"}) or vector(0)) < 1
                 for: 1m
                 annotations:
                     consequence: 'Tilgjengelige kubernetes pods for su-se-framover er mindre enn 1'
-                    action: '`kubectl describe pod {{ $labels.kubernetes_pod_name }}` for events, og `kubectl logs {{ $labels.kubernetes_pod_name }}` for logger'
+                    action: '`kubectl describe deployment su-se-framover -n supstonad` for events, og `kubectl get pods -l app=su-se-framover -n supstonad` for pods'
                 labels:
                     namespace: supstonad
                     severity: critical
