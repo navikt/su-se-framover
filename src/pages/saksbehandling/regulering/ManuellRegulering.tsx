@@ -183,6 +183,11 @@ const ManuellRegulering = () => {
                                             .filter((u) => u.forventetInntekt > 0)
                                             .map((u, index) => (
                                                 <div key={u.id} className={styles.ieu}>
+                                                    <p>
+                                                        {`${formatMessage('ieu.verdi.tidligere')}: ${
+                                                            uføregrunnlag[index].forventetInntekt
+                                                        } kr`}
+                                                    </p>
                                                     <Controller
                                                         control={form.control}
                                                         name={`uføre.${index}.forventetInntekt`}
