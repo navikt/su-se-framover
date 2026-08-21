@@ -8,7 +8,7 @@ export default {
     'ingen.ieu': 'Bruker har ikke IEU som kan reguleres',
     'ingen.fradrag': 'Bruker har ikke fradrag som kan reguleres',
 
-    'ieu.verdi.tidligere': 'Tidligere inntekt etter uførhet',
+    'ieu.verdi.tidligere': 'Gjeldende inntekt etter uførhet i SU',
     'knapper.tilbake': 'Tilbake',
     'knapper.send': 'Gjennomfør regulering',
     notification: 'Regulering har blitt gjennomført',
