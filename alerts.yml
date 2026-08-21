@@ -10,7 +10,7 @@ spec:
         - name: su-se-framover
           rules:
               - alert: su-se-framover-ingress-utilgjengelig
-                expr: sum(up{app="su-se-framover", namespace="supstonad", job=~"probe/.*", k8s_cluster_name="{{K8S_CLUSTER_NAME}}"}) < 1
+                expr: (sum(up{app="su-se-framover", namespace="supstonad", job=~"probe/.*", k8s_cluster_name="{{K8S_CLUSTER_NAME}}"}) or vector(0)) < 1
                 for: 1m
                 annotations:
                     consequence: 'su-se-framover sin ingress har vært utilgjengelig i minst 1 minutt'
