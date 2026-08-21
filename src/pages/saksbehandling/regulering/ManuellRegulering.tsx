@@ -5,6 +5,7 @@ import { Controller, useForm } from 'react-hook-form';
 import { useNavigate, useOutletContext } from 'react-router-dom';
 import * as reguleringApi from '~src/api/reguleringApi';
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
+import { EksterneFradrag } from '~src/components/forms/vilkårOgGrunnlagForms/fradrag/EksterneFradrag.tsx';
 import FradragForm from '~src/components/forms/vilkårOgGrunnlagForms/fradrag/FradragForm';
 import {
     FradragFormData,
@@ -168,7 +169,14 @@ const ManuellRegulering = () => {
                                     <Heading level="3" size="medium" className={styles.kategoriTittel}>
                                         {formatMessage('reguler.ieu')}
                                     </Heading>
-
+                                    <div className={styles.eksterneFradrag}>
+                                        <EksterneFradrag
+                                            sakId={props.sak.id}
+                                            fnr={props.søker.fnr}
+                                            periode={regulering.periode}
+                                            tittel="Eksterne fradrag"
+                                        />
+                                    </div>
                                     {harRegulerbarIEU ? (
                                         form
                                             .getValues('uføre')
@@ -201,7 +209,6 @@ const ManuellRegulering = () => {
                                         <p>{formatMessage('ingen.ieu')}.</p>
                                     )}
                                 </div>
-
                                 <div className={styles.regulering}>
                                     <Heading level="3" size="medium" className={styles.kategoriTittel}>
                                         {formatMessage('reguler.fradrag')}
