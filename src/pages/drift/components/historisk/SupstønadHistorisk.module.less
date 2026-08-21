@@ -1,11 +1,48 @@
 @import '@styles/variables.less';
 
 .modal {
+    width: 90vw;
+    max-width: 1200px;
+}
+
+.tabPanel {
+    padding: @spacing-s 0;
+}
+
+.diagnostikkContainer {
+    display: flex;
+    gap: @spacing-l;
+}
+
+.diagnostikkForm {
     display: flex;
     flex-direction: column;
-    gap: @spacing;
-    padding: @spacing-s;
-    min-width: 400px;
+    gap: @spacing-xs;
+    max-width: 300px;
+}
+
+.uttrekkResultat {
+    white-space: pre-wrap;
+    word-break: break-word;
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.oversiktContainer {
+    display: flex;
+    flex-direction: column;
+    gap: @spacing-s;
+}
+
+.feilbeskrivelseCell {
+    word-break: break-word;
+    max-width: 300px;
+}
+
+.bekreftSlettContainer {
+    display: flex;
+    gap: @spacing-xxs;
+    align-items: center;
 }
 
 .divider {
