@@ -100,7 +100,7 @@ const AvsluttBehandling = () => {
                     {(søknad || søknadsbehandling) && (
                         <LukkSøknadOgAvsluttBehandling
                             søknad={(søknad || søknadsbehandling?.søknad)!}
-                            behandlingErPåbegynt={søknadsbehandling?.status !== 'OPPRETTET'}
+                            behandlingErPåbegynt={søknadsbehandling !== undefined && !!søknadsbehandling?.saksbehandler}
                         />
                     )}
                     {revurdering && <AvsluttRevurdering sakId={props.sak.id} revurdering={revurdering} />}
