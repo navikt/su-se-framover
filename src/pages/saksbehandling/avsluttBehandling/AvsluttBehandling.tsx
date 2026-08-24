@@ -98,7 +98,10 @@ const AvsluttBehandling = () => {
 
                 <div className={styles.mainContent}>
                     {(søknad || søknadsbehandling) && (
-                        <LukkSøknadOgAvsluttBehandling søknad={(søknad || søknadsbehandling?.søknad)!} />
+                        <LukkSøknadOgAvsluttBehandling
+                            søknad={(søknad || søknadsbehandling?.søknad)!}
+                            behandlingErPåbegynt={søknadsbehandling !== undefined && !!søknadsbehandling?.saksbehandler}
+                        />
                     )}
                     {revurdering && <AvsluttRevurdering sakId={props.sak.id} revurdering={revurdering} />}
                     {klage && <AvsluttKlage sakId={props.sak.id} klage={klage} />}

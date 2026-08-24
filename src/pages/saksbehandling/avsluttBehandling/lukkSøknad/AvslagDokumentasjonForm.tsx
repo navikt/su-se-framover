@@ -1,5 +1,6 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { yupResolver } from '@hookform/resolvers/yup';
+import { Alert } from '@navikt/ds-react';
 import { Controller, useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert.tsx';
@@ -14,7 +15,7 @@ import nb from '~src/pages/saksbehandling/avsluttBehandling/lukkSøknad/lukkSøk
 import { fritekstSchema } from '~src/pages/saksbehandling/avsluttBehandling/lukkSøknad/lukkSøknadUtils.ts';
 import { Søknad } from '~src/types/Søknad.ts';
 
-export const AvslagDokumentasjonForm = (props: { søknad: Søknad; sakId: string }) => {
+export const AvslagDokumentasjonForm = (props: { søknad: Søknad; sakId: string; behandlingErPåbegynt: boolean }) => {
     const navigate = useNavigate();
     const { formatMessage } = useI18n({ messages: nb });
     const [avslagManglendeDokStatus, avslåPgaManglendeDok] = useAsyncActionCreator(SøknadActions.avslåSøknad);
@@ -59,10 +60,19 @@ export const AvslagDokumentasjonForm = (props: { søknad: Søknad; sakId: string
                 )}
             />
             {RemoteData.isFailure(avslagManglendeDokStatus) && <ApiErrorAlert error={avslagManglendeDokStatus.error} />}
+            {!props.behandlingErPåbegynt && (
+                <div style={{ marginBottom: '1rem' }}>
+                    <Alert variant="warning">
+                        Behandlingen må være påbegynt før søknaden kan avslås. Du må derfor først starte behandlingen
+                        før du kan lukke søknaden.
+                    </Alert>
+                </div>
+            )}
             <AvsluttBehandlingBunnknapper
                 sakId={sakId}
                 submitButtonText={formatMessage('knapp.lukkSøknad')}
                 isSubmitPending={RemoteData.isPending(avslagManglendeDokStatus)}
+                disabled={!props.behandlingErPåbegynt}
             />
         </form>
     );

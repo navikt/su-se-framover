@@ -18,7 +18,7 @@ import {
 import { TrukketForm } from '~src/pages/saksbehandling/avsluttBehandling/lukkSøknad/TrukketForm';
 import { AvsluttSøknadsbehandlingBegrunnelse, LukkSøknadBegrunnelse, Søknad } from '~src/types/Søknad';
 
-const LukkSøknadOgAvsluttBehandling = (props: { søknad: Søknad }) => {
+const LukkSøknadOgAvsluttBehandling = (props: { søknad: Søknad; behandlingErPåbegynt: boolean }) => {
     const { formatMessage } = useI18n({ messages: nb });
     const [valgtBegrunnelse, setValgtbegrunnelse] = useState<string>('velgBegrunnelse');
     const sak = useOutletContext<SaksoversiktContext>().sak;
@@ -63,7 +63,11 @@ const LukkSøknadOgAvsluttBehandling = (props: { søknad: Søknad }) => {
             {valgtBegrunnelse === LukkSøknadBegrunnelse.Avslag && <AvslagForm søknad={props.søknad} sakId={sak.id} />}
 
             {valgtBegrunnelse === AvsluttSøknadsbehandlingBegrunnelse.ManglendeDok && (
-                <AvslagDokumentasjonForm søknad={props.søknad} sakId={sak.id} />
+                <AvslagDokumentasjonForm
+                    søknad={props.søknad}
+                    sakId={sak.id}
+                    behandlingErPåbegynt={props.behandlingErPåbegynt}
+                />
             )}
 
             {valgtBegrunnelse === 'velgBegrunnelse' && (
