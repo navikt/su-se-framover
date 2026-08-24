@@ -321,7 +321,7 @@ const TellRaderPanel = () => {
                 </Button>
                 {RemoteData.isSuccess(tellRaderStatus) && (
                     <Alert variant="success" size="small">
-                        Antall rader: {tellRaderStatus.value.antallRader}
+                        Antall rader: {tellRaderStatus.value.antall}
                     </Alert>
                 )}
                 {RemoteData.isFailure(tellRaderStatus) && <ApiErrorAlert error={tellRaderStatus.error} />}
