@@ -234,7 +234,7 @@ export async function dryRunPersonhendelser(args: {
 
 export async function tellRaderSupstønadHistorisk(args: {
     tabellnavn: string;
-}): Promise<ApiClientResult<{ antallRader: number }>> {
+}): Promise<ApiClientResult<{ antall: number }>> {
     return apiClient({
         url: `/drift/supstonadhistorisk/tellrader`,
         method: 'POST',
