@@ -311,6 +311,7 @@ export async function startHistoriskImport(_?: void): Promise<ApiClientResult<vo
 export interface JobbStatus {
     id: string;
     jobbNavn: string;
+    beskrivelse: string | null;
     status: 'FULLFØRT' | 'FEILET' | 'KJØRER';
     startetTidspunkt: string;
     ferdigTidspunkt: string | null;

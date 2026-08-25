@@ -83,6 +83,7 @@ const JobbOversikt = () => {
                 <Table className={styles.tabell} size="small">
                     <Table.Header>
                         <Table.Row>
+                            <Table.HeaderCell />
                             <Table.HeaderCell>Jobb</Table.HeaderCell>
                             <Table.HeaderCell>Status</Table.HeaderCell>
                             <Table.HeaderCell>Startet</Table.HeaderCell>
@@ -94,7 +95,14 @@ const JobbOversikt = () => {
                     </Table.Header>
                     <Table.Body>
                         {sorterJobber(jobberStatus.value).map((jobb) => (
-                            <Table.Row key={jobb.id}>
+                            <Table.ExpandableRow
+                                key={jobb.id}
+                                content={
+                                    <div className={styles.beskrivelse}>
+                                        {jobb.beskrivelse ?? 'Ingen beskrivelse tilgjengelig'}
+                                    </div>
+                                }
+                            >
                                 <Table.DataCell>{jobb.jobbNavn}</Table.DataCell>
                                 <Table.DataCell>
                                     <Tag variant={statusTagVariant(jobb.status)} size="small">
@@ -110,7 +118,7 @@ const JobbOversikt = () => {
                                 <Table.DataCell>
                                     <TrunkertFeilmelding melding={jobb.feilmelding} />
                                 </Table.DataCell>
-                            </Table.Row>
+                            </Table.ExpandableRow>
                         ))}
                     </Table.Body>
                 </Table>
