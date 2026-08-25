@@ -24,11 +24,12 @@ jobs:
               env:
                   CLUSTER: dev-gcp
                   RESOURCE: alerts.yml
-                  VAR: SLACK_ALERTS_CHANNEL=#su_alerts_dev,LOGS_URL_LOKI=https://grafana.nav.cloud.nais.io/goto/efq0y6eulatc0c?orgId=1
+                  VAR: SLACK_ALERTS_CHANNEL=#su_alerts_dev,LOGS_URL_LOKI=https://grafana.nav.cloud.nais.io/goto/efq0y6eulatc0c?orgId=1,K8S_CLUSTER_NAME=dev
 
             - name: deploy to prod
               uses: nais/deploy/actions/deploy@v2
               env:
                   CLUSTER: prod-gcp
                   RESOURCE: alerts.yml
-                  VAR: SLACK_ALERTS_CHANNEL=#su_alerts,LOGS_URL_LOKI=https://grafana.nav.cloud.nais.io/goto/ffq0y43v6ll34a?orgId=1
+                  VAR: SLACK_ALERTS_CHANNEL=#su_alerts,LOGS_URL_LOKI=https://grafana.nav.cloud.nais.io/goto/afvuvs1dzlk3ka?orgId=default
+

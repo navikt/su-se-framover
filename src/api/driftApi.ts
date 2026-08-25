@@ -234,7 +234,7 @@ export async function dryRunPersonhendelser(args: {
 
 export async function tellRaderSupstønadHistorisk(args: {
     tabellnavn: string;
-}): Promise<ApiClientResult<{ antallRader: number }>> {
+}): Promise<ApiClientResult<{ antall: number }>> {
     return apiClient({
         url: `/drift/supstonadhistorisk/tellrader`,
         method: 'POST',
@@ -242,6 +242,69 @@ export async function tellRaderSupstønadHistorisk(args: {
         body: {
             tabellnavn: args.tabellnavn,
         },
+    });
+}
+
+export async function hentUttrekkSupstønadHistorisk(args: {
+    tabellnavn: string;
+    antallRader: number;
+    iterator?: string;
+}): Promise<ApiClientResult<unknown>> {
+    return apiClient({
+        url: `/drift/supstonadhistorisk/hentuttrekk`,
+        method: 'POST',
+        request: { headers: new Headers({ Accept: 'application/json' }) },
+        body: {
+            tabellnavn: args.tabellnavn,
+            antallRader: args.antallRader,
+            iterator: args.iterator ?? null,
+        },
+    });
+}
+
+export type ImportStatus = 'PÅGÅR' | 'FULLFØRT' | 'FEILET';
+
+export interface TabellImportStatus {
+    tabellnavn: string;
+    status: ImportStatus;
+    forventetAntall: number;
+    importertAntall: number;
+}
+
+export interface HistoriskImportOversikt {
+    id: string;
+    status: ImportStatus;
+    opprettet: string;
+    fullført: Nullable<string>;
+    feilbeskrivelse: Nullable<string>;
+    totaltForventetAntall: number;
+    totaltImportertAntall: number;
+    tabeller: TabellImportStatus[];
+}
+
+export async function hentHistoriskeImporter(_?: void): Promise<ApiClientResult<HistoriskImportOversikt[]>> {
+    return apiClient({
+        url: `/drift/supstonadhistorisk/import`,
+        method: 'GET',
+        request: { headers: new Headers({ Accept: 'application/json' }) },
+    });
+}
+
+export async function slettHistoriskImport(args: { importId: string }): Promise<ApiClientResult<void>> {
+    return apiClient({
+        url: `/drift/supstonadhistorisk/import/${args.importId}`,
+        method: 'DELETE',
+        request: { headers: new Headers({ Accept: 'application/json' }) },
+        bodyTransformer: async () => undefined as void,
+    });
+}
+
+export async function startHistoriskImport(_?: void): Promise<ApiClientResult<void>> {
+    return apiClient({
+        url: `/drift/supstonadhistorisk/import`,
+        method: 'POST',
+        request: { headers: new Headers({ Accept: 'application/json' }) },
+        bodyTransformer: async () => undefined as void,
     });
 }
 

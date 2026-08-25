@@ -9,7 +9,12 @@ import messages from '../avsluttBehandling-nb';
 
 import styles from './avsluttBehandlingBunnknapper.module.less';
 
-const AvsluttBehandlingBunnknapper = (props: { submitButtonText: string; isSubmitPending: boolean; sakId: string }) => {
+const AvsluttBehandlingBunnknapper = (props: {
+    submitButtonText: string;
+    isSubmitPending: boolean;
+    sakId: string;
+    disabled?: boolean;
+}) => {
     const { formatMessage } = useI18n({ messages });
     return (
         <div className={styles.container}>
@@ -17,7 +22,7 @@ const AvsluttBehandlingBunnknapper = (props: { submitButtonText: string; isSubmi
                 <ChevronLeftIcon />
                 {formatMessage('link.tilbake')}
             </LinkAsButton>
-            <Button variant="danger" type="submit">
+            <Button variant="danger" type="submit" disabled={props.disabled}>
                 {props.submitButtonText}
                 {props.isSubmitPending && <Loader />}
             </Button>
