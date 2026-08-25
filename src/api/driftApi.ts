@@ -319,7 +319,7 @@ export interface JobbStatus {
     intervallSekunder: number;
 }
 
-export async function fetchJobberStatus(): Promise<ApiClientResult<JobbStatus[]>> {
+export async function fetchJobberStatus(_?: void): Promise<ApiClientResult<JobbStatus[]>> {
     return apiClient({
         url: `/drift/jobber/status`,
         method: 'GET',
