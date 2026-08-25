@@ -55,7 +55,7 @@ const JobbOversikt = () => {
     const [jobberStatus, hentJobber] = useApiCall(fetchJobberStatus);
 
     useEffect(() => {
-        hentJobber();
+        hentJobber({});
     }, []);
 
     return (
@@ -65,7 +65,7 @@ const JobbOversikt = () => {
                 <Button
                     variant="tertiary"
                     size="small"
-                    onClick={() => hentJobber()}
+                    onClick={() => hentJobber({})}
                     loading={RemoteData.isPending(jobberStatus)}
                 >
                     Oppdater
