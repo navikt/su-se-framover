@@ -312,7 +312,7 @@ export interface JobbStatus {
     id: string;
     jobbNavn: string;
     beskrivelse: string | null;
-    status: 'FULLFØRT' | 'FEILET' | 'KJØRER';
+    status: 'FULLFØRT' | 'FULLFØRT_MED_FEIL' | 'FEILET' | 'KJØRER';
     startetTidspunkt: string;
     ferdigTidspunkt: string | null;
     feilmelding: string | null;

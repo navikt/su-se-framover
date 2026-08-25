@@ -10,14 +10,17 @@ import styles from './JobbOversikt.module.less';
 
 const statusPrioritet: Record<JobbStatus['status'], number> = {
     FEILET: 0,
-    KJØRER: 1,
-    FULLFØRT: 2,
+    FULLFØRT_MED_FEIL: 1,
+    KJØRER: 2,
+    FULLFØRT: 3,
 };
 
-const statusTagVariant = (status: JobbStatus['status']): 'success' | 'error' | 'info' => {
+const statusTagVariant = (status: JobbStatus['status']): 'success' | 'error' | 'warning' | 'info' => {
     switch (status) {
         case 'FULLFØRT':
             return 'success';
+        case 'FULLFØRT_MED_FEIL':
+            return 'warning';
         case 'FEILET':
             return 'error';
         case 'KJØRER':
