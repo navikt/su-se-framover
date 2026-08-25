@@ -18,6 +18,7 @@ import { useApiCall, useAsyncActionCreator } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
 import * as Routes from '~src/lib/routes';
 import { useAppDispatch } from '~src/redux/Store';
+import { vedtakMessages } from '~src/typeMappinger/VedtakTypeMapper';
 import {
     Fradragskategori,
     fradragTilLabelTag,
@@ -25,6 +26,7 @@ import {
     VelgbareFradragskategorier,
 } from '~src/types/Fradrag.ts';
 import { ReguleringOversiktsstatus, Reguleringsstatus, ÅrsakTilManuellReguleringKategori } from '~src/types/Regulering';
+import { formatDate } from '~src/utils/date/dateUtils.ts';
 import styles from './regulering.module.less';
 import messages from './regulering-nb';
 
@@ -132,6 +134,7 @@ const Reguleringsoversikt = () => {
                             <Table.HeaderCell>{formatMessage('tabell.lenke')}</Table.HeaderCell>
                             <Table.HeaderCell>{formatMessage('tabell.ekstraInformasjon')}</Table.HeaderCell>
                             <Table.HeaderCell>{formatMessage('tabell.årsakTilManuellRegulering')}</Table.HeaderCell>
+                            <Table.HeaderCell>{formatMessage('tabell.sisteVedtak')}</Table.HeaderCell>
                             <Table.HeaderCell>{formatMessage('tabell.status')}</Table.HeaderCell>
                         </Table.Row>
                     </Table.Header>
@@ -140,7 +143,18 @@ const Reguleringsoversikt = () => {
                             data,
                             arr.sortBy([sortByFnr]),
                             arr.mapWithIndex(
-                                (index, { saksnummer, fnr, fradragsKategori, årsakTilManuellRegulering, status }) => {
+                                (
+                                    index,
+                                    {
+                                        saksnummer,
+                                        fnr,
+                                        fradragsKategori,
+                                        årsakTilManuellRegulering,
+                                        status,
+                                        sisteVedtakType,
+                                        sisteVedtakOpprettet,
+                                    },
+                                ) => {
                                     return (
                                         <Table.Row key={index}>
                                             <Table.DataCell>{saksnummer}</Table.DataCell>
@@ -199,6 +213,11 @@ const Reguleringsoversikt = () => {
                                             </Table.DataCell>
                                             <Table.DataCell>
                                                 {årsakTilManuellRegulering.map((årsak) => formatMessage(årsak))}
+                                            </Table.DataCell>
+                                            <Table.DataCell>
+                                                {sisteVedtakType && vedtakMessages[sisteVedtakType]}
+                                                <br />
+                                                {sisteVedtakOpprettet && formatDate(sisteVedtakOpprettet)}
                                             </Table.DataCell>
                                             <Table.DataCell>{status}</Table.DataCell>
                                         </Table.Row>

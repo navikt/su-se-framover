@@ -1,5 +1,6 @@
 import { Nullable } from '~src/lib/types';
 import { Attestering } from '~src/types/Behandling';
+import { VedtakType } from '~src/types/Vedtak.ts';
 import { Beregning } from './Beregning';
 import { Fradragskategori } from './Fradrag';
 import { GrunnlagsdataOgVilkårsvurderinger } from './grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
@@ -41,6 +42,8 @@ export interface ReguleringOversiktsstatus {
     fradragsKategori: Fradragskategori[];
     årsakTilManuellRegulering: ÅrsakTilManuellReguleringKategori[];
     status: Reguleringsstatus;
+    sisteVedtakType?: VedtakType;
+    sisteVedtakOpprettet: string;
 }
 
 export enum Reguleringstype {
