@@ -308,6 +308,24 @@ export async function startHistoriskImport(_?: void): Promise<ApiClientResult<vo
     });
 }
 
+export interface JobbStatus {
+    id: string;
+    jobbNavn: string;
+    status: 'FULLFØRT' | 'FEILET' | 'KJØRER';
+    startetTidspunkt: string;
+    ferdigTidspunkt: string | null;
+    feilmelding: string | null;
+    intervallSekunder: number;
+}
+
+export async function fetchJobberStatus(): Promise<ApiClientResult<JobbStatus[]>> {
+    return apiClient({
+        url: `/drift/jobber/status`,
+        method: 'GET',
+        request: { headers: new Headers({ Accept: 'application/json' }) },
+    });
+}
+
 export async function kjørFradragssjekk(args: { maaned: string; dryRun: boolean }): Promise<ApiClientResult<void>> {
     return apiClient({
         url: `/drift/fradragssjekk/kjor`,
