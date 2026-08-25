@@ -1,6 +1,6 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { PaperclipIcon } from '@navikt/aksel-icons';
-import { Alert, BodyLong, BodyShort, Button, Heading, Link, Loader, Modal, Panel } from '@navikt/ds-react';
+import { Alert, BodyLong, BodyShort, Button, Heading, Loader, Modal, Panel } from '@navikt/ds-react';
 import { useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -8,7 +8,6 @@ import { ApiError } from '~src/api/apiClient';
 import { fetchSøknadutskrift } from '~src/api/pdfApi';
 import { OpprettetSøknad } from '~src/api/søknadApi';
 import { SuccessIcon } from '~src/assets/Icons';
-import forsteSideBildet from '~src/assets/images/forsteSide.png';
 import CircleWithIcon from '~src/components/circleWithIcon/CircleWithIcon';
 import * as personSlice from '~src/features/person/person.slice';
 import innsendingSlice from '~src/features/søknad/innsending.slice';
