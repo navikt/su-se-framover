@@ -48,7 +48,8 @@ jobs:
           team: supstonad
           salsa: false
           image_suffix: app # hvis denne endres så må prod-deploy oppdateres likt
-          tag: ${{ github.sha }}
+          # Bruker default unik tag fra nais/docker-build-push (timestamp + short SHA)
+          # for å unngå at re-runs overskriver eksisterende image
 
   deploy-to-dev-gcp:
     name: deploy-to-dev-gcp
@@ -66,7 +67,7 @@ jobs:
           VAR: image=${{ needs.build-push-docker-image.outputs.image }}
 
   deploy_to_prod:
-    needs: deploy-to-dev-gcp
+    needs: [build-push-docker-image, deploy-to-dev-gcp]
     name: Deploy to prod
     runs-on: ubuntu-latest
     permissions:
@@ -77,6 +78,7 @@ jobs:
         - uses: nais/deploy/actions/deploy@v2
           env:
               #se https://console.cloud.google.com/artifacts/docker/nais-management-233d/europe-north1/supstonad?authuser=1&inv=1&invt=AbybBg&project=supstonad-prod-9599
-              VAR: image=europe-north1-docker.pkg.dev/nais-management-233d/supstonad/su-se-framover-app:${{ github.sha }}
+              # Tidligere: image=europe-north1-docker.pkg.dev/nais-management-233d/supstonad/su-se-framover-app:${{ github.sha }}
+              VAR: image=${{ needs.build-push-docker-image.outputs.image }}
               CLUSTER: prod-gcp
               RESOURCE: .nais/prod-gcp.yaml
