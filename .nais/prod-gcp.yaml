@@ -39,14 +39,14 @@ spec:
   liveness:
     path: isAlive
     port: 8080
-    initialDelay: 20
-    timeout: 3
+    initialDelay: 25
+    timeout: 10
     failureThreshold: 5
   readiness:
     path: isReady
     port: 8080
-    initialDelay: 20
-    timeout: 3
+    initialDelay: 25
+    timeout: 10
     failureThreshold: 5
   ingresses:
     - https://supstonad.intern.nav.no
