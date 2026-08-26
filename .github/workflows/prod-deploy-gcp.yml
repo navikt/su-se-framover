@@ -48,8 +48,13 @@ jobs:
           team: supstonad
           salsa: false
           image_suffix: app # hvis denne endres så må prod-deploy oppdateres likt
-          # Bruker default unik tag fra nais/docker-build-push (timestamp + short SHA)
-          # for å unngå at re-runs overskriver eksisterende image
+          # Ikke sett eksplisitt tag — lar nais/docker-build-push generere en unik tag per build
+          # (f.eks. 2026-08-26-124500-abc1234). Dette forhindrer at image-tagen overskrives i
+          # registry ved re-runs eller nye builds. Kubernetes cacher images per tag på noden
+          # (imagePullPolicy: IfNotPresent), så hvis tagen overskrives med nytt innhold kan
+          # pods på ulike noder ende opp med forskjellige Vite-builds — noe som gir
+          # NS_ERROR_CORRUPTED_CONTENT fordi index.html refererer til assets som ikke finnes
+          # på alle pods.
 
   deploy-to-dev-gcp:
     name: deploy-to-dev-gcp

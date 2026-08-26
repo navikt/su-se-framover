@@ -29,6 +29,11 @@ spec:
     sidecar:
       enabled: true
       autoLogin: true
+  # Forhindrer at CPU-spike ved oppstart trigger unødvendig oppskalering.
+  # Node.js + OTel-instrumentering bruker mye CPU de første sekundene, som uten
+  # stabiliseringsvindu fikk HPA til å skalere opp umiddelbart. Nye pods på andre
+  # noder kunne ende opp med cachet gammelt image (IfNotPresent) med andre
+  # Vite-hashes, som ga NS_ERROR_CORRUPTED_CONTENT i browseren.
   replicas:
     min: 1
     max: 2
@@ -36,6 +41,9 @@ spec:
       scaleUpStabilizationWindowSeconds: 90
       cpu:
         thresholdPercentage: 85
+  # Probes med romslige verdier for å tåle CPU-press ved oppstart og under last.
+  # Tidligere default (initialDelay: 5, timeout: 1) var for aggressivt og førte
+  # til unødvendige restarts som forverret CPU-spike-problemet.
   liveness:
     path: isAlive
     port: 8080
