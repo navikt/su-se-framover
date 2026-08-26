@@ -31,14 +31,23 @@ spec:
       autoLogin: true
   replicas:
     min: 1
+    max: 2
+    scalingStrategy:
+      scaleUpStabilizationWindowSeconds: 90
+      cpu:
+        thresholdPercentage: 85
   liveness:
     path: isAlive
     port: 8080
-    initialDelay: 5
+    initialDelay: 25
+    timeout: 10
+    failureThreshold: 5
   readiness:
     path: isReady
     port: 8080
-    initialDelay: 5
+    initialDelay: 25
+    timeout: 10
+    failureThreshold: 5
   ingresses:
     - https://supstonad.intern.nav.no
   env:
