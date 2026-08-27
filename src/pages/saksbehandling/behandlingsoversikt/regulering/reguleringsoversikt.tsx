@@ -215,9 +215,9 @@ const Reguleringsoversikt = () => {
                                                 {årsakTilManuellRegulering.map((årsak) => formatMessage(årsak))}
                                             </Table.DataCell>
                                             <Table.DataCell>
-                                                {sisteVedtakType && vedtakMessages[sisteVedtakType]}
+                                                {vedtakMessages[sisteVedtakType]}
                                                 <br />
-                                                {sisteVedtakOpprettet && formatDate(sisteVedtakOpprettet)}
+                                                {formatDate(sisteVedtakOpprettet)}
                                             </Table.DataCell>
                                             <Table.DataCell>{status}</Table.DataCell>
                                         </Table.Row>

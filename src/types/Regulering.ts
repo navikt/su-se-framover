@@ -42,7 +42,7 @@ export interface ReguleringOversiktsstatus {
     fradragsKategori: Fradragskategori[];
     årsakTilManuellRegulering: ÅrsakTilManuellReguleringKategori[];
     status: Reguleringsstatus;
-    sisteVedtakType?: VedtakType;
+    sisteVedtakType: VedtakType;
     sisteVedtakOpprettet: string;
 }
 
