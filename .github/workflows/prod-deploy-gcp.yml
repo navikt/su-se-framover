@@ -46,7 +46,7 @@ jobs:
         with:
           docker_context: .
           team: supstonad
-          salsa: false
+          salsa: true
           image_suffix: app # hvis denne endres så må prod-deploy oppdateres likt
           # Ikke sett eksplisitt tag — lar nais/docker-build-push generere en unik tag per build
           # (f.eks. 2026-08-26-124500-abc1234). Dette forhindrer at image-tagen overskrives i
