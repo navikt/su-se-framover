@@ -102,6 +102,7 @@ export interface Formue {
     eiendomBrukesTil: Nullable<string>;
     kjøretøy: Nullable<Array<{ verdiPåKjøretøy: number; kjøretøyDeEier: string }>>;
     innskuddsBeløp: Nullable<number>;
+    sparekontoBeløp: Nullable<number>;
     verdipapirBeløp: Nullable<number>;
     skylderNoenMegPengerBeløp: Nullable<number>;
     kontanterBeløp: Nullable<number>;

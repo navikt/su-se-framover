@@ -48,6 +48,11 @@ const OppsummeringAvFormue = (props: { formue: { søkers: Formue; eps?: Nullable
                 epsverdi={props.formue.eps ? (props.formue.eps.innskuddsBeløp ?? 0) : null}
             />
             <FormueTrippel
+                label={formatMessage('formue.sparekontobeløp')}
+                søkersVerdi={props.formue.søkers.sparekontoBeløp ?? 0}
+                epsverdi={props.formue.eps ? (props.formue.eps.sparekontoBeløp ?? 0) : null}
+            />
+            <FormueTrippel
                 label={formatMessage('formue.verdipapirbeløp')}
                 søkersVerdi={props.formue.søkers.verdipapirBeløp ?? 0}
                 epsverdi={props.formue.eps ? (props.formue.eps.verdipapirBeløp ?? 0) : null}

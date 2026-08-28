@@ -126,6 +126,22 @@ export const formueValideringSchema = (formueTilhører: 'søker' | 'eps') => {
                     .required(),
                 otherwise: yup.number(),
             }) as yup.Schema<Nullable<string>>,
+        harSparekonto: yup.boolean().nullable().required(`Fyll ut om ${tilhører} har sparekonto`),
+        sparekontoBeløp: yup
+            .number()
+            .nullable()
+            .label('Beløp på sparekonto')
+            .defined()
+            .when(keyOf<FormData>('harSparekonto'), {
+                is: true,
+                then: yup
+                    .number()
+                    .typeError('Beløp på sparekonto må være et tall')
+                    .nullable(false)
+                    .positive()
+                    .required(),
+                otherwise: yup.number(),
+            }) as yup.Schema<Nullable<string>>,
         harVerdipapir: yup.boolean().nullable().required(`Fyll ut om ${tilhører} har verdipapirer`),
         verdipapirBeløp: yup
             .number()

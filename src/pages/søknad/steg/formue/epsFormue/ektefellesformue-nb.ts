@@ -22,6 +22,11 @@ export default {
     'innskudd.pengerPåKontoInkludertDepositum': 'Har ektefelle/samboer penger på konto (inkludert depositumskonto)?',
     'innskudd.beløp': 'Hvor mye penger er det på konto?',
 
+    'sparekonto.label': 'Har ektefelle/samboer sparekonto?',
+    'sparekonto.beløp': 'Hvor mye penger er det på sparekonto?',
+
+    'bankkort.label': 'Har ektefelle/samboer flere bankkort?',
+
     'verdipapir.label': 'Har ektefelle/samboer aksjer, aksjefond eller verdipapir?',
     'verdipapir.beløp': 'Hvor mye penger er dette verdt?',
 

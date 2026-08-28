@@ -121,6 +121,7 @@ const toFormue = (formue: SøknadState['formue']) => {
         kjøretøy: formue.kjøretøy.map((p) => ({ ...p, verdiPåKjøretøy: Number(p.verdiPåKjøretøy) })),
 
         innskuddsBeløp: formue.harInnskuddPåKonto ? Number(formue.innskuddsBeløp) : null,
+        sparekontoBeløp: formue.harSparekonto ? Number(formue.sparekontoBeløp) : null,
         verdipapirBeløp: formue.harVerdipapir ? Number(formue.verdipapirBeløp) : null,
 
         skylderNoenMegPengerBeløp: formue.skylderNoenMegPenger ? Number(formue.skylderNoenMegPengerBeløp) : null,

@@ -79,6 +79,8 @@ export interface SøknadFellesState {
         kjøretøy: Kjøretøy[];
         harInnskuddPåKonto: Nullable<boolean>;
         innskuddsBeløp: Nullable<string>;
+        harSparekonto: Nullable<boolean>;
+        sparekontoBeløp: Nullable<string>;
         harVerdipapir: Nullable<boolean>;
         verdipapirBeløp: Nullable<string>;
         skylderNoenMegPenger: Nullable<boolean>;
@@ -141,6 +143,8 @@ const initialFormue: SøknadState['formue'] = {
     kjøretøy: [],
     harInnskuddPåKonto: null,
     innskuddsBeløp: null,
+    harSparekonto: null,
+    sparekontoBeløp: null,
     harVerdipapir: null,
     verdipapirBeløp: null,
     skylderNoenMegPenger: null,

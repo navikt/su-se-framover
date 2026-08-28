@@ -22,6 +22,11 @@ export default {
     'innskudd.pengerPåKontoInkludertDepositum': 'Har du penger på konto (inkludert depositumskonto)?',
     'innskudd.beløp': 'Hvor mye penger er det på konto?',
 
+    'sparekonto.label': 'Har du sparekonto?',
+    'sparekonto.beløp': 'Hvor mye penger er det på sparekonto?',
+
+    'bankkort.label': 'Har du flere bankkort?',
+
     'verdipapir.label': 'Har du aksjer, aksjefond eller verdipapir?',
     'verdipapir.beløp': 'Hvor mye penger er dette verdt?',
 

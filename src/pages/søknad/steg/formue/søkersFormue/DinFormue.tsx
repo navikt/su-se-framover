@@ -319,6 +319,42 @@ const DinFormue = (props: { forrigeUrl: string; nesteUrl: string; avbrytUrl: str
 
                 <Controller
                     control={form.control}
+                    name="harSparekonto"
+                    render={({ field, fieldState }) => (
+                        <BooleanRadioGroup
+                            legend={formatMessage('sparekonto.label')}
+                            error={fieldState.error?.message}
+                            {...field}
+                            onChange={(val) => {
+                                field.onChange(val);
+                                setFieldsToNull(['sparekontoBeløp']);
+                            }}
+                        />
+                    )}
+                />
+
+                {form.watch('harSparekonto') && (
+                    <Controller
+                        control={form.control}
+                        name="sparekontoBeløp"
+                        render={({ field, fieldState }) => (
+                            <TextField
+                                className={sharedStyles.narrow}
+                                id="innskuddsBeløp"
+                                label={formatMessage('sparekonto.beløp')}
+                                error={fieldState.error?.message}
+                                {...field}
+                                value={field.value ?? ''}
+                                // Dette elementet vises ikke ved sidelast
+
+                                autoFocus
+                            />
+                        )}
+                    />
+                )}
+
+                <Controller
+                    control={form.control}
                     name="harVerdipapir"
                     render={({ field, fieldState }) => (
                         <BooleanRadioGroup

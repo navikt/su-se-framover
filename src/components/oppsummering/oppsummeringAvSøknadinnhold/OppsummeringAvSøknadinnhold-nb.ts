@@ -47,6 +47,7 @@ export default {
     'formue.verdiPåEiendom': 'Verdi på eiendom',
     'formue.verdiPåKjøretøy': 'Verdi på kjøretøy',
     'formue.innskuddsbeløp': 'Innskuddsbeløp',
+    'formue.sparekontobeløp': 'Sparekontobeløp',
     'formue.verdipapirbeløp': 'Verdipapirbeløp',
     'formue.kontanter': 'Kontanter over 1000',
     'formue.skylderNoenSøkerPengerBeløp': 'Skylder noen søker penger',
