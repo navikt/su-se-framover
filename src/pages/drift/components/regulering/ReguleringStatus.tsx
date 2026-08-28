@@ -1,7 +1,11 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { Alert, Button, Heading, Loader, Select, Table, Textarea } from '@navikt/ds-react';
 import { useEffect, useState } from 'react';
-import { hentReguleringsstatusUtestående, produserReguleringsstatusUtestående } from '~src/api/reguleringApi.ts';
+import {
+    hentReguleringsstatusUtestående,
+    produserReguleringsstatusUtestående,
+    slettPågåendeReguleringStatus,
+} from '~src/api/reguleringApi.ts';
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert.tsx';
 import { useApiCall } from '~src/lib/hooks.ts';
 
@@ -15,6 +19,9 @@ const ReguleringStatus = () => {
     const currentYear = new Date().getFullYear();
     const previousYear = currentYear - 1;
     const [valgtÅr, setValgtÅr] = useState<string>(currentYear.toString());
+
+    const [avbrytPågåendeStatus, avbrytPågående, resetStatusAvbryt] = useApiCall(slettPågåendeReguleringStatus);
+    const [bekreftAvbryt, setbekreftAvbryt] = useState(false);
 
     useEffect(() => {
         reguleringsstatusUteståendeRequest({});
@@ -65,7 +72,52 @@ const ReguleringStatus = () => {
                             key={status.id}
                             style={{ marginTop: '2rem', paddingBottom: '2rem', borderBottom: '1px solid #c6c2bf' }}
                         >
-                            <Alert variant={statusAlert}>Uthenting av status {status.produserStatus}</Alert>
+                            <Alert variant={statusAlert}>
+                                <p>Uthenting av status {status.produserStatus}</p>
+                                {status.produserStatus === 'Pågående' && (
+                                    <>
+                                        {!bekreftAvbryt ? (
+                                            <Button
+                                                variant="danger"
+                                                size="small"
+                                                onClick={() => setbekreftAvbryt(true)}
+                                            >
+                                                Avbryt
+                                            </Button>
+                                        ) : (
+                                            <>
+                                                <Button
+                                                    variant="danger"
+                                                    size="small"
+                                                    onClick={avbrytPågående}
+                                                    loading={RemoteData.isPending(avbrytPågåendeStatus)}
+                                                >
+                                                    Bekreft start
+                                                </Button>
+                                                <Button
+                                                    variant="tertiary"
+                                                    size="small"
+                                                    onClick={() => {
+                                                        setbekreftAvbryt(false);
+                                                        resetStatusAvbryt();
+                                                    }}
+                                                >
+                                                    Avbryt
+                                                </Button>
+                                            </>
+                                        )}
+                                        {RemoteData.isSuccess(avbrytPågåendeStatus) && (
+                                            <Alert variant="success" size="small">
+                                                Pågående er avbrutt og slettet
+                                            </Alert>
+                                        )}
+                                        {RemoteData.isFailure(avbrytPågåendeStatus) && (
+                                            <ApiErrorAlert error={avbrytPågåendeStatus.error} />
+                                        )}
+                                    </>
+                                )}
+                            </Alert>
+
                             {status.reguleringStatus && (
                                 <div>
                                     <section style={{ marginTop: '2rem' }}>
