@@ -21,7 +21,7 @@ const ReguleringStatus = () => {
     const [valgtÅr, setValgtÅr] = useState<string>(currentYear.toString());
 
     const [avbrytPågåendeStatus, avbrytPågående, resetStatusAvbryt] = useApiCall(slettPågåendeReguleringStatus);
-    const [bekreftAvbryt, setbekreftAvbryt] = useState(false);
+    const [bekreftAvbryt, setBekreftAvbryt] = useState(false);
 
     useEffect(() => {
         reguleringsstatusUteståendeRequest({});
@@ -80,9 +80,9 @@ const ReguleringStatus = () => {
                                             <Button
                                                 variant="danger"
                                                 size="small"
-                                                onClick={() => setbekreftAvbryt(true)}
+                                                onClick={() => setBekreftAvbryt(true)}
                                             >
-                                                Avbryt
+                                                Avbryt Avbryt
                                             </Button>
                                         ) : (
                                             <>
@@ -98,7 +98,7 @@ const ReguleringStatus = () => {
                                                     variant="tertiary"
                                                     size="small"
                                                     onClick={() => {
-                                                        setbekreftAvbryt(false);
+                                                        setBekreftAvbryt(false);
                                                         resetStatusAvbryt();
                                                     }}
                                                 >
