@@ -45,7 +45,9 @@ jobs:
                   team: supstonad
                   salsa: true
                   image_suffix: app
-                  tag: ${{ github.sha }}
+                  # Bruker default unik tag fra nais/docker-build-push (timestamp + short SHA)
+                  # for å unngå at samme tag overskrives av ulike workflows.
+                  # Se prod-deploy-gcp.yml for utfyllende forklaring.
 
     deploy-to-dev-gcp-q1:
         name: deploy-to-dev-gcp-q1

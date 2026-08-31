@@ -101,6 +101,13 @@ export async function hentReguleringsstatusUtestående(): Promise<ApiClientResul
     });
 }
 
+export async function slettPågåendeReguleringStatus(): Promise<ApiClientResult<void>> {
+    return apiClient({
+        url: `/reguleringer/status-regulering-utestaende`,
+        method: 'DELETE',
+    });
+}
+
 export async function avsluttRegulering(args: {
     reguleringId: string;
     begrunnelse: string;
