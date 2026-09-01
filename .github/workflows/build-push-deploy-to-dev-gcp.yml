@@ -51,7 +51,8 @@ jobs:
                   team: supstonad
                   salsa: true
                   image_suffix: app # hvis denne endres så må prod-deploy oppdateres likt
-                  tag: ${{ github.sha }}
+                  # Bruker default unik tag fra nais/docker-build-push (timestamp + short SHA)
+                  # for å unngå at re-runs overskriver eksisterende image
 
     deploy-to-dev-gcp:
         if: github.event_name == 'workflow_dispatch'

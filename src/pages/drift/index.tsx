@@ -23,6 +23,7 @@ import { toIsoDateOnlyString } from '~src/utils/date/dateUtils';
 import DokumentDistribusjon from './components/dokument/DokumentDistribusjon';
 import Fradragssjekk from './components/fradragssjekk/Fradragssjekk';
 import SupstønadHistorisk from './components/historisk/SupstønadHistorisk';
+import JobbOversikt from './components/jobber/JobbOversikt';
 import Personhendelser from './components/personhendelser/Personhendelser';
 import ResendStatistikk from './components/ResendStatistikk.tsx';
 import Gregulering from './components/regulering/G-regulering';
@@ -278,6 +279,8 @@ const Drift = () => {
                 </div>
                 {knappTrykket === Knapp.NØKKELTALL && <Nøkkeltall />}
             </div>
+
+            <JobbOversikt />
         </div>
     );
 };
