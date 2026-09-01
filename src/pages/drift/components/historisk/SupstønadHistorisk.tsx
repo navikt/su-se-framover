@@ -20,6 +20,7 @@ import {
     hentHistoriskeImporter,
     hentUttrekkSupstønadHistorisk,
     ImportStatus,
+    konverterImport,
     slettHistoriskImport,
     startHistoriskImport,
     tellRaderSupstønadHistorisk,
@@ -203,7 +204,11 @@ const ImportRad = (props: { import_: HistoriskImportOversikt; onSlettet: () => v
     const { import_, onSlettet } = props;
     const [bekreftSlett, setBekreftSlett] = useState(false);
     const [slettStatus, slett, resetSlettStatus] = useApiCall(slettHistoriskImport);
+
+    const [startKonverteringStatus, startKonvertering] = useApiCall(konverterImport);
+
     const kanSlettes = import_.status !== 'PÅGÅR';
+    const kanKonverteres = import_.status == 'FULLFØRT';
 
     const handleSlett = () => {
         slett({ importId: import_.id }, () => {
@@ -219,6 +224,19 @@ const ImportRad = (props: { import_: HistoriskImportOversikt; onSlettet: () => v
                 <Tag variant={statusTagVariant(import_.status)} size="small">
                     {import_.status}
                 </Tag>
+                {kanKonverteres && (
+                    <div>
+                        <Button
+                            variant="danger"
+                            size="small"
+                            onClick={() => startKonvertering({ importId: import_.id })}
+                            loading={RemoteData.isPending(slettStatus)}
+                        >
+                            Konverter import
+                        </Button>
+                        <>Status {startKonverteringStatus}</>
+                    </div>
+                )}
             </Table.DataCell>
             <Table.DataCell>{formatDateTime(import_.opprettet)}</Table.DataCell>
             <Table.DataCell>{import_.fullført ? formatDateTime(import_.fullført) : '–'}</Table.DataCell>
