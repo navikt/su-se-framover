@@ -11,7 +11,7 @@ import {
 } from '~src/api/driftApi';
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
 import { MonthPicker } from '~src/components/inputs/datePicker/DatePicker';
-import { useApiCall } from '~src/lib/hooks';
+import { ApiResult, useApiCall } from '~src/lib/hooks';
 import { Nullable } from '~src/lib/types';
 import { formatDate, formatDateTime, toIsoMonth } from '~src/utils/date/dateUtils';
 
@@ -144,7 +144,7 @@ const FradragssjekkModal = (props: { visModal: boolean; onClose: () => void }) =
     );
 };
 
-const Resultat = (props: { status: ReturnType<typeof useApiCall<void, FradragssjekkDriftResultat>>[0] }) => {
+const Resultat = (props: { status: ApiResult<FradragssjekkDriftResultat> }) => {
     if (RemoteData.isInitial(props.status) || RemoteData.isPending(props.status)) {
         return <Loader title="Henter siste resultat" />;
     }
