@@ -232,6 +232,14 @@ export async function dryRunPersonhendelser(args: {
     });
 }
 
+export async function konverterImport(args: { importId: string }): Promise<ApiClientResult<void>> {
+    return apiClient({
+        url: `/drift/supstonadhistorisk/import/${args.importId}/konverter`,
+        method: 'POST',
+        request: { headers: new Headers({ Accept: 'application/json' }) },
+    });
+}
+
 export async function tellRaderSupstønadHistorisk(args: {
     tabellnavn: string;
 }): Promise<ApiClientResult<{ antall: number }>> {
