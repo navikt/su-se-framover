@@ -164,7 +164,6 @@ const Kvittering = () => {
 
                                     <Button
                                         onClick={() => {
-                                            handleSkrivUtSøknadClick(saksnummerOgSøknad);
                                             setOpen(true);
                                         }}
                                     >
@@ -174,7 +173,7 @@ const Kvittering = () => {
 
                                     <Modal
                                         ref={ref}
-                                        aria-label="Kontrollsamtale"
+                                        aria-label={formatMessage('påminnelse.ikkeSkrivPåUtskrift.tittel')}
                                         open={open}
                                         onClose={() => setOpen(false)}
                                     >
@@ -191,7 +190,10 @@ const Kvittering = () => {
                                                     <Button
                                                         variant="secondary"
                                                         type="button"
-                                                        onClick={() => setOpen(false)}
+                                                        onClick={() => {
+                                                            setOpen(false);
+                                                            handleSkrivUtSøknadClick(saksnummerOgSøknad);
+                                                        }}
                                                     >
                                                         Jeg forstår
                                                     </Button>
