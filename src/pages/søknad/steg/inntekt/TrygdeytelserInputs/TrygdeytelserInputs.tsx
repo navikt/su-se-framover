@@ -8,6 +8,7 @@ import styles from './trygdeytelserInputs.module.less';
 
 export const trygdeytelserMessages = {
     'trygdeytelserIUtlandet.beløp': 'Hvor mye får du i lokal valuta i måneden?',
+    'trygdeytelserIUtlandet.beløp.eps': 'Hvor mye får ektefelle/samboer i lokal valuta i måneden?',
     'trygdeytelserIUtlandet.ytelse': 'Type ytelse',
     'trygdeytelserIUtlandet.valuta': 'Valuta',
     'button.fjern.trygdeytelse': 'Fjern trygdeytelse',
@@ -23,6 +24,7 @@ const TrygdeytelserInputFelter = (props: {
     onChange: (element: { index: number; beløp: string; type: string; valuta: string }) => void;
     onLeggTilClick: () => void;
     onFjernClick: (index: number) => void;
+    erEps: boolean;
 }) => {
     const { formatMessage } = useI18n({ messages: trygdeytelserMessages });
 
@@ -52,7 +54,11 @@ const TrygdeytelserInputFelter = (props: {
                             <TextField
                                 id={beløpId}
                                 name={beløpId}
-                                label={formatMessage('trygdeytelserIUtlandet.beløp')}
+                                label={
+                                    props.erEps
+                                        ? formatMessage('trygdeytelserIUtlandet.beløp.eps')
+                                        : formatMessage('trygdeytelserIUtlandet.beløp')
+                                }
                                 value={input.beløp}
                                 onChange={(e) => {
                                     props.onChange({
