@@ -1,0 +1,52 @@
+# SU-frontend-ekspertens kunnskapshub
+
+Dette er inngangen til verifisert kunnskap om `su-se-framover`. Dokumentasjonen er
+et kart inn i gjeldende kode, ikke en erstatning for kode, tester eller faglige
+kilder.
+
+## Slik brukes kunnskapsbasen
+
+1. Les [`../AGENTS.md`](../AGENTS.md) og relevante filinstruksjoner.
+2. Les bare temafilene som berører oppgaven.
+3. Kontroller kritiske påstander mot gjeldende kode og tester.
+4. Verifiser kryss-repo-påstander mot både frontend og gjeldende backendkontrakt.
+5. Flytt uavklarte, historiske eller avkreftede påstander til
+   [avklaringsfilen](domenekontekst/avklaringer.md).
+6. Oppdater riktig temafil når ny, varig kunnskap er bekreftet.
+
+## Kildestatus
+
+| Status | Betydning |
+|---|---|
+| `verified` | Bekreftet i gjeldende frontendkode, test eller konfigurasjon |
+| `cross-repo` | Bekreftet på begge sider av en repositorygrense |
+| `current-strategy` | Beskriver dagens løsning, men er ikke en vedtatt regel |
+| `historical` | Beskriver eldre oppførsel |
+| `unresolved` | Mangler tilstrekkelig belegg |
+| `rejected` | Avkreftet av nyere, sterkere belegg |
+
+## Temaer
+
+| Tema | Bruk når du skal forstå |
+|---|---|
+| [Systemoversikt](domenekontekst/systemoversikt.md) | frontend, BFF, backend og tekniske grenser |
+| [Brukerflyter](domenekontekst/brukerflyter.md) | ruter, sider og hovedoppgaver |
+| [API og kontrakter](domenekontekst/api-og-kontrakter.md) | API-klienter, DTO-er og runtime-validering |
+| [Behandling og attestering](domenekontekst/behandling-og-attestering.md) | statuser, handlinger og attestering |
+| [Utbetaling og simulering](domenekontekst/utbetaling-og-simulering.md) | beregning, simulering, oversending og kvittering |
+| [Brev og dokument](domenekontekst/brev-og-dokument.md) | forhåndsvisning, valg og distribusjon |
+| [Regulering, stans og gjenopptak](domenekontekst/regulering-stans-og-gjenopptak.md) | separate endringsflyter |
+| [Klage og tilbakekreving](domenekontekst/klage-og-tilbakekreving.md) | egne tilstandsmaskiner og attestering |
+| [Autentisering og tilgang](domenekontekst/autentisering-og-tilgang.md) | Wonderwall, JWT, OBO, roller og tilgang |
+| [UI-tilstand og feilhåndtering](domenekontekst/ui-tilstand-og-feilhåndtering.md) | RemoteData, feil og tomtilstander |
+| [Aksel og tilgjengelighet](domenekontekst/aksel-og-tilgjengelighet.md) | designsystem og universell utforming |
+| [Eksterne repoer](domenekontekst/eksterne-repos.md) | systemgrenser og kildestatus |
+| [Avklaringer](domenekontekst/avklaringer.md) | forhold som ikke skal brukes som gjeldende fakta |
+
+## Historikk og læring
+
+- [Prosesslæring](agents/su-frontend-ekspert.lessons.jsonl) gjelder agentens
+  arbeidsmåte, ikke domenet.
+- [Godkjente avvik](ai-historikk/avvik.jsonl) er avgrensede unntak uten presedens.
+- [Endringer](ai-historikk/endringer.jsonl) gjelder dette AI-oppsettet og
+  domenedokumentasjonen.
