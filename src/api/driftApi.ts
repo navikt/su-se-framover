@@ -232,10 +232,48 @@ export async function dryRunPersonhendelser(args: {
     });
 }
 
-export async function konverterImport(args: { importId: string }): Promise<ApiClientResult<void>> {
+export interface StartHistoriskKonverteringResponse {
+    projeksjonId: string;
+}
+
+export type HistoriskKonverteringStatus = 'PÅGÅR' | 'FULLFØRT' | 'FEILET';
+
+export interface HistoriskKonvertering {
+    id: string;
+    importId: string;
+    status: HistoriskKonverteringStatus;
+    dryRun: boolean;
+    maksAntallStønader: Nullable<number>;
+    antallStønader: number;
+    avviksoppsummering: Record<string, number>;
+    forbehold: string[];
+    opprettet: string;
+    fullført: Nullable<string>;
+    feilbeskrivelse: Nullable<string>;
+}
+
+export async function konverterImport(args: {
+    importId: string;
+    maksAntallStønader?: number;
+}): Promise<ApiClientResult<StartHistoriskKonverteringResponse>> {
+    const query =
+        args.maksAntallStønader !== undefined
+            ? `?${new URLSearchParams({ maksAntallStonader: args.maksAntallStønader.toString() })}`
+            : '';
+
     return apiClient({
-        url: `/drift/supstonadhistorisk/import/${args.importId}/konverter`,
+        url: `/drift/supstonadhistorisk/import/${encodeURIComponent(args.importId)}/konverter${query}`,
         method: 'POST',
+        request: { headers: new Headers({ Accept: 'application/json' }) },
+    });
+}
+
+export async function hentHistoriskeKonverteringer(args: {
+    importId: string;
+}): Promise<ApiClientResult<HistoriskKonvertering[]>> {
+    return apiClient({
+        url: `/drift/supstonadhistorisk/import/${encodeURIComponent(args.importId)}/konverteringer`,
+        method: 'GET',
         request: { headers: new Headers({ Accept: 'application/json' }) },
     });
 }
