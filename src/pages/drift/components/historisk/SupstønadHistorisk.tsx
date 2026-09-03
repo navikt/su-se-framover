@@ -208,7 +208,7 @@ const ImportRad = (props: { import_: HistoriskImportOversikt; onSlettet: () => v
     const [startKonverteringStatus, startKonvertering] = useApiCall(konverterImport);
 
     const kanSlettes = import_.status !== 'PÅGÅR';
-    const kanKonverteres = import_.status == 'FULLFØRT';
+    const kanKonverteres = import_.status === 'FULLFØRT';
 
     const handleSlett = () => {
         slett({ importId: import_.id }, () => {
@@ -230,11 +230,18 @@ const ImportRad = (props: { import_: HistoriskImportOversikt; onSlettet: () => v
                             variant="danger"
                             size="small"
                             onClick={() => startKonvertering({ importId: import_.id })}
-                            loading={RemoteData.isPending(slettStatus)}
+                            loading={RemoteData.isPending(startKonverteringStatus)}
                         >
                             Konverter import
                         </Button>
-                        <>Status {startKonverteringStatus}</>
+                        {RemoteData.isSuccess(startKonverteringStatus) && (
+                            <Alert variant="success" size="small">
+                                Konvertering startet.
+                            </Alert>
+                        )}
+                        {RemoteData.isFailure(startKonverteringStatus) && (
+                            <ApiErrorAlert error={startKonverteringStatus.error} />
+                        )}
                     </div>
                 )}
             </Table.DataCell>
