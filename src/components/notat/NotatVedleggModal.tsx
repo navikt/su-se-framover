@@ -12,7 +12,7 @@ type Props = {
     open: boolean;
     kanRedigere: boolean;
     valgtFil: File | null;
-    vedlegg: NotatVedlegg[];
+    vedlegg: Pick<NotatVedlegg, 'id' | 'filnavn' | 'mimeType' | 'opprettet' | 'innhold'>[];
     lasterVedlegg: boolean;
     lasterOppVedlegg: boolean;
     sletterVedlegg: boolean;

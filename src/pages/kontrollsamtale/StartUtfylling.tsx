@@ -13,7 +13,7 @@ const Startutfylling = () => {
     const { formatMessage } = useI18n({ messages });
     const navigate = useNavigate();
 
-    const { step, sakId } = useRouteParams<typeof kontrollsamtaleUtfylling>();
+    const { step, sakId, kontrollsamtaleId } = useRouteParams<typeof kontrollsamtaleUtfylling>();
     const personligOppmøte = useAppSelector((state) => state.kontrollsamtale.personligOppmøte);
 
     if (!sakId) {
@@ -33,16 +33,20 @@ const Startutfylling = () => {
     ];
     const aktivtStegIndex = steg.findIndex((s) => s.step === step);
     useEffect(() => {
+        if (!sakId || !kontrollsamtaleId) {
+            return;
+        }
         if (aktivtStegIndex === -1) {
             navigate(
                 kontrollsamtaleUtfylling.createURL({
                     sakId,
+                    kontrollsamtaleId,
                     step: KontrollsamtaleSteg.PersonligOppmøte,
                 }),
                 { replace: true },
             );
         }
-    }, [aktivtStegIndex, navigate, sakId]);
+    }, [aktivtStegIndex, navigate, sakId, kontrollsamtaleId]);
 
     if (aktivtStegIndex === -1) {
         return null;
@@ -57,9 +61,13 @@ const Startutfylling = () => {
                         activeStep={aktivtStegIndex + 1}
                         orientation="horizontal"
                         onStepChange={(index) => {
+                            if (!sakId || !kontrollsamtaleId) {
+                                return;
+                            }
                             navigate(
                                 kontrollsamtaleUtfylling.createURL({
                                     sakId,
+                                    kontrollsamtaleId,
                                     step: steg[index - 1].step,
                                 }),
                             );
@@ -77,6 +85,7 @@ const Startutfylling = () => {
                     sakId={sakId!}
                     title={formatMessage(aktivtSteg!.step)}
                     hjelpetekst={aktivtSteg?.hjelpetekst}
+                    kontrollsamtaleId={kontrollsamtaleId!}
                 />
             </div>
         </div>
