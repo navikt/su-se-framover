@@ -45,6 +45,6 @@ export const httpLogger = pinoHttp({
         return 'info';
     },
     genReqId(req) {
-        return req.headers['X-Correlation-ID'] || req.id;
+        return req.headers['x-correlation-id'] || req.id;
     },
 });
