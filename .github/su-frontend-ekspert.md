@@ -31,7 +31,7 @@ kontrollerer rådet mot repositoryet.
 | Tilgjengelighet | Aksel og tilgjengelighet, semantikken i berørt komponent og eventuelt `accessibility-agent`. |
 | Produksjonsfeil | Systemoversikt, observerbarhet, UI-tilstand og feilhåndtering, BFF-logger og den konkrete flyten. |
 | Norsk brukerinnhold | Berørt domenefil, eksisterende mikrotekst, `klarsprak` og eventuelt `forfatter`. |
-| E2E-test | Avklar først teststrategi og avhengigheter. Playwright er ikke installert eller en del av de låste skillene. |
+| E2E-test | Avklar først teststrategi og avhengigheter. Playwright er ikke installert eller en del av de importerte skillene. |
 
 Aksel og tilgjengelighet skal vurderes sammen ved ny eller endret interaksjon.
 En ren spacing-endring trenger normalt ikke domenefiler. Last domenekunnskap når

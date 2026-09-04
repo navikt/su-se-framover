@@ -46,9 +46,7 @@ offisiell dokumentasjon før en ny adapter legges til:
 | [`agents/su-frontend-ekspert.agent.md`](agents/su-frontend-ekspert.agent.md) | Detaljert profil for standardrollen innen frontend, BFF, auth og domene |
 | [`agents/su-frontend-ekspert.lessons.jsonl`](agents/su-frontend-ekspert.lessons.jsonl) | Varig prosesslæring |
 | [`frontend-skills.md`](frontend-skills.md) | Register og repoavgrensning for installerte frontend-skills |
-| [`skills.lock.json`](skills.lock.json) | Full upstream-commit og innholdshasher for installerte skills |
 | [`skills/`](skills/) | Skills fra `navikt/copilot`, lest direkte av Copilot CLI |
-| [`workflows/copilot-setup-steps.yml`](workflows/copilot-setup-steps.yml) | Deterministisk avhengighetsoppsett for Copilot cloud agent |
 | [`su-frontend-ekspert.md`](su-frontend-ekspert.md) | Kunnskapshub |
 | [`domenekontekst/`](domenekontekst/) | Verifiserte fakta og avklaringer |
 | [`ai-historikk/avvik.jsonl`](ai-historikk/avvik.jsonl) | Eksplisitt godkjente, avgrensede unntak |

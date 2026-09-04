@@ -1,10 +1,10 @@
 ---
 name: aksel-builder
-description: Expert builder for Aksel, the Nav / @navikt design system — React components, design tokens, layout primitives, theming (light/dark), icons, CSS, the Tailwind preset, version migrations, Figma-to-code. Triggers — Aksel, "using/with aksel", Nav/Navikt, "designsystemet", "design system", @navikt/ds-* (e.g. @navikt/ds-react) or @navikt/aksel-* packages; add/create/build/refactor a component (button, input, modal, table, alert, card, form) or layout; implement a design from Figma (pasted figma.com/design/...?node-id link, "implement this design", "build this from Figma", design-to-code). Invoke for frontend UI work with any Aksel signal unless the user opts out.
+description: Expert builder for Aksel, the Nav / @navikt design system — React components, design tokens, layout primitives, theming (light/dark), icons, CSS, the Tailwind preset, and version migrations. Triggers — Aksel, "using/with aksel", Nav/Navikt, "designsystemet", "design system", @navikt/ds-* (e.g. @navikt/ds-react) or @navikt/aksel-* packages; add/create/build/refactor a component (button, input, modal, table, alert, card, form) or layout. Invoke for frontend UI work with any Aksel signal unless the user opts out.
 license: MIT
 metadata:
   domain: frontend
-  tags: aksel design-system nav react spacing tokens layout responsive primitives icons tailwind figma figma-to-code design-to-code
+  tags: aksel design-system nav react spacing tokens layout responsive primitives icons tailwind
 ---
 
 # Aksel design system skill
@@ -141,7 +141,6 @@ time a task touches its domain — don't preload all of them.** All reference fi
 | If the task is…                                  | Load                   | Then call                                                                                        |
 | ------------------------------------------------ | ---------------------- | ------------------------------------------------------------------------------------------------ |
 | Pick/build a component (form, modal, table, …)   | `components.md`        | `find_docs` → `get_component_info` → `get_doc` (usage) → build                                   |
-| Implement a **Figma design** → Aksel code        | `figma-to-code.md`     | Figma MCP (`get_design_context`, including screenshot) → map to Aksel via the `aksel_*` tools → build |
 | Lay out / space / make responsive                | `primitives-layout.md` | build with primitives (`get_component_info` for a primitive's API)                               |
 | Color / token / spacing value / Tailwind styling | `tokens-styling.md`    | `get_token_details` (browse via `find_docs` `kind:"tokens"`)                                     |
 | Light/dark mode or base color                    | `theming.md`           | usually no call — `Theme` component                                                              |
@@ -169,7 +168,6 @@ contains_. Load on demand to keep context small.
 - [references/tokens-styling.md](references/tokens-styling.md) — token-props vs `--ax-` variables, color roles, styling discipline, Tailwind preset.
 - [references/theming.md](references/theming.md) — light/dark mode, the `Theme` component, `data-color`.
 - [references/components.md](references/components.md) — choosing the right component; form & composition patterns.
-- [references/figma-to-code.md](references/figma-to-code.md) — Figma → Aksel code: Code Connect, confidence matrix, HTML→primitive/token mapping, validation. Needs the Figma MCP.
 - [references/icons.md](references/icons.md) — finding icons, `name` → `${name}Icon`, sizing, a11y.
 - [references/accessibility.md](references/accessibility.md) — required a11y props, semantic structure, Norwegian content.
 - [references/migrations.md](references/migrations.md) — upgrading versions, codemods, v7→v8 highlights.

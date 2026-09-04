@@ -23,8 +23,7 @@
     "references/primitives-layout.md",
     "references/setup-and-imports.md",
     "references/theming.md",
-    "references/tokens-styling.md",
-    "references/figma-to-code.md"
+    "references/tokens-styling.md"
   ],
   "examples": [
     "Sett opp et frontend-prosjekt med Aksel",
@@ -32,7 +31,6 @@
     "Bygg en mobil-first sidelayout med Page.Block og VStack",
     "Sett riktig padding med space-tokens - hva er space-16 i v8?",
     "Migrer app fra aksel v7 til v8",
-    "Hvilket ikon skal jeg bruke for en 'tilbake-knapp'?",
-    "Konverter denne figma-skissen til frontend-kode med Aksel-komponenter"
+    "Hvilket ikon skal jeg bruke for en 'tilbake-knapp'?"
   ]
 }

@@ -170,11 +170,6 @@ npm run build:server
 `npm run lint-and-typecheck` bruker en skrivende Biome-kommando. Bruk den ikke som
 en ren kontroll dersom arbeidsområdet ikke skal endres.
 
-Copilot cloud agent klargjøres av
-[`copilot-setup-steps.yml`](.github/workflows/copilot-setup-steps.yml). Hold
-workflowen i samsvar med Node/npm-versjonene, låsefilene og supply-chain-reglene
-i repositoryet.
-
 ## Kunnskap og historikk
 
 Les [oversikten over AI-styringen](.github/AI-STYRING.md) for filansvar og

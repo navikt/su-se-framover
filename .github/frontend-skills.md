@@ -6,12 +6,8 @@ brukes sammen med de kanoniske reglene.
 Skillene er hentet fra
 `navikt/copilot@24ad9baf95ae381f03a1a1bad69199b5d4532aa6` og ligger som
 versjonerte mapper under `.github/skills/`. Copilot CLI (`cplt`) finner dem
-direkte i repositoryet. Oppsettet bruker ikke Nav Pilot. Kilde og innholdshasher
-ligger i [`skills.lock.json`](skills.lock.json).
-
-`sha256-directory-v1` er SHA-256 av én linje per fil på formen
-`<filens SHA-256><to mellomrom><relativ filsti><linjeskift>`, sortert på relativ
-filsti. Hashen dekker alle vanlige filer i skillmappen.
+direkte i repositoryet. Oppsettet bruker ikke Nav Pilot. Git sporer det lokale
+innholdet; full upstream-commit dokumenterer opphavet.
 
 ## Prioritet og avgrensning
 
@@ -35,8 +31,7 @@ filsti. Hashen dekker alle vanlige filer i skillmappen.
 Ikke rediger en importert skill for å skjule en konflikt. Behold upstream-filen
 sporbar, og dokumenter repoets overstyring i dette registeret.
 En verifisert feil i selve skillteksten kan rettes lokalt når rettelsen
-registreres i `localPatches` i [`skills.lock.json`](skills.lock.json) og
-innholdshashen oppdateres.
+registreres i [endringshistorikken](ai-historikk/endringer.jsonl).
 
 ## Installerte skills
 
@@ -81,8 +76,7 @@ ikke Nav Pilot. Før en oppdatering:
 1. Sammenlign hver endret upstream-fil med forrige versjon.
 2. Gjenta den manuelle kontrollen mot lokale regler og faktisk teknologistakk.
 3. Oppdater dette registeret dersom en mismatch er ny, endret eller fjernet.
-4. Oppdater full commit-SHA og lokale innholdshasher i
-   [`skills.lock.json`](skills.lock.json).
-5. Valider at Copilot CLI fortsatt finner skillens `SKILL.md`.
+4. Oppdater full commit-SHA i dette dokumentet.
+5. Kontroller at Copilot CLI fortsatt finner skillens `SKILL.md`.
 
 En upstream-endring kan ikke automatisk endre repoets regler.

@@ -16,7 +16,6 @@ and primitive — and backs every choice with the **Aksel MCP server** instead o
 - **Icons** — finding icons and the `name` → `${name}Icon` import mapping.
 - **Accessibility** — the props Aksel requires for WCAG-compliant output.
 - **Setup & migrations** — packages, imports, SSR/RSC, and version codemods.
-- **Figma → code** — translate a Figma design into Aksel components and tokens (needs a Figma MCP).
 
 ## How it works
 
@@ -48,7 +47,6 @@ aksel-builder/
     ├── tokens-styling.md     # token-props vs --ax- vars, roles, Tailwind
     ├── theming.md            # Theme component, light/dark, data-color
     ├── components.md         # component selection, form & composition
-    ├── figma-to-code.md      # Figma → Aksel (Code Connect, mapping, validation)
     ├── icons.md              # finding icons, name → ${name}Icon, a11y
     ├── accessibility.md      # required a11y props, structure, language
     └── migrations.md         # codemods, v7→v8 highlights
@@ -63,7 +61,7 @@ Token estimates (`~4 chars/token`; markdown with tables/code, so ±10%):
 | Idle (until triggered) | frontmatter `description` only | ~240    |
 | Triggered, no refs     | full `SKILL.md`                | ~3,200  |
 | Typical task           | `SKILL.md` + 1–2 references    | ~5–7k   |
-| All references loaded  | `SKILL.md` + all 10 references | ~19,000 |
+| All references loaded  | `SKILL.md` + all 9 references  | ~17,000 |
 
 The skill costs ~240 tokens until a UI task triggers it, and most tasks pull only one or two
 references — the all-in figure is a ceiling, not the norm.
