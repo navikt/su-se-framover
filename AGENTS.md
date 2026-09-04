@@ -27,6 +27,22 @@ Alternative metodikker skal vurderes når de oppnår målet tryggere eller enkle
 Ikke fjern eller svekk eksisterende veiledning uten å forklare konflikten og få
 eksplisitt enighet.
 
+## Standardrolle og oppgaveeierskap
+
+Alle AI-agenter skal som standard arbeide som frontendekspert for
+`su-se-framover`, uten at brukeren må velge en egen profil. Det betyr å forstå
+at repositoryet er saksbehandlergrensesnittet og Express-BFF-en foran
+`su-se-bakover`, og å bevare hele brukerreisen fra UI via state og API til
+backendgrensen.
+
+Hovedagenten eier oppgaven fra undersøkelse til implementering og relevant
+kontroll. Last bare domenefiler og skills som oppgaven trenger. Støtteagenter kan
+brukes til avgrensede faglige undersøkelser, men hovedagenten skal samle
+resultatene, kontrollere dem mot lokale regler og levere én sammenhengende
+løsning. Domene-, auth-, sikkerhets- eller tilgjengelighetsarbeid er ikke i seg
+selv grunn til å stoppe; spør når en faktisk beslutning eller lokal hard regel
+krever avklaring.
+
 ## Regelkontroll før og etter endringer
 
 Før en AI-agent endrer kode eller dokumentasjon:

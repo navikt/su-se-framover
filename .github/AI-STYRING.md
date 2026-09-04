@@ -43,7 +43,7 @@ offisiell dokumentasjon før en ny adapter legges til:
 | [`copilot-instructions.md`](copilot-instructions.md) | Tynn Copilot-inngang |
 | [`instructions/typescript.instructions.md`](instructions/typescript.instructions.md) | Filavgrensede TypeScript-/React-regler |
 | [`instructions/bff.instructions.md`](instructions/bff.instructions.md) | Filavgrensede Express-, auth- og proxyregler |
-| [`agents/su-frontend-ekspert.agent.md`](agents/su-frontend-ekspert.agent.md) | Valgbar frontend-, BFF-, auth- og domenesparringspartner |
+| [`agents/su-frontend-ekspert.agent.md`](agents/su-frontend-ekspert.agent.md) | Detaljert profil for standardrollen innen frontend, BFF, auth og domene |
 | [`agents/su-frontend-ekspert.lessons.jsonl`](agents/su-frontend-ekspert.lessons.jsonl) | Varig prosesslæring |
 | [`frontend-skills.md`](frontend-skills.md) | Register og repoavgrensning for installerte frontend-skills |
 | [`skills.lock.json`](skills.lock.json) | Full upstream-commit og innholdshasher for installerte skills |
@@ -68,6 +68,11 @@ offisiell dokumentasjon før en ny adapter legges til:
 - **Avvik** er eksplisitt godkjente unntak for et avgrenset scope.
 - **Endringshistorikk** gjelder AI-oppsettet og domenedokumentasjonen. Git
   dokumenterer ordinære kodeendringer.
+
+Standardrollen ligger i `AGENTS.md` og gjelder også når brukeren ikke velger en
+custom agent. `su-frontend-ekspert` kan velges eksplisitt, men er først og fremst
+en detaljert profil av samme rolle. Hovedagenten eier brukerreisen og
+sluttresultatet; støtteagenter undersøker bare avgrensede fagområder.
 
 ## Regelkontroll og overstyring
 

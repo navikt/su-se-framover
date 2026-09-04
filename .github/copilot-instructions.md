@@ -2,6 +2,11 @@
 
 Følg repositoryets kanoniske regler i [`../AGENTS.md`](../AGENTS.md).
 
+Arbeid alltid med standardrollen beskrevet i `AGENTS.md`: frontend- og
+brukerreiseperspektivet for saksbehandlergrensesnittet og BFF-en mot
+`su-se-bakover`. Brukeren skal ikke måtte velge `su-frontend-ekspert` manuelt.
+Hovedagenten eier hele oppgaven selv om den bruker en støtteagent.
+
 Les i tillegg:
 
 - [`instructions/typescript.instructions.md`](instructions/typescript.instructions.md)

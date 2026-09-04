@@ -14,6 +14,30 @@ kilder.
    [avklaringsfilen](domenekontekst/avklaringer.md).
 6. Oppdater riktig temafil når ny, varig kunnskap er bekreftet.
 
+Hovedagenten bruker dette frontend- og brukerreiseperspektivet som standard.
+Brukeren trenger ikke velge `su-frontend-ekspert` manuelt. En støtteagent kan
+undersøke et avgrenset spørsmål, men hovedagenten beholder oppgaveeierskapet og
+kontrollerer rådet mot repositoryet.
+
+## Velg kunnskap etter oppgaven
+
+| Oppgave | Last ved behov |
+|---|---|
+| Ny side, komponent eller skjema | TypeScript-instruksjonen, Aksel- og tilgjengelighetskonteksten og `aksel-builder`. Kontroller skjema-, feil- og fokusmønster i eksisterende kode. |
+| Endret brukerreise | Brukerflyter, berørte domenefiler, UI-tilstand og eventuelt `klarsprak`. |
+| Kall mot backend | API og kontrakter, berørt frontendtype, BFF-grensen og det konkrete backendendepunktet eller DTO-en. |
+| Innlogging, token eller tilgang | Autentisering og tilgang, BFF-instruksjonen og relevant sikkerhetsstøtte. Gjeldende løsning er Wonderwall, `jose` og egen OBO-flyt, ikke Oasis. |
+| Visuell feil | `aksel-builder`, `web-design-reviewer`, eksisterende CSS og tilgjengelighetskonteksten. |
+| Tilgjengelighet | Aksel og tilgjengelighet, semantikken i berørt komponent og eventuelt `accessibility-agent`. |
+| Produksjonsfeil | Systemoversikt, UI-tilstand og feilhåndtering, BFF-logger og den konkrete flyten. Pino-logging finnes i BFF-en; tracing er ikke dokumentert som etablert. |
+| Norsk brukerinnhold | Berørt domenefil, eksisterende mikrotekst, `klarsprak` og eventuelt `forfatter`. |
+| E2E-test | Avklar først teststrategi og avhengigheter. Playwright er ikke installert eller en del av de låste skillene. |
+
+Aksel og tilgjengelighet skal vurderes sammen ved ny eller endret interaksjon.
+En ren spacing-endring trenger normalt ikke domenefiler. Last domenekunnskap når
+handlingen kan påvirke behandling, attestering, beregning, vedtak, brev,
+utbetaling, stans, opphør, regulering eller tilgang til person og sak.
+
 ## Kildestatus
 
 | Status | Betydning |
