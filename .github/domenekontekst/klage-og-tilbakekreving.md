@@ -1,5 +1,8 @@
 # Klage og tilbakekreving
 
+> Kildestatus: `verified` mot frontendkode. Faglige overgangsregler er ikke
+> `cross-repo`-verifisert med mindre det står eksplisitt.
+
 ## Klage
 
 Frontend har egne typer, ruter og sider for å opprette klage, vurdere formkrav,

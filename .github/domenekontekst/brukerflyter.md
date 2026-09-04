@@ -1,5 +1,8 @@
 # Brukerflyter
 
+> Kildestatus: `verified` mot frontendkode. Påstander er ikke `cross-repo` med
+> mindre det står eksplisitt.
+
 ## Verifiserte hovedinnganger
 
 `src/Root.tsx` kobler ruter til disse hovedflytene:
@@ -16,7 +19,9 @@
 - registrere kontrollsamtale og kontrollnotat
 - utføre avgrensede driftsoppgaver
 
-`src/types/Sak.ts` definerer frontendens sakstyper som `ALDER` og `UFØRE`.
+`src/types/Sak.ts` definerer `Sakstype` med medlemmene `Alder` og `Uføre`, som
+har wire-verdiene `'alder'` og `'uføre'`. Bruk `Sakstype.Alder` og
+`Sakstype.Uføre`, ikke strengliteraler i store bokstaver.
 
 ## Kontroll av en flyt
 

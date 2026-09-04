@@ -1,5 +1,8 @@
 # Systemoversikt
 
+> Kildestatus: `verified` mot frontendkode og konfigurasjon. Påstander er ikke
+> `cross-repo` med mindre det står eksplisitt.
+
 ## Verifisert ansvar
 
 `su-se-framover` består av en React-applikasjon og en Express-BFF.
@@ -25,7 +28,7 @@ authflyten skal virke.
 | `src/Root.tsx` og `src/pages/` | Ruter, sidekomposisjon og brukerflyter |
 | `src/components/` og `src/features/` | UI-byggesteiner og domenenær frontendfunksjonalitet |
 | `src/redux/` og slices | Delt state og asynkrone operasjoner |
-| `src/api/` | Typede klientfunksjoner mot BFF-ens `/api` |
+| `src/api/` | Typede klientfunksjoner mot BFF-ens `/api` og den avgrensede BFF-konfigurasjonen |
 | `server/auth/` | JWT-validering og OBO-veksling |
 | `server/proxy.ts` | Beskyttet proxy til `su-se-bakover` |
 | `server/routes.ts` | Runtime-konfigurasjon, statiske filer og health-endepunkter |

@@ -11,5 +11,5 @@ Les i tillegg:
 - [avklaringer](domenekontekst/avklaringer.md) før en uverifisert faglig påstand
   bygges inn i UI-et
 
-Ikke kopier regler mellom disse filene. Rapporter regelkonflikter og følg
+Ikke lag nye normative kopier av reglene. Rapporter regelkonflikter og følg
 avviksprosessen i `AGENTS.md`.

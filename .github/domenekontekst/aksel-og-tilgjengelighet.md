@@ -1,5 +1,8 @@
 # Aksel og tilgjengelighet
 
+> Kildestatus: `verified` mot statisk frontendkode og konfigurasjon. Dette er
+> ikke en full atferdstest eller dokumentasjon av WCAG-samsvar.
+
 ## Verifisert grunnlag
 
 Repositoryet bruker Aksel-komponenter, ikoner og globale stiler.
@@ -14,19 +17,12 @@ Applikasjonsskallet har:
 - dokumenttitler per hovedrute
 - Aksel `Loader`, `Alert`, skjemakomponenter og knapper
 
-## Teamregler
+## Relevant styring
 
-- Bruk Aksel før egenimplementerte komponenter, ikoner og designverdier.
-- Bruk semantisk HTML før ARIA.
-- Alle interaktive handlinger skal kunne brukes med tastatur og ha synlig fokus.
-- Skjemafelt skal ha tilgjengelig navn og feil knyttet til feltet.
-- Ved side- eller kontekstskifte skal fokus håndteres slik at brukeren forstår
-  resultatet.
-- Loading, feil, suksess og tomtilstand skal formidles forståelig, ikke bare med
-  farge eller visuell plassering.
-- Mikrotekst skal beskrive handling og konsekvens presist og på norsk.
-- Kontroller skjermleserrekkefølge og overskriftshierarki ved større
-  sideendringer.
+Normative regler for Aksel, semantisk HTML, tastatur, fokus, skjermleser og
+mikrotekst ligger i
+[`typescript.instructions.md`](../instructions/typescript.instructions.md).
+Denne filen dokumenterer det verifiserte grunnlaget for reglene.
 
 Biomes regler er en minimumskontroll. De beviser ikke alene samsvar med WCAG
 2.1/2.2 eller kravene til universell utforming.

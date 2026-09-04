@@ -16,6 +16,8 @@ fakta og regler.
 | React 19 `ref` som prop skal erstatte all `forwardRef` | Begge mønstre finnes i kodebasen | Egen teknisk beslutning |
 | Importstil for `fp-ts` skal standardiseres | Både `fp-ts/X`, `fp-ts/lib/X` og en lokal facade brukes | Egen oppryddingsbeslutning |
 | Component testing skal være obligatorisk | Jest-oppsettet har ikke etablert DOM-/komponenttestmiljø | Beslutning om testverktøy og supply-chain-vurdering |
+| Ny innlogging reparerer alle tokenfeil som BFF-en markerer med `x-login-required` | Dagens validering markerer flere ugyldig-token-kategorier; enkelte kan skyldes vedvarende konfigurasjons- eller nøkkelavvik | Tester og eventuell finere klassifisering i `server/auth/index.ts` |
+| Hvert backendendepunkt håndhever alle dokumenterte tilgangs- og overgangsgrenser | Frontend skal anta denne ansvarsgrensen, men full backendkontroll er ikke gjennomført | Endepunkt- og testkontroll i `su-se-bakover` |
 
 ## Avkreftet
 

@@ -37,7 +37,7 @@ Før en AI-agent endrer kode eller dokumentasjon:
 4. Beskriv regelen, konsekvensen og et regelkonformt alternativ.
 5. Vent på eksplisitt godkjenning før et avvik brukes.
 6. Registrer et godkjent avvik med scope, begrunnelse, konsekvenser, status, belegg
-   og tidspunkt eller hendelse for ny vurdering.
+   for godkjenningen og tidspunkt eller hendelse for ny vurdering.
 7. Kontroller det ferdige resultatet mot både reglene og det godkjente avviket.
 
 Godkjente avvik registreres i
@@ -79,9 +79,10 @@ koderegler. Uklar eller motstridende veiledning skal løftes til brukeren.
 
 ## Frontendregler
 
-Filavgrensede TypeScript- og React-regler ligger i
+Normative TypeScript- og React-regler ligger i
 [`typescript.instructions.md`](.github/instructions/typescript.instructions.md).
-Viktige teamregler er:
+Punktene under er bare et sammendrag. Ved avvik gjelder den filavgrensede
+instruksjonen:
 
 - Bruk målrettet runtime-validering ved utsatte datagrenser.
 - Modeller relevante asynkrone tilstander eksplisitt med `RemoteData`.

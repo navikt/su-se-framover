@@ -1,8 +1,11 @@
 # Eksterne repoer og systemgrenser
 
-## `navikt/su-se-bakover`
+> Kildestatus: Systemgrensene er `verified` mot frontend og BFF. Konkrete
+> backendpåstander er ikke `cross-repo` med mindre det står eksplisitt.
 
-Backend er autoritativ for:
+## Frontendens tillitsgrense mot `navikt/su-se-bakover`
+
+Frontend skal behandle backend som autoritativ for:
 
 - domenetilstand og gyldige overganger
 - tilgang til person, sak og operasjon
@@ -10,13 +13,15 @@ Backend er autoritativ for:
 - vedtak, brevoperasjoner og integrasjoner
 - persistens og sideeffekter
 
-Frontend presenterer status og tilbyr handlinger gjennom API-et. Når en
-frontendtype eller faglig tekst avhenger av backend, skal påstanden kontrolleres
-mot gjeldende endepunkt eller DTO i begge repoer.
+Dette er en normativ ansvarsgrense for frontend, ikke belegg for at hvert
+backendendepunkt faktisk håndhever alle punktene. Frontend presenterer status og
+tilbyr handlinger gjennom API-et. Når en frontendtype eller faglig tekst
+avhenger av backend, skal påstanden kontrolleres mot gjeldende endepunkt, test
+eller DTO i begge repoer.
 
 `navikt/su-se-bakover#2967` er et strukturelt forbilde for AI-styringen og et
-kart over domenet. Backendens Kotlin-, Flyway-, SQL-, Kotliquery-, session-,
-transaksjons- og persistensregler gjelder ikke automatisk her.
+kart over domenet. Backendspesifikke implementasjonsregler gjelder ikke
+automatisk her.
 
 ## Andre grenser
 

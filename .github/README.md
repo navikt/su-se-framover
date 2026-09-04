@@ -17,13 +17,23 @@ ulike AI-verktøy følger samme regler uten at kopier driver fra hverandre.
 |---|---|
 | GitHub Copilot | [`copilot-instructions.md`](copilot-instructions.md), som peker til `AGENTS.md` |
 | OpenAI Codex | Leser `AGENTS.md` |
-| Cursor | Bruker `AGENTS.md` som prosjektinstruksjon der funksjonen støttes |
+| Cursor | Ingen egen adapter er konfigurert; bruk `AGENTS.md` der funksjonen støttes |
 | Claude Code | [`../CLAUDE.md`](../CLAUDE.md) importerer bare `AGENTS.md` |
 | Gemini CLI | [`../GEMINI.md`](../GEMINI.md) importerer bare `AGENTS.md` |
-| JetBrains Junie | Konfigureres til å bruke `AGENTS.md` som prosjektregel |
+| JetBrains Junie | Ingen egen adapter er konfigurert; pek verktøyet til `AGENTS.md` ved behov |
 
 Ikke opprett en ny kopi av reglene for et verktøy. Lag bare en minimal adapter
 dersom verktøyet ikke kan lese `AGENTS.md`.
+
+Verktøystøtte og oppdagelsesregler kan endres mellom versjoner. Kontroller mot
+offisiell dokumentasjon før en ny adapter legges til:
+
+- [GitHub Copilot repository instructions](https://docs.github.com/en/copilot/customizing-copilot/adding-repository-custom-instructions-for-github-copilot)
+- [OpenAI Codex og `AGENTS.md`](https://developers.openai.com/codex/guides/agents-md/)
+- [Claude Code memory og imports](https://code.claude.com/docs/en/memory)
+- [Gemini CLI og `GEMINI.md`](https://geminicli.com/docs/cli/gemini-md/)
+- [Cursor project rules](https://cursor.com/docs/context/rules)
+- [JetBrains Junie guidelines](https://www.jetbrains.com/help/junie/customize-guidelines.html)
 
 ## Struktur og ansvar
 
@@ -73,10 +83,16 @@ Prosesslæring:
 {"date":"YYYY-MM-DD","type":"process-learning","summary":"varig læring om arbeidsmåte","evidence":["grunnlag"]}
 ```
 
-Godkjent avvik:
+Opprettet avvik:
 
 ```json
-{"date":"YYYY-MM-DD","id":"unik-id","rule":"regel eller filreferanse","scope":["sti eller komponent"],"reason":"begrunnelse","decision":"godkjent løsning","consequences":"kjente følger","status":"active","revisit":"dato eller hendelse","evidence":["grunnlag"]}
+{"eventId":"unik-hendelse","deviationId":"stabil-avviks-id","eventType":"created","effectiveAt":"YYYY-MM-DDTHH:mm:ssZ","rule":"regel eller filreferanse","scope":["sti eller komponent"],"reason":"begrunnelse","decision":"godkjent løsning","approval":"PR, issue eller annen ikke-personlig beslutningsreferanse","consequences":"kjente følger","status":"active","revisit":"dato eller hendelse","evidence":["grunnlag"]}
+```
+
+Statusendring for et eksisterende avvik:
+
+```json
+{"eventId":"ny-unik-hendelse","deviationId":"samme-stabile-avviks-id","eventType":"status-changed","effectiveAt":"YYYY-MM-DDTHH:mm:ssZ","status":"expired","supersedesEventId":"forrige-hendelse","reason":"hvorfor statusen ble endret","evidence":["grunnlag"]}
 ```
 
 Endring i AI-oppsettet:
@@ -85,8 +101,12 @@ Endring i AI-oppsettet:
 {"date":"YYYY-MM-DD","type":"governance-change","summary":"endring","reason":"begrunnelse","files":["berørte filer"],"evidence":["grunnlag"]}
 ```
 
-Avviksstatus er `active`, `expired` eller `superseded`. Behold normalt eldre
-oppføringer og endre status gjennom en ny oppføring fremfor å slette historikk.
+Hver ikke-tomme linje skal være et JSON-objekt. `eventId` er unik,
+`deviationId` er stabil gjennom hele livsløpet, og en statusendring peker på
+forrige hendelse med `supersedesEventId`. Gjeldende status er siste gyldige
+hendelse sortert på `effectiveAt`; filrekkefølge avgjør ved likt tidspunkt.
+Avviksstatus er `active`, `expired` eller `superseded`. Historiske hendelser
+beholdes.
 
 ## Vedlikehold uten duplisering
 

@@ -1,5 +1,9 @@
 # Autentisering og tilgang
 
+> Kildestatus: `verified` mot frontend- og BFF-kode. Backendens egne
+> tilgangsavgjørelser er ikke `cross-repo`-verifisert med mindre det står
+> eksplisitt.
+
 ## Verifisert authflyt
 
 1. Wonderwall håndterer innlogging og sesjon.
@@ -9,10 +13,12 @@
 5. BFF-en proxer `/api` med OBO-tokenet. Tokenet sendes ikke til nettleserkoden.
 
 BFF-en skiller ugyldig eller utløpt brukertoken fra driftsfeil mot
-authinfrastruktur. Bare BFF-ens egen `401` markeres med
-`x-login-required`. Frontend bruker denne markøren for relogin, slik at en
-transparent backend-`401` ikke lager innloggingsloop. Operasjonelle
-validerings- og OBO-feil svarer med `502` og en avgrenset feilkode.
+authinfrastruktur. BFF-ens egen `401` markeres med `x-login-required`, og
+frontend bruker markøren for relogin. En transparent backend-`401` mangler
+markøren og utløser ikke automatisk relogin. Markøren beskriver dagens
+implementasjon; den beviser ikke at ny innlogging kan reparere alle årsaker som
+klassifiseres som ugyldig token. Operasjonelle validerings- og OBO-feil svarer
+med `502` og en avgrenset feilkode.
 
 ## Roller og tilgang
 
@@ -28,6 +34,8 @@ skjult UI sikrer endepunktet.
 - Ikke logg innkommende token, OBO-token, client secret eller tokenrespons.
 - Ikke legg serverens authkonfigurasjon i `/frontend-config`.
 - Ikke map alle `401` til relogin.
+- Ikke utvid hvilke tokenfeil som markeres for relogin uten å vurdere risiko for
+  vedvarende innloggingsloop.
 - Ikke gjør en driftsfeil mot JWKS eller tokenendepunktet om til en
   autentiseringsfeil.
 - Bevar timeout, utløpsmargin og deduplisering dersom OBO-cachen endres.

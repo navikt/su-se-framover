@@ -1,5 +1,9 @@
 # Brev og dokument
 
+> Kildestatus: `verified` mot frontendkode. Betydningen av journalførings- og
+> distribusjonsstatuser er ikke `cross-repo`-verifisert med mindre det står
+> eksplisitt.
+
 ## Verifiserte flater
 
 Frontend støtter:

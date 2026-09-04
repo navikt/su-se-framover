@@ -1,5 +1,8 @@
 # Utbetaling og simulering
 
+> Kildestatus: `verified` mot frontendkode. Betydningen av nedstrøms statuser er
+> ikke `cross-repo`-verifisert med mindre det står eksplisitt.
+
 ## Verifisert frontendansvar
 
 Søknadsbehandling har et eget simuleringsendepunkt, og revurdering har en samlet

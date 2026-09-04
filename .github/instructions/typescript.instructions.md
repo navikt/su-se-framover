@@ -10,10 +10,10 @@ Disse reglene gjelder TypeScript- og React-filer. Følg også
 ## Harde regler
 
 - Koden skal passere repositoryets `strict` TypeScript-oppsett og aktive
-  Biome-regler. Ikke omgå feil med `any`, brede type assertions eller
-  deaktivering av regler.
-- Bevar én sentral HTTP-grense gjennom `src/api/apiClient.ts`. Ikke kall
-  `su-se-bakover` direkte utenom BFF-en.
+  Biome-regler.
+- Alle nettleserkall mot `su-se-bakover` skal gå gjennom
+  `src/api/apiClient.ts`, som prefikser `/api`. BFF-egne endepunkter utenfor
+  `/api`, i dag `/frontend-config`, bruker en avgrenset klient direkte mot BFF-en.
 - Ikke eksponer eller logg access-token, OBO-token, client secret eller sensitive
   personopplysninger.
 - Behandle `401` fra BFF-ens egen auth-utfordring separat fra `401`/`403` som
@@ -22,15 +22,24 @@ Disse reglene gjelder TypeScript- og React-filer. Følg også
 
 ## Teamregler
 
+- Ikke omgå typefeil med `any`, brede type assertions eller deaktivering av
+  regler. Et nødvendig, smalt unntak skal begrunnes ved koden og følge
+  avviksprosessen dersom det bryter en gjeldende regel.
+
 ### API-kontrakter og runtime-validering
 
 - TypeScript-typer alene validerer ikke JSON. Sammenlign endrede frontendtyper med
   gjeldende DTO eller endepunkt i `su-se-bakover` når kontrakten krysser
   repositorygrensen.
+- Frontendtypene skal speile backendkontraktene; `su-se-bakover` er fasit for
+  kontrakten og domenebeslutningen. Ikke opprett en konkurrerende
+  frontendkontrakt.
 - Bruk målrettet runtime-validering når data kommer fra en særlig utsatt grense:
   feilrespons med ukjent kropp, runtime-konfigurasjon, URL eller lagring i
   nettleseren, tredjepart, eller en kontrakt der feil form kan gi uriktig
   saksbehandling.
+- Ikke krev runtime-dekoding av alle backendresponser. Valideringen skal være
+  proporsjonal med risikoen og ikke duplisere backendens domeneregler.
 - Bruk `unknown` og en smal decoder eller type guard. `io-ts` er installert, men
   ikke etablert i gjeldende kode; innføring som generell kontraktstrategi krever
   en egen beslutning.

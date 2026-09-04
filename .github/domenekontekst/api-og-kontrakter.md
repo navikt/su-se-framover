@@ -1,5 +1,8 @@
 # API og kontrakter
 
+> Kildestatus: `verified` mot frontendkode. Påstander er ikke `cross-repo` med
+> mindre det står eksplisitt.
+
 ## Verifisert struktur
 
 `src/api/apiClient.ts` er den sentrale nettleserklienten. Den:
@@ -18,13 +21,19 @@ driftsoperasjoner.
 ## Kontraktansvar
 
 Frontendtypene under `src/types/` beskriver forventet responsform, men TypeScript
-validerer ikke runtime-JSON. Når en kontrakt endres:
+validerer ikke runtime-JSON. Typene skal speile backendkontrakten;
+`su-se-bakover` er fasit for kontrakten og domenebeslutningen. Frontend skal ikke
+opprette en konkurrerende kontrakt eller kopiere backendens domeneregler. Når en
+kontrakt endres:
 
 1. kontroller endepunkt og DTO i gjeldende `su-se-bakover`
 2. oppdater frontendtype, mapping og alle statusgrener samlet
 3. vurder målrettet runtime-validering ved utsatte grenser
 4. vis kontraktbrudd som feil, ikke som tom eller vellykket respons
 5. test eller typekontroller alle berørte konsumenter
+
+Det er ikke et mål å runtime-dekode alle backendresponser. Runtime-validering
+brukes målrettet når datagrensen eller konsekvensen gjør det nødvendig.
 
 `io-ts` og `io-ts-types` er installert, men det finnes ingen import i `src/**`.
 De er derfor ikke en verifisert generell kontraktstrategi. Dagens konkrete

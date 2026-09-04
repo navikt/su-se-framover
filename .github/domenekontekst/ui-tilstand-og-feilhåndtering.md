@@ -1,8 +1,11 @@
 # UI-tilstand og feilhåndtering
 
-## Verifisert strategi
+> Kildestatus: `verified` mot representative frontendflyter. Påstander er ikke
+> `cross-repo` med mindre det står eksplisitt.
 
-Asynkrone operasjoner modelleres gjennomgående med
+## Gjeldende strategi
+
+Asynkrone operasjoner modelleres bredt i eksisterende kode med
 `RemoteData<ApiError, T>`. Typiske mønstre er:
 
 - `RemoteData.fold` for hele side- eller seksjonsinnhold
@@ -11,21 +14,11 @@ Asynkrone operasjoner modelleres gjennomgående med
 - Redux Toolkit-slices for delt state
 - `useApiCall` og lokal state for avgrensede komponentoperasjoner
 
-## Avtalte teamregler
+## Relevant styring
 
-- Håndter `initial`, `pending`, `failure` og `success` eksplisitt.
-- Ikke representer samme operasjon med både `RemoteData` og en separat
-  `isLoading`-boolean.
-- Vis en eksplisitt tomtilstand når fravær ellers kan oppfattes som lasting,
-  teknisk feil eller feil filter.
-- Bevar brukerens kontekst ved handlingsfeil; ikke erstatt hele skjemaet med en
-  generisk feil dersom handlingen kan prøves igjen.
-- Vis backendens avvisning selv om lokal validering godkjente input.
-- Ved mulig utdatert state: hent oppdatert data eller gi en forståelig beskjed,
-  fremfor å late som operasjonen lyktes.
-
-En tom samling trenger ikke egen tekst når konteksten allerede gjør tomheten
-entydig.
+Normative regler for `RemoteData`, loading, feil og tomtilstand ligger i
+[`typescript.instructions.md`](../instructions/typescript.instructions.md).
+Denne filen dokumenterer bare dagens mønstre og domenekonteksten de brukes i.
 
 ## Kilder
 

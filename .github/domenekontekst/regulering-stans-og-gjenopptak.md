@@ -1,5 +1,8 @@
 # Regulering, stans og gjenopptak
 
+> Kildestatus: `verified` mot frontendkode. Faglige overgangsregler er ikke
+> `cross-repo`-verifisert med mindre det står eksplisitt.
+
 ## Regulering
 
 Frontend har oversikt over reguleringsstatus, opprettelse og behandling av
@@ -39,5 +42,6 @@ sender brev krever kontroll av den konkrete backendflyten.
 - `src/api/reguleringApi.ts`
 - `src/api/revurderingApi.ts`
 - `src/pages/saksbehandling/regulering/`
+- `src/pages/saksbehandling/regulering/ReguleringAttestering.tsx`
 - `src/pages/saksbehandling/stans/`
 - `src/pages/saksbehandling/gjenoppta/`

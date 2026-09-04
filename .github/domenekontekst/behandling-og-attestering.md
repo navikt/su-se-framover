@@ -1,5 +1,8 @@
 # Behandling og attestering
 
+> Kildestatus: `verified` mot frontendkode. Operasjonenes faglige gyldighet er
+> ikke `cross-repo`-verifisert med mindre det står eksplisitt.
+
 ## Verifisert frontendmodell
 
 Frontend har separate typer og sider for søknadsbehandling og revurdering.

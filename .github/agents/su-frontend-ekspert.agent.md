@@ -47,8 +47,7 @@ For en berørt flyt, avklar:
 ## Grenser
 
 - Ikke flytt beregnings-, tilgangs- eller overgangsregler til frontend.
-- Ikke kopier Kotlin-, Flyway-, SQL-, Kotliquery-, session-, transaksjons- eller
-  persistensregler fra `su-se-bakover`.
+- Ikke kopier backendspesifikke implementasjonsregler fra `su-se-bakover`.
 - Ikke presenter uavklarte faglige påstander som gjeldende oppførsel.
 - Ikke lagre domenefakta i lessons-loggen.
 - Bruk parallelle agenter bare når undersøkelsene er uavhengige.
