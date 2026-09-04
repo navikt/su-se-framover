@@ -6,11 +6,19 @@
 
 ## Verifisert authflyt
 
-1. Wonderwall håndterer innlogging og sesjon.
+1. Saksbehandleren autentiseres med Entra ID gjennom Wonderwall.
 2. Wonderwall legger bearer-token på kall til applikasjonen.
 3. BFF-en validerer tokenets signatur, issuer, audience og utløp med `jose`.
 4. BFF-en gjør OBO-veksling for målgruppen til `su-se-bakover`.
 5. BFF-en proxer `/api` med OBO-tokenet. Tokenet sendes ikke til nettleserkoden.
+6. `su-se-bakover` validerer backendtokenet og er autoritativ for roller og
+   tilgang til person, sak og operasjon. Håndhevingen må fortsatt kontrolleres
+   for det konkrete endepunktet som endres.
+
+Frontend og BFF bruker ikke TokenX eller Oasis. JWT-valideringen og
+Azure OBO-vekslingen er allerede implementert i `server/auth/`. Nye ruter og
+features skal gjenbruke denne grensen, ikke implementere egen tokenvalidering
+eller token exchange.
 
 BFF-en skiller ugyldig eller utløpt brukertoken fra driftsfeil mot
 authinfrastruktur. BFF-ens egen `401` markeres med `x-login-required`, og
@@ -53,3 +61,5 @@ skjult UI sikrer endepunktet.
 - `.nais/dev-gcp.yaml`
 - `.nais/prod-gcp.yaml`
 - `docker-compose.yml`
+- `navikt/su-se-bakover#2970` ved head
+  `84d987139407c854cd75d0b73118e654de89ec15`

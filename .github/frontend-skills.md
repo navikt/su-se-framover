@@ -44,6 +44,19 @@ sporbar, og dokumenter repoets overstyring i dette registeret.
 | [`klarsprak`](skills/klarsprak/SKILL.md) | Skillen formulerer stilvalg som absolutte regler, blant annet ordvalg, tankestrek og når brukeren skal spørres. Dette er språkråd, ikke lokale harde regler. | Bevar faglig og juridisk betydning, etablerte domenebegreper, kodeverdier og dokumentets eksisterende målform og stil. Rapporter språklige avvik, men ikke gjennomfør bred språkvask eller omstrukturering uten at det inngår i oppgaven. |
 | [`security-owasp`](skills/security-owasp/SKILL.md) | Skillen dekker Kotlin, Go, Java, SQL og database, og merker blant annet SHA-pinning av Actions og tilgangskontroll på alle endepunkter som absolutte regler. Dette er ikke vedtatte frontendregler og kan plassere backendansvar i BFF-en. | Bruk bare relevante browser-, TypeScript-, Node/BFF-, auth-, input-, logging-, feil- og supply-chain-råd. Autorisasjon og domeneoverganger forblir backendansvar. Ikke innfør database-/backendregler eller gjør bred Actions-omlegging uten separat beslutning. |
 
+## Bevisst ikke inkludert
+
+- TokenX- og generiske auth-skills: repoet bruker Wonderwall, `jose` og
+  eksisterende Azure OBO-kode i `server/auth/`.
+- Playwright: verken testverktøyet eller komponenttestinfrastruktur er etablert.
+- Generiske API-skills: frontendens kontrakt og BFF-mønster er dokumentert
+  lokalt og skal følge det konkrete backendendepunktet.
+- Observability-, troubleshooting- og Grafana-skills: repoet har Pino-basert
+  BFF-logging, men ingen verifisert tracing-, browser-telemetri- eller
+  querybibliotek-stack.
+- Generiske planleggings- og intervju-skills: planlegging og avklaringer inngår i
+  hovedagentens faste arbeidsmåte.
+
 ## Avhengigheter og verktøy
 
 En skill gir ikke i seg selv godkjenning til å:

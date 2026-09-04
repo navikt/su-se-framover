@@ -29,7 +29,7 @@ kontrollerer rådet mot repositoryet.
 | Innlogging, token eller tilgang | Autentisering og tilgang, BFF-instruksjonen og relevant sikkerhetsstøtte. Gjeldende løsning er Wonderwall, `jose` og egen OBO-flyt, ikke Oasis. |
 | Visuell feil | `aksel-builder`, `web-design-reviewer`, eksisterende CSS og tilgjengelighetskonteksten. |
 | Tilgjengelighet | Aksel og tilgjengelighet, semantikken i berørt komponent og eventuelt `accessibility-agent`. |
-| Produksjonsfeil | Systemoversikt, UI-tilstand og feilhåndtering, BFF-logger og den konkrete flyten. Pino-logging finnes i BFF-en; tracing er ikke dokumentert som etablert. |
+| Produksjonsfeil | Systemoversikt, observerbarhet, UI-tilstand og feilhåndtering, BFF-logger og den konkrete flyten. |
 | Norsk brukerinnhold | Berørt domenefil, eksisterende mikrotekst, `klarsprak` og eventuelt `forfatter`. |
 | E2E-test | Avklar først teststrategi og avhengigheter. Playwright er ikke installert eller en del av de låste skillene. |
 
@@ -63,6 +63,7 @@ utbetaling, stans, opphør, regulering eller tilgang til person og sak.
 | [Klage og tilbakekreving](domenekontekst/klage-og-tilbakekreving.md) | egne tilstandsmaskiner og attestering |
 | [Autentisering og tilgang](domenekontekst/autentisering-og-tilgang.md) | Wonderwall, JWT, OBO, roller og tilgang |
 | [UI-tilstand og feilhåndtering](domenekontekst/ui-tilstand-og-feilhåndtering.md) | RemoteData, feil og tomtilstander |
+| [Observerbarhet](domenekontekst/observerbarhet.md) | korrelasjons-ID, BFF-logging og klientfeil |
 | [Aksel og tilgjengelighet](domenekontekst/aksel-og-tilgjengelighet.md) | designsystem og universell utforming |
 | [Eksterne repoer](domenekontekst/eksterne-repos.md) | systemgrenser og kildestatus |
 | [Avklaringer](domenekontekst/avklaringer.md) | forhold som ikke skal brukes som gjeldende fakta |

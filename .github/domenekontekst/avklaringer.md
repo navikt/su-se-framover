@@ -21,6 +21,8 @@ fakta og regler.
 | Alle ruter har en beskrivende dokumenttittel | Tittelverktøy finnes, men brukes ikke på hele rutestrukturen | Rute-for-rute-kontroll og tilgjengelighetstest |
 | Person-, skatte- og adresseoppslag har riktig faglig grunnlag og sporing | Frontend verifiserer klientflatene, men ikke backendens kontroll eller audit | Berørte backendendepunkter, tester og faglig kilde |
 | `/devTools` og tilhørende `/dev`-endepunkter er utilgjengelige i produksjon | Frontendruten har ingen synlig rolle- eller miljøgate | Backendruting og miljøkonfigurasjon |
+| Stack trace i `ErrorBoundary` skal vises i alle miljøer | Dagens komponent viser klientfeilens stack, men ønsket balanse mellom utviklerstøtte og eksponering er ikke dokumentert | Beslutning om miljøavgrensning og feilpresentasjon |
+| Eksisterende `console.log`-bruk er en vedtatt frontendstrategi | Enkelte flyter logger lokalt, men det finnes ingen dokumentert browser-loggpolicy | Definer ønsket policy og vurder de berørte flytene |
 
 ## Avkreftet
 

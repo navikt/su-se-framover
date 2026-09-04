@@ -25,6 +25,10 @@ Disse reglene gjelder Express-BFF-en. Følg også
 
 - Hold kommunikasjon med authleverandøren i `server/auth/` og kommunikasjon med
   `su-se-bakover` i den etablerte proxygrensen.
+- Gjenbruk `authenticateUser`, `validateToken` og `requestOboToken`. Ikke lag en
+  parallell JWT-validering eller tokenveksling i en feature eller route, og ikke
+  innfør TokenX, Oasis eller et nytt auth-bibliotek uten en eksplisitt
+  arkitektur- og authbeslutning.
 - Bevar eksplisitt timeout, utløpsmargin, cacheopprydding og deduplisering av
   samtidige OBO-kall når tokenflyten endres.
 - Skill ugyldig eller uventet respons fra suksess. Ikke bruk

@@ -26,7 +26,7 @@ Trenger du å kjøre install-skript for en spesifikk pakke (f.eks. native bindin
 skal behovet og pakken vurderes eksplisitt først. Overstyr bare for den avgrensede
 installasjonen, og ikke endre den innskrevne `.npmrc`-regelen:
 ```sh
-$ npm install --ignore-scripts=false
+$ npm rebuild <pakkenavn> --ignore-scripts=false
 ```
 
 # Moduler release age

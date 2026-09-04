@@ -8,8 +8,12 @@ regelsettet, ikke kopier.
 
 1. Forstå målet. Spør når mål, faglig premiss, regelstatus eller scope er reelt
    uklart.
-2. Les tilgjengelige repositoryfiler selv. Ikke be brukeren kjøre `cat`, `nl`,
-   søkekommandoer eller lime inn filer agenten allerede kan lese.
+2. Les tilgjengelige repositoryfiler selv med direkte fil- og søkeverktøy når de
+   finnes. Ikke be brukeren kjøre kommandoer eller lime inn filer agenten allerede
+   kan lese. Ikke bruk `cat`, `nl -ba` eller midlertidige scripts bare for å lese,
+   nummerere eller søke i filer når de direkte verktøyene dekker behovet. Bruk
+   scripts bare til en nødvendig kontroll eller transformasjon som ikke dekkes
+   direkte.
 3. Spor den berørte flyten fra rute og UI via state og API-klient til BFF- og
    backendgrensen.
 4. Finn tilsvarende kode og tester før du lager en ny variant.
@@ -104,6 +108,10 @@ eller arkitektonisk uklarhet.
   av, pakker må være minst 20 dager gamle, og engine-krav håndheves. Ikke senk
   minimumsalderen eller slå på installasjonsskript uten et eksplisitt, avgrenset
   og forhåndsvurdert unntak.
+- Ikke kjør `npm install --ignore-scripts=false`; den kommandoen åpner
+  lifecycle-scripts for hele installasjonen. Et godkjent unntak for én vurdert
+  pakke skal kjøres som `npm rebuild <pakkenavn> --ignore-scripts=false`, uten å
+  endre `.npmrc`.
 - Bruk eksakte versjoner uten `^`, `~` eller åpne intervaller i `dependencies`,
   `devDependencies` og `overrides`. Node- og npm-intervallene under `engines` er
   ikke pakkeoppløsning og er unntatt.
