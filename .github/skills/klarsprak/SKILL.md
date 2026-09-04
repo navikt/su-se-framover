@@ -141,7 +141,7 @@ Skann etter de norske formene i venstre kolonne. De er langt vanligere i KI-gene
 | Skann etter (engelsk opphav) | Gjør i stedet |
 |------------------------------|---------------|
 | «fordype seg i» (delve into) | Skriv bare innholdet |
-| «utnytte», «leverere» (leverage) | «bruke» |
+| «utnytte», «levere» (leverage) | «bruke» |
 | «rike», «sfære» (realm) | «område», «felt» |
 | «understreke» (underscore) | Si poenget direkte |
 | «avgjørende» (crucial) | Si hvorfor det er viktig |

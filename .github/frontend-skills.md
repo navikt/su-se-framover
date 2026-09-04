@@ -34,6 +34,9 @@ filsti. Hashen dekker alle vanlige filer i skillmappen.
 
 Ikke rediger en importert skill for å skjule en konflikt. Behold upstream-filen
 sporbar, og dokumenter repoets overstyring i dette registeret.
+En verifisert feil i selve skillteksten kan rettes lokalt når rettelsen
+registreres i `localPatches` i [`skills.lock.json`](skills.lock.json) og
+innholdshashen oppdateres.
 
 ## Installerte skills
 

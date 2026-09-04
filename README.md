@@ -24,7 +24,7 @@ Derfor må `npm run prepare` kjøres eksplisitt etter install (det er ikke et li
 
 Trenger du å kjøre install-skript for en spesifikk pakke (f.eks. native bindings),
 skal behovet og pakken vurderes eksplisitt først. Overstyr bare for den avgrensede
-installasjonen, og ikke endre den innskrevne `.npmrc`-regelen:
+installasjonen, og ikke endre den innsjekkede `.npmrc`-regelen:
 ```sh
 $ npm rebuild <pakkenavn> --ignore-scripts=false
 ```

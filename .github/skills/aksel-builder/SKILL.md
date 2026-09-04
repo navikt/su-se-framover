@@ -141,7 +141,7 @@ time a task touches its domain — don't preload all of them.** All reference fi
 | If the task is…                                  | Load                   | Then call                                                                                        |
 | ------------------------------------------------ | ---------------------- | ------------------------------------------------------------------------------------------------ |
 | Pick/build a component (form, modal, table, …)   | `components.md`        | `find_docs` → `get_component_info` → `get_doc` (usage) → build                                   |
-| Implement a **Figma design** → Aksel code        | `figma-to-code.md`     | Figma MCP (`get_design_context`/`get_screenshot`) → map to Aksel via the `aksel_*` tools → build |
+| Implement a **Figma design** → Aksel code        | `figma-to-code.md`     | Figma MCP (`get_design_context`, including screenshot) → map to Aksel via the `aksel_*` tools → build |
 | Lay out / space / make responsive                | `primitives-layout.md` | build with primitives (`get_component_info` for a primitive's API)                               |
 | Color / token / spacing value / Tailwind styling | `tokens-styling.md`    | `get_token_details` (browse via `find_docs` `kind:"tokens"`)                                     |
 | Light/dark mode or base color                    | `theming.md`           | usually no call — `Theme` component                                                              |

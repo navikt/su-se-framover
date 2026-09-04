@@ -5,14 +5,28 @@
     "commit": "24ad9baf95ae381f03a1a1bad69199b5d4532aa6"
   },
   "digestAlgorithm": "sha256-directory-v1",
+  "localPatches": [
+    {
+      "path": "skills/aksel-builder/SKILL.md",
+      "reason": "Fjernet kall til et Figma-screenshotverktøy som referansen sier ikke finnes."
+    },
+    {
+      "path": "skills/klarsprak/SKILL.md",
+      "reason": "Rettet skrivefeilen «leverere» til «levere»."
+    },
+    {
+      "path": "skills/web-design-reviewer/references/framework-fixes.md",
+      "reason": "Erstattet generell overflow-klipping med retting av elementet som skaper overflow."
+    }
+  ],
   "skills": {
     "aksel-builder": {
       "sourcePath": "skills/aksel-builder",
-      "sha256": "af0d717558f0c081c8481977b20f87789842abc53bca0a56d615f2ed4633806c"
+      "sha256": "22870f6f88daf09b48613c4e35454251ee869612c0a6d8a02d1687cc97e54322"
     },
     "klarsprak": {
       "sourcePath": "skills/klarsprak",
-      "sha256": "24fc134e78de4814066b351dfdb578d22ea77cad27094f5acd974e49da779d62"
+      "sha256": "2392feaa3eba8f2bbbc9d111d7d977265935773a5f6367639490a02ff9535187"
     },
     "security-owasp": {
       "sourcePath": "skills/security-owasp",
@@ -20,7 +34,7 @@
     },
     "web-design-reviewer": {
       "sourcePath": "skills/web-design-reviewer",
-      "sha256": "92071a70f1c9b12421b89e723e9e435dc2d0c106da584c9f4fc974c829945a6a"
+      "sha256": "42c1e1a484aa479211895a9cb8eb45d45a5e5e2f62082421ffffdd9e39b2ba4f"
     }
   }
 }

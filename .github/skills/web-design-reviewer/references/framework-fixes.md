@@ -14,11 +14,15 @@ This document explains specific fix techniques for each framework and styling me
   width: 100%;
 }
 
-/* After: Control overflow */
+/* After: Let the container shrink and constrain the overflowing child */
 .container {
   width: 100%;
   max-width: 100%;
-  overflow-x: hidden;
+  min-width: 0;
+}
+
+.container > .wide-content {
+  max-width: 100%;
 }
 ```
 
@@ -196,16 +200,10 @@ const Card = styled.div`
 
 ## Next.js / App Router
 
-### Global Style Fixes
+### Responsive Media
 
 ```css
 /* app/globals.css */
-
-/* Prevent layout overflow */
-html, body {
-  max-width: 100vw;
-  overflow-x: hidden;
-}
 
 /* Prevent image overflow */
 img {
@@ -213,6 +211,9 @@ img {
   height: auto;
 }
 ```
+
+Do not hide page-level overflow globally. Find and constrain the child that
+causes the overflow so zoomed content and keyboard focus remain reachable.
 
 ---
 
