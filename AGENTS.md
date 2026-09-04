@@ -25,6 +25,14 @@ regelsettet, ikke kopier.
 8. Bruk en høykapasitets sparringsagent ved komplekse domene-, auth-, arkitektur-
    eller kildekritiske vurderinger.
 9. Del store regelgjennomganger i korte beslutningsgrupper.
+10. Bruk færrest mulig verktøykall. Les lokale filer først, og ikke hent samme
+    kilde gjennom flere verktøy. Hvis et eksternt oppslag feiler, rapporter det
+    fremfor å prøve flere varianter uten en tydelig og nødvendig grunn.
+11. Ikke opprett todoer, start agenter eller lag egne kontrollscripts for små
+    oppgaver som kan løses direkte. Bruk eksisterende prosjektkommandoer og
+    direkte fil-, søke- og valideringsverktøy før hjemmelaget automatisering.
+12. Parallelliser bare selvstendige kall som alle er nødvendige. Ikke bruk
+    parallellisering til overlappende søk eller spekulative kontroller.
 
 Eksisterende praksis er et sterkt utgangspunkt, ikke en erstatning for vurdering.
 Alternative metodikker skal vurderes når de oppnår målet tryggere eller enklere.
