@@ -46,9 +46,15 @@ jobs:
         with:
           docker_context: .
           team: supstonad
-          salsa: false
+          salsa: true
           image_suffix: app # hvis denne endres så må prod-deploy oppdateres likt
-          tag: ${{ github.sha }}
+          # Ikke sett eksplisitt tag — lar nais/docker-build-push generere en unik tag per build
+          # (f.eks. 2026-08-26-124500-abc1234). Dette forhindrer at image-tagen overskrives i
+          # registry ved re-runs eller nye builds. Kubernetes cacher images per tag på noden
+          # (imagePullPolicy: IfNotPresent), så hvis tagen overskrives med nytt innhold kan
+          # pods på ulike noder ende opp med forskjellige Vite-builds — noe som gir
+          # NS_ERROR_CORRUPTED_CONTENT fordi index.html refererer til assets som ikke finnes
+          # på alle pods.
 
   deploy-to-dev-gcp:
     name: deploy-to-dev-gcp
@@ -66,7 +72,7 @@ jobs:
           VAR: image=${{ needs.build-push-docker-image.outputs.image }}
 
   deploy_to_prod:
-    needs: deploy-to-dev-gcp
+    needs: [build-push-docker-image, deploy-to-dev-gcp]
     name: Deploy to prod
     runs-on: ubuntu-latest
     permissions:
@@ -77,6 +83,7 @@ jobs:
         - uses: nais/deploy/actions/deploy@v2
           env:
               #se https://console.cloud.google.com/artifacts/docker/nais-management-233d/europe-north1/supstonad?authuser=1&inv=1&invt=AbybBg&project=supstonad-prod-9599
-              VAR: image=europe-north1-docker.pkg.dev/nais-management-233d/supstonad/su-se-framover-app:${{ github.sha }}
+              # Tidligere: image=europe-north1-docker.pkg.dev/nais-management-233d/supstonad/su-se-framover-app:${{ github.sha }}
+              VAR: image=${{ needs.build-push-docker-image.outputs.image }}
               CLUSTER: prod-gcp
               RESOURCE: .nais/prod-gcp.yaml

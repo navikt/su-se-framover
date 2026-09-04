@@ -6,3 +6,4 @@ server/dist
 .DS_STORE
 .env
 settings.json
+.github/

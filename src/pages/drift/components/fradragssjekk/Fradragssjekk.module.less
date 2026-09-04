@@ -1,7 +1,30 @@
 @import '@styles/variables.less';
 
 .modal {
-    max-width: 100%;
+    width: 90vw;
+    max-width: 1200px;
+}
+
+.innhold {
+    display: grid;
+    grid-template-columns: minmax(240px, 1fr) minmax(0, 3fr);
+    gap: @spacing-l;
+}
+
+.startSeksjon,
+.resultatSeksjon,
+.resultat,
+.blokk,
+.sakstype {
+    display: flex;
+    flex-direction: column;
+}
+
+.startSeksjon,
+.resultatSeksjon,
+.resultat,
+.blokk {
+    gap: @spacing-s;
 }
 
 .form {
@@ -13,4 +36,39 @@
 .actions {
     display: flex;
     justify-content: flex-start;
+}
+
+.resultatHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.metadata {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+    gap: @spacing-s;
+    padding: @spacing-s;
+    background: var(--a-surface-subtle);
+    border-radius: var(--a-border-radius-medium);
+}
+
+.blokk {
+    padding: @spacing-s;
+    border: 1px solid var(--a-border-divider);
+    border-radius: var(--a-border-radius-medium);
+}
+
+.sakstype {
+    gap: @spacing-xs;
+}
+
+@media (max-width: 768px) {
+    .modal {
+        width: 100%;
+    }
+
+    .innhold {
+        grid-template-columns: 1fr;
+    }
 }

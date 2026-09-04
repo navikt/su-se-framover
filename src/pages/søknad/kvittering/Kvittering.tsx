@@ -1,7 +1,7 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { PaperclipIcon } from '@navikt/aksel-icons';
-import { Alert, BodyLong, BodyShort, Button, Heading, Loader, Panel } from '@navikt/ds-react';
-import { useState } from 'react';
+import { Alert, BodyLong, BodyShort, Button, Heading, Loader, Modal, Panel } from '@navikt/ds-react';
+import { useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { ApiError } from '~src/api/apiClient';
@@ -31,6 +31,8 @@ const Kvittering = () => {
     const [fetchSøknadPdfState, setFetchSøknadPdfState] = useState<RemoteData.RemoteData<ApiError, null>>(
         RemoteData.initial,
     );
+    const ref = useRef<HTMLDialogElement>(null);
+    const [open, setOpen] = useState(false);
     const { formatMessage } = useI18n({ messages });
 
     const handleAvsluttSøknad = (sakId: Nullable<string>) => {
@@ -141,6 +143,13 @@ const Kvittering = () => {
                                     <BodyShort>
                                         <strong>{formatMessage('vedlegg.søkerManglerDok')}</strong>
                                     </BodyShort>
+
+                                    <Alert variant="info" className={styles.påminnelseIkkeSkrivPåUtskriftContainer}>
+                                        <Heading level="2" size="medium" spacing>
+                                            {formatMessage('påminnelse.ikkeSkrivPåUtskrift.tittel')}
+                                        </Heading>
+                                        <BodyLong>{formatMessage('påminnelse.ikkeSkrivPåUtskrift.tekst')}</BodyLong>
+                                    </Alert>
                                 </div>
                                 {RemoteData.isFailure(fetchSøknadPdfState) && (
                                     <Alert variant="error">{formatMessage('feil.kunneIkkeHentePdf')}</Alert>
@@ -155,12 +164,43 @@ const Kvittering = () => {
 
                                     <Button
                                         onClick={() => {
-                                            handleSkrivUtSøknadClick(saksnummerOgSøknad);
+                                            setOpen(true);
                                         }}
                                     >
                                         {formatMessage('kvittering.skrivUtSøknad')}
                                         {RemoteData.isPending(fetchSøknadPdfState) && <Loader />}
                                     </Button>
+
+                                    <Modal
+                                        ref={ref}
+                                        aria-label={formatMessage('påminnelse.ikkeSkrivPåUtskrift.tittel')}
+                                        open={open}
+                                        onClose={() => setOpen(false)}
+                                    >
+                                        <Modal.Body>
+                                            <Heading size="medium" spacing>
+                                                {formatMessage('påminnelse.ikkeSkrivPåUtskrift.tittel')}
+                                            </Heading>
+                                            <form>
+                                                <BodyShort spacing>
+                                                    {formatMessage('påminnelse.ikkeSkrivPåUtskrift.tekst')}
+                                                </BodyShort>
+
+                                                <div style={{ marginTop: '1rem', textAlign: 'right' }}>
+                                                    <Button
+                                                        variant="secondary"
+                                                        type="button"
+                                                        onClick={() => {
+                                                            setOpen(false);
+                                                            handleSkrivUtSøknadClick(saksnummerOgSøknad);
+                                                        }}
+                                                    >
+                                                        Jeg forstår
+                                                    </Button>
+                                                </div>
+                                            </form>
+                                        </Modal.Body>
+                                    </Modal>
                                 </div>
                             </div>
                         );

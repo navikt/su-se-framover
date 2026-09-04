@@ -232,6 +232,52 @@ export async function dryRunPersonhendelser(args: {
     });
 }
 
+export interface StartHistoriskKonverteringResponse {
+    projeksjonId: string;
+}
+
+export type HistoriskKonverteringStatus = 'PÅGÅR' | 'FULLFØRT' | 'FEILET';
+
+export interface HistoriskKonvertering {
+    id: string;
+    importId: string;
+    status: HistoriskKonverteringStatus;
+    dryRun: boolean;
+    maksAntallStønader: Nullable<number>;
+    antallStønader: number;
+    avviksoppsummering: Record<string, number>;
+    forbehold: string[];
+    opprettet: string;
+    fullført: Nullable<string>;
+    feilbeskrivelse: Nullable<string>;
+}
+
+export async function konverterImport(args: {
+    importId: string;
+    maksAntallStønader?: number;
+}): Promise<ApiClientResult<StartHistoriskKonverteringResponse>> {
+    const query =
+        args.maksAntallStønader !== undefined
+            ? `?${new URLSearchParams({ maksAntallStonader: args.maksAntallStønader.toString() })}`
+            : '';
+
+    return apiClient({
+        url: `/drift/supstonadhistorisk/import/${encodeURIComponent(args.importId)}/konverter${query}`,
+        method: 'POST',
+        request: { headers: new Headers({ Accept: 'application/json' }) },
+    });
+}
+
+export async function hentHistoriskeKonverteringer(args: {
+    importId: string;
+}): Promise<ApiClientResult<HistoriskKonvertering[]>> {
+    return apiClient({
+        url: `/drift/supstonadhistorisk/import/${encodeURIComponent(args.importId)}/konverteringer`,
+        method: 'GET',
+        request: { headers: new Headers({ Accept: 'application/json' }) },
+    });
+}
+
 export async function tellRaderSupstønadHistorisk(args: {
     tabellnavn: string;
 }): Promise<ApiClientResult<{ antall: number }>> {
@@ -322,6 +368,61 @@ export interface JobbStatus {
 export async function fetchJobberStatus(): Promise<ApiClientResult<JobbStatus[]>> {
     return apiClient({
         url: `/drift/jobber/status`,
+        method: 'GET',
+        request: { headers: new Headers({ Accept: 'application/json' }) },
+    });
+}
+
+export type FradragssjekkKjøringStatus = 'FULLFØRT' | 'FEILET';
+
+export type FradragssjekkSakStatus =
+    | 'INGEN_AVVIK'
+    | 'KUN_OBSERVASJON'
+    | 'EKSTERN_FEIL'
+    | 'OPPGAVE_IKKE_OPPRETTET_DRY_RUN'
+    | 'OPPGAVE_OPPRETTET'
+    | 'OPPGAVEOPPRETTELSE_FEILET'
+    | 'INVARIANTBRUDD';
+
+export interface FradragssjekkFradragStatistikk {
+    fradragstype: string;
+    beskrivelse: string | null;
+    antallOppgaver: number;
+}
+
+export interface FradragssjekkSakstypeStatistikk {
+    sakstype: 'ALDER' | 'UFØRE';
+    antallOppgaver: number;
+    oppgaverPerFradrag: FradragssjekkFradragStatistikk[];
+}
+
+export interface FradragssjekkOppsummering {
+    nøkkeltall: Partial<Record<FradragssjekkSakStatus, number>>;
+    antallOppgaver: number;
+    oppgaverPerSakstype: FradragssjekkSakstypeStatistikk[];
+}
+
+export interface FradragssjekkOpprettetOppgave {
+    sakId: string;
+    saksnummer: number;
+    oppgaveId: string;
+}
+
+export interface FradragssjekkDriftResultat {
+    id: string;
+    dato: string;
+    dryRun: boolean;
+    status: FradragssjekkKjøringStatus;
+    opprettet: string;
+    ferdigstilt: string;
+    oppsummering: FradragssjekkOppsummering;
+    opprettedeOppgaver: FradragssjekkOpprettetOppgave[];
+    feilmelding: string | null;
+}
+
+export async function hentSisteFradragssjekkResultat(): Promise<ApiClientResult<FradragssjekkDriftResultat>> {
+    return apiClient({
+        url: `/drift/fradragssjekk/resultat`,
         method: 'GET',
         request: { headers: new Headers({ Accept: 'application/json' }) },
     });

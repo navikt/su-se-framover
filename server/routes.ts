@@ -65,7 +65,7 @@ async function setup() {
         );
 
         router.get('/assets/{*splat}', (req, res) => {
-            logger.error(
+            logger.warn(
                 {
                     url: req.originalUrl,
                     referer: req.headers.referer,
