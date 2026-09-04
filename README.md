@@ -22,7 +22,9 @@ $ npm run prepare # installerer Husky git hooks (pre-commit, pre-push)
 Dette skrur også av våre egne lifecycle-skript, inkludert `prepare` som installerer Husky git hooks.
 Derfor må `npm run prepare` kjøres eksplisitt etter install (det er ikke et lifecycle-skript når det kalles direkte, så `ignore-scripts` påvirker det ikke).
 
-Trenger du å kjøre install-skript for en spesifikk pakke (f.eks. native bindings), kan du midlertidig overstyre med:
+Trenger du å kjøre install-skript for en spesifikk pakke (f.eks. native bindings),
+skal behovet og pakken vurderes eksplisitt først. Overstyr bare for den avgrensede
+installasjonen, og ikke endre den innskrevne `.npmrc`-regelen:
 ```sh
 $ npm install --ignore-scripts=false
 ```
@@ -39,7 +41,9 @@ Hvis dette skjer får man en slik feilmelding:
 ```
 
 Verifisere min-release-age kan gjøres ved å kjøre `npm config get before` -> en dato for --min-release-age dager siden.
-Kan overstyres lokalt ved å kjøre npm install --min-release-age 5 feks(dager).
+Ved avgrenset feilsøking kan verdien overstyres lokalt etter en eksplisitt
+vurdering. Vanlige installasjoner og avhengighetsoppdateringer skal ikke redusere
+20-dagersgrensen.
 
 Starte for lokal utvikling:
 ```sh

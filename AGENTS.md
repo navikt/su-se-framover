@@ -73,9 +73,18 @@ koderegler. Uklar eller motstridende veiledning skal løftes til brukeren.
   frontend. Presenter backendresultatet og håndter at backend kan avvise kallet.
 - Runtime-konfigurasjon som sendes til nettleseren skal være eksplisitt
   allowlistet og aldri inneholde serverhemmeligheter.
-- Behold supply-chain-vernet i [`.npmrc`](.npmrc): installasjonsskript er slått av,
-  pakker må ha minimumsalder, og engine-krav håndheves. Et nødvendig unntak skal
-  være eksplisitt, avgrenset og vurdert før installasjon.
+- Behold supply-chain-vernet i [`.npmrc`](.npmrc): installasjonsskript er slått
+  av, pakker må være minst 20 dager gamle, og engine-krav håndheves. Ikke senk
+  minimumsalderen eller slå på installasjonsskript uten et eksplisitt, avgrenset
+  og forhåndsvurdert unntak.
+- Bruk eksakte versjoner uten `^`, `~` eller åpne intervaller i `dependencies`,
+  `devDependencies` og `overrides`. Node- og npm-intervallene under `engines` er
+  ikke pakkeoppløsning og er unntatt.
+- Automatiske npm-oppdateringer skal være patch-only. Minor- og
+  majoroppdateringer krever en eksplisitt beslutning og separat vurdering.
+- Bruk låsefilen og `npm ci` i automatisering. En manifestendring skal ha
+  tilhørende, gjennomgått `package-lock.json`; ikke aksepter uventede
+  transitive endringer eller lifecycle-scripts.
 
 ## Frontendregler
 
@@ -99,8 +108,8 @@ instruksjonen:
 ## Teknologi og kontroller
 
 Repositoryet bruker React 19, TypeScript 5.9, Vite, Express 5 som BFF, Redux
-Toolkit, `remote-data-ts`, `fp-ts`, React Hook Form, Yup, Aksel, Biome, Jest, npm
-og Node 24.
+Toolkit, `@devexperts/remote-data-ts`, `fp-ts`, React Hook Form, Yup, Aksel,
+Biome, Jest, npm og Node 24.
 
 Bruk eksisterende npm-skript og den minste kombinasjonen som dekker endringen:
 
@@ -117,9 +126,11 @@ en ren kontroll dersom arbeidsområdet ikke skal endres.
 
 ## Kunnskap og historikk
 
-Start i [kunnskapshuben](.github/su-frontend-ekspert.md) ved oppgaver som krever
-domene-, flyt-, API-, auth- eller tilgjengelighetsforståelse. Temafilene er kart
-inn i gjeldende kode, ikke erstatning for den.
+Les [oversikten over AI-styringen](.github/AI-STYRING.md) for filansvar og
+vedlikehold. Start i [kunnskapshuben](.github/su-frontend-ekspert.md) ved
+oppgaver som krever domene-, flyt-, API-, auth- eller
+tilgjengelighetsforståelse. Temafilene er kart inn i gjeldende kode, ikke
+erstatning for den.
 
 - [Domenekontekst](.github/domenekontekst/) inneholder verifiserte fakta og
   tydelig merkede grenser.

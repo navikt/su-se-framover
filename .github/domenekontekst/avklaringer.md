@@ -7,7 +7,7 @@ fakta og regler.
 
 | Påstand eller spørsmål | Hvorfor uavklart | Krever |
 |---|---|---|
-| Alle frontendtyper samsvarer med gjeldende DTO-er i `su-se-bakover` | Frontendtypene og klientene er verifisert lokalt, men full DTO-sammenligning er ikke gjennomført | Kontrakt-for-kontrakt-kontroll i begge repoer |
+| Uberørte frontendtyper samsvarer med gjeldende DTO-er i `su-se-bakover` | En full DTO-audit er ikke en fast forhåndskontroll og blir raskt utdatert | Verifiser den berørte kontrakten behovsstyrt mot en eksplisitt backend-ref |
 | `io-ts` skal være generell kontraktstrategi | Pakkene er installert, men brukes ikke i `src/**` | Egen beslutning og migreringsplan; inntil da brukes målrettede guards/decodere |
 | Alle reguleringer ender i én av et fast sett forretningsutfall | Frontend har flere statuser, men faglig uttømmende betydning eies av backend | Gjeldende backendkode og faglig kilde |
 | Regulering, stans og gjenopptak sender aldri vedtaksbrev | Frontend viser egne brevvalg i deler av revurderingsflyten, men beviser ikke en generell regel | Kontroll av hver backendflyt |

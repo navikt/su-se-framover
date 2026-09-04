@@ -18,7 +18,9 @@ presentasjon av domenet supplerende stønad.
    temafiler.
 3. Kontroller kritiske påstander mot gjeldende frontendkode og tester.
 4. Når en påstand krysser API-grensen, kontroller også gjeldende backendendepunkt
-   eller DTO. Backenddokumentasjon er et kart, ikke automatisk frontendfakta.
+   eller DTO på en eksplisitt Git-ref. Bruk lokal kode når den er tilgjengelig,
+   ellers en godkjent GitHub-integrasjon. Backenddokumentasjon er et kart, ikke
+   automatisk frontendfakta, og lessons-loggen er aldri belegg for domenelogikk.
 5. Spør ved reell uklarhet. Ikke be brukeren lese repositoryfiler for deg.
 
 ## Rolle

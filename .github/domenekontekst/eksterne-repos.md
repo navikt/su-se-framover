@@ -39,3 +39,25 @@ alternativ produksjonsflyt.
 Bruk eksterne dokumenter og repoer til å danne hypoteser. Merk påstanden
 `cross-repo` først når begge sider av grensen er kontrollert. Legg resten i
 [avklaringer](avklaringer.md).
+
+## Behovsstyrt kryss-repo-verifisering
+
+Ikke sammenlign alle frontendtyper med alle backend-DTO-er som en fast
+forhåndskontroll. Verifiser bare kontrakten eller domenepåstanden som berøres av
+oppgaven.
+
+1. Bruk et lokalt checkout av `su-se-bakover` når det er tilgjengelig.
+2. Hvis repoet ikke er lokalt tilgjengelig, bruk en godkjent GitHub-integrasjon
+   eller MCP-server mot en eksplisitt Git-ref.
+3. Bruk backendens default branch for gjeldende hovedlinje. Ved en koordinert
+   endring brukes den aktuelle PR-en eller commit-SHA-en i stedet.
+4. Kontroller endepunkt, DTO, mapping og relevante backendtester. Dokumenter
+   repository, ref og kildefiler som belegg.
+5. Kontroller deretter frontendtype, API-klient, mapping, tilstander og
+   konsumenter.
+6. Hvis en side av grensen ikke kan kontrolleres, merk påstanden `unresolved`;
+   ikke blokker urelaterte endringer med krav om en full kontraktaudit.
+
+Backendens domenedokumentasjon kan brukes som kart og kilde til hypoteser.
+Backendens lessons-logg gjelder prosesslæring og skal ikke brukes som belegg for
+DTO-er, domenelogikk, tilgang eller tilstandsoverganger.
