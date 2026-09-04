@@ -7,6 +7,7 @@ import {
     personligOppmøteUpdated,
 } from '~src/features/kontrollsamtale/kontrollsamtale.slice.ts';
 import { useI18n } from '~src/lib/i18n.ts';
+import * as routes from '~src/lib/routes.ts';
 import { kontrollsamtaleUtfylling, useRouteParams } from '~src/lib/routes.ts';
 import messages from '~src/pages/kontrollsamtale/steg/personligOppmøte/personligOppmøte-nb.ts';
 import { FormData, schema } from '~src/pages/kontrollsamtale/steg/personligOppmøte/validering.ts';
@@ -23,7 +24,7 @@ const PersonligOppmøte = ({ avbrytUrl }: Props) => {
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
     const { formatMessage } = useI18n({ messages: { ...messages } });
-    const { sakId } = useRouteParams<typeof kontrollsamtaleUtfylling>();
+    const { sakId, kontrollsamtaleId } = useRouteParams<typeof routes.kontrollsamtaleUtfylling>();
 
     if (!sakId) {
         throw new Error('Mangler sakId');
@@ -36,6 +37,9 @@ const PersonligOppmøte = ({ avbrytUrl }: Props) => {
         },
         resolver: yupResolver(schema),
     });
+    if (!sakId || !kontrollsamtaleId) {
+        throw new Error('Mangler sakId eller kontrollsamtaleId');
+    }
     const onSubmit = (values: FormData) => {
         dispatch(personligOppmøteUpdated(values.personligOppmøte));
 
@@ -45,6 +49,7 @@ const PersonligOppmøte = ({ avbrytUrl }: Props) => {
                 kontrollsamtaleUtfylling.createURL({
                     sakId,
                     step: KontrollsamtaleSteg.OriginalPass,
+                    kontrollsamtaleId,
                 }),
             );
             return;
@@ -53,6 +58,7 @@ const PersonligOppmøte = ({ avbrytUrl }: Props) => {
             kontrollsamtaleUtfylling.createURL({
                 sakId,
                 step: KontrollsamtaleSteg.FullmaktOgLegeerklæring,
+                kontrollsamtaleId,
             }),
         );
     };

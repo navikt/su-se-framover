@@ -20,13 +20,14 @@ const Oppsummering = ({ forrigeUrl, nesteUrl, avbrytUrl }: Props) => {
     const { formatMessage } = useI18n({ messages: { ...messages } });
     const dispatch = useAppDispatch();
     const kontrollsamtale = useAppSelector((state) => state.kontrollsamtale);
-    const { sakId } = useParams<{
+    const { sakId, kontrollsamtaleId } = useParams<{
         sakId: string;
+        kontrollsamtaleId: string;
     }>();
 
     const onSubmit = async () => {
-        if (!sakId) {
-            throw new Error('Mangler sakId');
+        if (!sakId || !kontrollsamtaleId) {
+            throw new Error('Mangler sakId eller kontrollsamtaleId');
         }
 
         if (
@@ -47,6 +48,7 @@ const Oppsummering = ({ forrigeUrl, nesteUrl, avbrytUrl }: Props) => {
         const resultat = await dispatch(
             sendKontrollsamtaleNotat({
                 sakId: sakId,
+                kontrollsamtaleId: kontrollsamtaleId,
                 personligOppmøte: kontrollsamtale.personligOppmøte,
                 fullmaktOgLegeerklæring: kontrollsamtale.fullmaktOgLegeerklæring,
                 originalPass: kontrollsamtale.originalPass,

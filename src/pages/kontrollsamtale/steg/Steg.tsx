@@ -12,7 +12,13 @@ import Utenlandsopphold from '~src/pages/kontrollsamtale/steg/utenlandsopphold/U
 import ØkonomiskSituasjon from '~src/pages/kontrollsamtale/steg/økonomi/ØkonomiskSituasjon.tsx';
 import { KontrollsamtaleSteg } from '~src/pages/kontrollsamtale/types.ts';
 
-const Steg = (props: { step: KontrollsamtaleSteg; title: string; hjelpetekst?: string; sakId: string }) => {
+const Steg = (props: {
+    step: KontrollsamtaleSteg;
+    title: string;
+    hjelpetekst?: string;
+    sakId: string;
+    kontrollsamtaleId: string;
+}) => {
     const sectionRef = useRef<HTMLDivElement>(null);
     useEffect(() => {
         sectionRef.current?.focus();
@@ -26,11 +32,11 @@ const Steg = (props: { step: KontrollsamtaleSteg; title: string; hjelpetekst?: s
                 </Heading>
                 {props.hjelpetekst && <Ingress>{props.hjelpetekst}</Ingress>}
             </div>
-            <ShowSteg step={props.step} sakId={props.sakId} />
+            <ShowSteg step={props.step} sakId={props.sakId} kontrollsamtaleId={props.kontrollsamtaleId} />
         </section>
     );
 };
-const ShowSteg = (props: { step: KontrollsamtaleSteg; sakId: string }) => {
+const ShowSteg = (props: { step: KontrollsamtaleSteg; sakId: string; kontrollsamtaleId: string }) => {
     const avbrytUrl = routes.soknad.createURL();
 
     if (!props.sakId) {
@@ -45,10 +51,12 @@ const ShowSteg = (props: { step: KontrollsamtaleSteg; sakId: string }) => {
                     nesteUrl={routes.kontrollsamtaleUtfylling.createURL({
                         step: KontrollsamtaleSteg.OriginalPass,
                         sakId: props.sakId,
+                        kontrollsamtaleId: props.kontrollsamtaleId,
                     })}
                     forrigeUrl={routes.kontrollsamtaleUtfylling.createURL({
                         step: KontrollsamtaleSteg.PersonligOppmøte,
                         sakId: props.sakId,
+                        kontrollsamtaleId: props.kontrollsamtaleId,
                     })}
                     avbrytUrl={avbrytUrl}
                 />
@@ -59,10 +67,12 @@ const ShowSteg = (props: { step: KontrollsamtaleSteg; sakId: string }) => {
                     nesteUrl={routes.kontrollsamtaleUtfylling.createURL({
                         step: KontrollsamtaleSteg.ReisetilUtlandet,
                         sakId: props.sakId,
+                        kontrollsamtaleId: props.kontrollsamtaleId,
                     })}
                     forrigeUrl={routes.kontrollsamtaleUtfylling.createURL({
                         step: KontrollsamtaleSteg.FullmaktOgLegeerklæring,
                         sakId: props.sakId,
+                        kontrollsamtaleId: props.kontrollsamtaleId,
                     })}
                     avbrytUrl={avbrytUrl}
                 />
@@ -73,10 +83,12 @@ const ShowSteg = (props: { step: KontrollsamtaleSteg; sakId: string }) => {
                     nesteUrl={routes.kontrollsamtaleUtfylling.createURL({
                         step: KontrollsamtaleSteg.ØkonomiskSituasjon,
                         sakId: props.sakId,
+                        kontrollsamtaleId: props.kontrollsamtaleId,
                     })}
                     forrigeUrl={routes.kontrollsamtaleUtfylling.createURL({
                         step: KontrollsamtaleSteg.OriginalPass,
                         sakId: props.sakId,
+                        kontrollsamtaleId: props.kontrollsamtaleId,
                     })}
                     avbrytUrl={avbrytUrl}
                 />
@@ -87,10 +99,12 @@ const ShowSteg = (props: { step: KontrollsamtaleSteg; sakId: string }) => {
                     nesteUrl={routes.kontrollsamtaleUtfylling.createURL({
                         step: KontrollsamtaleSteg.AndreForhold,
                         sakId: props.sakId,
+                        kontrollsamtaleId: props.kontrollsamtaleId,
                     })}
                     forrigeUrl={routes.kontrollsamtaleUtfylling.createURL({
                         step: KontrollsamtaleSteg.ReisetilUtlandet,
                         sakId: props.sakId,
+                        kontrollsamtaleId: props.kontrollsamtaleId,
                     })}
                     avbrytUrl={avbrytUrl}
                 />
@@ -101,10 +115,12 @@ const ShowSteg = (props: { step: KontrollsamtaleSteg; sakId: string }) => {
                     nesteUrl={routes.kontrollsamtaleUtfylling.createURL({
                         step: KontrollsamtaleSteg.SkatteOpplysninger,
                         sakId: props.sakId,
+                        kontrollsamtaleId: props.kontrollsamtaleId,
                     })}
                     forrigeUrl={routes.kontrollsamtaleUtfylling.createURL({
                         step: KontrollsamtaleSteg.ØkonomiskSituasjon,
                         sakId: props.sakId,
+                        kontrollsamtaleId: props.kontrollsamtaleId,
                     })}
                     avbrytUrl={avbrytUrl}
                 />
@@ -115,10 +131,12 @@ const ShowSteg = (props: { step: KontrollsamtaleSteg; sakId: string }) => {
                     nesteUrl={routes.kontrollsamtaleUtfylling.createURL({
                         step: KontrollsamtaleSteg.Oppsummering,
                         sakId: props.sakId,
+                        kontrollsamtaleId: props.kontrollsamtaleId,
                     })}
                     forrigeUrl={routes.kontrollsamtaleUtfylling.createURL({
                         step: KontrollsamtaleSteg.AndreForhold,
                         sakId: props.sakId,
+                        kontrollsamtaleId: props.kontrollsamtaleId,
                     })}
                     avbrytUrl={avbrytUrl}
                 />
@@ -129,6 +147,7 @@ const ShowSteg = (props: { step: KontrollsamtaleSteg; sakId: string }) => {
                     forrigeUrl={routes.kontrollsamtaleUtfylling.createURL({
                         step: KontrollsamtaleSteg.SkatteOpplysninger,
                         sakId: props.sakId,
+                        kontrollsamtaleId: props.kontrollsamtaleId,
                     })}
                     avbrytUrl={avbrytUrl}
                     nesteUrl={routes.kontrollsamtaleKvittering.createURL({

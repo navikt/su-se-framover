@@ -1,5 +1,6 @@
 import { KontrollsamtaleFormStatus } from '~src/components/oppsummering/kontrollsamtale/OppsummeringAvKontrollsamtaleUtils';
 import { Nullable } from '~src/lib/types';
+import { Tidspunkt, UUID } from '~src/types/Notat.ts';
 
 export interface Kontrollsamtale {
     id: string;
@@ -45,6 +46,7 @@ export interface KontrollsamtaleReiseDato {
 }
 export interface LagreKontrollsamtaleNotatRequest {
     sakId: string;
+    kontrollsamtaleId: string;
     personligOppmøte: boolean;
     fullmaktOgLegeerklæring: boolean | null;
     originalPass: boolean;
@@ -58,4 +60,19 @@ export interface LagreKontrollsamtaleNotatRequest {
     andreForhold: boolean;
     skatteOpplysninger: boolean;
     fritekst: string | null;
+}
+
+export interface LeggTilKontrollsamtaleVedleggRequest {
+    sakId: string;
+    kontrollsamtaleId: string;
+    fil: File;
+}
+
+export interface KontrollsamtaleNotatVedlegg {
+    id: UUID;
+    kontrollsamtaleId: UUID;
+    filnavn: string;
+    mimeType: string;
+    innhold: string;
+    opprettet: Tidspunkt;
 }

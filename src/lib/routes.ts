@@ -323,10 +323,12 @@ export const kontrollsamtale: Route<{
 export const kontrollsamtaleUtfylling: Route<{
     step: KontrollsamtaleSteg;
     sakId: string;
+    kontrollsamtaleId: string;
 }> = {
-    path: 'saker/:sakId/kontrollsamtaler/notat/utfylling/:step',
-    absPath: '/kontrollsamtale/saker/:sakId/kontrollsamtaler/notat/utfylling/:step',
-    createURL: (args) => `/kontrollsamtale/saker/${args.sakId}/kontrollsamtaler/notat/utfylling/${args.step}`,
+    path: 'saker/:sakId/kontrollsamtaler/:kontrollsamtaleId/notat/utfylling/:step',
+    absPath: '/kontrollsamtale/saker/:sakId/kontrollsamtaler/:kontrollsamtaleId/notat/utfylling/:step',
+    createURL: (args) =>
+        `/kontrollsamtale/saker/${args.sakId}/kontrollsamtaler/${args.kontrollsamtaleId}/notat/utfylling/${args.step}`,
 };
 
 export const kontrollsamtaleKvittering: Route<{
