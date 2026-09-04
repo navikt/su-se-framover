@@ -1,0 +1,26 @@
+{
+  "version": 1,
+  "source": {
+    "repository": "navikt/copilot",
+    "commit": "24ad9baf95ae381f03a1a1bad69199b5d4532aa6"
+  },
+  "digestAlgorithm": "sha256-directory-v1",
+  "skills": {
+    "aksel-builder": {
+      "sourcePath": "skills/aksel-builder",
+      "sha256": "af0d717558f0c081c8481977b20f87789842abc53bca0a56d615f2ed4633806c"
+    },
+    "klarsprak": {
+      "sourcePath": "skills/klarsprak",
+      "sha256": "24fc134e78de4814066b351dfdb578d22ea77cad27094f5acd974e49da779d62"
+    },
+    "security-owasp": {
+      "sourcePath": "skills/security-owasp",
+      "sha256": "77e9d1c3f950260049fa7730466d12deb626a906f8666f0c3216bb0172dcb3f8"
+    },
+    "web-design-reviewer": {
+      "sourcePath": "skills/web-design-reviewer",
+      "sha256": "92071a70f1c9b12421b89e723e9e435dc2d0c106da584c9f4fc974c829945a6a"
+    }
+  }
+}

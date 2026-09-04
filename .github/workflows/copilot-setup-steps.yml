@@ -1,0 +1,36 @@
+name: Copilot Setup Steps
+
+on:
+    workflow_dispatch:
+    push:
+        paths:
+            - .github/workflows/copilot-setup-steps.yml
+    pull_request:
+        paths:
+            - .github/workflows/copilot-setup-steps.yml
+
+permissions: {}
+
+jobs:
+    copilot-setup-steps:
+        runs-on: ubuntu-latest
+        timeout-minutes: 15
+        permissions:
+            contents: read
+        steps:
+            - uses: actions/checkout@v7
+              with:
+                  persist-credentials: false
+            - uses: actions/setup-node@v7.0.0
+              with:
+                  node-version: '24.1.0'
+                  cache: npm
+                  cache-dependency-path: |
+                      package-lock.json
+                      server/package-lock.json
+            - name: Ensure npm has min-release-age support
+              run: npm install --global --ignore-scripts npm@11.10.0
+            - name: Install frontend dependencies
+              run: npm ci --min-release-age 20 --ignore-scripts
+            - name: Install BFF dependencies
+              run: npm ci --min-release-age 20 --ignore-scripts --prefix server

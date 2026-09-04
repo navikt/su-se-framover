@@ -42,8 +42,13 @@ offisiell dokumentasjon før en ny adapter legges til:
 | [`../AGENTS.md`](../AGENTS.md) | Kanoniske, verktøyuavhengige regler |
 | [`copilot-instructions.md`](copilot-instructions.md) | Tynn Copilot-inngang |
 | [`instructions/typescript.instructions.md`](instructions/typescript.instructions.md) | Filavgrensede TypeScript-/React-regler |
+| [`instructions/bff.instructions.md`](instructions/bff.instructions.md) | Filavgrensede Express-, auth- og proxyregler |
 | [`agents/su-frontend-ekspert.agent.md`](agents/su-frontend-ekspert.agent.md) | Valgbar frontend-, BFF-, auth- og domenesparringspartner |
 | [`agents/su-frontend-ekspert.lessons.jsonl`](agents/su-frontend-ekspert.lessons.jsonl) | Varig prosesslæring |
+| [`frontend-skills.md`](frontend-skills.md) | Register og repoavgrensning for installerte frontend-skills |
+| [`skills.lock.json`](skills.lock.json) | Full upstream-commit og innholdshasher for installerte skills |
+| [`skills/`](skills/) | Skills fra `navikt/copilot`, lest direkte av Copilot CLI |
+| [`workflows/copilot-setup-steps.yml`](workflows/copilot-setup-steps.yml) | Deterministisk avhengighetsoppsett for Copilot cloud agent |
 | [`su-frontend-ekspert.md`](su-frontend-ekspert.md) | Kunnskapshub |
 | [`domenekontekst/`](domenekontekst/) | Verifiserte fakta og avklaringer |
 | [`ai-historikk/avvik.jsonl`](ai-historikk/avvik.jsonl) | Eksplisitt godkjente, avgrensede unntak |
@@ -57,6 +62,9 @@ offisiell dokumentasjon før en ny adapter legges til:
 - **Domenefakta** er verifisert oppførsel i en temafil.
 - **Avklaringer** er uavklarte, historiske eller avkreftede påstander.
 - **Prosesslæring** forbedrer agentens arbeidsmåte og inneholder ikke domenefakta.
+- **Skills** gir oppgavespesifikke arbeidsflyter og referanser, men er ikke
+  normative over `AGENTS.md` eller filinstruksjonene. Absolutte formuleringer i
+  en skill må kontrolleres manuelt mot lokale regler før bruk.
 - **Avvik** er eksplisitt godkjente unntak for et avgrenset scope.
 - **Endringshistorikk** gjelder AI-oppsettet og domenedokumentasjonen. Git
   dokumenterer ordinære kodeendringer.
@@ -100,6 +108,9 @@ Endring i AI-oppsettet:
 ```json
 {"date":"YYYY-MM-DD","type":"governance-change","summary":"endring","reason":"begrunnelse","files":["berørte filer"],"evidence":["grunnlag"]}
 ```
+
+`files` kan inneholde fil- eller katalogstier. En katalogsti betyr alle filer
+under katalogen som ble berørt av den beskrevne endringen.
 
 Hver ikke-tomme linje skal være et JSON-objekt. `eventId` er unik,
 `deviationId` er stabil gjennom hele livsløpet, og en statusendring peker på

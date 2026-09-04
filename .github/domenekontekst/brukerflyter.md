@@ -18,10 +18,18 @@
 - vise og distribuere dokumenter
 - registrere kontrollsamtale og kontrollnotat
 - utføre avgrensede driftsoppgaver
+- bruke en utviklerverktøyrute som oppretter testdata gjennom `/dev`-endepunkter
+
+`/devTools` er registrert uten en synlig rolle- eller miljøgate i
+`src/Root.tsx`. Backend må derfor være autoritativ for om endepunktene er
+tilgjengelige. Produksjonsavgrensningen er ikke verifisert i dette repoet.
 
 `src/types/Sak.ts` definerer `Sakstype` med medlemmene `Alder` og `Uføre`, som
 har wire-verdiene `'alder'` og `'uføre'`. Bruk `Sakstype.Alder` og
-`Sakstype.Uføre`, ikke strengliteraler i store bokstaver.
+`Sakstype.Uføre`, ikke strengliteraler i store bokstaver. URL-tema bruker
+`'alder'` og `'ufore'`. Backendens enum-medlemmer heter `ALDER` og `UFØRE`, men
+wire-kontrakten er lowercase. Dette er `cross-repo`-verifisert mot
+`navikt/su-se-bakover` sin default branch 2026-09-04.
 
 ## Kontroll av en flyt
 

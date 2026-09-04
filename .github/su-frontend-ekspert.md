@@ -45,6 +45,8 @@ kilder.
 
 ## Historikk og læring
 
+- [Frontend-skillregisteret](frontend-skills.md) forklarer når installerte
+  arbeidsflyter skal brukes og hvilke repoavgrensninger som gjelder.
 - [Prosesslæring](agents/su-frontend-ekspert.lessons.jsonl) gjelder agentens
   arbeidsmåte, ikke domenet.
 - [Godkjente avvik](ai-historikk/avvik.jsonl) er avgrensede unntak uten presedens.

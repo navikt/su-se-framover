@@ -6,6 +6,10 @@ Les i tillegg:
 
 - [`instructions/typescript.instructions.md`](instructions/typescript.instructions.md)
   for TypeScript- og React-filer
+- [`instructions/bff.instructions.md`](instructions/bff.instructions.md) for
+  Express-BFF-en
+- [frontend-skillregisteret](frontend-skills.md) når oppgaven matcher en
+  installert skill
 - [kunnskapshuben](su-frontend-ekspert.md) for domene, API, BFF, auth, Aksel og
   tilgjengelighet
 - [avklaringer](domenekontekst/avklaringer.md) før en uverifisert faglig påstand

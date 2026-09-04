@@ -18,6 +18,15 @@ API-modulene dekker blant annet sak, søknad, behandling, revurdering,
 regulering, dokument, klage, tilbakekreving, kontrollsamtale, person, skatt og
 driftsoperasjoner.
 
+## Sensitive oppslag
+
+`personApi.ts`, `skattApi.ts` og `adresseOppslagApi.ts` eksponerer
+person-, skatte- og adresseoppslag gjennom BFF-en. Frontendkoden verifiserer
+endepunktene og responsformene, men dokumenterer ikke alene det faglige
+grunnlaget, sporingen eller betydningen av operasjoner som
+`/skatt/uten-verifisering`. Disse forholdene ligger i
+[avklaringer](avklaringer.md).
+
 ## Kontraktansvar
 
 Frontendtypene under `src/types/` beskriver forventet responsform, men TypeScript

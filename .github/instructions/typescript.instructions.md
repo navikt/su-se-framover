@@ -1,5 +1,5 @@
 ---
-applyTo: "**/*.{ts,tsx}"
+applyTo: "src/**/*.{ts,tsx}"
 ---
 
 # TypeScript- og React-instruksjoner
@@ -34,6 +34,9 @@ Disse reglene gjelder TypeScript- og React-filer. Følg også
 - Frontendtypene skal speile backendkontraktene; `su-se-bakover` er fasit for
   kontrakten og domenebeslutningen. Ikke opprett en konkurrerende
   frontendkontrakt.
+- Frontend kan avlede UI-visning fra backendstatus, men skal ikke etablere en
+  forenklet, autoritativ tilstandsmaskin. Bruk typed status og håndter avvisning
+  fra backend.
 - Bruk målrettet runtime-validering når data kommer fra en særlig utsatt grense:
   feilrespons med ukjent kropp, runtime-konfigurasjon, URL eller lagring i
   nettleseren, tredjepart, eller en kontrakt der feil form kan gi uriktig
@@ -108,5 +111,5 @@ npm run build
 npm run build:server
 ```
 
-Bruk `npm run build:server` for BFF-endringer og `npm run build` for endringer som
-påvirker Vite-bygget.
+Bruk `npm run build` for endringer som påvirker Vite-bygget. BFF-endringer følger
+[`bff.instructions.md`](bff.instructions.md).

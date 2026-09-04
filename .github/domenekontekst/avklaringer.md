@@ -18,6 +18,9 @@ fakta og regler.
 | Component testing skal være obligatorisk | Jest-oppsettet har ikke etablert DOM-/komponenttestmiljø | Beslutning om testverktøy og supply-chain-vurdering |
 | Ny innlogging reparerer alle tokenfeil som BFF-en markerer med `x-login-required` | Dagens validering markerer flere ugyldig-token-kategorier; enkelte kan skyldes vedvarende konfigurasjons- eller nøkkelavvik | Tester og eventuell finere klassifisering i `server/auth/index.ts` |
 | Hvert backendendepunkt håndhever alle dokumenterte tilgangs- og overgangsgrenser | Frontend skal anta denne ansvarsgrensen, men full backendkontroll er ikke gjennomført | Endepunkt- og testkontroll i `su-se-bakover` |
+| Alle ruter har en beskrivende dokumenttittel | Tittelverktøy finnes, men brukes ikke på hele rutestrukturen | Rute-for-rute-kontroll og tilgjengelighetstest |
+| Person-, skatte- og adresseoppslag har riktig faglig grunnlag og sporing | Frontend verifiserer klientflatene, men ikke backendens kontroll eller audit | Berørte backendendepunkter, tester og faglig kilde |
+| `/devTools` og tilhørende `/dev`-endepunkter er utilgjengelige i produksjon | Frontendruten har ingen synlig rolle- eller miljøgate | Backendruting og miljøkonfigurasjon |
 
 ## Avkreftet
 

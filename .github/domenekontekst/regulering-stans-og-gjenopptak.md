@@ -38,6 +38,7 @@ sender brev krever kontroll av den konkrete backendflyten.
 ## Kilder
 
 - `src/types/Sak.ts`
+- `src/types/Utbetalingsperiode.ts`
 - `src/types/Regulering.ts`
 - `src/api/reguleringApi.ts`
 - `src/api/revurderingApi.ts`

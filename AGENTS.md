@@ -57,8 +57,18 @@ og sikkerhetskrav kan ikke overstyres gjennom avviksloggen.
   som gjeldende regel.
 
 Ved konflikt gjelder ufravikelige krav først, deretter dette regelsettet og
-filavgrensede instruksjoner. Domenefiler beskriver fakta og ansvar, ikke nye
-koderegler. Uklar eller motstridende veiledning skal løftes til brukeren.
+filavgrensede instruksjoner. Importerte skills er underordnet disse reglene og
+avgrenses i [`frontend-skills.md`](.github/frontend-skills.md). Domenefiler
+beskriver fakta og ansvar, ikke nye koderegler. Uklar eller motstridende
+veiledning skal løftes til brukeren.
+
+Ord som `hard rule`, `always`, `never`, «skal» og «aldri» i en importert skill
+gir ikke rådet samme status i dette repositoryet. Før en skill brukes, skal
+agenten manuelt sammenligne de relevante rådene med gjeldende regler,
+repositorykode og teknologistakk. Rapporter mismatch, bruk den repo-riktige
+løsningen og fortsett arbeidet. Spør bare når konflikten gjelder en lokal hard
+regel, krever et lokalt avvik eller etterlater reell faglig, sikkerhetsmessig
+eller arkitektonisk uklarhet.
 
 ## Ufravikelige grenser
 
@@ -69,8 +79,9 @@ koderegler. Uklar eller motstridende veiledning skal løftes til brukeren.
   OBO-veksling før kall til `su-se-bakover`.
 - Skjult eller deaktivert UI er ikke autorisasjon. Backend er autoritativ for
   tilgang, gyldige domenetilstander og tillatte overganger.
-- Ikke dupliser backendens beregnings-, tilgangs- eller overgangsregler i
-  frontend. Presenter backendresultatet og håndter at backend kan avvise kallet.
+- Frontend kan avlede visning fra typed backendstatus, men er ikke autoritativ
+  for beregning, tilgang eller gyldige overganger. Presenter backendresultatet
+  og håndter at backend kan avvise kallet.
 - Runtime-konfigurasjon som sendes til nettleseren skal være eksplisitt
   allowlistet og aldri inneholde serverhemmeligheter.
 - Behold supply-chain-vernet i [`.npmrc`](.npmrc): installasjonsskript er slått
@@ -105,6 +116,9 @@ instruksjonen:
   HTML, tastaturstøtte, fokusrekkefølge, skjermleserinformasjon og forståelig
   feiltekst.
 
+Normative BFF-regler ligger i
+[`bff.instructions.md`](.github/instructions/bff.instructions.md).
+
 ## Teknologi og kontroller
 
 Repositoryet bruker React 19, TypeScript 5.9, Vite, Express 5 som BFF, Redux
@@ -124,6 +138,11 @@ npm run build:server
 `npm run lint-and-typecheck` bruker en skrivende Biome-kommando. Bruk den ikke som
 en ren kontroll dersom arbeidsområdet ikke skal endres.
 
+Copilot cloud agent klargjøres av
+[`copilot-setup-steps.yml`](.github/workflows/copilot-setup-steps.yml). Hold
+workflowen i samsvar med Node/npm-versjonene, låsefilene og supply-chain-reglene
+i repositoryet.
+
 ## Kunnskap og historikk
 
 Les [oversikten over AI-styringen](.github/AI-STYRING.md) for filansvar og
@@ -134,6 +153,8 @@ erstatning for den.
 
 - [Domenekontekst](.github/domenekontekst/) inneholder verifiserte fakta og
   tydelig merkede grenser.
+- [Frontend-skills](.github/frontend-skills.md) beskriver installerte
+  arbeidsflyter og repoavgrensninger.
 - [Avklaringer](.github/domenekontekst/avklaringer.md) inneholder uavklarte,
   historiske og avkreftede påstander.
 - [Prosesslæring](.github/agents/su-frontend-ekspert.lessons.jsonl) inneholder bare

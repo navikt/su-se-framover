@@ -14,8 +14,11 @@ Applikasjonsskallet har:
 
 - hopp-lenke til hovedinnhold
 - semantisk `<main>`
-- dokumenttitler per hovedrute
+- `WithDocTitle` og `useDocTitle` for dokumenttitler på deler av rutestrukturen
 - Aksel `Loader`, `Alert`, skjemakomponenter og knapper
+
+Dokumenttitler er ikke verifisert for alle ruter. Nye eller endrede ruter må
+kontrolleres eksplisitt mot kravet om en beskrivende sidetittel.
 
 ## Relevant styring
 
