@@ -222,9 +222,21 @@ const ImportRad = (props: { import_: HistoriskImportOversikt; onSlettet: () => v
         <>
             <Table.Row>
                 <Table.DataCell>
-                    <Tag variant={statusTagVariant(import_.status)} size="small">
-                        {import_.status}
-                    </Tag>
+                    <div className={styles.statusMedHandling}>
+                        <Tag variant={statusTagVariant(import_.status)} size="small">
+                            {import_.status}
+                        </Tag>
+                        {import_.status === 'FULLFØRT' && (
+                            <Button
+                                variant="secondary"
+                                size="small"
+                                onClick={() => setVisKonverteringer((vises) => !vises)}
+                                aria-expanded={visKonverteringer}
+                            >
+                                {visKonverteringer ? 'Skjul konvertering' : 'Konverter import'}
+                            </Button>
+                        )}
+                    </div>
                 </Table.DataCell>
                 <Table.DataCell>{formatDateTime(import_.opprettet)}</Table.DataCell>
                 <Table.DataCell>{import_.fullført ? formatDateTime(import_.fullført) : '–'}</Table.DataCell>
@@ -241,28 +253,16 @@ const ImportRad = (props: { import_: HistoriskImportOversikt; onSlettet: () => v
                     )}
                 </Table.DataCell>
                 <Table.DataCell>
-                    <HStack gap="2" wrap>
-                        {import_.status === 'FULLFØRT' && (
-                            <Button
-                                variant="secondary"
-                                size="small"
-                                onClick={() => setVisKonverteringer((vises) => !vises)}
-                                aria-expanded={visKonverteringer}
-                            >
-                                {visKonverteringer ? 'Skjul konverteringer' : 'Vis konverteringer'}
-                            </Button>
-                        )}
-                        {kanSlettes && !bekreftSlett && (
-                            <Button
-                                variant="tertiary"
-                                size="small"
-                                onClick={() => setBekreftSlett(true)}
-                                aria-label="Slett import"
-                            >
-                                <TrashIcon aria-hidden />
-                            </Button>
-                        )}
-                    </HStack>
+                    {kanSlettes && !bekreftSlett && (
+                        <Button
+                            variant="tertiary"
+                            size="small"
+                            onClick={() => setBekreftSlett(true)}
+                            aria-label="Slett import"
+                        >
+                            <TrashIcon aria-hidden />
+                        </Button>
+                    )}
                     {kanSlettes && bekreftSlett && (
                         <div className={styles.bekreftSlettContainer}>
                             <Button
