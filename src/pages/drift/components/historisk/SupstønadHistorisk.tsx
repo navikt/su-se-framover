@@ -16,6 +16,7 @@ import {
 import { useEffect, useState } from 'react';
 import { ApiError } from '~src/api/apiClient';
 import {
+    beregnSupstønadHistorisk,
     HistoriskImportOversikt,
     HistoriskKonvertering,
     hentHistoriskeImporter,
@@ -457,7 +458,10 @@ const TellRaderPanel = () => {
     const [tellRaderStatus, tellRader] = useApiCall(tellRaderSupstønadHistorisk);
     const [hentUttrekkStatus, hentUttrekk] = useApiCall(hentUttrekkSupstønadHistorisk);
 
+    const [_, beregnHistorisk] = useApiCall(beregnSupstønadHistorisk);
+
     const handleSubmit = () => {
+        beregnHistorisk({});
         if (!tabellnavn.trim()) {
             return;
         }

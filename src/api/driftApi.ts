@@ -291,6 +291,23 @@ export async function tellRaderSupstønadHistorisk(args: {
     });
 }
 
+export async function beregnSupstønadHistorisk(): Promise<ApiClientResult<{ antallRader: number }>> {
+    return apiClient({
+        url: `/drift/supstonadhistorisk/beregning-test`,
+        method: 'POST',
+        request: { headers: new Headers({ Accept: 'application/json' }) },
+        body: {
+            perioder: [
+                {
+                    periode: { fraOgMed: '2016-07-01', tilOgMed: '2026-10-31' },
+                    strategi: 'BorMedVoksne',
+                },
+            ],
+            fradrag: [],
+        },
+    });
+}
+
 export async function hentUttrekkSupstønadHistorisk(args: {
     tabellnavn: string;
     antallRader: number;
