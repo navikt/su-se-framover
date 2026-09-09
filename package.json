@@ -38,7 +38,7 @@
   "license": "MIT",
   "engines": {
     "node": ">=24.1.0 <25.0.0",
-    "npm": ">=11.10.0"
+    "npm": ">=11.18.0"
   },
   "bugs": {
     "url": "https://github.com/navikt/su-se-framover/issues"
@@ -96,7 +96,9 @@
     "vite": "8.2.1"
   },
   "overrides": {
-    "js-yaml": "3.15.2",
+    "@istanbuljs/load-nyc-config": {
+      "js-yaml": "3.15.2"
+    },
     "yaml@<2.2.2": "2.2.2"
   }
 }
