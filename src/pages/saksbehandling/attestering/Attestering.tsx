@@ -6,6 +6,10 @@ import { useI18n } from '~src/lib/i18n';
 import * as Routes from '~src/lib/routes';
 import { ReferanseType } from '~src/types/Notat.ts';
 import { erKlageAvsluttet, erKlageTilAttestering } from '~src/utils/klage/klageUtils.ts';
+import {
+    erTilbakekrevingAvsluttet,
+    erTilbakekrevingTilAttestering,
+} from '~src/utils/ManuellTilbakekrevingsbehandlingUtils.ts';
 import { erInformasjonsRevurdering } from '~src/utils/revurdering/revurderingUtils';
 import {
     erRevurderingAvsluttet,
@@ -74,6 +78,15 @@ const Attestering = () => {
                     referanseType={ReferanseType.KLAGE}
                     underAttestering={erKlageTilAttestering(klage)}
                     kanRedigere={!erKlageAvsluttet(klage)}
+                />
+            )}
+            {tilbakekreving && (
+                <NotatPanel
+                    sakId={sak.id}
+                    referanseId={tilbakekreving.id}
+                    referanseType={ReferanseType.TILBAKEKREVING}
+                    underAttestering={erTilbakekrevingTilAttestering(tilbakekreving)}
+                    kanRedigere={!erTilbakekrevingAvsluttet(tilbakekreving)}
                 />
             )}
             <div className={styles.headingContainer}>

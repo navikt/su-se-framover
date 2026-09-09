@@ -4,6 +4,10 @@ import { useI18n } from '~src/lib/i18n';
 import * as routes from '~src/lib/routes';
 import { ManuellTilbakekrevingsbehandling, TilbakekrevingSteg } from '~src/types/ManuellTilbakekrevingsbehandling';
 import { ReferanseType } from '~src/types/Notat.ts';
+import {
+    erTilbakekrevingAvsluttet,
+    erTilbakekrevingTilAttestering,
+} from '~src/utils/ManuellTilbakekrevingsbehandlingUtils';
 import messages from '../Tilbakekreving-nb';
 import styles from './BehandleTilbakekreving.module.less';
 import BrevForTilbakekreving from './brevForTilbakekreving/BrevForTilbakekreving';
@@ -21,7 +25,6 @@ const BehandleTilbakekreving = (props: {
     const { behandlingId, steg } = routes.useRouteParams<typeof routes.tilbakekrevingValgtBehandling>();
 
     const behandling = props.tilbakekrevinger.find((t) => t.id === behandlingId);
-
     if (!behandling) {
         return (
             <div>
@@ -37,9 +40,8 @@ const BehandleTilbakekreving = (props: {
                 sakId={props.sakId}
                 referanseId={behandling.id}
                 referanseType={ReferanseType.TILBAKEKREVING}
-                // TODO
-                underAttestering={false}
-                kanRedigere={true}
+                underAttestering={erTilbakekrevingTilAttestering(behandling)}
+                kanRedigere={!erTilbakekrevingAvsluttet(behandling)}
             />
             {steg !== TilbakekrevingSteg.Oppsummering && (
                 <>
