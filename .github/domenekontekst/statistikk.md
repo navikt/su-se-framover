@@ -69,7 +69,10 @@ Beholdningsalderen fordeler behandlingene i intervallene 0–7, 8–30, 31–60,
 Målingen `TID_I_NÅVÆRENDE_STATUS` vises som «Tid i status ved periodens slutt»
 og regnes fra tidspunktet for siste statusovergang til den samme sluttdatoen.
 Målingene beskriver de samme behandlingene og skal ikke summeres med hverandre.
-Hovedvisningen viser siste øyeblikksbilde. Tidligere delperioder vises separat.
+Hovedvisningen viser siste øyeblikksbilde med begge aldersfordelingene.
+Historikken viser beholdningen og antallet over 90 dager for hver tidligere
+delperiode. Dette gjør utviklingen sammenlignbar uten å gjenta to komplette
+krysstabeller per periode.
 Hvert historiske øyeblikksbilde bruker statusen og alderen behandlingen hadde
 ved slutten av den aktuelle delperioden, ikke dagens status eller alder. Når
 behandlingen får en avsluttende status, inngår den ikke i senere
@@ -96,7 +99,9 @@ Behandlingen følges til første avsluttende status: `IVERKSATT`, `AVSLUTTET` el
 oppgir `grunnlag` hvor mange behandlinger som har hatt hele fristen, og
 `ferdige` hvor mange av disse som fikk en avsluttende status innen fristen.
 `åpneVedTilOgMed` er behandlinger uten avsluttende status ved rapportperiodens
-slutt. Oversendte klager inngår derfor ikke.
+slutt. Oversendte klager inngår derfor ikke. Tallet gjelder bare behandlinger
+som ble mottatt i den valgte perioden. Beholdningen kan i tillegg inneholde
+eldre behandlinger som ble mottatt før periodestart.
 
 Kohortene brukes til å sammenligne hvor raskt behandlinger fra forskjellige
 mottaksperioder blir ferdige. Behandlinger som ikke har rukket å få hele
@@ -107,7 +112,8 @@ Hovedvisningen summerer tellerne og grunnlagene for alle mottaksperioder i det
 valgte tidsrommet. Prosentene beregnes fra de summerte tellerne og grunnlagene,
 ikke som et gjennomsnitt av periodeprosentene. `åpneVedTilOgMed` kan summeres
 fordi hver behandling tilhører én kohort og alle kohortene måles på samme
-rapportdato.
+rapportdato. Den summerte raden merkes med hele den valgte rapportperioden,
+også når en ytelse ikke har mottak i den siste delperioden.
 
 ### Metadata
 
@@ -132,6 +138,15 @@ Fasemålingene er:
 Klage får ikke fasemålingene fordi sakstatistikken ikke lager egne
 `TIL_ATTESTERING`- eller `UNDERKJENT`-hendelser for klage. En behandling kan
 bidra med flere fasemålinger etter gjentatte underkjenninger.
+
+Frontend viser utviklingen i gjennomsnittlig total behandlingstid. Målingene kan
+gjelde ulike grupper behandlinger og skal ikke legges sammen. Varigheter under
+ett døgn vises i timer eller minutter, ikke som `0,0 dager`.
+
+Årsoppløsning kan velges når rapportperioden dekker minst 12 måneder. Første og
+siste delperiode kan fortsatt dekke bare deler av kalenderåret. Slike
+delperioder merkes med de faktiske datoene og skal ikke sammenlignes som om de
+var like lange.
 
 Aggregatversjon 4 innførte `registrertTid` for registrerte behandlinger,
 `mottattTid` for behandlingstid, kohorter og beholdningsalder samt korrigert

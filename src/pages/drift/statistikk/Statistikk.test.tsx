@@ -110,6 +110,7 @@ describe('SakstatistikkPanel', () => {
         expect(markup).toContain('Hver periode er et historisk øyeblikksbilde');
         expect(markup).toContain('Omarbeid etter underkjenning');
         expect(markup).toContain('Behandlinger fulgt fra mottak');
+        expect(markup).toContain('Fortsatt åpne blant behandlingene som ble mottatt i perioden');
         expect(markup).toContain('Om datagrunnlaget');
     });
 });

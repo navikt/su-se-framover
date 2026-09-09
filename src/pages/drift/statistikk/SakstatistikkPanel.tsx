@@ -103,13 +103,55 @@ const tekstFraKode = (verdi: string): string => {
 const formaterDager = (dager: number): string =>
     new Intl.NumberFormat('nb-NO', { maximumFractionDigits: 1, minimumFractionDigits: 1 }).format(dager);
 
+const formaterVarighet = (dager: number): string => {
+    if (dager === 0) return '0 minutter';
+
+    const minutter = dager * 24 * 60;
+    if (minutter < 1) return '< 1 minutt';
+    if (minutter < 60) {
+        const avrundet = Math.round(minutter);
+        return `${avrundet.toLocaleString('nb-NO')} ${avrundet === 1 ? 'minutt' : 'minutter'}`;
+    }
+
+    const timer = minutter / 60;
+    if (timer < 24) {
+        const avrundet = Math.round(timer * 10) / 10;
+        return `${avrundet.toLocaleString('nb-NO')} ${avrundet === 1 ? 'time' : 'timer'}`;
+    }
+
+    return `${formaterDager(dager)} dager`;
+};
+
 const formaterPeriode = (fraOgMed: string, tilOgMed: string): string =>
     `${formatDate(parseNonNullableIsoDateOnly(fraOgMed))}–${formatDate(parseNonNullableIsoDateOnly(tilOgMed))}`;
+
+const formaterDelperiode = (fraOgMed: string, tilOgMed: string, oppløsning: Statistikkoppløsning): string => {
+    if (oppløsning !== 'ÅR') return formaterPeriode(fraOgMed, tilOgMed);
+
+    const fra = parseNonNullableIsoDateOnly(fraOgMed);
+    const til = parseNonNullableIsoDateOnly(tilOgMed);
+    if (fra.getFullYear() !== til.getFullYear()) return formaterPeriode(fraOgMed, tilOgMed);
+
+    const år = fra.getFullYear();
+    const starterFørsteJanuar = fra.getMonth() === 0 && fra.getDate() === 1;
+    const slutterSisteDesember = til.getMonth() === 11 && til.getDate() === 31;
+    if (starterFørsteJanuar && slutterSisteDesember) return String(år);
+    if (starterFørsteJanuar) return `${år} (til ${formatDate(tilOgMed)})`;
+    if (slutterSisteDesember) return `${år} (fra ${formatDate(fraOgMed)})`;
+    return `${år} (${formaterPeriode(fraOgMed, tilOgMed)})`;
+};
 
 const forskyvÅr = (dato: string, antall: number): Date => {
     const resultat = parseNonNullableIsoDateOnly(dato);
     resultat.setFullYear(resultat.getFullYear() + antall);
     return resultat;
+};
+
+const dekkerMinstTolvMåneder = (fraOgMed: string, tilOgMed: string): boolean => {
+    const fra = parseNonNullableIsoDateOnly(fraOgMed);
+    const førsteTillatteSluttdato = new Date(fra.getFullYear() + 1, fra.getMonth(), fra.getDate());
+    førsteTillatteSluttdato.setDate(førsteTillatteSluttdato.getDate() - 1);
+    return parseNonNullableIsoDateOnly(tilOgMed) >= førsteTillatteSluttdato;
 };
 
 const apiFeilmelding = (statuskode: number, melding: string): string => {
@@ -127,6 +169,7 @@ const SakstatistikkPanel = () => {
     const [kategori, setKategori] = useState<SakStatistikkKategori>('SØKNAD');
     const [ytelse, setYtelse] = useState<string | null>(null);
     const { status, genererer, prøvIgjen } = useSakstatistikk({ fraOgMed, tilOgMed, oppløsning });
+    const kanVelgeÅrsoppløsning = dekkerMinstTolvMåneder(fraOgMed, tilOgMed);
 
     const velgPeriode = (valg: Standardperiode) => {
         setPeriodevalg(valg);
@@ -160,8 +203,12 @@ const SakstatistikkPanel = () => {
                     toDate={parseNonNullableIsoDateOnly(tilOgMed)}
                     onChange={(dato) => {
                         if (dato) {
+                            const nyFraOgMed = toIsoDateOnlyString(dato);
                             setPeriodevalg('EGENDEFINERT');
-                            setFraOgMed(toIsoDateOnlyString(dato));
+                            setFraOgMed(nyFraOgMed);
+                            if (oppløsning === 'ÅR' && !dekkerMinstTolvMåneder(nyFraOgMed, tilOgMed)) {
+                                setOppløsning('MÅNED');
+                            }
                         }
                     }}
                 />
@@ -172,8 +219,12 @@ const SakstatistikkPanel = () => {
                     toDate={forskyvÅr(fraOgMed, 2)}
                     onChange={(dato) => {
                         if (dato) {
+                            const nyTilOgMed = toIsoDateOnlyString(dato);
                             setPeriodevalg('EGENDEFINERT');
-                            setTilOgMed(toIsoDateOnlyString(dato));
+                            setTilOgMed(nyTilOgMed);
+                            if (oppløsning === 'ÅR' && !dekkerMinstTolvMåneder(fraOgMed, nyTilOgMed)) {
+                                setOppløsning('MÅNED');
+                            }
                         }
                     }}
                 />
@@ -186,7 +237,9 @@ const SakstatistikkPanel = () => {
                     >
                         <option value="UKE">Uke</option>
                         <option value="MÅNED">Måned</option>
-                        <option value="ÅR">År</option>
+                        <option value="ÅR" disabled={!kanVelgeÅrsoppløsning}>
+                            År{kanVelgeÅrsoppløsning ? '' : ' (krever minst 12 måneder)'}
+                        </option>
                     </Select>
                 )}
                 <Select
@@ -254,6 +307,15 @@ export const SakstatistikkInnhold = (props: {
         (kohort) => kohort.kategori === props.kategori && (props.ytelse === null || kohort.sakYtelse === props.ytelse),
     );
     const harPeriodedata = harSakstatistikk(perioder);
+    const totalBehandlingstidSerier = lagBehandlingstidSerier(
+        perioder,
+        props.kategori,
+        props.ytelse,
+        'TOTAL_BEHANDLINGSTID',
+    );
+    const harTotalBehandlingstid = totalBehandlingstidSerier.some((serie) =>
+        serie.punkter.some((punkt) => punkt.antall > 0),
+    );
 
     return (
         <VStack gap={{ xs: '6', md: '8' }}>
@@ -263,20 +325,43 @@ export const SakstatistikkInnhold = (props: {
                 <>
                     {harPeriodedata && (
                         <>
+                            {props.data.oppløsning === 'ÅR' && props.data.perioder.length > 1 && (
+                                <Alert variant="info">
+                                    Årsperiodene kan dekke ulike deler av kalenderårene. Ta hensyn til hvor mange
+                                    måneder hver delperiode dekker når du sammenligner antall.
+                                </Alert>
+                            )}
                             <StatistikkortGrid perioder={perioder} kategori={props.kategori} ytelse={props.ytelse} />
                             <BehandlingstidKortGrid
                                 perioder={props.data.perioder}
                                 kategori={props.kategori}
                                 ytelse={props.ytelse}
                             />
-                            <AntallDiagram perioder={perioder} kategori={props.kategori} />
-                            <UtfallDiagram perioder={perioder} />
-                            <BeholdningDiagram perioder={perioder} />
+                            {harTotalBehandlingstid && (
+                                <BehandlingstidDiagram
+                                    serier={totalBehandlingstidSerier}
+                                    kategori={props.kategori}
+                                    måling="TOTAL_BEHANDLINGSTID"
+                                    fraOgMed={props.data.fraOgMed}
+                                    tilOgMed={props.data.tilOgMed}
+                                />
+                            )}
+                            <AntallDiagram
+                                perioder={perioder}
+                                kategori={props.kategori}
+                                oppløsning={props.data.oppløsning}
+                            />
+                            <UtfallDiagram perioder={perioder} oppløsning={props.data.oppløsning} />
+                            <BeholdningDiagram perioder={perioder} oppløsning={props.data.oppløsning} />
                             <Beholdningsalder perioder={perioder} />
                             <Omarbeid perioder={perioder} />
                         </>
                     )}
-                    <Kohorter kohorter={kohorter} rapportdato={props.data.tilOgMed} />
+                    <Kohorter
+                        kohorter={kohorter}
+                        rapportFraOgMed={props.data.fraOgMed}
+                        rapportdato={props.data.tilOgMed}
+                    />
                 </>
             )}
             <Datagrunnlag data={props.data} />
@@ -318,10 +403,15 @@ const StatistikkortGrid = (props: {
             <VStack gap="4">
                 <div>
                     <Heading id="periodetotaler" level="3" size="medium">
-                        Totalt for valgt periode
+                        Oversikt for valgt periode
                     </Heading>
                     <BodyShort>
                         {tekstFraKode(props.kategori)}, {props.ytelse ? tekstFraKode(props.ytelse) : 'alle ytelser'}
+                    </BodyShort>
+                    <BodyShort size="small">
+                        Kortene måler ulike ting og skal ikke trekkes fra hverandre. Registrerte behandlinger telles på
+                        registreringsdatoen, statusoverganger telles når utfallet registreres, og beholdningen er et
+                        øyeblikksbilde på sluttdatoen.
                     </BodyShort>
                 </div>
                 <HGrid columns={{ xs: 1, sm: 3 }} gap={{ xs: '4', md: '6' }}>
@@ -388,7 +478,8 @@ const BehandlingstidKortGrid = (props: {
                         </HelpText>
                     </div>
                     <BodyShort>
-                        Kortene viser et antallsvektet gjennomsnitt for hele perioden. Ytelsene holdes adskilt.
+                        Kortene viser et antallsvektet gjennomsnitt for hele perioden. Målingene gjelder ulike grupper
+                        behandlinger og skal ikke summeres. Ytelsene holdes adskilt.
                     </BodyShort>
                 </div>
                 {ytelser.map((seriensYtelse) => (
@@ -415,9 +506,7 @@ const BehandlingstidKortGrid = (props: {
                                         <VStack gap="2">
                                             <Label>{målingstekst(måling, props.kategori)}</Label>
                                             <Heading level="5" size="medium">
-                                                {gjennomsnitt === null
-                                                    ? 'Ingen data'
-                                                    : `${formaterDager(gjennomsnitt)} dager`}
+                                                {gjennomsnitt === null ? 'Ingen data' : formaterVarighet(gjennomsnitt)}
                                             </Heading>
                                             <BodyShort size="small">
                                                 {gjennomsnitt === null
@@ -449,7 +538,8 @@ export const BehandlingstidDiagram = (props: {
 }) => {
     const [aktivtPunkt, setAktivtPunkt] = useState<{ ytelse: string; punkt: BehandlingstidPunkt } | null>(null);
     const allePunkter = props.serier.flatMap((serie) => serie.punkter);
-    const maks = Math.max(1, ...allePunkter.flatMap((punkt) => [punkt.medianDager ?? 0, punkt.p90Dager ?? 0]));
+    const aksePunkter = props.serier[0]?.punkter ?? [];
+    const maks = Math.max(1, ...allePunkter.map((punkt) => punkt.gjennomsnittDager ?? 0));
     const bredde = 900;
     const høyde = 260;
     const padding = 36;
@@ -457,12 +547,34 @@ export const BehandlingstidDiagram = (props: {
     const x = (indeks: number) => padding + (indeks * (bredde - padding * 2)) / (antallPerioder - 1);
     const y = (verdi: number) => høyde - padding - (verdi / maks) * (høyde - padding * 2);
     const farger = ['var(--a-blue-600)', 'var(--a-purple-600)', 'var(--a-orange-600)', 'var(--a-green-600)'];
+    const erUkeserie = aksePunkter.every((punkt) => {
+        const fra = parseNonNullableIsoDateOnly(punkt.periode);
+        const til = parseNonNullableIsoDateOnly(punkt.periodeTilOgMed);
+        return til.getTime() - fra.getTime() <= 7 * MILLIS_PER_DAY;
+    });
+    const erMånedsserie =
+        !erUkeserie &&
+        aksePunkter.every((punkt) => {
+            const fra = parseNonNullableIsoDateOnly(punkt.periode);
+            const til = parseNonNullableIsoDateOnly(punkt.periodeTilOgMed);
+            return fra.getFullYear() === til.getFullYear() && fra.getMonth() === til.getMonth();
+        });
+    const formaterAkseetikett = (punkt: BehandlingstidPunkt): string => {
+        const fra = parseNonNullableIsoDateOnly(punkt.periode);
+        if (erMånedsserie) {
+            return new Intl.DateTimeFormat('nb-NO', { month: 'short', year: '2-digit' }).format(fra);
+        }
+        if (erUkeserie) {
+            return new Intl.DateTimeFormat('nb-NO', { day: '2-digit', month: '2-digit' }).format(fra);
+        }
+        return String(fra.getFullYear());
+    };
 
-    const segmenter = (punkter: BehandlingstidPunkt[], felt: 'medianDager' | 'p90Dager'): string[] => {
+    const segmenter = (punkter: BehandlingstidPunkt[]): string[] => {
         const resultat: string[] = [];
         let segment = '';
         punkter.forEach((punkt, indeks) => {
-            const verdi = punkt[felt];
+            const verdi = punkt.gjennomsnittDager;
             if (verdi === null) {
                 if (segment) resultat.push(segment);
                 segment = '';
@@ -483,13 +595,7 @@ export const BehandlingstidDiagram = (props: {
                         {formaterPeriode(props.fraOgMed, props.tilOgMed)}
                     </Heading>
                     <div className={styles.beskrivelseMedHjelp}>
-                        <BodyShort as="span">
-                            {målingsforklaring(props.måling, props.kategori)} Median vises med heltrukken linje.
-                            90-persentilen vises stiplet.
-                        </BodyShort>
-                        <HelpText title="Hva betyr 90-persentil?">
-                            90 prosent av målingene brukte denne tiden eller mindre.
-                        </HelpText>
+                        <BodyShort as="span">{målingsforklaring(props.måling, props.kategori)} </BodyShort>
                     </div>
                 </div>
                 {props.serier.length === 0 ? (
@@ -504,7 +610,7 @@ export const BehandlingstidDiagram = (props: {
                                 aria-labelledby="behandlingstid-tittel behandlingstid-beskrivelse"
                             >
                                 <desc id="behandlingstid-beskrivelse">
-                                    Behandlingstid i dager. Alle verdiene finnes i tabellen under diagrammet.
+                                    Gjennomsnittlig behandlingstid. Alle verdiene finnes i tabellen under diagrammet.
                                 </desc>
                                 <line
                                     x1={padding}
@@ -521,67 +627,42 @@ export const BehandlingstidDiagram = (props: {
                                     className={styles.akse}
                                 />
                                 <text x={padding} y={padding - 10} className={styles.aksetekst}>
-                                    {formaterDager(maks)} dager
+                                    {formaterVarighet(maks)}
                                 </text>
-                                <text x={padding} y={høyde - 10} className={styles.aksetekst}>
-                                    {allePunkter[0]?.periode}
-                                </text>
-                                <text x={bredde - padding} y={høyde - 10} textAnchor="end" className={styles.aksetekst}>
-                                    {allePunkter.at(-1)?.periode}
-                                </text>
+                                {aksePunkter.map((punkt, indeks) => (
+                                    <text
+                                        key={punkt.periode}
+                                        x={x(indeks)}
+                                        y={høyde - 10}
+                                        textAnchor="middle"
+                                        className={styles.aksetekst}
+                                    >
+                                        {formaterAkseetikett(punkt)}
+                                    </text>
+                                ))}
                                 {props.serier.map((serie, serieindeks) => (
                                     <g key={serie.ytelse}>
-                                        {segmenter(serie.punkter, 'medianDager').map((punkter) => (
+                                        {segmenter(serie.punkter).map((punkter) => (
                                             <polyline
-                                                key={`median-${punkter}`}
+                                                key={punkter}
                                                 points={punkter}
                                                 fill="none"
                                                 stroke={farger[serieindeks % farger.length]}
                                                 strokeWidth="4"
                                             />
                                         ))}
-                                        {segmenter(serie.punkter, 'p90Dager').map((punkter) => (
-                                            <polyline
-                                                key={`p90-${punkter}`}
-                                                points={punkter}
-                                                fill="none"
-                                                stroke={farger[serieindeks % farger.length]}
-                                                strokeWidth="3"
-                                                strokeDasharray="10 8"
-                                            />
-                                        ))}
                                         {serie.punkter.map((punkt, indeks) =>
-                                            punkt.medianDager === null ? null : (
+                                            punkt.gjennomsnittDager === null ? null : (
                                                 <circle
                                                     key={`${serie.ytelse}-${punkt.periode}`}
                                                     cx={x(indeks)}
-                                                    cy={y(punkt.medianDager)}
+                                                    cy={y(punkt.gjennomsnittDager)}
                                                     r="7"
                                                     fill={farger[serieindeks % farger.length]}
                                                     className={styles.diagrampunkt}
                                                     tabIndex={0}
                                                     role="button"
-                                                    aria-label={`${tekstFraKode(serie.ytelse)}, ${formaterPeriode(punkt.periode, punkt.periodeTilOgMed)}. Median ${formaterDager(punkt.medianDager)} dager. Vis detaljer.`}
-                                                    onFocus={() => setAktivtPunkt({ ytelse: serie.ytelse, punkt })}
-                                                    onMouseEnter={() => setAktivtPunkt({ ytelse: serie.ytelse, punkt })}
-                                                />
-                                            ),
-                                        )}
-                                        {serie.punkter.map((punkt, indeks) =>
-                                            punkt.p90Dager === null ? null : (
-                                                <rect
-                                                    key={`p90-${serie.ytelse}-${punkt.periode}`}
-                                                    x={x(indeks) - 6}
-                                                    y={y(punkt.p90Dager) - 6}
-                                                    width="12"
-                                                    height="12"
-                                                    fill="var(--a-surface-default)"
-                                                    stroke={farger[serieindeks % farger.length]}
-                                                    strokeWidth="3"
-                                                    className={styles.diagrampunkt}
-                                                    tabIndex={0}
-                                                    role="button"
-                                                    aria-label={`${tekstFraKode(serie.ytelse)}, ${formaterPeriode(punkt.periode, punkt.periodeTilOgMed)}. 90-persentil ${formaterDager(punkt.p90Dager)} dager. Vis detaljer.`}
+                                                    aria-label={`${tekstFraKode(serie.ytelse)}, ${formaterPeriode(punkt.periode, punkt.periodeTilOgMed)}. Gjennomsnitt ${formaterVarighet(punkt.gjennomsnittDager)}. Vis detaljer.`}
                                                     onFocus={() => setAktivtPunkt({ ytelse: serie.ytelse, punkt })}
                                                     onMouseEnter={() => setAktivtPunkt({ ytelse: serie.ytelse, punkt })}
                                                 />
@@ -592,6 +673,12 @@ export const BehandlingstidDiagram = (props: {
                             </svg>
                         </div>
                         <div className={styles.forklaring}>
+                            <span className={styles.linjeforklaring}>
+                                <svg className={styles.linjeprøve} viewBox="0 0 32 8" aria-hidden="true">
+                                    <line x1="0" y1="4" x2="32" y2="4" />
+                                </svg>
+                                Gjennomsnitt
+                            </span>
                             {props.serier.map((serie, indeks) => (
                                 <span key={serie.ytelse}>
                                     <span
@@ -609,10 +696,8 @@ export const BehandlingstidDiagram = (props: {
                                         {tekstFraKode(aktivtPunkt.ytelse)},{' '}
                                         {formaterPeriode(aktivtPunkt.punkt.periode, aktivtPunkt.punkt.periodeTilOgMed)}
                                     </strong>
-                                    <span>Median: {formaterDager(aktivtPunkt.punkt.medianDager ?? 0)} dager</span>
-                                    <span>90-persentil: {formaterDager(aktivtPunkt.punkt.p90Dager ?? 0)} dager</span>
                                     <span>
-                                        Gjennomsnitt: {formaterDager(aktivtPunkt.punkt.gjennomsnittDager ?? 0)} dager
+                                        Gjennomsnitt: {formaterVarighet(aktivtPunkt.punkt.gjennomsnittDager ?? 0)}
                                     </span>
                                     <span>
                                         {props.måling === 'TOTAL_BEHANDLINGSTID'
@@ -647,8 +732,6 @@ export const BehandlingstidTabell = (props: { serier: BehandlingstidSerie[]; må
                         <Table.Row>
                             <Table.HeaderCell>Periode</Table.HeaderCell>
                             <Table.HeaderCell>Ytelse</Table.HeaderCell>
-                            <Table.HeaderCell align="right">Median</Table.HeaderCell>
-                            <Table.HeaderCell align="right">90-persentil</Table.HeaderCell>
                             <Table.HeaderCell align="right">Gjennomsnitt</Table.HeaderCell>
                             <Table.HeaderCell align="right">
                                 {props.måling === 'TOTAL_BEHANDLINGSTID' ? 'Behandlinger' : 'Målinger'}
@@ -664,19 +747,9 @@ export const BehandlingstidTabell = (props: { serier: BehandlingstidSerie[]; må
                                     </Table.DataCell>
                                     <Table.DataCell>{tekstFraKode(serie.ytelse)}</Table.DataCell>
                                     <Table.DataCell align="right">
-                                        {punkt.medianDager === null
-                                            ? 'Ingen data'
-                                            : `${formaterDager(punkt.medianDager)} dager`}
-                                    </Table.DataCell>
-                                    <Table.DataCell align="right">
-                                        {punkt.p90Dager === null
-                                            ? 'Ingen data'
-                                            : `${formaterDager(punkt.p90Dager)} dager`}
-                                    </Table.DataCell>
-                                    <Table.DataCell align="right">
                                         {punkt.gjennomsnittDager === null
                                             ? 'Ingen data'
-                                            : `${formaterDager(punkt.gjennomsnittDager)} dager`}
+                                            : formaterVarighet(punkt.gjennomsnittDager)}
                                     </Table.DataCell>
                                     <Table.DataCell align="right">{punkt.antall}</Table.DataCell>
                                 </Table.Row>
@@ -769,8 +842,20 @@ const Alderstabell = ({ periode, måling }: { periode: SakStatistikkPeriode; må
 
 const Beholdningsalder = ({ perioder }: { perioder: SakStatistikkPeriode[] }) => {
     const perioderMedData = perioder.filter((periode) => periode.beholdningsalder.length > 0);
-    const sistePeriode = perioderMedData.at(-1);
-    if (!sistePeriode) return null;
+    const sistePeriode = perioder.at(-1);
+    if (!sistePeriode || perioderMedData.length === 0) return null;
+    const tidligerePerioder = perioderMedData.filter((periode) => periode !== sistePeriode).reverse();
+
+    const summerAldersmåling = (
+        periode: SakStatistikkPeriode,
+        måling: Beholdningsaldersmåling,
+        intervall?: Beholdningsaldersintervall,
+    ): number =>
+        summer(
+            periode.beholdningsalder
+                .filter((rad) => rad.måling === måling && (intervall === undefined || rad.intervall === intervall))
+                .map((rad) => rad.antall),
+        );
 
     return (
         <section aria-labelledby="beholdningsalder-tittel">
@@ -804,44 +889,69 @@ const Beholdningsalder = ({ perioder }: { perioder: SakStatistikkPeriode[] }) =>
                 <Heading level="4" size="small">
                     {formaterPeriode(sistePeriode.fraOgMed, sistePeriode.tilOgMed)}
                 </Heading>
-                {(Object.keys(aldersmålingstekst) as Beholdningsaldersmåling[]).map((måling) => (
-                    <VStack key={måling} gap="3">
-                        <Heading level="5" size="xsmall">
-                            {aldersmålingstekst[måling]}
-                        </Heading>
-                        <Alderstabell periode={sistePeriode} måling={måling} />
-                    </VStack>
-                ))}
-                {perioderMedData.length > 1 && (
+                {sistePeriode.beholdningsalder.length === 0 ? (
+                    <Alert variant="info">Ingen aldersfordeling for beholdningen i denne perioden.</Alert>
+                ) : (
+                    (Object.keys(aldersmålingstekst) as Beholdningsaldersmåling[]).map((måling) => (
+                        <VStack key={måling} gap="3">
+                            <Heading level="5" size="xsmall">
+                                {aldersmålingstekst[måling]}
+                            </Heading>
+                            <Alderstabell periode={sistePeriode} måling={måling} />
+                        </VStack>
+                    ))
+                )}
+                {tidligerePerioder.length > 0 && (
                     <ExpansionCard aria-label="Beholdningsalder for tidligere perioder">
                         <ExpansionCard.Header>
                             <ExpansionCard.Title as="h4" size="small">
-                                Vis tidligere perioder
+                                Vis utvikling i tidligere perioder
                             </ExpansionCard.Title>
+                            <ExpansionCard.Description>
+                                Tabellen summerer alle statuser og valgte ytelser.
+                            </ExpansionCard.Description>
                         </ExpansionCard.Header>
                         <ExpansionCard.Content>
-                            <VStack gap="6">
-                                {[...perioderMedData]
-                                    .reverse()
-                                    .slice(1)
-                                    .map((periode) => (
-                                        <VStack key={periode.fraOgMed} gap="4">
-                                            <Heading level="5" size="small">
-                                                {formaterPeriode(periode.fraOgMed, periode.tilOgMed)}
-                                            </Heading>
-                                            {(Object.keys(aldersmålingstekst) as Beholdningsaldersmåling[]).map(
-                                                (måling) => (
-                                                    <VStack key={måling} gap="3">
-                                                        <Heading level="6" size="xsmall">
-                                                            {aldersmålingstekst[måling]}
-                                                        </Heading>
-                                                        <Alderstabell periode={periode} måling={måling} />
-                                                    </VStack>
-                                                ),
-                                            )}
-                                        </VStack>
-                                    ))}
-                            </VStack>
+                            <div className={styles.tabellRamme}>
+                                <Table size="small">
+                                    <Table.Header>
+                                        <Table.Row>
+                                            <Table.HeaderCell>Periode</Table.HeaderCell>
+                                            <Table.HeaderCell align="right">Beholdning</Table.HeaderCell>
+                                            <Table.HeaderCell align="right">Total alder over 90 dager</Table.HeaderCell>
+                                            <Table.HeaderCell align="right">
+                                                Over 90 dager i samme status
+                                            </Table.HeaderCell>
+                                        </Table.Row>
+                                    </Table.Header>
+                                    <Table.Body>
+                                        {tidligerePerioder.map((periode) => (
+                                            <Table.Row key={periode.fraOgMed}>
+                                                <Table.DataCell>
+                                                    {formaterPeriode(periode.fraOgMed, periode.tilOgMed)}
+                                                </Table.DataCell>
+                                                <Table.DataCell align="right">
+                                                    {summerAldersmåling(periode, 'BEHANDLINGENS_ALDER')}
+                                                </Table.DataCell>
+                                                <Table.DataCell align="right">
+                                                    {summerAldersmåling(
+                                                        periode,
+                                                        'BEHANDLINGENS_ALDER',
+                                                        'OVER_90_DAGER',
+                                                    )}
+                                                </Table.DataCell>
+                                                <Table.DataCell align="right">
+                                                    {summerAldersmåling(
+                                                        periode,
+                                                        'TID_I_NÅVÆRENDE_STATUS',
+                                                        'OVER_90_DAGER',
+                                                    )}
+                                                </Table.DataCell>
+                                            </Table.Row>
+                                        ))}
+                                    </Table.Body>
+                                </Table>
+                            </div>
                         </ExpansionCard.Content>
                     </ExpansionCard>
                 )}
@@ -869,8 +979,10 @@ const Omarbeidskort = ({ rad }: { rad: SakStatistikkOmarbeid }) => (
                 tittel="Median tid etter underkjenning"
                 verdi={
                     rad.medianTidEtterUnderkjenningMillis === null
-                        ? 'Ingen måling'
-                        : `${formaterDager(rad.medianTidEtterUnderkjenningMillis / MILLIS_PER_DAY)} dager`
+                        ? rad.medEnUnderkjenning + rad.medFlereUnderkjenninger > 0
+                            ? 'Kan ikke beregnes'
+                            : 'Ikke aktuelt'
+                        : formaterVarighet(rad.medianTidEtterUnderkjenningMillis / MILLIS_PER_DAY)
                 }
             />
         </HGrid>
@@ -890,8 +1002,9 @@ const Oppsummeringsboks = ({ tittel, verdi }: { tittel: string; verdi: string })
 
 const Omarbeid = ({ perioder }: { perioder: SakStatistikkPeriode[] }) => {
     const perioderMedData = perioder.filter((periode) => periode.omarbeid.length > 0);
-    const sistePeriode = perioderMedData.at(-1);
-    if (!sistePeriode) return null;
+    const sistePeriode = perioder.at(-1);
+    if (!sistePeriode || perioderMedData.length === 0) return null;
+    const tidligerePerioderMedData = perioderMedData.filter((periode) => periode !== sistePeriode).reverse();
 
     return (
         <section aria-labelledby="omarbeid-tittel">
@@ -908,10 +1021,12 @@ const Omarbeid = ({ perioder }: { perioder: SakStatistikkPeriode[] }) => {
                 <Heading level="4" size="small">
                     {formaterPeriode(sistePeriode.fraOgMed, sistePeriode.tilOgMed)}
                 </Heading>
-                {sistePeriode.omarbeid.map((rad) => (
-                    <Omarbeidskort key={rad.sakYtelse} rad={rad} />
-                ))}
-                {perioderMedData.length > 1 && (
+                {sistePeriode.omarbeid.length === 0 ? (
+                    <Alert variant="info">Ingen behandlinger med utfall i denne perioden.</Alert>
+                ) : (
+                    sistePeriode.omarbeid.map((rad) => <Omarbeidskort key={rad.sakYtelse} rad={rad} />)
+                )}
+                {tidligerePerioderMedData.length > 0 && (
                     <ExpansionCard aria-label="Omarbeid for tidligere perioder">
                         <ExpansionCard.Header>
                             <ExpansionCard.Title as="h4" size="small">
@@ -938,7 +1053,7 @@ const Omarbeid = ({ perioder }: { perioder: SakStatistikkPeriode[] }) => {
                                         </Table.Row>
                                     </Table.Header>
                                     <Table.Body>
-                                        {[...perioderMedData].reverse().flatMap((periode) =>
+                                        {tidligerePerioderMedData.flatMap((periode) =>
                                             periode.omarbeid.map((rad) => (
                                                 <Table.Row key={`${periode.fraOgMed}-${rad.sakYtelse}`}>
                                                     <Table.DataCell>
@@ -959,11 +1074,13 @@ const Omarbeid = ({ perioder }: { perioder: SakStatistikkPeriode[] }) => {
                                                     </Table.DataCell>
                                                     <Table.DataCell align="right">
                                                         {rad.medianTidEtterUnderkjenningMillis === null
-                                                            ? 'Ingen måling'
-                                                            : `${formaterDager(
+                                                            ? rad.medEnUnderkjenning + rad.medFlereUnderkjenninger > 0
+                                                                ? 'Kan ikke beregnes'
+                                                                : 'Ikke aktuelt'
+                                                            : formaterVarighet(
                                                                   rad.medianTidEtterUnderkjenningMillis /
                                                                       MILLIS_PER_DAY,
-                                                              )} dager`}
+                                                              )}
                                                     </Table.DataCell>
                                                 </Table.Row>
                                             )),
@@ -983,9 +1100,16 @@ const fristtekst = (kohort: SakStatistikkKohort, dager: 30 | 60 | 90): string =>
     const frist = kohort[`ferdigInnen${dager}Dager`];
     if (frist.grunnlag === 0) return 'Ikke nok oppfølgingstid';
     const prosent = (frist.ferdige / frist.grunnlag) * 100;
+    const prosenttekst = new Intl.NumberFormat('nb-NO', {
+        maximumFractionDigits: 1,
+        minimumFractionDigits: 1,
+    }).format(prosent);
+    const manglerOppfølgingstid = kohort.antallStartet - frist.grunnlag;
     const dekning =
-        frist.grunnlag < kohort.antallStartet ? `, ${frist.grunnlag} av ${kohort.antallStartet} kan vurderes` : '';
-    return `${frist.ferdige} av ${frist.grunnlag} (${prosent.toFixed(1)} %)${dekning}`;
+        manglerOppfølgingstid > 0
+            ? `. ${manglerOppfølgingstid} av ${kohort.antallStartet} har ennå ikke hatt ${dager} dagers oppfølgingstid`
+            : '';
+    return `${frist.ferdige} av ${frist.grunnlag} (${prosenttekst} %)${dekning}`;
 };
 
 const Kohorttabell = ({ kohorter, rapportdato }: { kohorter: SakStatistikkKohort[]; rapportdato: string }) => (
@@ -999,7 +1123,9 @@ const Kohorttabell = ({ kohorter, rapportdato }: { kohorter: SakStatistikkKohort
                     <Table.HeaderCell>Ferdige innen 30 dager</Table.HeaderCell>
                     <Table.HeaderCell>Ferdige innen 60 dager</Table.HeaderCell>
                     <Table.HeaderCell>Ferdige innen 90 dager</Table.HeaderCell>
-                    <Table.HeaderCell align="right">Åpne {formatDate(rapportdato)}</Table.HeaderCell>
+                    <Table.HeaderCell align="right">
+                        Fortsatt åpne blant behandlingene som ble mottatt i perioden {formatDate(rapportdato)}
+                    </Table.HeaderCell>
                 </Table.Row>
             </Table.Header>
             <Table.Body>
@@ -1019,10 +1145,22 @@ const Kohorttabell = ({ kohorter, rapportdato }: { kohorter: SakStatistikkKohort
     </div>
 );
 
-const Kohorter = ({ kohorter, rapportdato }: { kohorter: SakStatistikkKohort[]; rapportdato: string }) => {
+const Kohorter = ({
+    kohorter,
+    rapportFraOgMed,
+    rapportdato,
+}: {
+    kohorter: SakStatistikkKohort[];
+    rapportFraOgMed: string;
+    rapportdato: string;
+}) => {
     if (kohorter.length === 0) return null;
     const sorterteKohorter = [...kohorter].sort((a, b) => a.fraOgMed.localeCompare(b.fraOgMed));
-    const summerteKohorter = summerKohorter(sorterteKohorter);
+    const summerteKohorter = summerKohorter(sorterteKohorter).map((kohort) => ({
+        ...kohort,
+        fraOgMed: rapportFraOgMed,
+        tilOgMed: rapportdato,
+    }));
     const harFlereMottaksperioder = new Set(sorterteKohorter.map((kohort) => kohort.fraOgMed)).size > 1;
 
     return (
@@ -1046,8 +1184,8 @@ const Kohorter = ({ kohorter, rapportdato }: { kohorter: SakStatistikkKohort[]; 
                             Tabellen grupperer behandlingene etter når de ble mottatt. Hvis 80 av 100 behandlinger ble
                             ferdige innen 30 dager, vises «80 av 100 (80 %)». Hvis bare 60 har rukket å få hele
                             90-dagersfristen før rapportdatoen, er grunnlaget for 90 dager 60. De øvrige regnes ikke som
-                            forsinket. «Åpne» er behandlinger som fortsatt mangler en avsluttende status ved
-                            rapportdatoen.
+                            forsinket. «Fortsatt åpne» teller bare behandlinger som ble mottatt i den valgte perioden.
+                            Beholdningen inkluderer også eldre behandlinger som ble mottatt før periodestart.
                         </BodyShort>
                     </VStack>
                 </Alert>
@@ -1154,10 +1292,9 @@ const stabletDiagram = (
     perioder: SummertPeriode[],
     kolonner: string[],
     hovedvisning: 'SUMMER_PERIODEN' | 'SISTE_PERIODE',
+    oppløsning: Statistikkoppløsning,
 ) => {
-    const sistePeriodeMedData = [...perioder]
-        .reverse()
-        .find((periode) => periode.grupper.some((gruppe) => gruppe.antall > 0));
+    const sistePeriode = perioder.at(-1);
     const summertPeriode =
         perioder.length === 0
             ? null
@@ -1177,30 +1314,23 @@ const stabletDiagram = (
                       }))
                       .filter((gruppe) => gruppe.antall > 0),
               };
-    const hovedperiode = hovedvisning === 'SUMMER_PERIODEN' ? summertPeriode : sistePeriodeMedData;
-    const detaljperioder =
-        hovedvisning === 'SUMMER_PERIODEN'
-            ? [...perioder].reverse()
-            : [...perioder].reverse().filter((periode) => periode !== sistePeriodeMedData);
-    const maksimum = Math.max(
-        1,
-        ...(hovedperiode?.grupper.map((gruppe) => gruppe.antall) ?? []),
-        ...detaljperioder.flatMap((periode) => periode.grupper.map((gruppe) => gruppe.antall)),
-    );
+    const hovedperiode = hovedvisning === 'SUMMER_PERIODEN' ? summertPeriode : sistePeriode;
+    const detaljperioder = [...perioder].reverse();
+    const maksimum = Math.max(1, ...(hovedperiode?.grupper.map((gruppe) => gruppe.antall) ?? []));
     const fargerekkefølge = [
         ...(hovedperiode?.grupper.map((gruppe) => gruppe.navn) ?? []),
         ...kolonner.filter((kolonne) => !hovedperiode?.grupper.some((gruppe) => gruppe.navn === kolonne)),
     ];
     const visPeriode = (periode: SummertPeriode) => (
         <div className={styles.periodegruppe} key={periode.fraOgMed}>
-            <Label>{formaterPeriode(periode.fraOgMed, periode.tilOgMed)}</Label>
+            <Label>{formaterDelperiode(periode.fraOgMed, periode.tilOgMed, oppløsning)}</Label>
             {periode.grupper.length === 0 ? (
                 <BodyShort>Ingen data i perioden.</BodyShort>
             ) : (
                 <div className={styles.horisontaleSøyler}>
                     {periode.grupper.map((gruppe) => (
                         <div className={styles.horisontalSøyleRad} key={gruppe.navn}>
-                            <span>{tekstFraKode(gruppe.navn)}</span>
+                            <span>{gruppe.navn.includes(' / ') ? gruppe.navn : tekstFraKode(gruppe.navn)}</span>
                             <span className={styles.søylespor}>
                                 <span
                                     className={`${styles.søylefyll} ${
@@ -1227,70 +1357,73 @@ const stabletDiagram = (
                     <BodyShort>{beskrivelse}</BodyShort>
                 </div>
                 {hovedperiode && hovedperiode.grupper.length > 0 ? (
-                    <div className={styles.søylediagram} aria-hidden="true">
-                        {visPeriode(hovedperiode)}
-                    </div>
+                    <div className={styles.søylediagram}>{visPeriode(hovedperiode)}</div>
                 ) : (
                     <Alert variant="info">Ingen data i den valgte perioden.</Alert>
                 )}
-                {detaljperioder.length > 0 && (
+                {detaljperioder.length > 1 && (
                     <ExpansionCard
                         aria-label={`${
-                            hovedvisning === 'SUMMER_PERIODEN' ? 'Delperioder' : 'Tidligere perioder'
+                            hovedvisning === 'SUMMER_PERIODEN' ? 'Delperioder' : 'Perioder'
                         } for ${tittel.toLocaleLowerCase('nb-NO')}`}
                     >
                         <ExpansionCard.Header>
                             <ExpansionCard.Title as="h4" size="small">
                                 {hovedvisning === 'SUMMER_PERIODEN'
                                     ? 'Vis periodene hver for seg'
-                                    : 'Vis tidligere perioder'}
+                                    : 'Vis utviklingen per periode'}
                             </ExpansionCard.Title>
                             <ExpansionCard.Description>
                                 Periodene er sortert med den nyeste først.
                             </ExpansionCard.Description>
                         </ExpansionCard.Header>
                         <ExpansionCard.Content>
-                            <VStack gap="6">
-                                <div className={styles.søylediagram} aria-hidden="true">
-                                    {detaljperioder.map(visPeriode)}
-                                </div>
-                                <div className={styles.tabellRamme}>
-                                    <Table size="small">
-                                        <Table.Header>
+                            <div className={styles.tabellRamme}>
+                                <Table size="small">
+                                    <Table.Header>
+                                        <Table.Row>
+                                            <Table.HeaderCell>Periode</Table.HeaderCell>
+                                            {kolonner.map((kolonne) => (
+                                                <Table.HeaderCell key={kolonne} align="right">
+                                                    {kolonne.includes(' / ') ? kolonne : tekstFraKode(kolonne)}
+                                                </Table.HeaderCell>
+                                            ))}
+                                        </Table.Row>
+                                    </Table.Header>
+                                    <Table.Body>
+                                        {detaljperioder.map((periode) => (
+                                            <Table.Row key={periode.fraOgMed}>
+                                                <Table.DataCell>
+                                                    {formaterDelperiode(periode.fraOgMed, periode.tilOgMed, oppløsning)}
+                                                </Table.DataCell>
+                                                {periode.grupper.length === 0 ? (
+                                                    <Table.DataCell colSpan={Math.max(1, kolonner.length)}>
+                                                        Ingen data
+                                                    </Table.DataCell>
+                                                ) : (
+                                                    kolonner.map((kolonne) => (
+                                                        <Table.DataCell key={kolonne} align="right">
+                                                            {periode.grupper.find((gruppe) => gruppe.navn === kolonne)
+                                                                ?.antall ?? 0}
+                                                        </Table.DataCell>
+                                                    ))
+                                                )}
+                                            </Table.Row>
+                                        ))}
+                                        {hovedvisning === 'SUMMER_PERIODEN' && hovedperiode && (
                                             <Table.Row>
-                                                <Table.HeaderCell>Periode</Table.HeaderCell>
+                                                <Table.HeaderCell scope="row">Totalt</Table.HeaderCell>
                                                 {kolonner.map((kolonne) => (
-                                                    <Table.HeaderCell key={kolonne} align="right">
-                                                        {tekstFraKode(kolonne)}
-                                                    </Table.HeaderCell>
+                                                    <Table.DataCell key={kolonne} align="right">
+                                                        {hovedperiode.grupper.find((gruppe) => gruppe.navn === kolonne)
+                                                            ?.antall ?? 0}
+                                                    </Table.DataCell>
                                                 ))}
                                             </Table.Row>
-                                        </Table.Header>
-                                        <Table.Body>
-                                            {detaljperioder.map((periode) => (
-                                                <Table.Row key={periode.fraOgMed}>
-                                                    <Table.DataCell>
-                                                        {formaterPeriode(periode.fraOgMed, periode.tilOgMed)}
-                                                    </Table.DataCell>
-                                                    {periode.grupper.length === 0 ? (
-                                                        <Table.DataCell colSpan={Math.max(1, kolonner.length)}>
-                                                            Ingen data
-                                                        </Table.DataCell>
-                                                    ) : (
-                                                        kolonner.map((kolonne) => (
-                                                            <Table.DataCell key={kolonne} align="right">
-                                                                {periode.grupper.find(
-                                                                    (gruppe) => gruppe.navn === kolonne,
-                                                                )?.antall ?? 0}
-                                                            </Table.DataCell>
-                                                        ))
-                                                    )}
-                                                </Table.Row>
-                                            ))}
-                                        </Table.Body>
-                                    </Table>
-                                </div>
-                            </VStack>
+                                        )}
+                                    </Table.Body>
+                                </Table>
+                            </div>
                         </ExpansionCard.Content>
                     </ExpansionCard>
                 )}
@@ -1316,9 +1449,11 @@ const grupperPerPeriode = (
 const AntallDiagram = ({
     perioder,
     kategori,
+    oppløsning,
 }: {
     perioder: SakStatistikkPeriode[];
     kategori: SakStatistikkKategori;
+    oppløsning: Statistikkoppløsning;
 }) => {
     const data = grupperPerPeriode(perioder, (periode) =>
         periode.antall.map((rad) => ({
@@ -1338,10 +1473,17 @@ const AntallDiagram = ({
         data,
         kolonner,
         'SUMMER_PERIODEN',
+        oppløsning,
     );
 };
 
-const BeholdningDiagram = ({ perioder }: { perioder: SakStatistikkPeriode[] }) => {
+const BeholdningDiagram = ({
+    perioder,
+    oppløsning,
+}: {
+    perioder: SakStatistikkPeriode[];
+    oppløsning: Statistikkoppløsning;
+}) => {
     const data = grupperPerPeriode(perioder, (periode) =>
         periode.beholdning.map((rad) => ({ navn: rad.status, antall: rad.antall })),
     );
@@ -1353,10 +1495,17 @@ const BeholdningDiagram = ({ perioder }: { perioder: SakStatistikkPeriode[] }) =
         data,
         kolonner,
         'SISTE_PERIODE',
+        oppløsning,
     );
 };
 
-const UtfallDiagram = ({ perioder }: { perioder: SakStatistikkPeriode[] }) => {
+const UtfallDiagram = ({
+    perioder,
+    oppløsning,
+}: {
+    perioder: SakStatistikkPeriode[];
+    oppløsning: Statistikkoppløsning;
+}) => {
     const data = grupperPerPeriode(perioder, (periode) =>
         periode.utfall.map((rad) => ({
             navn: `${rad.status}${rad.resultat ? ` / ${rad.resultat}` : ''}`,
@@ -1371,6 +1520,7 @@ const UtfallDiagram = ({ perioder }: { perioder: SakStatistikkPeriode[] }) => {
         data,
         kolonner,
         'SUMMER_PERIODEN',
+        oppløsning,
     );
 };
 
