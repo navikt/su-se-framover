@@ -3,15 +3,26 @@ import { SakStatistikkResponse } from '~src/types/Statistikk';
 import {
     beregnVektetGjennomsnitt,
     filtrerPåKategoriOgYtelse,
+    filtrerStønad,
+    hentStønadMånedsantall,
     lagBehandlingstidSerier,
     MILLIS_PER_DAY,
     millisTilDager,
+    summerKohorter,
 } from './statistikkUtils';
 
 const data: SakStatistikkResponse = {
     fraOgMed: '2026-01-01',
     tilOgMed: '2026-02-28',
     oppløsning: 'MÅNED',
+    metadata: {
+        aggregatversjon: 1,
+        maksSekvensId: 10,
+        sisteHendelseTidspunkt: '2026-02-28T12:00:00Z',
+        antallBehandlinger: 2,
+        behandlingerMedFlereUtfall: 0,
+    },
+    kohorter: [],
     perioder: [
         {
             fraOgMed: '2026-01-01',
@@ -39,6 +50,8 @@ const data: SakStatistikkResponse = {
                     nittiendePersentilMillis: MILLIS_PER_DAY * 6,
                 },
             ],
+            beholdningsalder: [],
+            omarbeid: [],
         },
         {
             fraOgMed: '2026-02-01',
@@ -47,6 +60,8 @@ const data: SakStatistikkResponse = {
             utfall: [],
             beholdning: [{ kategori: 'SØKNAD', sakYtelse: 'UFØRE', status: 'REGISTRERT', antall: 7 }],
             behandlingstid: [],
+            beholdningsalder: [],
+            omarbeid: [],
         },
     ],
 };
@@ -101,5 +116,120 @@ describe('statistikkUtils', () => {
         const perioder = filtrerPåKategoriOgYtelse(data, 'SØKNAD', 'UFØRE');
 
         expect(perioder.map((periode) => periode.beholdning[0].antall)).toEqual([4, 7]);
+    });
+
+    it('skiller manglende stønadsdata fra en tilgjengelig måned med null saker', () => {
+        const stønadsdata = {
+            fraOgMed: '2026-01',
+            tilOgMed: '2026-02',
+            perioder: [
+                {
+                    måned: '2026-01',
+                    datagrunnlag: 'MANGLER' as const,
+                    rader: [],
+                    bestandsendringerTilgjengelig: false,
+                    bestandsendringer: [],
+                },
+                {
+                    måned: '2026-02',
+                    datagrunnlag: 'TILGJENGELIG' as const,
+                    rader: [],
+                    bestandsendringerTilgjengelig: true,
+                    bestandsendringer: [],
+                },
+            ],
+        };
+
+        expect(hentStønadMånedsantall(stønadsdata, '2026-01')).toBeNull();
+        expect(hentStønadMånedsantall(stønadsdata, '2026-02')).toBe(0);
+        expect(hentStønadMånedsantall(stønadsdata, '2026-03')).toBeNull();
+    });
+
+    it('filtrerer bestandsendringer bare på stønadstype', () => {
+        const filtrert = filtrerStønad(
+            {
+                fraOgMed: '2026-01',
+                tilOgMed: '2026-01',
+                perioder: [
+                    {
+                        måned: '2026-01',
+                        datagrunnlag: 'TILGJENGELIG',
+                        rader: [],
+                        bestandsendringerTilgjengelig: true,
+                        bestandsendringer: [
+                            {
+                                stønadstype: 'UFØRE',
+                                nye: 1,
+                                videreført: 2,
+                                utgått: 3,
+                                endretStønadsklassifisering: 4,
+                            },
+                            {
+                                stønadstype: 'ALDER',
+                                nye: 5,
+                                videreført: 6,
+                                utgått: 7,
+                                endretStønadsklassifisering: 8,
+                            },
+                        ],
+                    },
+                ],
+            },
+            {
+                stønadstype: 'UFØRE',
+                vedtakstype: 'REGULERING',
+                vedtaksresultat: null,
+                stønadsklassifisering: null,
+            },
+        );
+
+        expect(filtrert.perioder[0].bestandsendringer).toEqual([
+            {
+                stønadstype: 'UFØRE',
+                nye: 1,
+                videreført: 2,
+                utgått: 3,
+                endretStønadsklassifisering: 4,
+            },
+        ]);
+    });
+
+    it('summerer kohorttellere og grunnlag for hele perioden', () => {
+        const felles = {
+            kategori: 'SØKNAD' as const,
+            sakYtelse: 'UFØRE',
+        };
+        const [summert] = summerKohorter([
+            {
+                ...felles,
+                fraOgMed: '2026-01-01',
+                tilOgMed: '2026-01-31',
+                antallStartet: 10,
+                ferdigInnen30Dager: { grunnlag: 10, ferdige: 8 },
+                ferdigInnen60Dager: { grunnlag: 10, ferdige: 9 },
+                ferdigInnen90Dager: { grunnlag: 10, ferdige: 10 },
+                åpneVedTilOgMed: 0,
+            },
+            {
+                ...felles,
+                fraOgMed: '2026-02-01',
+                tilOgMed: '2026-02-28',
+                antallStartet: 5,
+                ferdigInnen30Dager: { grunnlag: 5, ferdige: 3 },
+                ferdigInnen60Dager: { grunnlag: 2, ferdige: 2 },
+                ferdigInnen90Dager: { grunnlag: 0, ferdige: 0 },
+                åpneVedTilOgMed: 2,
+            },
+        ]);
+
+        expect(summert).toMatchObject({
+            fraOgMed: '2026-01-01',
+            tilOgMed: '2026-02-28',
+            antallStartet: 15,
+            ferdigInnen30Dager: { grunnlag: 15, ferdige: 11 },
+            ferdigInnen60Dager: { grunnlag: 12, ferdige: 11 },
+            ferdigInnen90Dager: { grunnlag: 10, ferdige: 10 },
+            åpneVedTilOgMed: 2,
+        });
     });
 });

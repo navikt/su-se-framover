@@ -3,11 +3,11 @@ import { Alert, BodyShort, Box, ExpansionCard, Heading, HGrid, Select, Table, VS
 import { useMemo, useState } from 'react';
 
 import { MonthPicker } from '~src/components/inputs/datePicker/DatePicker';
-import { StønadStatistikkResponse } from '~src/types/Statistikk';
+import { StønadStatistikkPeriode, StønadStatistikkResponse } from '~src/types/Statistikk';
 import { formatMonthYear, toIsoMonth } from '~src/utils/date/dateUtils';
 
 import styles from './statistikk.module.less';
-import { filtrerStønad, summer } from './statistikkUtils';
+import { filtrerStønad, hentStønadMånedsantall, summer } from './statistikkUtils';
 import { useStønadstatistikk } from './useStatistikk';
 
 const diagramfarger = [
@@ -17,6 +17,8 @@ const diagramfarger = [
     styles.diagramfarge4,
     styles.diagramfarge5,
     styles.diagramfarge6,
+    styles.diagramfarge7,
+    styles.diagramfarge8,
 ];
 
 const førsteDagIMåned = (måned: string): Date => new Date(`${måned}-01T12:00:00`);
@@ -39,6 +41,17 @@ const månederIPeriode = (fraOgMed: string, tilOgMed: string): string[] => {
     return måneder;
 };
 
+const MAKS_ANTALL_MÅNEDER = 24;
+
+const forskyvMåned = (måned: string, antall: number): Date => {
+    const dato = førsteDagIMåned(måned);
+    dato.setMonth(dato.getMonth() + antall);
+    return dato;
+};
+
+const finnPeriode = (perioder: StønadStatistikkPeriode[], måned: string): StønadStatistikkPeriode | null =>
+    perioder.find((periode) => periode.måned === måned) ?? null;
+
 const tekstFraKode = (verdi: string): string => {
     const tekst = verdi.replaceAll('_', ' ').toLocaleLowerCase('nb-NO');
     return tekst.charAt(0).toLocaleUpperCase('nb-NO') + tekst.slice(1);
@@ -60,7 +73,11 @@ const StønadstatistikkPanel = () => {
     const [vedtakstype, setVedtakstype] = useState<string | null>(null);
     const [vedtaksresultat, setVedtaksresultat] = useState<string | null>(null);
     const [stønadsklassifisering, setStønadsklassifisering] = useState<string | null>(null);
-    const status = useStønadstatistikk({ fraOgMed: forrigeMåned(fraOgMed), tilOgMed });
+    const inkluderSammenligningsmåned = månederIPeriode(fraOgMed, tilOgMed).length < MAKS_ANTALL_MÅNEDER;
+    const status = useStønadstatistikk({
+        fraOgMed: inkluderSammenligningsmåned ? forrigeMåned(fraOgMed) : fraOgMed,
+        tilOgMed,
+    });
 
     const dataIValgtPeriode = useMemo(
         () => ({
@@ -92,13 +109,13 @@ const StønadstatistikkPanel = () => {
           }
         : null;
 
-    const forrigeMånedsAntall = filtrertDataMedSammenligningsmåned
-        ? summer(
-              filtrertDataMedSammenligningsmåned.perioder
-                  .find((periode) => periode.måned === forrigeMåned(tilOgMed))
-                  ?.rader.map((rad) => rad.antall) ?? [],
-          )
-        : null;
+    const forrigeMånedsperiode = filtrertDataMedSammenligningsmåned?.perioder.find(
+        (periode) => periode.måned === forrigeMåned(tilOgMed),
+    );
+    const forrigeMånedsAntall =
+        forrigeMånedsperiode?.datagrunnlag === 'TILGJENGELIG'
+            ? summer(forrigeMånedsperiode.rader.map((rad) => rad.antall))
+            : null;
 
     const alleKlassifiseringer = RemoteData.isSuccess(status)
         ? [
@@ -158,6 +175,8 @@ const StønadstatistikkPanel = () => {
                         <MonthPicker
                             label="Fra og med måned"
                             value={førsteDagIMåned(fraOgMed)}
+                            fromDate={forskyvMåned(tilOgMed, -(MAKS_ANTALL_MÅNEDER - 1))}
+                            toDate={førsteDagIMåned(tilOgMed)}
                             onChange={(dato) => {
                                 if (dato) setFraOgMed(toIsoMonth(dato));
                             }}
@@ -165,6 +184,8 @@ const StønadstatistikkPanel = () => {
                         <MonthPicker
                             label="Til og med måned"
                             value={førsteDagIMåned(tilOgMed)}
+                            fromDate={førsteDagIMåned(fraOgMed)}
+                            toDate={forskyvMåned(fraOgMed, MAKS_ANTALL_MÅNEDER - 1)}
                             onChange={(dato) => {
                                 if (dato) setTilOgMed(toIsoMonth(dato));
                             }}
@@ -242,13 +263,17 @@ const StønadstatistikkPanel = () => {
                 </Alert>
             )}
             {data &&
-                (data.perioder.every((periode) => periode.rader.length === 0) ? (
-                    <Alert variant="info">Ingen statistikk for valgt periode.</Alert>
+                (månederIPeriode(fraOgMed, tilOgMed).every(
+                    (måned) => finnPeriode(dataIValgtPeriode.perioder, måned)?.datagrunnlag !== 'TILGJENGELIG',
+                ) ? (
+                    <Alert variant="info">Datagrunnlaget mangler for valgt periode.</Alert>
                 ) : (
                     <StønadstatistikkInnhold
                         data={data}
                         forrigeMånedsAntall={forrigeMånedsAntall}
-                        erHittilIÅr={periodevalg === 'HITTIL_I_ÅR'}
+                        bestandsfilterKanVises={
+                            vedtakstype === null && vedtaksresultat === null && stønadsklassifisering === null
+                        }
                     />
                 ))}
         </VStack>
@@ -258,58 +283,100 @@ const StønadstatistikkPanel = () => {
 const StønadstatistikkInnhold = ({
     data,
     forrigeMånedsAntall,
-    erHittilIÅr,
+    bestandsfilterKanVises,
 }: {
     data: StønadStatistikkResponse;
     forrigeMånedsAntall: number | null;
-    erHittilIÅr: boolean;
+    bestandsfilterKanVises: boolean;
 }) => {
-    const perMåned = månederIPeriode(data.fraOgMed, data.tilOgMed).map((måned) => ({
-        måned,
-        antall: summer(data.perioder.find((periode) => periode.måned === måned)?.rader.map((rad) => rad.antall) ?? []),
-    }));
-    const siste = perMåned.find((periode) => periode.måned === data.tilOgMed) ?? {
-        måned: data.tilOgMed,
-        antall: 0,
-    };
+    const perMåned = månederIPeriode(data.fraOgMed, data.tilOgMed).map((måned) => {
+        return {
+            måned,
+            antall: hentStønadMånedsantall(data, måned),
+        };
+    });
+    const tilgjengeligeMåneder = perMåned.filter(
+        (periode): periode is { måned: string; antall: number } => periode.antall !== null,
+    );
+    const første = tilgjengeligeMåneder[0];
+    const siste = tilgjengeligeMåneder.at(-1);
+    const erÉnMåned = perMåned.length === 1;
+    const sammenligningsmåned = erÉnMåned ? (siste ? forrigeMåned(siste.måned) : null) : første?.måned;
+    const sammenligningsantall = erÉnMåned ? forrigeMånedsAntall : første?.antall;
     const endring =
-        forrigeMånedsAntall !== null && forrigeMånedsAntall !== 0
-            ? ((siste.antall - forrigeMånedsAntall) / forrigeMånedsAntall) * 100
+        siste &&
+        sammenligningsmåned !== siste.måned &&
+        sammenligningsantall !== null &&
+        sammenligningsantall !== undefined &&
+        sammenligningsantall !== 0
+            ? ((siste.antall - sammenligningsantall) / sammenligningsantall) * 100
             : null;
-    const sumMånedsforekomster = summer(perMåned.map((periode) => periode.antall));
-    const forrigeKalendermåned = forrigeMåned(data.tilOgMed);
+    const manglendeMåneder = perMåned.filter((periode) => periode.antall === null);
+    const gjennomsnittPerMåned =
+        tilgjengeligeMåneder.length === 0
+            ? null
+            : summer(tilgjengeligeMåneder.map((periode) => periode.antall)) / tilgjengeligeMåneder.length;
     const resultater = [
         ...new Set(data.perioder.flatMap((periode) => periode.rader.map((rad) => rad.vedtaksresultat))),
     ].sort();
-    const resultatperioder = data.perioder.map((periode) => ({
-        måned: periode.måned,
-        grupper: resultater.map((resultat) => ({
-            resultat,
-            antall: summer(periode.rader.filter((rad) => rad.vedtaksresultat === resultat).map((rad) => rad.antall)),
-        })),
-    }));
-    const sisteResultatperiode = resultatperioder.at(-1);
-    const størsteResultat = Math.max(1, ...(sisteResultatperiode?.grupper.map((gruppe) => gruppe.antall) ?? []));
+    const resultatperioder = månederIPeriode(data.fraOgMed, data.tilOgMed).map((måned) => {
+        const periode = finnPeriode(data.perioder, måned);
+        return {
+            måned,
+            grupper:
+                periode?.datagrunnlag === 'TILGJENGELIG'
+                    ? resultater.map((resultat) => ({
+                          resultat,
+                          antall: summer(
+                              periode.rader.filter((rad) => rad.vedtaksresultat === resultat).map((rad) => rad.antall),
+                          ),
+                      }))
+                    : null,
+        };
+    });
+    const sisteResultatperiode = [...resultatperioder].reverse().find((periode) => periode.grupper !== null);
+    const størsteResultat = Math.max(1, ...(sisteResultatperiode?.grupper?.map((gruppe) => gruppe.antall) ?? []));
 
     return (
         <VStack gap={{ xs: '6', md: '8' }}>
             <HGrid columns={{ xs: 1, sm: 3 }} gap={{ xs: '4', md: '6' }}>
                 <Oppsummeringskort
-                    tittel={formatMonthYear(førsteDagIMåned(siste.måned))}
-                    verdi={siste.antall.toLocaleString('nb-NO')}
+                    tittel={`${formatMonthYear(førsteDagIMåned(siste?.måned ?? data.tilOgMed))}${
+                        siste?.måned !== data.tilOgMed ? ' (siste måned med data)' : ''
+                    }`}
+                    verdi={siste?.antall?.toLocaleString('nb-NO') ?? 'Mangler data'}
                 />
                 <Oppsummeringskort
-                    tittel={`Endring fra ${formatMonthYear(førsteDagIMåned(forrigeKalendermåned))}`}
+                    tittel={
+                        sammenligningsmåned && siste
+                            ? `Endring fra ${formatMonthYear(
+                                  førsteDagIMåned(sammenligningsmåned),
+                              )} til ${formatMonthYear(førsteDagIMåned(siste.måned))}`
+                            : 'Endring fra forrige måned'
+                    }
                     verdi={endring === null ? 'Ikke nok data' : `${endring >= 0 ? '+' : ''}${endring.toFixed(1)} %`}
                 />
                 <Oppsummeringskort
-                    tittel={erHittilIÅr ? 'Månedsforekomster hittil i år' : 'Månedsforekomster i perioden'}
-                    verdi={sumMånedsforekomster.toLocaleString('nb-NO')}
+                    tittel="Gjennomsnitt per måned"
+                    verdi={
+                        gjennomsnittPerMåned === null
+                            ? 'Mangler data'
+                            : new Intl.NumberFormat('nb-NO', { maximumFractionDigits: 1 }).format(gjennomsnittPerMåned)
+                    }
+                    beskrivelse={`${tilgjengeligeMåneder.length} ${
+                        tilgjengeligeMåneder.length === 1 ? 'måned inngår' : 'måneder inngår'
+                    }${
+                        manglendeMåneder.length > 0
+                            ? `. ${manglendeMåneder.length} ${
+                                  manglendeMåneder.length === 1 ? 'måned mangler' : 'måneder mangler'
+                              } data`
+                            : ''
+                    }.`}
                 />
             </HGrid>
             <BodyShort>
-                Summen av månedsforekomster teller en sak én gang for hver måned den har stønad. Den viser ikke antall
-                unike saker eller personer.
+                Hver månedsverdi viser antall saker med stønad den måneden. Den samme saken kan inngå i flere måneder.
+                Gjennomsnittet er derfor ikke antall unike saker eller personer.
             </BodyShort>
 
             <Månedsutvikling perioder={perMåned} />
@@ -319,13 +386,14 @@ const StønadstatistikkInnhold = ({
                     <Heading id="stønad-per-måned" level="3" size="medium">
                         Vedtaksresultat
                     </Heading>
-                    <BodyShort>Antall per vedtaksresultat i siste måned.</BodyShort>
-                    {sisteResultatperiode && (
+                    <BodyShort>Antall per vedtaksresultat i siste måned med data.</BodyShort>
+                    {sisteResultatperiode ? (
                         <div className={styles.periodegruppe} aria-hidden="true">
                             <Heading level="4" size="small">
                                 {formatMonthYear(førsteDagIMåned(sisteResultatperiode.måned))}
+                                {sisteResultatperiode.måned !== data.tilOgMed ? ' (siste måned med data)' : ''}
                             </Heading>
-                            {sisteResultatperiode.grupper.some((gruppe) => gruppe.antall > 0) ? (
+                            {sisteResultatperiode.grupper?.some((gruppe) => gruppe.antall > 0) ? (
                                 <div className={styles.horisontaleSøyler}>
                                     {sisteResultatperiode.grupper
                                         .filter((gruppe) => gruppe.antall > 0)
@@ -348,9 +416,11 @@ const StønadstatistikkInnhold = ({
                                         ))}
                                 </div>
                             ) : (
-                                <BodyShort>Ingen data i måneden.</BodyShort>
+                                <BodyShort>Ingen vedtaksresultater i måneden.</BodyShort>
                             )}
                         </div>
+                    ) : (
+                        <BodyShort>Ingen vedtaksresultater i perioden.</BodyShort>
                     )}
                     <ExpansionCard aria-label="Vedtaksresultat for alle måneder">
                         <ExpansionCard.Header>
@@ -376,23 +446,27 @@ const StønadstatistikkInnhold = ({
                                         </Table.Row>
                                     </Table.Header>
                                     <Table.Body>
-                                        {data.perioder.map((periode) => (
+                                        {resultatperioder.map((periode) => (
                                             <Table.Row key={periode.måned}>
                                                 <Table.DataCell>
                                                     {formatMonthYear(førsteDagIMåned(periode.måned))}
                                                 </Table.DataCell>
-                                                {resultater.map((resultat) => (
-                                                    <Table.DataCell key={resultat} align="right">
-                                                        {summer(
-                                                            periode.rader
-                                                                .filter((rad) => rad.vedtaksresultat === resultat)
-                                                                .map((rad) => rad.antall),
-                                                        )}
+                                                {periode.grupper ? (
+                                                    <>
+                                                        {periode.grupper.map((gruppe) => (
+                                                            <Table.DataCell key={gruppe.resultat} align="right">
+                                                                {gruppe.antall}
+                                                            </Table.DataCell>
+                                                        ))}
+                                                        <Table.DataCell align="right">
+                                                            {summer(periode.grupper.map((gruppe) => gruppe.antall))}
+                                                        </Table.DataCell>
+                                                    </>
+                                                ) : (
+                                                    <Table.DataCell colSpan={resultater.length + 1}>
+                                                        Mangler datagrunnlag
                                                     </Table.DataCell>
-                                                ))}
-                                                <Table.DataCell align="right">
-                                                    {summer(periode.rader.map((rad) => rad.antall))}
-                                                </Table.DataCell>
+                                                )}
                                             </Table.Row>
                                         ))}
                                     </Table.Body>
@@ -403,12 +477,13 @@ const StønadstatistikkInnhold = ({
                 </VStack>
             </section>
             <Stønadsklassifisering data={data} />
+            <Bestandsendringer data={data} kanVisesMedValgteFiltre={bestandsfilterKanVises} />
         </VStack>
     );
 };
 
-const Månedsutvikling = ({ perioder }: { perioder: { måned: string; antall: number }[] }) => {
-    const maksimum = Math.max(1, ...perioder.map((periode) => periode.antall));
+const Månedsutvikling = ({ perioder }: { perioder: { måned: string; antall: number | null }[] }) => {
+    const maksimum = Math.max(1, ...perioder.flatMap((periode) => (periode.antall === null ? [] : [periode.antall])));
 
     return (
         <section aria-labelledby="stønad-månedsutvikling">
@@ -423,12 +498,16 @@ const Månedsutvikling = ({ perioder }: { perioder: { måned: string; antall: nu
                     <div className={styles.månedsdiagram}>
                         {perioder.map((periode) => (
                             <div className={styles.månedsSøyle} key={periode.måned}>
-                                <strong>{periode.antall.toLocaleString('nb-NO')}</strong>
+                                <strong>
+                                    {periode.antall === null ? 'Mangler' : periode.antall.toLocaleString('nb-NO')}
+                                </strong>
                                 <span className={styles.månedsSøyleområde}>
-                                    <span
-                                        className={`${styles.månedsSøylefyll} ${styles.diagramfarge1}`}
-                                        style={{ height: `${(periode.antall / maksimum) * 100}%` }}
-                                    />
+                                    {periode.antall !== null && (
+                                        <span
+                                            className={`${styles.månedsSøylefyll} ${styles.diagramfarge1}`}
+                                            style={{ height: `${(periode.antall / maksimum) * 100}%` }}
+                                        />
+                                    )}
                                 </span>
                                 <span>{formatMonthYear(førsteDagIMåned(periode.måned))}</span>
                             </div>
@@ -459,7 +538,9 @@ const Månedsutvikling = ({ perioder }: { perioder: { måned: string; antall: nu
                                             <Table.DataCell>
                                                 {formatMonthYear(førsteDagIMåned(periode.måned))}
                                             </Table.DataCell>
-                                            <Table.DataCell align="right">{periode.antall}</Table.DataCell>
+                                            <Table.DataCell align="right">
+                                                {periode.antall === null ? 'Mangler datagrunnlag' : periode.antall}
+                                            </Table.DataCell>
                                         </Table.Row>
                                     ))}
                                 </Table.Body>
@@ -480,19 +561,27 @@ const Stønadsklassifisering = ({ data }: { data: StønadStatistikkResponse }) =
             ),
         ),
     ].sort();
-    const perioder = data.perioder.map((periode) => ({
-        måned: periode.måned,
-        grupper: klassifiseringer.map((klassifisering) => ({
-            klassifisering,
-            antall: summer(
-                periode.rader
-                    .filter((rad) => (rad.stønadsklassifisering ?? 'IKKE_KLASSIFISERT') === klassifisering)
-                    .map((rad) => rad.antall),
-            ),
-        })),
-    }));
-    const sistePeriode = perioder.at(-1);
-    const maksimum = Math.max(1, ...(sistePeriode?.grupper.map((gruppe) => gruppe.antall) ?? []));
+    const perioder = månederIPeriode(data.fraOgMed, data.tilOgMed).map((måned) => {
+        const periode = finnPeriode(data.perioder, måned);
+        return {
+            måned,
+            grupper:
+                periode?.datagrunnlag === 'TILGJENGELIG'
+                    ? klassifiseringer.map((klassifisering) => ({
+                          klassifisering,
+                          antall: summer(
+                              periode.rader
+                                  .filter(
+                                      (rad) => (rad.stønadsklassifisering ?? 'IKKE_KLASSIFISERT') === klassifisering,
+                                  )
+                                  .map((rad) => rad.antall),
+                          ),
+                      }))
+                    : null,
+        };
+    });
+    const sistePeriode = [...perioder].reverse().find((periode) => periode.grupper !== null);
+    const maksimum = Math.max(1, ...(sistePeriode?.grupper?.map((gruppe) => gruppe.antall) ?? []));
 
     return (
         <section aria-labelledby="stønadsklassifisering-tittel">
@@ -502,16 +591,17 @@ const Stønadsklassifisering = ({ data }: { data: StønadStatistikkResponse }) =
                         Stønadsklassifisering
                     </Heading>
                     <BodyShort>
-                        Antall per klassifisering i siste måned. Den samme saken kan inngå i flere måneder, så månedene
-                        summeres ikke.
+                        Antall per klassifisering i siste måned med data. Den samme saken kan inngå i flere måneder, så
+                        månedene summeres ikke.
                     </BodyShort>
                 </div>
-                {sistePeriode && (
+                {sistePeriode ? (
                     <div className={styles.periodegruppe} aria-hidden="true">
                         <Heading level="4" size="small">
                             {formatMonthYear(førsteDagIMåned(sistePeriode.måned))}
+                            {sistePeriode.måned !== data.tilOgMed ? ' (siste måned med data)' : ''}
                         </Heading>
-                        {sistePeriode.grupper.some((gruppe) => gruppe.antall > 0) ? (
+                        {sistePeriode.grupper?.some((gruppe) => gruppe.antall > 0) ? (
                             <div className={styles.horisontaleSøyler}>
                                 {sistePeriode.grupper
                                     .filter((gruppe) => gruppe.antall > 0)
@@ -534,9 +624,11 @@ const Stønadsklassifisering = ({ data }: { data: StønadStatistikkResponse }) =
                                     ))}
                             </div>
                         ) : (
-                            <BodyShort>Ingen data i måneden.</BodyShort>
+                            <BodyShort>Ingen stønadsklassifiseringer i måneden.</BodyShort>
                         )}
                     </div>
+                ) : (
+                    <BodyShort>Ingen stønadsklassifiseringer i perioden.</BodyShort>
                 )}
                 <ExpansionCard aria-label="Stønadsklassifisering for alle måneder">
                     <ExpansionCard.Header>
@@ -566,11 +658,17 @@ const Stønadsklassifisering = ({ data }: { data: StønadStatistikkResponse }) =
                                             <Table.DataCell>
                                                 {formatMonthYear(førsteDagIMåned(periode.måned))}
                                             </Table.DataCell>
-                                            {periode.grupper.map((gruppe) => (
-                                                <Table.DataCell key={gruppe.klassifisering} align="right">
-                                                    {gruppe.antall}
+                                            {periode.grupper ? (
+                                                periode.grupper.map((gruppe) => (
+                                                    <Table.DataCell key={gruppe.klassifisering} align="right">
+                                                        {gruppe.antall}
+                                                    </Table.DataCell>
+                                                ))
+                                            ) : (
+                                                <Table.DataCell colSpan={Math.max(1, klassifiseringer.length)}>
+                                                    Mangler datagrunnlag
                                                 </Table.DataCell>
-                                            ))}
+                                            )}
                                         </Table.Row>
                                     ))}
                                 </Table.Body>
@@ -583,12 +681,140 @@ const Stønadsklassifisering = ({ data }: { data: StønadStatistikkResponse }) =
     );
 };
 
-const Oppsummeringskort = ({ tittel, verdi }: { tittel: string; verdi: string }) => (
+const Bestandsendringer = ({
+    data,
+    kanVisesMedValgteFiltre,
+}: {
+    data: StønadStatistikkResponse;
+    kanVisesMedValgteFiltre: boolean;
+}) => {
+    const sistePeriode = finnPeriode(data.perioder, data.tilOgMed);
+
+    return (
+        <section aria-labelledby="stønadsbestand-tittel">
+            <VStack gap="4">
+                <div>
+                    <Heading id="stønadsbestand-tittel" level="3" size="medium">
+                        Endringer i stønadsbestanden
+                    </Heading>
+                    <BodyShort>
+                        Viser nye, videreførte og utgåtte saker sammenlignet med foregående kalendermåned.
+                    </BodyShort>
+                </div>
+                {!kanVisesMedValgteFiltre ? (
+                    <Alert variant="info">
+                        Bestandsendringer kan ikke filtreres på vedtakstype, vedtaksresultat eller
+                        stønadsklassifisering. Fjern disse filtrene for å se endringene.
+                    </Alert>
+                ) : !sistePeriode || !sistePeriode.bestandsendringerTilgjengelig ? (
+                    <Alert variant="info">Kan ikke sammenlignes med forrige måned.</Alert>
+                ) : sistePeriode.bestandsendringer.length === 0 ? (
+                    <BodyShort>Det finnes ingen bestandsendringer i måneden.</BodyShort>
+                ) : (
+                    <VStack gap="5">
+                        <Heading level="4" size="small">
+                            {formatMonthYear(førsteDagIMåned(sistePeriode.måned))}
+                        </Heading>
+                        {sistePeriode.bestandsendringer.map((rad) => (
+                            <VStack key={rad.stønadstype} gap="3">
+                                <Heading level="5" size="xsmall">
+                                    {tekstFraKode(rad.stønadstype)}
+                                </Heading>
+                                <HGrid columns={{ xs: 2, md: 4 }} gap="4">
+                                    <Oppsummeringskort tittel="Nye" verdi={rad.nye.toLocaleString('nb-NO')} />
+                                    <Oppsummeringskort
+                                        tittel="Videreførte"
+                                        verdi={rad.videreført.toLocaleString('nb-NO')}
+                                    />
+                                    <Oppsummeringskort tittel="Utgåtte" verdi={rad.utgått.toLocaleString('nb-NO')} />
+                                    <Oppsummeringskort
+                                        tittel="Endret klassifisering"
+                                        verdi={rad.endretStønadsklassifisering.toLocaleString('nb-NO')}
+                                    />
+                                </HGrid>
+                            </VStack>
+                        ))}
+                    </VStack>
+                )}
+                {kanVisesMedValgteFiltre && data.perioder.length > 1 && (
+                    <ExpansionCard aria-label="Bestandsendringer for alle måneder">
+                        <ExpansionCard.Header>
+                            <ExpansionCard.Title as="h4" size="small">
+                                Vis alle måneder
+                            </ExpansionCard.Title>
+                            <ExpansionCard.Description>
+                                Endringene vises per måned og summeres ikke.
+                            </ExpansionCard.Description>
+                        </ExpansionCard.Header>
+                        <ExpansionCard.Content>
+                            <div className={styles.tabellRamme}>
+                                <Table size="small">
+                                    <Table.Header>
+                                        <Table.Row>
+                                            <Table.HeaderCell>Måned</Table.HeaderCell>
+                                            <Table.HeaderCell>Stønadstype</Table.HeaderCell>
+                                            <Table.HeaderCell align="right">Nye</Table.HeaderCell>
+                                            <Table.HeaderCell align="right">Videreførte</Table.HeaderCell>
+                                            <Table.HeaderCell align="right">Utgåtte</Table.HeaderCell>
+                                            <Table.HeaderCell align="right">Endret klassifisering</Table.HeaderCell>
+                                        </Table.Row>
+                                    </Table.Header>
+                                    <Table.Body>
+                                        {data.perioder.flatMap((periode) => {
+                                            const måned = formatMonthYear(førsteDagIMåned(periode.måned));
+                                            if (!periode.bestandsendringerTilgjengelig) {
+                                                return (
+                                                    <Table.Row key={periode.måned}>
+                                                        <Table.DataCell>{måned}</Table.DataCell>
+                                                        <Table.DataCell colSpan={5}>
+                                                            Kan ikke sammenlignes med forrige måned
+                                                        </Table.DataCell>
+                                                    </Table.Row>
+                                                );
+                                            }
+                                            if (periode.bestandsendringer.length === 0) {
+                                                return (
+                                                    <Table.Row key={periode.måned}>
+                                                        <Table.DataCell>{måned}</Table.DataCell>
+                                                        <Table.DataCell colSpan={5}>
+                                                            Ingen bestandsendringer
+                                                        </Table.DataCell>
+                                                    </Table.Row>
+                                                );
+                                            }
+                                            return periode.bestandsendringer.map((rad) => (
+                                                <Table.Row key={`${periode.måned}-${rad.stønadstype}`}>
+                                                    <Table.DataCell>{måned}</Table.DataCell>
+                                                    <Table.DataCell>{tekstFraKode(rad.stønadstype)}</Table.DataCell>
+                                                    <Table.DataCell align="right">{rad.nye}</Table.DataCell>
+                                                    <Table.DataCell align="right">{rad.videreført}</Table.DataCell>
+                                                    <Table.DataCell align="right">{rad.utgått}</Table.DataCell>
+                                                    <Table.DataCell align="right">
+                                                        {rad.endretStønadsklassifisering}
+                                                    </Table.DataCell>
+                                                </Table.Row>
+                                            ));
+                                        })}
+                                    </Table.Body>
+                                </Table>
+                            </div>
+                        </ExpansionCard.Content>
+                    </ExpansionCard>
+                )}
+            </VStack>
+        </section>
+    );
+};
+
+const Oppsummeringskort = ({ tittel, verdi, beskrivelse }: { tittel: string; verdi: string; beskrivelse?: string }) => (
     <Box background="surface-default" borderColor="border-divider" borderWidth="1" borderRadius="medium" padding="6">
-        <BodyShort>{tittel}</BodyShort>
-        <Heading level="3" size="large">
-            {verdi}
-        </Heading>
+        <VStack gap="2">
+            <BodyShort>{tittel}</BodyShort>
+            <Heading level="3" size="large">
+                {verdi}
+            </Heading>
+            {beskrivelse && <BodyShort size="small">{beskrivelse}</BodyShort>}
+        </VStack>
     </Box>
 );
 

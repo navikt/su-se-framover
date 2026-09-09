@@ -10,7 +10,15 @@ const params = {
 
 const ferdig: SakStatistikkResponse = {
     ...params,
+    metadata: {
+        aggregatversjon: 1,
+        maksSekvensId: null,
+        sisteHendelseTidspunkt: null,
+        antallBehandlinger: 0,
+        behandlingerMedFlereUtfall: 0,
+    },
     perioder: [],
+    kohorter: [],
 };
 
 const genererer: GenerererStatistikkResponse = {
