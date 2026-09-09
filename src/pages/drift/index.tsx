@@ -31,6 +31,7 @@ import { SøknadTabellDrift } from './components/SøknadTabell';
 import Stønadsmottakere from './components/stønadsmottakere/Stønadsmottakere';
 import SendUtbetalingsIder from './components/utbetalingslinjer/SendUtbetalingslinjer';
 import styles from './index.module.less';
+import Statistikk from './statistikk/Statistikk';
 
 enum Knapp {
     FIX_SØKNADER,
@@ -83,205 +84,211 @@ const Drift = () => {
     const [konsistensavstemmingFagområde, setKonsistensavstemmingFagområde] = useState<string>('SUUFORE');
 
     return (
-        <div className={styles.container}>
-            {vilFikseVedtak && <VilFikseVedtakModal open={vilFikseVedtak} onClose={() => setVilFikseVedtak(false)} />}
-
-            <div>
-                <h1>Drift</h1>
-            </div>
-
-            <div>
-                <h1>Status</h1>
-                <div className={styles.statusContainer}>
-                    {RemoteData.isSuccess(statusBakover) ? (
-                        <Alert className={styles.alert} variant="success">
-                            Bakover er oppe
-                        </Alert>
-                    ) : (
-                        <Alert className={styles.alert} variant="error">
-                            Bakover er nede
-                        </Alert>
-                    )}
-                </div>
-            </div>
-            <h1>Actions</h1>
-            <div>
-                <div className={styles.actionsContainer}>
-                    <Button variant="secondary" className={styles.knapp} type="button" onClick={fixSøknader}>
-                        Fix Søknader
-                        {RemoteData.isPending(fixSøknaderResponse) && <Loader />}
-                    </Button>
-
-                    <Button
-                        variant="secondary"
-                        className={styles.knapp}
-                        type="button"
-                        onClick={() => setGrensesnittsavstemmingModalOpen(true)}
-                    >
-                        Grensesnittsavstemming
-                        {RemoteData.isPending(grensesnittsavstemmingStatus) && <Loader />}
-                    </Button>
-                    <Modal
-                        open={grensesnittsavstemmingModalOpen}
-                        onClose={() => {
-                            setGrensesnittsavstemmingModalOpen(false);
-                        }}
-                        aria-label="grensesnittavstemming"
-                    >
-                        <Modal.Body>
-                            <div className={styles.modalContainer}>
-                                <DatePicker
-                                    label={''}
-                                    value={grensesnittsavtemmingFraOgMed}
-                                    onChange={(date) => {
-                                        setGrensesnittsavtemmingFraOgMed(date);
-                                    }}
-                                />
-                                <DatePicker
-                                    label={''}
-                                    value={grensesnittsavtemmingTilOgMed}
-                                    onChange={(date) => {
-                                        setGrensesnittsavtemmingTilOgMed(date);
-                                    }}
-                                />
-                                <Select
-                                    label={'Fagområde'}
-                                    value={grensesnittsavstemmingFagområde}
-                                    onChange={(e) => setGrensesnittsavstemmingFagområde(e.target.value)}
-                                >
-                                    <option value="SUUFORE">{'UFØRE'}</option>
-                                    <option value="SUALDER">{'ALDER'}</option>
-                                </Select>
-                                <Button
-                                    variant="secondary"
-                                    className={styles.knapp}
-                                    type="button"
-                                    onClick={() => {
-                                        settKnappTrykket(Knapp.GRENSESNITTSAVSTEMMING);
-                                        fetchGrensesnittsavstemming({
-                                            fraOgMed: toIsoDateOnlyString(grensesnittsavtemmingFraOgMed!),
-                                            tilOgMed: toIsoDateOnlyString(grensesnittsavtemmingTilOgMed!),
-                                            fagområde: grensesnittsavstemmingFagområde,
-                                        });
-                                    }}
-                                >
-                                    Grensesnittsavstemming
-                                    {RemoteData.isPending(grensesnittsavstemmingStatus) && <Loader />}
-                                </Button>
-                            </div>
-                        </Modal.Body>
-                    </Modal>
-                    <Button
-                        variant="secondary"
-                        className={styles.knapp}
-                        type="button"
-                        onClick={() => setKonsistensavtemmingModalOpen(true)}
-                    >
-                        Konsistensavstemming
-                        {RemoteData.isPending(konsistensavstemmingStatus) && <Loader />}
-                    </Button>
-                    <Modal
-                        open={konsistensavtemmingModalOpen}
-                        onClose={() => {
-                            setKonsistensavtemmingModalOpen(false);
-                        }}
-                        aria-label="konsistensavstemming"
-                    >
-                        <Modal.Body>
-                            <div className={styles.modalContainer}>
-                                <DatePicker
-                                    label={''}
-                                    value={konsistensavstemmingFraOgMed}
-                                    onChange={(date) => {
-                                        setKonsistensavstemmingFraOgMed(date);
-                                    }}
-                                />
-                                <Select
-                                    label={'Fagområde'}
-                                    value={konsistensavstemmingFagområde}
-                                    onChange={(e) => setKonsistensavstemmingFagområde(e.target.value)}
-                                >
-                                    <option value="SUUFORE">{'UFØRE'}</option>
-                                    <option value="SUALDER">{'ALDER'}</option>
-                                </Select>
-                                <Button
-                                    variant="secondary"
-                                    className={styles.knapp}
-                                    type="button"
-                                    onClick={() => {
-                                        settKnappTrykket(Knapp.KONSISTENSAVSTEMMING);
-                                        fetchKonsistensavstemming({
-                                            fraOgMed: toIsoDateOnlyString(konsistensavstemmingFraOgMed!),
-                                            fagområde: konsistensavstemmingFagområde,
-                                        });
-                                    }}
-                                >
-                                    Konsistensavstemming
-                                    {RemoteData.isPending(konsistensavstemmingStatus) && <Loader />}
-                                </Button>
-                            </div>
-                        </Modal.Body>
-                    </Modal>
-                    <Gregulering />
-                    <Fradragssjekk />
-                    <Personhendelser />
-                    <Stønadsmottakere />
-                    <SupstønadHistorisk />
-                    <DokumentDistribusjon />
-
-                    <Button
-                        variant="secondary"
-                        className={styles.knapp}
-                        type="button"
-                        onClick={() => settKnappTrykket(Knapp.NØKKELTALL)}
-                    >
-                        Nøkkeltall
-                    </Button>
-
-                    <SakStatistikk />
-                    <StønadStatistikk />
-
-                    <ResendStatistikk />
-
-                    <Button
-                        variant="secondary"
-                        className={styles.knapp}
-                        type="button"
-                        onClick={() => setVilFikseVedtak(true)}
-                    >
-                        Fiks vedtak
-                    </Button>
-                    <SendUtbetalingsIder />
-
-                    <KontrollsamtaleOversikt />
-                </div>
-                {knappTrykket === Knapp.FIX_SØKNADER && RemoteData.isFailure(fixSøknaderResponse) && (
-                    <Alert className={styles.alert} variant="error">
-                        <p>Fix Søknader feilet</p>
-                        {fixSøknaderResponse.error.statusCode}
-                        <p>
-                            {fixSøknaderResponse.error.body?.message ?? JSON.stringify(fixSøknaderResponse.error.body)}
-                        </p>
-                    </Alert>
+        <>
+            <div className={styles.container}>
+                {vilFikseVedtak && (
+                    <VilFikseVedtakModal open={vilFikseVedtak} onClose={() => setVilFikseVedtak(false)} />
                 )}
-                <div className={styles.tabellContainer}>
-                    {knappTrykket === Knapp.FIX_SØKNADER && RemoteData.isSuccess(fixSøknaderResponse) && (
-                        <div>
-                            <SøknadTabellDrift søknadResponse={fixSøknaderResponse.value} />
-                        </div>
-                    )}
-                    {knappTrykket === Knapp.KONSISTENSAVSTEMMING &&
-                        RemoteData.isSuccess(konsistensavstemmingStatus) && (
+
+                <div>
+                    <h1>Drift</h1>
+                </div>
+
+                <div>
+                    <h1>Status</h1>
+                    <div className={styles.statusContainer}>
+                        {RemoteData.isSuccess(statusBakover) ? (
                             <Alert className={styles.alert} variant="success">
-                                <p>{JSON.stringify(konsistensavstemmingStatus.value)}</p>
+                                Bakover er oppe
+                            </Alert>
+                        ) : (
+                            <Alert className={styles.alert} variant="error">
+                                Bakover er nede
                             </Alert>
                         )}
+                    </div>
                 </div>
-                {knappTrykket === Knapp.NØKKELTALL && <Nøkkeltall />}
-            </div>
+                <h1>Actions</h1>
+                <div>
+                    <div className={styles.actionsContainer}>
+                        <Button variant="secondary" className={styles.knapp} type="button" onClick={fixSøknader}>
+                            Fix Søknader
+                            {RemoteData.isPending(fixSøknaderResponse) && <Loader />}
+                        </Button>
 
-            <JobbOversikt />
-        </div>
+                        <Button
+                            variant="secondary"
+                            className={styles.knapp}
+                            type="button"
+                            onClick={() => setGrensesnittsavstemmingModalOpen(true)}
+                        >
+                            Grensesnittsavstemming
+                            {RemoteData.isPending(grensesnittsavstemmingStatus) && <Loader />}
+                        </Button>
+                        <Modal
+                            open={grensesnittsavstemmingModalOpen}
+                            onClose={() => {
+                                setGrensesnittsavstemmingModalOpen(false);
+                            }}
+                            aria-label="grensesnittavstemming"
+                        >
+                            <Modal.Body>
+                                <div className={styles.modalContainer}>
+                                    <DatePicker
+                                        label={''}
+                                        value={grensesnittsavtemmingFraOgMed}
+                                        onChange={(date) => {
+                                            setGrensesnittsavtemmingFraOgMed(date);
+                                        }}
+                                    />
+                                    <DatePicker
+                                        label={''}
+                                        value={grensesnittsavtemmingTilOgMed}
+                                        onChange={(date) => {
+                                            setGrensesnittsavtemmingTilOgMed(date);
+                                        }}
+                                    />
+                                    <Select
+                                        label={'Fagområde'}
+                                        value={grensesnittsavstemmingFagområde}
+                                        onChange={(e) => setGrensesnittsavstemmingFagområde(e.target.value)}
+                                    >
+                                        <option value="SUUFORE">{'UFØRE'}</option>
+                                        <option value="SUALDER">{'ALDER'}</option>
+                                    </Select>
+                                    <Button
+                                        variant="secondary"
+                                        className={styles.knapp}
+                                        type="button"
+                                        onClick={() => {
+                                            settKnappTrykket(Knapp.GRENSESNITTSAVSTEMMING);
+                                            fetchGrensesnittsavstemming({
+                                                fraOgMed: toIsoDateOnlyString(grensesnittsavtemmingFraOgMed!),
+                                                tilOgMed: toIsoDateOnlyString(grensesnittsavtemmingTilOgMed!),
+                                                fagområde: grensesnittsavstemmingFagområde,
+                                            });
+                                        }}
+                                    >
+                                        Grensesnittsavstemming
+                                        {RemoteData.isPending(grensesnittsavstemmingStatus) && <Loader />}
+                                    </Button>
+                                </div>
+                            </Modal.Body>
+                        </Modal>
+                        <Button
+                            variant="secondary"
+                            className={styles.knapp}
+                            type="button"
+                            onClick={() => setKonsistensavtemmingModalOpen(true)}
+                        >
+                            Konsistensavstemming
+                            {RemoteData.isPending(konsistensavstemmingStatus) && <Loader />}
+                        </Button>
+                        <Modal
+                            open={konsistensavtemmingModalOpen}
+                            onClose={() => {
+                                setKonsistensavtemmingModalOpen(false);
+                            }}
+                            aria-label="konsistensavstemming"
+                        >
+                            <Modal.Body>
+                                <div className={styles.modalContainer}>
+                                    <DatePicker
+                                        label={''}
+                                        value={konsistensavstemmingFraOgMed}
+                                        onChange={(date) => {
+                                            setKonsistensavstemmingFraOgMed(date);
+                                        }}
+                                    />
+                                    <Select
+                                        label={'Fagområde'}
+                                        value={konsistensavstemmingFagområde}
+                                        onChange={(e) => setKonsistensavstemmingFagområde(e.target.value)}
+                                    >
+                                        <option value="SUUFORE">{'UFØRE'}</option>
+                                        <option value="SUALDER">{'ALDER'}</option>
+                                    </Select>
+                                    <Button
+                                        variant="secondary"
+                                        className={styles.knapp}
+                                        type="button"
+                                        onClick={() => {
+                                            settKnappTrykket(Knapp.KONSISTENSAVSTEMMING);
+                                            fetchKonsistensavstemming({
+                                                fraOgMed: toIsoDateOnlyString(konsistensavstemmingFraOgMed!),
+                                                fagområde: konsistensavstemmingFagområde,
+                                            });
+                                        }}
+                                    >
+                                        Konsistensavstemming
+                                        {RemoteData.isPending(konsistensavstemmingStatus) && <Loader />}
+                                    </Button>
+                                </div>
+                            </Modal.Body>
+                        </Modal>
+                        <Gregulering />
+                        <Fradragssjekk />
+                        <Personhendelser />
+                        <Stønadsmottakere />
+                        <SupstønadHistorisk />
+                        <DokumentDistribusjon />
+
+                        <Button
+                            variant="secondary"
+                            className={styles.knapp}
+                            type="button"
+                            onClick={() => settKnappTrykket(Knapp.NØKKELTALL)}
+                        >
+                            Nøkkeltall
+                        </Button>
+
+                        <SakStatistikk />
+                        <StønadStatistikk />
+
+                        <ResendStatistikk />
+
+                        <Button
+                            variant="secondary"
+                            className={styles.knapp}
+                            type="button"
+                            onClick={() => setVilFikseVedtak(true)}
+                        >
+                            Fiks vedtak
+                        </Button>
+                        <SendUtbetalingsIder />
+
+                        <KontrollsamtaleOversikt />
+                    </div>
+                    {knappTrykket === Knapp.FIX_SØKNADER && RemoteData.isFailure(fixSøknaderResponse) && (
+                        <Alert className={styles.alert} variant="error">
+                            <p>Fix Søknader feilet</p>
+                            {fixSøknaderResponse.error.statusCode}
+                            <p>
+                                {fixSøknaderResponse.error.body?.message ??
+                                    JSON.stringify(fixSøknaderResponse.error.body)}
+                            </p>
+                        </Alert>
+                    )}
+                    <div className={styles.tabellContainer}>
+                        {knappTrykket === Knapp.FIX_SØKNADER && RemoteData.isSuccess(fixSøknaderResponse) && (
+                            <div>
+                                <SøknadTabellDrift søknadResponse={fixSøknaderResponse.value} />
+                            </div>
+                        )}
+                        {knappTrykket === Knapp.KONSISTENSAVSTEMMING &&
+                            RemoteData.isSuccess(konsistensavstemmingStatus) && (
+                                <Alert className={styles.alert} variant="success">
+                                    <p>{JSON.stringify(konsistensavstemmingStatus.value)}</p>
+                                </Alert>
+                            )}
+                    </div>
+                    {knappTrykket === Knapp.NØKKELTALL && <Nøkkeltall />}
+                </div>
+
+                <JobbOversikt />
+            </div>
+            <Statistikk />
+        </>
     );
 };
 
