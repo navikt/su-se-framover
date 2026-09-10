@@ -15,6 +15,7 @@ import {
 } from '@navikt/ds-react';
 import { useMemo, useState } from 'react';
 
+import { omgjøringsgrunnerTekstMapper } from '~src/components/forms/revurdering/Omgjøringgrunner-nb';
 import { DatePicker } from '~src/components/inputs/datePicker/DatePicker';
 import {
     Behandlingstidsmåling,
@@ -22,7 +23,9 @@ import {
     Beholdningsaldersmåling,
     SakStatistikkKategori,
     SakStatistikkKohort,
+    SakStatistikkLov,
     SakStatistikkOmarbeid,
+    SakStatistikkParagraf,
     SakStatistikkPeriode,
     SakStatistikkResponse,
     Statistikkoppløsning,
@@ -66,7 +69,7 @@ const målingstekst = (måling: Behandlingstidsmåling, kategori: SakStatistikkK
     }
     if (måling === 'TID_HOS_ATTESTANT') return 'Tid hos attestant';
     if (måling === 'SAKSBEHANDLING_FØR_ATTESTERING') return 'Registrert → til attestering';
-    return 'Underkjent → til attestering på nytt';
+    return 'Tid per underkjenning → ny attestering';
 };
 
 const målingsforklaring = (måling: Behandlingstidsmåling, kategori: SakStatistikkKategori): string => {
@@ -81,7 +84,7 @@ const målingsforklaring = (måling: Behandlingstidsmåling, kategori: SakStatis
     if (måling === 'TID_HOS_ATTESTANT') {
         return 'Tiden fra behandlingen ble sendt til attestering til den ble iverksatt eller underkjent.';
     }
-    return 'Tiden fra underkjenning til behandlingen ble sendt til attestering på nytt.';
+    return 'Tiden for én overgang fra underkjenning til behandlingen ble sendt til attestering på nytt. En behandling kan bidra med flere målinger.';
 };
 
 const egendefinertKodetekst: Record<string, string> = {
@@ -91,6 +94,29 @@ const egendefinertKodetekst: Record<string, string> = {
     SUUFORE: 'Uføre',
     SU_ALDER: 'Alder',
     SU_UFØR: 'Uføre',
+    UFØRHET: 'Uførevilkåret er ikke oppfylt',
+    FLYKTNING: 'Flyktningvilkåret er ikke oppfylt',
+    OPPHOLDSTILLATELSE: 'Kravet til oppholdstillatelse er ikke oppfylt',
+    PERSONLIG_OPPMØTE: 'Kravet til personlig oppmøte er ikke oppfylt',
+    FORMUE: 'Formuen er for høy',
+    BOR_OG_OPPHOLDER_SEG_I_NORGE: 'Kravet om å bo og oppholde seg i Norge er ikke oppfylt',
+    FOR_HØY_INNTEKT: 'Inntekten er for høy',
+    SU_UNDER_MINSTEGRENSE: 'Beregnet stønad er under minstegrensen',
+    UTENLANDSOPPHOLD_OVER_90_DAGER: 'Utenlandsopphold over 90 dager',
+    UTENLANDSOPPHOLD: 'Utenlandsopphold',
+    INNLAGT_PÅ_INSTITUSJON: 'Institusjonsopphold',
+    MANGLENDE_DOKUMENTASJON: 'Manglende dokumentasjon',
+    SØKNAD_MANGLER_DOKUMENTASJON: 'Søknaden mangler dokumentasjon',
+    ALDERSPENSJON_FOLKETRYGDEN: 'Det er ikke søkt alderspensjon fra folketrygden',
+    ALDERSPENSJON_ANDRE_NORSKE_PENSJONSORDNINGER: 'Det er ikke søkt andre norske pensjoner',
+    ALDERSPENSJON_UTENLANDSKE_PENSJONSORDNINGER: 'Det er ikke søkt utenlandske pensjoner',
+    ALDERSPENSJON: 'Det er ikke søkt alderspensjon',
+    FAMILIEGJENFORENING: 'Vilkåret knyttet til familiegjenforening er ikke oppfylt',
+    FOR_TIDLIG_SØKNAD: 'Søknaden ble sendt for tidlig',
+    IKKE_INNENFOR_FRISTEN: 'Klagen ble sendt etter fristen',
+    KLAGES_IKKE_PÅ_KONKRETE_ELEMENTER_I_VEDTAKET: 'Klagen gjelder ikke konkrete deler av vedtaket',
+    IKKE_UNDERSKREVET: 'Klagen er ikke underskrevet',
+    ...omgjøringsgrunnerTekstMapper,
 };
 
 const tekstFraKode = (verdi: string): string => {
@@ -102,6 +128,9 @@ const tekstFraKode = (verdi: string): string => {
 
 const formaterDager = (dager: number): string =>
     new Intl.NumberFormat('nb-NO', { maximumFractionDigits: 1, minimumFractionDigits: 1 }).format(dager);
+
+const formaterProsent = (prosent: number): string =>
+    new Intl.NumberFormat('nb-NO', { maximumFractionDigits: 1, minimumFractionDigits: 1 }).format(prosent);
 
 const formaterVarighet = (dager: number): string => {
     if (dager === 0) return '0 minutter';
@@ -288,7 +317,7 @@ const SakstatistikkPanel = () => {
                 </Alert>
             )}
             {RemoteData.isSuccess(status) && (
-                <SakstatistikkInnhold data={status.value} kategori={kategori} ytelse={ytelse} />
+                <SakstatistikkInnhold key={kategori} data={status.value} kategori={kategori} ytelse={ytelse} />
             )}
         </VStack>
     );
@@ -304,7 +333,9 @@ export const SakstatistikkInnhold = (props: {
         [props.data, props.kategori, props.ytelse],
     );
     const kohorter = props.data.kohorter.filter(
-        (kohort) => kohort.kategori === props.kategori && (props.ytelse === null || kohort.sakYtelse === props.ytelse),
+        (kohort) =>
+            kohort.behandlingskategori === props.kategori &&
+            (props.ytelse === null || kohort.sakYtelse === props.ytelse),
     );
     const harPeriodedata = harSakstatistikk(perioder);
     const totalBehandlingstidSerier = lagBehandlingstidSerier(
@@ -315,6 +346,9 @@ export const SakstatistikkInnhold = (props: {
     );
     const harTotalBehandlingstid = totalBehandlingstidSerier.some((serie) =>
         serie.punkter.some((punkt) => punkt.antall > 0),
+    );
+    const kohortvisning = (
+        <Kohorter kohorter={kohorter} rapportFraOgMed={props.data.fraOgMed} rapportdato={props.data.tilOgMed} />
     );
 
     return (
@@ -331,7 +365,14 @@ export const SakstatistikkInnhold = (props: {
                                     måneder hver delperiode dekker når du sammenligner antall.
                                 </Alert>
                             )}
+                            {props.data.metadata.sisteHendelseTidspunkt && (
+                                <BodyShort size="small">
+                                    Siste registrerte hendelse i datagrunnlaget:{' '}
+                                    {formatDateTime(props.data.metadata.sisteHendelseTidspunkt)}
+                                </BodyShort>
+                            )}
                             <StatistikkortGrid perioder={perioder} kategori={props.kategori} ytelse={props.ytelse} />
+                            {kohortvisning}
                             <BehandlingstidKortGrid
                                 perioder={props.data.perioder}
                                 kategori={props.kategori}
@@ -352,16 +393,17 @@ export const SakstatistikkInnhold = (props: {
                                 oppløsning={props.data.oppløsning}
                             />
                             <UtfallDiagram perioder={perioder} oppløsning={props.data.oppløsning} />
+                            <Utfallsfordelinger
+                                perioder={perioder}
+                                kategori={props.kategori}
+                                oppløsning={props.data.oppløsning}
+                            />
                             <BeholdningDiagram perioder={perioder} oppløsning={props.data.oppløsning} />
                             <Beholdningsalder perioder={perioder} />
-                            <Omarbeid perioder={perioder} />
+                            <Omarbeid perioder={perioder} kategori={props.kategori} />
                         </>
                     )}
-                    <Kohorter
-                        kohorter={kohorter}
-                        rapportFraOgMed={props.data.fraOgMed}
-                        rapportdato={props.data.tilOgMed}
-                    />
+                    {!harPeriodedata && kohortvisning}
                 </>
             )}
             <Datagrunnlag data={props.data} />
@@ -385,11 +427,11 @@ const StatistikkortGrid = (props: {
             detaljer: 'Behandlinger som ble registrert i hele den valgte perioden.',
         },
         {
-            tittel: 'Statusoverganger i perioden',
+            tittel: 'Ferdigbehandlede behandlinger i perioden',
             verdi: summer(props.perioder.flatMap((periode) => periode.utfall.map((rad) => rad.antall))).toLocaleString(
                 'nb-NO',
             ),
-            detaljer: 'Overganger til iverksatt, avsluttet, avbrutt eller oversendt i hele perioden.',
+            detaljer: 'Behandlinger som fikk sin første avsluttende status i hele perioden.',
         },
         {
             tittel: 'Beholdning ved periodens slutt',
@@ -410,8 +452,8 @@ const StatistikkortGrid = (props: {
                     </BodyShort>
                     <BodyShort size="small">
                         Kortene måler ulike ting og skal ikke trekkes fra hverandre. Registrerte behandlinger telles på
-                        registreringsdatoen, statusoverganger telles når utfallet registreres, og beholdningen er et
-                        øyeblikksbilde på sluttdatoen.
+                        registreringsdatoen, ferdigbehandlede behandlinger telles ved første avsluttende utfall, og
+                        beholdningen er et øyeblikksbilde på sluttdatoen.
                     </BodyShort>
                 </div>
                 <HGrid columns={{ xs: 1, sm: 3 }} gap={{ xs: '4', md: '6' }}>
@@ -779,8 +821,8 @@ const aldersintervalltekst: Record<Beholdningsaldersintervall, string> = {
 };
 
 const aldersmålingstekst: Record<Beholdningsaldersmåling, string> = {
-    BEHANDLINGENS_ALDER: 'Behandlingens totale alder',
-    TID_I_NÅVÆRENDE_STATUS: 'Tid i status ved periodens slutt',
+    BEHANDLINGENS_ALDER: 'Tid siden behandlingen ble mottatt',
+    TID_I_NÅVÆRENDE_STATUS: 'Tid siden behandlingen fikk nåværende status',
 };
 
 const Alderstabell = ({ periode, måling }: { periode: SakStatistikkPeriode; måling: Beholdningsaldersmåling }) => {
@@ -865,11 +907,12 @@ const Beholdningsalder = ({ perioder }: { perioder: SakStatistikkPeriode[] }) =>
                         Alder på beholdningen
                     </Heading>
                     <BodyShort>
-                        Behandlingens totale alder regnes fra mottatt tidspunkt til periodens slutt. Tid i status ved
-                        periodens slutt regnes fra siste statusovergang til den samme sluttdatoen. «Registrert» i over
-                        90 dager betyr derfor at ingen senere statusovergang er registrert, ikke nødvendigvis at ingen
-                        har arbeidet med behandlingen. Første tabell viser beholdningen ved slutten av siste delperiode.
-                        Periodene summeres ikke.
+                        Den første tabellen viser hvor lang tid det har gått siden behandlingen ble mottatt. Den andre
+                        viser hvor lenge behandlingen har hatt statusen som står i raden. En behandling kan derfor være
+                        over 90 dager gammel, men bare ha vært «Underkjent» i 31–60 dager. For «Registrert» er målingene
+                        vanligvis like fordi behandlingen ennå ikke har fått en ny status. Det betyr ikke nødvendigvis
+                        at ingen har arbeidet med behandlingen. Tabellen viser beholdningen ved slutten av siste
+                        delperiode. Periodene summeres ikke.
                     </BodyShort>
                 </div>
                 <Alert variant="info">
@@ -960,51 +1003,77 @@ const Beholdningsalder = ({ perioder }: { perioder: SakStatistikkPeriode[] }) =>
     );
 };
 
-const Omarbeidskort = ({ rad }: { rad: SakStatistikkOmarbeid }) => (
-    <VStack gap="3">
-        <div>
-            <Heading level="4" size="small">
-                {tekstFraKode(rad.sakYtelse)}
-            </Heading>
-            <BodyShort size="small">{rad.behandlingerMedUtfall} behandlinger med utfall</BodyShort>
-        </div>
-        <HGrid columns={{ xs: 2, lg: 4 }} gap="4">
-            <Oppsummeringsboks tittel="Uten underkjenning" verdi={rad.utenUnderkjenning.toLocaleString('nb-NO')} />
-            <Oppsummeringsboks tittel="Én underkjenning" verdi={rad.medEnUnderkjenning.toLocaleString('nb-NO')} />
-            <Oppsummeringsboks
-                tittel="Flere underkjenninger"
-                verdi={rad.medFlereUnderkjenninger.toLocaleString('nb-NO')}
-            />
-            <Oppsummeringsboks
-                tittel="Median tid etter underkjenning"
-                verdi={
-                    rad.medianTidEtterUnderkjenningMillis === null
-                        ? rad.medEnUnderkjenning + rad.medFlereUnderkjenninger > 0
-                            ? 'Kan ikke beregnes'
-                            : 'Ikke aktuelt'
-                        : formaterVarighet(rad.medianTidEtterUnderkjenningMillis / MILLIS_PER_DAY)
-                }
-            />
-        </HGrid>
-    </VStack>
-);
+type Omarbeidsoppsummering = Pick<
+    SakStatistikkOmarbeid,
+    'sakYtelse' | 'behandlingerMedUtfall' | 'utenUnderkjenning' | 'medEnUnderkjenning' | 'medFlereUnderkjenninger'
+>;
 
-const Oppsummeringsboks = ({ tittel, verdi }: { tittel: string; verdi: string }) => (
+const Omarbeidskort = ({
+    rad,
+    visUnderkjenningsandel,
+}: {
+    rad: Omarbeidsoppsummering;
+    visUnderkjenningsandel: boolean;
+}) => {
+    const underkjente = rad.medEnUnderkjenning + rad.medFlereUnderkjenninger;
+    const andel = rad.behandlingerMedUtfall === 0 ? null : (underkjente / rad.behandlingerMedUtfall) * 100;
+
+    return (
+        <VStack gap="3">
+            <div>
+                <Heading level="4" size="small">
+                    {tekstFraKode(rad.sakYtelse)}
+                </Heading>
+                <BodyShort size="small">{rad.behandlingerMedUtfall} ferdigbehandlede behandlinger</BodyShort>
+            </div>
+            <HGrid columns={{ xs: 1, sm: 2, lg: visUnderkjenningsandel ? 4 : 3 }} gap="4">
+                {visUnderkjenningsandel && (
+                    <Oppsummeringsboks
+                        tittel="Underkjenningsandel"
+                        verdi={andel === null ? 'Ingen data' : `${formaterProsent(andel)} %`}
+                        detaljer={`${underkjente.toLocaleString('nb-NO')} av ${rad.behandlingerMedUtfall.toLocaleString('nb-NO')} hadde minst én underkjenning.`}
+                    />
+                )}
+                <Oppsummeringsboks tittel="Uten underkjenning" verdi={rad.utenUnderkjenning.toLocaleString('nb-NO')} />
+                <Oppsummeringsboks tittel="Én underkjenning" verdi={rad.medEnUnderkjenning.toLocaleString('nb-NO')} />
+                <Oppsummeringsboks
+                    tittel="Flere underkjenninger"
+                    verdi={rad.medFlereUnderkjenninger.toLocaleString('nb-NO')}
+                />
+            </HGrid>
+        </VStack>
+    );
+};
+
+const Oppsummeringsboks = ({ tittel, verdi, detaljer }: { tittel: string; verdi: string; detaljer?: string }) => (
     <Box background="surface-default" borderColor="border-divider" borderWidth="1" borderRadius="medium" padding="5">
         <VStack gap="2">
             <Label>{tittel}</Label>
             <Heading level="5" size="medium">
                 {verdi}
             </Heading>
+            {detaljer && <BodyShort size="small">{detaljer}</BodyShort>}
         </VStack>
     </Box>
 );
 
-const Omarbeid = ({ perioder }: { perioder: SakStatistikkPeriode[] }) => {
+const Omarbeid = ({ perioder, kategori }: { perioder: SakStatistikkPeriode[]; kategori: SakStatistikkKategori }) => {
     const perioderMedData = perioder.filter((periode) => periode.omarbeid.length > 0);
-    const sistePeriode = perioder.at(-1);
-    if (!sistePeriode || perioderMedData.length === 0) return null;
-    const tidligerePerioderMedData = perioderMedData.filter((periode) => periode !== sistePeriode).reverse();
+    if (perioderMedData.length === 0) return null;
+    const summertePerYtelse = new Map<string, Omarbeidsoppsummering>();
+    perioderMedData.forEach((periode) => {
+        periode.omarbeid.forEach((rad) => {
+            const eksisterende = summertePerYtelse.get(rad.sakYtelse);
+            summertePerYtelse.set(rad.sakYtelse, {
+                sakYtelse: rad.sakYtelse,
+                behandlingerMedUtfall: (eksisterende?.behandlingerMedUtfall ?? 0) + rad.behandlingerMedUtfall,
+                utenUnderkjenning: (eksisterende?.utenUnderkjenning ?? 0) + rad.utenUnderkjenning,
+                medEnUnderkjenning: (eksisterende?.medEnUnderkjenning ?? 0) + rad.medEnUnderkjenning,
+                medFlereUnderkjenninger: (eksisterende?.medFlereUnderkjenninger ?? 0) + rad.medFlereUnderkjenninger,
+            });
+        });
+    });
+    const visUnderkjenningsandel = kategori === 'SØKNAD' || kategori === 'REVURDERING';
 
     return (
         <section aria-labelledby="omarbeid-tittel">
@@ -1015,25 +1084,22 @@ const Omarbeid = ({ perioder }: { perioder: SakStatistikkPeriode[] }) => {
                     </Heading>
                     <BodyShort>
                         Behandlinger som ble ferdige i perioden, fordelt etter om de ble underkjent null, én eller flere
-                        ganger. Medianen er samlet tid fra underkjenning til ny attestering per behandling.
+                        ganger. Oppsummeringen gjelder hele den valgte perioden.
                     </BodyShort>
                 </div>
-                <Heading level="4" size="small">
-                    {formaterPeriode(sistePeriode.fraOgMed, sistePeriode.tilOgMed)}
-                </Heading>
-                {sistePeriode.omarbeid.length === 0 ? (
-                    <Alert variant="info">Ingen behandlinger med utfall i denne perioden.</Alert>
-                ) : (
-                    sistePeriode.omarbeid.map((rad) => <Omarbeidskort key={rad.sakYtelse} rad={rad} />)
-                )}
-                {tidligerePerioderMedData.length > 0 && (
+                {[...summertePerYtelse.values()]
+                    .sort((a, b) => a.sakYtelse.localeCompare(b.sakYtelse, 'nb-NO'))
+                    .map((rad) => (
+                        <Omarbeidskort key={rad.sakYtelse} rad={rad} visUnderkjenningsandel={visUnderkjenningsandel} />
+                    ))}
+                {perioderMedData.length > 1 && (
                     <ExpansionCard aria-label="Omarbeid for tidligere perioder">
                         <ExpansionCard.Header>
                             <ExpansionCard.Title as="h4" size="small">
-                                Vis tidligere perioder
+                                Vis periodene hver for seg
                             </ExpansionCard.Title>
                             <ExpansionCard.Description>
-                                Medianene gjelder hver enkelt periode og summeres ikke.
+                                Perioder uten ferdigbehandlede behandlinger vises ikke.
                             </ExpansionCard.Description>
                         </ExpansionCard.Header>
                         <ExpansionCard.Content>
@@ -1047,13 +1113,10 @@ const Omarbeid = ({ perioder }: { perioder: SakStatistikkPeriode[] }) => {
                                             <Table.HeaderCell align="right">Uten underkjenning</Table.HeaderCell>
                                             <Table.HeaderCell align="right">Én</Table.HeaderCell>
                                             <Table.HeaderCell align="right">Flere</Table.HeaderCell>
-                                            <Table.HeaderCell align="right">
-                                                Median etter underkjenning
-                                            </Table.HeaderCell>
                                         </Table.Row>
                                     </Table.Header>
                                     <Table.Body>
-                                        {tidligerePerioderMedData.flatMap((periode) =>
+                                        {[...perioderMedData].reverse().flatMap((periode) =>
                                             periode.omarbeid.map((rad) => (
                                                 <Table.Row key={`${periode.fraOgMed}-${rad.sakYtelse}`}>
                                                     <Table.DataCell>
@@ -1071,16 +1134,6 @@ const Omarbeid = ({ perioder }: { perioder: SakStatistikkPeriode[] }) => {
                                                     </Table.DataCell>
                                                     <Table.DataCell align="right">
                                                         {rad.medFlereUnderkjenninger}
-                                                    </Table.DataCell>
-                                                    <Table.DataCell align="right">
-                                                        {rad.medianTidEtterUnderkjenningMillis === null
-                                                            ? rad.medEnUnderkjenning + rad.medFlereUnderkjenninger > 0
-                                                                ? 'Kan ikke beregnes'
-                                                                : 'Ikke aktuelt'
-                                                            : formaterVarighet(
-                                                                  rad.medianTidEtterUnderkjenningMillis /
-                                                                      MILLIS_PER_DAY,
-                                                              )}
                                                     </Table.DataCell>
                                                 </Table.Row>
                                             )),
@@ -1100,10 +1153,7 @@ const fristtekst = (kohort: SakStatistikkKohort, dager: 30 | 60 | 90): string =>
     const frist = kohort[`ferdigInnen${dager}Dager`];
     if (frist.grunnlag === 0) return 'Ikke nok oppfølgingstid';
     const prosent = (frist.ferdige / frist.grunnlag) * 100;
-    const prosenttekst = new Intl.NumberFormat('nb-NO', {
-        maximumFractionDigits: 1,
-        minimumFractionDigits: 1,
-    }).format(prosent);
+    const prosenttekst = formaterProsent(prosent);
     const manglerOppfølgingstid = kohort.antallStartet - frist.grunnlag;
     const dekning =
         manglerOppfølgingstid > 0
@@ -1222,7 +1272,8 @@ const Datagrunnlag = ({ data }: { data: SakStatistikkResponse }) => (
                 {data.metadata.behandlingerMedFlereUtfall > 0 && (
                     <Alert variant="info">
                         {data.metadata.behandlingerMedFlereUtfall.toLocaleString('nb-NO')} behandlinger har flere
-                        registrerte utfall. Antall statusoverganger er derfor ikke det samme som antall behandlinger.
+                        registrerte avsluttende hendelser. Utfallstallene bruker bare den første hendelsen per
+                        behandling.
                     </Alert>
                 )}
                 <div className={styles.tabellRamme}>
@@ -1361,7 +1412,7 @@ const stabletDiagram = (
                 ) : (
                     <Alert variant="info">Ingen data i den valgte perioden.</Alert>
                 )}
-                {detaljperioder.length > 1 && (
+                {detaljperioder.length > 1 && kolonner.length > 0 && (
                     <ExpansionCard
                         aria-label={`${
                             hovedvisning === 'SUMMER_PERIODEN' ? 'Delperioder' : 'Perioder'
@@ -1442,7 +1493,9 @@ const grupperPerPeriode = (
         return {
             fraOgMed: periode.fraOgMed,
             tilOgMed: periode.tilOgMed,
-            grupper: [...grupper].map(([navn, antall]) => ({ navn, antall })),
+            grupper: [...grupper]
+                .map(([navn, antall]) => ({ navn, antall }))
+                .sort((a, b) => a.navn.localeCompare(b.navn, 'nb-NO')),
         };
     });
 
@@ -1463,7 +1516,9 @@ const AntallDiagram = ({
             antall: rad.antall,
         })),
     );
-    const kolonner = [...new Set(data.flatMap((periode) => periode.grupper.map((gruppe) => gruppe.navn)))];
+    const kolonner = [...new Set(data.flatMap((periode) => periode.grupper.map((gruppe) => gruppe.navn)))].sort(
+        (a, b) => a.localeCompare(b, 'nb-NO'),
+    );
     return stabletDiagram(
         'antall-tittel',
         'Registrerte behandlinger',
@@ -1477,6 +1532,418 @@ const AntallDiagram = ({
     );
 };
 
+interface Fordelingsrad {
+    nøkkel: string;
+    kode: string;
+    paragrafer: SakStatistikkParagraf[];
+    antallBehandlinger: number;
+}
+
+interface Fordelingsgruppe {
+    nøkkel: string;
+    sakYtelse: string;
+    resultat: string | null;
+    totalt: number;
+    rader: Fordelingsrad[];
+}
+
+type Fordelingstype = 'AVSLAG' | 'OPPHØR' | 'KLAGEAVVISNING' | 'KLAGEHJEMMEL' | 'KLAGEOMGJØRING';
+
+interface Fordelingsoppsett {
+    type: Fordelingstype;
+    id: string;
+    tittel: string;
+    radoverskrift: string;
+    totaltekst: string;
+}
+
+const lovtekst: Record<SakStatistikkLov, string> = {
+    SU: 'SU-loven',
+    FVL: 'Forvaltningsloven',
+};
+
+const formaterParagrafer = (paragrafer: SakStatistikkParagraf[]): string =>
+    paragrafer.length === 0
+        ? '–'
+        : [...paragrafer]
+              .sort((a, b) => a.lov.localeCompare(b.lov) || a.paragraf - b.paragraf)
+              .map((paragraf) => `${lovtekst[paragraf.lov]} § ${paragraf.paragraf}`)
+              .join(', ');
+
+const leggTilDatakvalitetsrader = (
+    rader: Fordelingsrad[],
+    antallUtenVerdi: number,
+    antallMedUkjentVerdi: number,
+    verdi: 'begrunnelse' | 'hjemmel',
+): Fordelingsrad[] => [
+    ...rader,
+    ...(antallUtenVerdi > 0
+        ? [
+              {
+                  nøkkel: 'MANGLER',
+                  kode: `Mangler ${verdi}`,
+                  paragrafer: [],
+                  antallBehandlinger: antallUtenVerdi,
+              },
+          ]
+        : []),
+    ...(antallMedUkjentVerdi > 0
+        ? [
+              {
+                  nøkkel: 'UKJENT',
+                  kode: `Ukjent ${verdi}`,
+                  paragrafer: [],
+                  antallBehandlinger: antallMedUkjentVerdi,
+              },
+          ]
+        : []),
+];
+
+const hentFordelingsgrupper = (periode: SakStatistikkPeriode, type: Fordelingstype): Fordelingsgruppe[] => {
+    switch (type) {
+        case 'AVSLAG':
+            return periode.avslagsgrunner.map((fordeling) => ({
+                nøkkel: fordeling.sakYtelse,
+                sakYtelse: fordeling.sakYtelse,
+                resultat: null,
+                totalt: fordeling.antallAvslag,
+                rader: leggTilDatakvalitetsrader(
+                    fordeling.grunner.map((grunn) => ({
+                        nøkkel: grunn.kode,
+                        kode: grunn.kode,
+                        paragrafer: grunn.paragrafer,
+                        antallBehandlinger: grunn.antallBehandlinger,
+                    })),
+                    fordeling.antallUtenBegrunnelse,
+                    fordeling.antallMedUkjentBegrunnelse,
+                    'begrunnelse',
+                ),
+            }));
+        case 'OPPHØR':
+            return periode.opphørsgrunner.map((fordeling) => ({
+                nøkkel: fordeling.sakYtelse,
+                sakYtelse: fordeling.sakYtelse,
+                resultat: null,
+                totalt: fordeling.antallOpphør,
+                rader: leggTilDatakvalitetsrader(
+                    fordeling.grunner.map((grunn) => ({
+                        nøkkel: grunn.kode,
+                        kode: grunn.kode,
+                        paragrafer: grunn.paragrafer,
+                        antallBehandlinger: grunn.antallBehandlinger,
+                    })),
+                    fordeling.antallUtenBegrunnelse,
+                    fordeling.antallMedUkjentBegrunnelse,
+                    'begrunnelse',
+                ),
+            }));
+        case 'KLAGEAVVISNING':
+            return periode.klageavvisningsgrunner.map((fordeling) => ({
+                nøkkel: fordeling.sakYtelse,
+                sakYtelse: fordeling.sakYtelse,
+                resultat: null,
+                totalt: fordeling.antallAvvisteKlager,
+                rader: leggTilDatakvalitetsrader(
+                    fordeling.grunner.map((grunn) => ({
+                        nøkkel: grunn.kode,
+                        kode: grunn.kode,
+                        paragrafer: [],
+                        antallBehandlinger: grunn.antallBehandlinger,
+                    })),
+                    fordeling.antallUtenBegrunnelse,
+                    fordeling.antallMedUkjentBegrunnelse,
+                    'begrunnelse',
+                ),
+            }));
+        case 'KLAGEHJEMMEL':
+            return periode.klagehjemler.map((fordeling) => ({
+                nøkkel: `${fordeling.sakYtelse}\u0000${fordeling.resultat}`,
+                sakYtelse: fordeling.sakYtelse,
+                resultat: fordeling.resultat,
+                totalt: fordeling.antallKlager,
+                rader: leggTilDatakvalitetsrader(
+                    fordeling.hjemler.map((hjemmel) => ({
+                        nøkkel: hjemmel.kode,
+                        kode: hjemmel.kode,
+                        paragrafer: [{ lov: hjemmel.lov, paragraf: hjemmel.paragraf }],
+                        antallBehandlinger: hjemmel.antallBehandlinger,
+                    })),
+                    fordeling.antallUtenHjemmel,
+                    fordeling.antallMedUkjentHjemmel,
+                    'hjemmel',
+                ),
+            }));
+        case 'KLAGEOMGJØRING':
+            return periode.klageomgjøringsgrunner.map((fordeling) => ({
+                nøkkel: `${fordeling.sakYtelse}\u0000${fordeling.resultat}`,
+                sakYtelse: fordeling.sakYtelse,
+                resultat: fordeling.resultat,
+                totalt: fordeling.antallKlager,
+                rader: leggTilDatakvalitetsrader(
+                    fordeling.grunner.map((grunn) => ({
+                        nøkkel: grunn.kode,
+                        kode: grunn.kode,
+                        paragrafer: [],
+                        antallBehandlinger: grunn.antallBehandlinger,
+                    })),
+                    fordeling.antallUtenBegrunnelse,
+                    fordeling.antallMedUkjentBegrunnelse,
+                    'begrunnelse',
+                ),
+            }));
+    }
+};
+
+const summerFordelingsgrupper = (perioder: SakStatistikkPeriode[], type: Fordelingstype): Fordelingsgruppe[] => {
+    const grupper = new Map<string, Fordelingsgruppe>();
+    perioder.forEach((periode) => {
+        hentFordelingsgrupper(periode, type).forEach((gruppe) => {
+            const eksisterende = grupper.get(gruppe.nøkkel);
+            const rader = new Map(eksisterende?.rader.map((rad) => [rad.nøkkel, rad]) ?? []);
+            gruppe.rader.forEach((rad) => {
+                const eksisterendeRad = rader.get(rad.nøkkel);
+                rader.set(rad.nøkkel, {
+                    ...rad,
+                    antallBehandlinger: (eksisterendeRad?.antallBehandlinger ?? 0) + rad.antallBehandlinger,
+                });
+            });
+            grupper.set(gruppe.nøkkel, {
+                ...gruppe,
+                totalt: (eksisterende?.totalt ?? 0) + gruppe.totalt,
+                rader: [...rader.values()],
+            });
+        });
+    });
+    return [...grupper.values()].sort(
+        (a, b) =>
+            a.sakYtelse.localeCompare(b.sakYtelse, 'nb-NO') ||
+            (a.resultat ?? '').localeCompare(b.resultat ?? '', 'nb-NO'),
+    );
+};
+
+const erHelPeriode = (periode: SakStatistikkPeriode, oppløsning: Statistikkoppløsning): boolean => {
+    const fra = parseNonNullableIsoDateOnly(periode.fraOgMed);
+    const til = parseNonNullableIsoDateOnly(periode.tilOgMed);
+    if (oppløsning === 'UKE') {
+        const forventetTil = new Date(fra);
+        forventetTil.setDate(forventetTil.getDate() + 6);
+        return fra.getDay() === 1 && til.getDay() === 0 && toIsoDateOnlyString(forventetTil) === periode.tilOgMed;
+    }
+    if (oppløsning === 'MÅNED') {
+        const sisteDag = new Date(fra.getFullYear(), fra.getMonth() + 1, 0).getDate();
+        return (
+            fra.getDate() === 1 &&
+            til.getDate() === sisteDag &&
+            fra.getFullYear() === til.getFullYear() &&
+            fra.getMonth() === til.getMonth()
+        );
+    }
+    return fra.getMonth() === 0 && fra.getDate() === 1 && til.getMonth() === 11 && til.getDate() === 31;
+};
+
+const formaterFordelingsendring = (
+    radnøkkel: string,
+    gruppenøkkel: string,
+    forrige: SakStatistikkPeriode,
+    siste: SakStatistikkPeriode,
+    type: Fordelingstype,
+): string => {
+    const hentAntall = (periode: SakStatistikkPeriode): number =>
+        hentFordelingsgrupper(periode, type)
+            .find((gruppe) => gruppe.nøkkel === gruppenøkkel)
+            ?.rader.find((rad) => rad.nøkkel === radnøkkel)?.antallBehandlinger ?? 0;
+    const før = hentAntall(forrige);
+    const nå = hentAntall(siste);
+    const differanse = nå - før;
+    if (før === 0) return nå === 0 ? 'Ingen endring' : `Fra 0 til ${nå.toLocaleString('nb-NO')}`;
+    const prosent = (differanse / før) * 100;
+    return `${differanse >= 0 ? '+' : ''}${differanse.toLocaleString('nb-NO')} (${prosent >= 0 ? '+' : ''}${formaterProsent(prosent)} %)`;
+};
+
+const Fordelingsseksjon = ({
+    perioder,
+    oppløsning,
+    oppsett,
+}: {
+    perioder: SakStatistikkPeriode[];
+    oppløsning: Statistikkoppløsning;
+    oppsett: Fordelingsoppsett;
+}) => {
+    const grupper = summerFordelingsgrupper(perioder, oppsett.type);
+    if (grupper.length === 0) return null;
+
+    const helePerioder = perioder.filter((periode) => erHelPeriode(periode, oppløsning));
+    const sisteHelePeriode = helePerioder.at(-1);
+    const forrigeHelePeriode = helePerioder.at(-2);
+    const sammenligningstekst =
+        sisteHelePeriode && forrigeHelePeriode
+            ? `${formaterDelperiode(sisteHelePeriode.fraOgMed, sisteHelePeriode.tilOgMed, oppløsning)} mot ${formaterDelperiode(forrigeHelePeriode.fraOgMed, forrigeHelePeriode.tilOgMed, oppløsning)}`
+            : null;
+
+    return (
+        <section aria-labelledby={oppsett.id}>
+            <VStack gap="4">
+                <div>
+                    <Heading id={oppsett.id} level="4" size="small">
+                        {oppsett.tittel}
+                    </Heading>
+                    <BodyShort>
+                        Én behandling kan ha flere {oppsett.radoverskrift.toLocaleLowerCase('nb-NO')}. Radene kan derfor
+                        ikke summeres til hovedtallet.
+                    </BodyShort>
+                </div>
+                {grupper.map((gruppe) => {
+                    const visParagrafkolonne =
+                        oppsett.type !== 'KLAGEHJEMMEL' && gruppe.rader.some((rad) => rad.paragrafer.length > 0);
+                    return (
+                        <VStack key={gruppe.nøkkel} gap="3">
+                            <div>
+                                <Heading level="5" size="xsmall">
+                                    {tekstFraKode(gruppe.sakYtelse)}
+                                    {gruppe.resultat ? ` / ${tekstFraKode(gruppe.resultat)}` : ''}
+                                </Heading>
+                                <BodyShort size="small">
+                                    {oppsett.totaltekst}: {gruppe.totalt.toLocaleString('nb-NO')}
+                                </BodyShort>
+                            </div>
+                            <div className={styles.tabellRamme}>
+                                <Table size="small">
+                                    <Table.Header>
+                                        <Table.Row>
+                                            <Table.HeaderCell>{oppsett.radoverskrift}</Table.HeaderCell>
+                                            {visParagrafkolonne && <Table.HeaderCell>Paragraf</Table.HeaderCell>}
+                                            <Table.HeaderCell align="right">
+                                                Behandlinger i valgt periode
+                                            </Table.HeaderCell>
+                                            <Table.HeaderCell align="right">Andel av hovedtallet</Table.HeaderCell>
+                                            <Table.HeaderCell align="right">
+                                                {sammenligningstekst
+                                                    ? `Endring: ${sammenligningstekst}`
+                                                    : 'Endring mellom hele perioder'}
+                                            </Table.HeaderCell>
+                                        </Table.Row>
+                                    </Table.Header>
+                                    <Table.Body>
+                                        {[...gruppe.rader]
+                                            .sort(
+                                                (a, b) =>
+                                                    b.antallBehandlinger - a.antallBehandlinger ||
+                                                    a.kode.localeCompare(b.kode, 'nb-NO'),
+                                            )
+                                            .map((rad) => (
+                                                <Table.Row key={rad.nøkkel}>
+                                                    <Table.DataCell>
+                                                        {rad.nøkkel === 'MANGLER' || rad.nøkkel === 'UKJENT'
+                                                            ? rad.kode
+                                                            : oppsett.type === 'KLAGEHJEMMEL'
+                                                              ? formaterParagrafer(rad.paragrafer)
+                                                              : tekstFraKode(rad.kode)}
+                                                    </Table.DataCell>
+                                                    {visParagrafkolonne && (
+                                                        <Table.DataCell>
+                                                            {formaterParagrafer(rad.paragrafer)}
+                                                        </Table.DataCell>
+                                                    )}
+                                                    <Table.DataCell align="right">
+                                                        {rad.antallBehandlinger.toLocaleString('nb-NO')}
+                                                    </Table.DataCell>
+                                                    <Table.DataCell align="right">
+                                                        {gruppe.totalt === 0
+                                                            ? '–'
+                                                            : `${formaterProsent(
+                                                                  (rad.antallBehandlinger / gruppe.totalt) * 100,
+                                                              )} %`}
+                                                    </Table.DataCell>
+                                                    <Table.DataCell align="right">
+                                                        {sisteHelePeriode && forrigeHelePeriode
+                                                            ? formaterFordelingsendring(
+                                                                  rad.nøkkel,
+                                                                  gruppe.nøkkel,
+                                                                  forrigeHelePeriode,
+                                                                  sisteHelePeriode,
+                                                                  oppsett.type,
+                                                              )
+                                                            : 'Ikke nok hele perioder'}
+                                                    </Table.DataCell>
+                                                </Table.Row>
+                                            ))}
+                                    </Table.Body>
+                                </Table>
+                            </div>
+                        </VStack>
+                    );
+                })}
+            </VStack>
+        </section>
+    );
+};
+
+const Utfallsfordelinger = ({
+    perioder,
+    kategori,
+    oppløsning,
+}: {
+    perioder: SakStatistikkPeriode[];
+    kategori: SakStatistikkKategori;
+    oppløsning: Statistikkoppløsning;
+}) => {
+    const oppsett: Fordelingsoppsett[] =
+        kategori === 'SØKNAD'
+            ? [
+                  {
+                      type: 'AVSLAG',
+                      id: 'avslagsgrunner-tittel',
+                      tittel: 'Avslagsgrunner for søknader',
+                      radoverskrift: 'Avslagsgrunn',
+                      totaltekst: 'Søknadsavslag',
+                  },
+              ]
+            : kategori === 'REVURDERING'
+              ? [
+                    {
+                        type: 'OPPHØR',
+                        id: 'opphørsgrunner-tittel',
+                        tittel: 'Opphørsgrunner for revurderinger',
+                        radoverskrift: 'Opphørsgrunn',
+                        totaltekst: 'Opphør',
+                    },
+                ]
+              : kategori === 'KLAGE'
+                ? [
+                      {
+                          type: 'KLAGEAVVISNING',
+                          id: 'klageavvisningsgrunner-tittel',
+                          tittel: 'Grunner til avvist klage',
+                          radoverskrift: 'Avvisningsgrunn',
+                          totaltekst: 'Avviste klager',
+                      },
+                      {
+                          type: 'KLAGEHJEMMEL',
+                          id: 'klagehjemler-tittel',
+                          tittel: 'Hjemler brukt i klagebehandlingen',
+                          radoverskrift: 'Hjemmel',
+                          totaltekst: 'Klager',
+                      },
+                      {
+                          type: 'KLAGEOMGJØRING',
+                          id: 'klageomgjøringsgrunner-tittel',
+                          tittel: 'Grunner til omgjøring',
+                          radoverskrift: 'Omgjøringsgrunn',
+                          totaltekst: 'Klager',
+                      },
+                  ]
+                : [];
+
+    if (oppsett.length === 0) return null;
+    return (
+        <VStack gap="6">
+            {oppsett.map((element) => (
+                <Fordelingsseksjon key={element.type} perioder={perioder} oppløsning={oppløsning} oppsett={element} />
+            ))}
+        </VStack>
+    );
+};
+
 const BeholdningDiagram = ({
     perioder,
     oppløsning,
@@ -1487,7 +1954,9 @@ const BeholdningDiagram = ({
     const data = grupperPerPeriode(perioder, (periode) =>
         periode.beholdning.map((rad) => ({ navn: rad.status, antall: rad.antall })),
     );
-    const kolonner = [...new Set(data.flatMap((periode) => periode.grupper.map((gruppe) => gruppe.navn)))];
+    const kolonner = [...new Set(data.flatMap((periode) => periode.grupper.map((gruppe) => gruppe.navn)))].sort(
+        (a, b) => a.localeCompare(b, 'nb-NO'),
+    );
     return stabletDiagram(
         'beholdning-tittel',
         'Beholdning',
@@ -1512,11 +1981,13 @@ const UtfallDiagram = ({
             antall: rad.antall,
         })),
     );
-    const kolonner = [...new Set(data.flatMap((periode) => periode.grupper.map((gruppe) => gruppe.navn)))];
+    const kolonner = [...new Set(data.flatMap((periode) => periode.grupper.map((gruppe) => gruppe.navn)))].sort(
+        (a, b) => a.localeCompare(b, 'nb-NO'),
+    );
     return stabletDiagram(
         'utfall-tittel',
         'Utfall i perioden',
-        'Statusoverganger til iverksatt, avsluttet, avbrutt eller oversendt og resultatet som ble registrert. Behandlingsårsaken sier hvorfor behandlingen ble opprettet, mens resultatet sier hva den endte med. Utfallet kan gjelde en behandling som startet i en tidligere periode.',
+        'Behandlinger som fikk sin første avsluttende status i perioden, og resultatet som ble registrert på den samme hendelsen. Hver behandling telles én gang. Utfallet kan gjelde en behandling som startet i en tidligere periode.',
         data,
         kolonner,
         'SUMMER_PERIODEN',

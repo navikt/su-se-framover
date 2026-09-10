@@ -47,10 +47,10 @@ skiller ikke mellom manglende og irrelevant årsak. Frontend skjuler derfor
 
 ### Utfall og beholdning
 
-Utfall teller hendelser som går til `IVERKSATT`, `AVSLUTTET`, `AVBRUTT` eller
-`OVERSENDT`. Tallene er ikke nødvendigvis unike behandlinger. Like statuser som
-følger direkte etter hverandre, slås sammen, men samme behandling kan få flere
-utfall over tid.
+Utfall teller hver behandling én gang, i perioden der den første avsluttende
+hendelsen går til `IVERKSATT`, `AVSLUTTET`, `AVBRUTT` eller `OVERSENDT`.
+Begrunnelsen hentes fra den samme hendelsen. Senere endringer påvirker ikke
+historiske utfall.
 
 Hovedvisningen summerer utfallshendelser over hele den valgte perioden.
 Detaljvisningen viser hver delperiode for seg.
@@ -89,9 +89,18 @@ status ved måletidspunktet.
 ### Omarbeid og kohorter
 
 Omarbeid omfatter behandlinger som fikk en avsluttende status i perioden. De
-fordeles etter om de har ingen, én eller flere underkjenninger. Medianen er
-samlet tid fra hver underkjenning til ny attestering per behandling. Den gjelder
-én periode og én ytelse og skal ikke slås sammen mellom perioder eller ytelser.
+fordeles etter om de har ingen, én eller flere underkjenninger.
+Underkjenningsandelen er antall ferdigbehandlede søknadsbehandlinger eller
+revurderinger med minst én underkjenning, delt på alle ferdigbehandlede
+behandlinger i den samme gruppen. Åpne behandlinger inngår ikke.
+Hovedvisningen summerer tellerne for hele den valgte perioden. Delperiodene
+vises separat.
+
+Backend må legge til `behandlingerMedTidsmåling` før frontend kan bruke
+omarbeidsmedianen etter den avklarte regelen. Frontend skal skjule medianen ved
+færre enn fem målinger, merke 5–9 som «få behandlinger» og vise minst ti uten
+særskilt merknad. Frontend skal ikke beregne en samlet median fra
+delperiodemedianer.
 
 Kohortene grupperer behandlinger etter perioden som inneholder `mottattTid`.
 Behandlingen følges til første avsluttende status: `IVERKSATT`, `AVSLUTTET` eller
@@ -118,9 +127,9 @@ også når en ytelse ikke har mottak i den siste delperioden.
 ### Metadata
 
 Sakresponsen inneholder aggregatversjon, høyeste sekvens-ID, tidspunktet for
-siste hendelse, antall behandlinger og antall behandlinger med flere utfall.
-Når behandlinger har flere utfall, er antall statusoverganger ikke det samme som
-antall behandlinger.
+siste hendelse, antall behandlinger og antall behandlinger med flere
+avsluttende hendelser. Utfallstallene bruker bare den første avsluttende
+hendelsen per behandling.
 
 ### Behandlingstid
 
@@ -138,6 +147,42 @@ Fasemålingene er:
 Klage får ikke fasemålingene fordi sakstatistikken ikke lager egne
 `TIL_ATTESTERING`- eller `UNDERKJENT`-hendelser for klage. En behandling kan
 bidra med flere fasemålinger etter gjentatte underkjenninger.
+
+Fasemålingen etter underkjenning gjelder én overgang. Omarbeidsmedianen gjelder
+samlet omarbeidstid per ferdig behandling. Frontend bruker ulike navn på
+målingene fordi antall og verdi kan avvike.
+
+### Utfall, begrunnelser og hjemler
+
+`utfall` teller hver behandling én gang, i perioden der behandlingen først
+får `IVERKSATT`, `AVSLUTTET`, `AVBRUTT` eller `OVERSENDT`. For klage betyr
+`OVERSENDT` at behandlingen er ferdig hos vedtaksinstansen. Senere avsluttende
+hendelser kan ikke brukes som avgang i flytbalansen.
+
+Backend skal returnere beholdning ved start, registrerte behandlinger, unike
+ferdigbehandlede behandlinger, beholdning ved slutt og avvik per periode,
+kategori og ytelse. Frontend skal ikke utlede denne flytbalansen fra dagens
+utfallshendelser.
+
+For søknad kan frontend vise «andel innvilget blant søknadsvedtak» når
+utfallene er unike behandlinger. Andelen er `INNVILGET / (INNVILGET + AVSLAG)`.
+`AVVIST`, `AVBRUTT`, `BORTFALT`, `TRUKKET` og `FEILREGISTRERT` inngår ikke.
+Andre behandlingskategorier trenger egne mål.
+
+Fristene 30, 60 og 90 dager beholdes. Historiske resultatkoder skal bare
+normaliseres når de er dokumenterte synonymer, som `AVSLÅTT` til `AVSLAG`.
+`AVSLAG`, `AVVIST`, `TRUKKET`, `BORTFALT`, `FEILREGISTRERT` og `AVBRUTT`
+forblir forskjellige resultater.
+
+Hver periode inneholder egne fordelinger for søknadsavslag,
+revurderingsopphør, avviste klager, klagehjemler og klageomgjøring. Fordelingene
+har eksplisitte nevnere og egne tall for manglende og ukjente verdier.
+Begrunnelser og hjemler kan overlappe. Frontend summerer derfor ikke radene og
+bruker ikke stablede diagrammer.
+
+Frontend viser totalsum og andel for hele den valgte perioden. Endring beregnes
+mellom de to siste hele delperiodene. En ufullstendig måned, uke eller årsperiode
+sammenlignes ikke prosentvis med en full periode.
 
 Frontend viser utviklingen i gjennomsnittlig total behandlingstid. Målingene kan
 gjelde ulike grupper behandlinger og skal ikke legges sammen. Varigheter under

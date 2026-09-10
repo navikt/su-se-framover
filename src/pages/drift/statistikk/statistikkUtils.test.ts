@@ -29,10 +29,10 @@ const data: SakStatistikkResponse = {
             tilOgMed: '2026-01-31',
             antall: [],
             utfall: [],
-            beholdning: [{ kategori: 'SØKNAD', sakYtelse: 'UFØRE', status: 'REGISTRERT', antall: 4 }],
+            beholdning: [{ behandlingskategori: 'SØKNAD', sakYtelse: 'UFØRE', status: 'REGISTRERT', antall: 4 }],
             behandlingstid: [
                 {
-                    kategori: 'SØKNAD',
+                    behandlingskategori: 'SØKNAD',
                     sakYtelse: 'UFØRE',
                     måling: 'TOTAL_BEHANDLINGSTID',
                     antall: 2,
@@ -41,7 +41,7 @@ const data: SakStatistikkResponse = {
                     nittiendePersentilMillis: MILLIS_PER_DAY * 5,
                 },
                 {
-                    kategori: 'SØKNAD',
+                    behandlingskategori: 'SØKNAD',
                     sakYtelse: 'ALDER',
                     måling: 'TOTAL_BEHANDLINGSTID',
                     antall: 1,
@@ -52,16 +52,26 @@ const data: SakStatistikkResponse = {
             ],
             beholdningsalder: [],
             omarbeid: [],
+            avslagsgrunner: [],
+            opphørsgrunner: [],
+            klageavvisningsgrunner: [],
+            klagehjemler: [],
+            klageomgjøringsgrunner: [],
         },
         {
             fraOgMed: '2026-02-01',
             tilOgMed: '2026-02-28',
             antall: [],
             utfall: [],
-            beholdning: [{ kategori: 'SØKNAD', sakYtelse: 'UFØRE', status: 'REGISTRERT', antall: 7 }],
+            beholdning: [{ behandlingskategori: 'SØKNAD', sakYtelse: 'UFØRE', status: 'REGISTRERT', antall: 7 }],
             behandlingstid: [],
             beholdningsalder: [],
             omarbeid: [],
+            avslagsgrunner: [],
+            opphørsgrunner: [],
+            klageavvisningsgrunner: [],
+            klagehjemler: [],
+            klageomgjøringsgrunner: [],
         },
     ],
 };
@@ -116,6 +126,68 @@ describe('statistikkUtils', () => {
         const perioder = filtrerPåKategoriOgYtelse(data, 'SØKNAD', 'UFØRE');
 
         expect(perioder.map((periode) => periode.beholdning[0].antall)).toEqual([4, 7]);
+    });
+
+    it('filtrerer utfallsfordelinger på behandlingskategori og ytelse', () => {
+        const dataMedFordelinger: SakStatistikkResponse = {
+            ...data,
+            perioder: [
+                {
+                    ...data.perioder[0],
+                    avslagsgrunner: [
+                        {
+                            sakYtelse: 'UFØRE',
+                            antallAvslag: 2,
+                            antallUtenBegrunnelse: 0,
+                            antallMedUkjentBegrunnelse: 0,
+                            grunner: [
+                                {
+                                    kode: 'FORMUE',
+                                    paragrafer: [{ lov: 'SU', paragraf: 8 }],
+                                    antallBehandlinger: 2,
+                                },
+                            ],
+                        },
+                        {
+                            sakYtelse: 'ALDER',
+                            antallAvslag: 1,
+                            antallUtenBegrunnelse: 0,
+                            antallMedUkjentBegrunnelse: 0,
+                            grunner: [],
+                        },
+                    ],
+                    opphørsgrunner: [
+                        {
+                            sakYtelse: 'UFØRE',
+                            antallOpphør: 1,
+                            antallUtenBegrunnelse: 0,
+                            antallMedUkjentBegrunnelse: 0,
+                            grunner: [],
+                        },
+                    ],
+                },
+                data.perioder[1],
+            ],
+        };
+
+        const [periode] = filtrerPåKategoriOgYtelse(dataMedFordelinger, 'SØKNAD', 'UFØRE');
+
+        expect(periode.avslagsgrunner).toEqual([
+            {
+                sakYtelse: 'UFØRE',
+                antallAvslag: 2,
+                antallUtenBegrunnelse: 0,
+                antallMedUkjentBegrunnelse: 0,
+                grunner: [
+                    {
+                        kode: 'FORMUE',
+                        paragrafer: [{ lov: 'SU', paragraf: 8 }],
+                        antallBehandlinger: 2,
+                    },
+                ],
+            },
+        ]);
+        expect(periode.opphørsgrunner).toEqual([]);
     });
 
     it('skiller manglende stønadsdata fra en tilgjengelig måned med null saker', () => {
@@ -196,7 +268,7 @@ describe('statistikkUtils', () => {
 
     it('summerer kohorttellere og grunnlag for hele perioden', () => {
         const felles = {
-            kategori: 'SØKNAD' as const,
+            behandlingskategori: 'SØKNAD' as const,
             sakYtelse: 'UFØRE',
         };
         const [summert] = summerKohorter([

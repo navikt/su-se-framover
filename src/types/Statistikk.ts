@@ -38,17 +38,100 @@ export interface SakStatistikkPeriode {
     behandlingstid: SakStatistikkBehandlingstid[];
     beholdningsalder: SakStatistikkBeholdningsalder[];
     omarbeid: SakStatistikkOmarbeid[];
+    avslagsgrunner: SakStatistikkAvslagsfordeling[];
+    opphørsgrunner: SakStatistikkOpphørsfordeling[];
+    klageavvisningsgrunner: SakStatistikkKlageavvisningsfordeling[];
+    klagehjemler: SakStatistikkKlagehjemmelfordeling[];
+    klageomgjøringsgrunner: SakStatistikkKlageomgjøringsfordeling[];
+}
+
+export type SakStatistikkLov = 'SU' | 'FVL';
+
+export interface SakStatistikkParagraf {
+    lov: SakStatistikkLov;
+    paragraf: number;
+}
+
+export interface SakStatistikkAvslagsgrunn {
+    kode: string;
+    paragrafer: SakStatistikkParagraf[];
+    antallBehandlinger: number;
+}
+
+export interface SakStatistikkAvslagsfordeling {
+    sakYtelse: string;
+    antallAvslag: number;
+    antallUtenBegrunnelse: number;
+    antallMedUkjentBegrunnelse: number;
+    grunner: SakStatistikkAvslagsgrunn[];
+}
+
+export interface SakStatistikkOpphørsgrunn {
+    kode: string;
+    paragrafer: SakStatistikkParagraf[];
+    antallBehandlinger: number;
+}
+
+export interface SakStatistikkOpphørsfordeling {
+    sakYtelse: string;
+    antallOpphør: number;
+    antallUtenBegrunnelse: number;
+    antallMedUkjentBegrunnelse: number;
+    grunner: SakStatistikkOpphørsgrunn[];
+}
+
+export interface SakStatistikkKlageavvisningsgrunn {
+    kode: string;
+    antallBehandlinger: number;
+}
+
+export interface SakStatistikkKlageavvisningsfordeling {
+    sakYtelse: string;
+    antallAvvisteKlager: number;
+    antallUtenBegrunnelse: number;
+    antallMedUkjentBegrunnelse: number;
+    grunner: SakStatistikkKlageavvisningsgrunn[];
+}
+
+export interface SakStatistikkKlagehjemmel {
+    kode: string;
+    lov: SakStatistikkLov;
+    paragraf: number;
+    antallBehandlinger: number;
+}
+
+export interface SakStatistikkKlagehjemmelfordeling {
+    sakYtelse: string;
+    resultat: 'OPPRETTHOLDT' | 'DELVIS_OMGJØRING';
+    antallKlager: number;
+    antallUtenHjemmel: number;
+    antallMedUkjentHjemmel: number;
+    hjemler: SakStatistikkKlagehjemmel[];
+}
+
+export interface SakStatistikkKlageomgjøringsgrunn {
+    kode: string;
+    antallBehandlinger: number;
+}
+
+export interface SakStatistikkKlageomgjøringsfordeling {
+    sakYtelse: string;
+    resultat: 'OMGJORT' | 'DELVIS_OMGJØRING';
+    antallKlager: number;
+    antallUtenBegrunnelse: number;
+    antallMedUkjentBegrunnelse: number;
+    grunner: SakStatistikkKlageomgjøringsgrunn[];
 }
 
 export interface SakStatistikkAntall {
-    kategori: SakStatistikkKategori;
+    behandlingskategori: SakStatistikkKategori;
     sakYtelse: string;
     behandlingAarsak: string | null;
     antall: number;
 }
 
 export interface SakStatistikkUtfall {
-    kategori: SakStatistikkKategori;
+    behandlingskategori: SakStatistikkKategori;
     sakYtelse: string;
     status: string;
     resultat: string | null;
@@ -56,14 +139,14 @@ export interface SakStatistikkUtfall {
 }
 
 export interface SakStatistikkStatus {
-    kategori: SakStatistikkKategori;
+    behandlingskategori: SakStatistikkKategori;
     sakYtelse: string;
     status: string;
     antall: number;
 }
 
 export interface SakStatistikkBehandlingstid {
-    kategori: SakStatistikkKategori;
+    behandlingskategori: SakStatistikkKategori;
     sakYtelse: string;
     måling: Behandlingstidsmåling;
     antall: number;
@@ -73,7 +156,7 @@ export interface SakStatistikkBehandlingstid {
 }
 
 export interface SakStatistikkBeholdningsalder {
-    kategori: SakStatistikkKategori;
+    behandlingskategori: SakStatistikkKategori;
     sakYtelse: string;
     status: string;
     måling: Beholdningsaldersmåling;
@@ -82,7 +165,7 @@ export interface SakStatistikkBeholdningsalder {
 }
 
 export interface SakStatistikkOmarbeid {
-    kategori: SakStatistikkKategori;
+    behandlingskategori: SakStatistikkKategori;
     sakYtelse: string;
     behandlingerMedUtfall: number;
     utenUnderkjenning: number;
@@ -99,7 +182,7 @@ export interface SakStatistikkKohortfrist {
 export interface SakStatistikkKohort {
     fraOgMed: string;
     tilOgMed: string;
-    kategori: SakStatistikkKategori;
+    behandlingskategori: SakStatistikkKategori;
     sakYtelse: string;
     antallStartet: number;
     ferdigInnen30Dager: SakStatistikkKohortfrist;

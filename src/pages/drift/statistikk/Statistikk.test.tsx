@@ -19,7 +19,7 @@ const data: SakStatistikkResponse = {
         {
             fraOgMed: '2026-01-01',
             tilOgMed: '2026-01-31',
-            kategori: 'SØKNAD',
+            behandlingskategori: 'SØKNAD',
             sakYtelse: 'UFØRE',
             antallStartet: 3,
             ferdigInnen30Dager: { grunnlag: 3, ferdige: 2 },
@@ -34,7 +34,7 @@ const data: SakStatistikkResponse = {
             tilOgMed: '2026-01-31',
             antall: [
                 {
-                    kategori: 'SØKNAD',
+                    behandlingskategori: 'SØKNAD',
                     sakYtelse: 'UFØRE',
                     behandlingAarsak: null,
                     antall: 3,
@@ -44,7 +44,7 @@ const data: SakStatistikkResponse = {
             beholdning: [],
             behandlingstid: [
                 {
-                    kategori: 'SØKNAD',
+                    behandlingskategori: 'SØKNAD',
                     sakYtelse: 'UFØRE',
                     måling: 'TOTAL_BEHANDLINGSTID',
                     antall: 3,
@@ -55,7 +55,7 @@ const data: SakStatistikkResponse = {
             ],
             beholdningsalder: [
                 {
-                    kategori: 'SØKNAD',
+                    behandlingskategori: 'SØKNAD',
                     sakYtelse: 'UFØRE',
                     status: 'REGISTRERT',
                     måling: 'BEHANDLINGENS_ALDER',
@@ -65,7 +65,7 @@ const data: SakStatistikkResponse = {
             ],
             omarbeid: [
                 {
-                    kategori: 'SØKNAD',
+                    behandlingskategori: 'SØKNAD',
                     sakYtelse: 'UFØRE',
                     behandlingerMedUtfall: 3,
                     utenUnderkjenning: 2,
@@ -74,6 +74,25 @@ const data: SakStatistikkResponse = {
                     medianTidEtterUnderkjenningMillis: 86_400_000,
                 },
             ],
+            avslagsgrunner: [
+                {
+                    sakYtelse: 'UFØRE',
+                    antallAvslag: 2,
+                    antallUtenBegrunnelse: 0,
+                    antallMedUkjentBegrunnelse: 0,
+                    grunner: [
+                        {
+                            kode: 'FORMUE',
+                            paragrafer: [{ lov: 'SU', paragraf: 8 }],
+                            antallBehandlinger: 2,
+                        },
+                    ],
+                },
+            ],
+            opphørsgrunner: [],
+            klageavvisningsgrunner: [],
+            klagehjemler: [],
+            klageomgjøringsgrunner: [],
         },
     ],
 };
@@ -91,7 +110,22 @@ describe('SakstatistikkPanel', () => {
     it('viser tomtilstand når periodene ikke har data', () => {
         const markup = renderToStaticMarkup(
             <SakstatistikkInnhold
-                data={{ ...data, perioder: [{ ...data.perioder[0], antall: [], behandlingstid: [] }] }}
+                data={{
+                    ...data,
+                    kohorter: [],
+                    perioder: [
+                        {
+                            ...data.perioder[0],
+                            antall: [],
+                            utfall: [],
+                            beholdning: [],
+                            behandlingstid: [],
+                            beholdningsalder: [],
+                            omarbeid: [],
+                            avslagsgrunner: [],
+                        },
+                    ],
+                }}
                 kategori="SØKNAD"
                 ytelse={null}
             />,
@@ -101,16 +135,44 @@ describe('SakstatistikkPanel', () => {
         expect(markup).not.toContain('<svg');
     });
 
+    it('lager ikke periodetabell for en seksjon uten data', () => {
+        const markup = renderToStaticMarkup(
+            <SakstatistikkInnhold
+                data={{
+                    ...data,
+                    perioder: [
+                        data.perioder[0],
+                        {
+                            ...data.perioder[0],
+                            fraOgMed: '2026-02-01',
+                            tilOgMed: '2026-02-28',
+                        },
+                    ],
+                }}
+                kategori="SØKNAD"
+                ytelse={null}
+            />,
+        );
+
+        expect(markup).toContain('Ingen data i den valgte perioden');
+        expect(markup).not.toContain('Perioder for beholdning');
+    });
+
     it('viser statistikkdata i tilgjengelige tabeller', () => {
         const markup = renderToStaticMarkup(<SakstatistikkInnhold data={data} kategori="SØKNAD" ytelse="UFØRE" />);
 
         expect(markup).toContain('<table');
         expect(markup).toContain('Gjennomsnittlig behandlingstid');
+        expect(markup).toContain('Siste registrerte hendelse i datagrunnlaget');
         expect(markup).toContain('Alder på beholdningen');
         expect(markup).toContain('Hver periode er et historisk øyeblikksbilde');
         expect(markup).toContain('Omarbeid etter underkjenning');
+        expect(markup).toContain('Underkjenningsandel');
         expect(markup).toContain('Behandlinger fulgt fra mottak');
         expect(markup).toContain('Fortsatt åpne blant behandlingene som ble mottatt i perioden');
+        expect(markup).toContain('Avslagsgrunner for søknader');
+        expect(markup).toContain('Formuen er for høy');
+        expect(markup).toContain('SU-loven § 8');
         expect(markup).toContain('Om datagrunnlaget');
     });
 });

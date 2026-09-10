@@ -93,7 +93,7 @@ export function lagBehandlingstidSerier(
                   ...new Set(
                       perioder.flatMap((periode) =>
                           periode.behandlingstid
-                              .filter((rad) => rad.kategori === kategori && rad.måling === måling)
+                              .filter((rad) => rad.behandlingskategori === kategori && rad.måling === måling)
                               .map((rad) => rad.sakYtelse),
                       ),
                   ),
@@ -105,7 +105,9 @@ export function lagBehandlingstidSerier(
         punkter: perioder.map((periode) => {
             const rad = periode.behandlingstid.find(
                 (målingRad) =>
-                    målingRad.kategori === kategori && målingRad.måling === måling && målingRad.sakYtelse === ytelse,
+                    målingRad.behandlingskategori === kategori &&
+                    målingRad.måling === måling &&
+                    målingRad.sakYtelse === ytelse,
             );
             return {
                 periode: periode.fraOgMed,
@@ -127,23 +129,43 @@ export const filtrerPåKategoriOgYtelse = (
     data.perioder.map((periode) => ({
         ...periode,
         antall: periode.antall.filter(
-            (rad) => rad.kategori === kategori && (ytelse === null || rad.sakYtelse === ytelse),
+            (rad) => rad.behandlingskategori === kategori && (ytelse === null || rad.sakYtelse === ytelse),
         ),
         utfall: periode.utfall.filter(
-            (rad) => rad.kategori === kategori && (ytelse === null || rad.sakYtelse === ytelse),
+            (rad) => rad.behandlingskategori === kategori && (ytelse === null || rad.sakYtelse === ytelse),
         ),
         beholdning: periode.beholdning.filter(
-            (rad) => rad.kategori === kategori && (ytelse === null || rad.sakYtelse === ytelse),
+            (rad) => rad.behandlingskategori === kategori && (ytelse === null || rad.sakYtelse === ytelse),
         ),
         behandlingstid: periode.behandlingstid.filter(
-            (rad) => rad.kategori === kategori && (ytelse === null || rad.sakYtelse === ytelse),
+            (rad) => rad.behandlingskategori === kategori && (ytelse === null || rad.sakYtelse === ytelse),
         ),
         beholdningsalder: periode.beholdningsalder.filter(
-            (rad) => rad.kategori === kategori && (ytelse === null || rad.sakYtelse === ytelse),
+            (rad) => rad.behandlingskategori === kategori && (ytelse === null || rad.sakYtelse === ytelse),
         ),
         omarbeid: periode.omarbeid.filter(
-            (rad) => rad.kategori === kategori && (ytelse === null || rad.sakYtelse === ytelse),
+            (rad) => rad.behandlingskategori === kategori && (ytelse === null || rad.sakYtelse === ytelse),
         ),
+        avslagsgrunner:
+            kategori === 'SØKNAD'
+                ? periode.avslagsgrunner.filter((rad) => ytelse === null || rad.sakYtelse === ytelse)
+                : [],
+        opphørsgrunner:
+            kategori === 'REVURDERING'
+                ? periode.opphørsgrunner.filter((rad) => ytelse === null || rad.sakYtelse === ytelse)
+                : [],
+        klageavvisningsgrunner:
+            kategori === 'KLAGE'
+                ? periode.klageavvisningsgrunner.filter((rad) => ytelse === null || rad.sakYtelse === ytelse)
+                : [],
+        klagehjemler:
+            kategori === 'KLAGE'
+                ? periode.klagehjemler.filter((rad) => ytelse === null || rad.sakYtelse === ytelse)
+                : [],
+        klageomgjøringsgrunner:
+            kategori === 'KLAGE'
+                ? periode.klageomgjøringsgrunner.filter((rad) => ytelse === null || rad.sakYtelse === ytelse)
+                : [],
     }));
 
 export const harSakstatistikk = (perioder: SakStatistikkPeriode[]): boolean =>
@@ -154,7 +176,12 @@ export const harSakstatistikk = (perioder: SakStatistikkPeriode[]): boolean =>
             periode.beholdning.length > 0 ||
             periode.behandlingstid.length > 0 ||
             periode.beholdningsalder.length > 0 ||
-            periode.omarbeid.length > 0,
+            periode.omarbeid.length > 0 ||
+            periode.avslagsgrunner.length > 0 ||
+            periode.opphørsgrunner.length > 0 ||
+            periode.klageavvisningsgrunner.length > 0 ||
+            periode.klagehjemler.length > 0 ||
+            periode.klageomgjøringsgrunner.length > 0,
     );
 
 export const summer = (verdier: number[]): number => verdier.reduce((sum, verdi) => sum + verdi, 0);
@@ -167,7 +194,7 @@ export const hentStønadMånedsantall = (data: StønadStatistikkResponse, måned
 export const summerKohorter = (kohorter: SakStatistikkKohort[]): SakStatistikkKohort[] => {
     const grupper = new Map<string, SakStatistikkKohort>();
     kohorter.forEach((kohort) => {
-        const nøkkel = `${kohort.kategori}\u0000${kohort.sakYtelse}`;
+        const nøkkel = `${kohort.behandlingskategori}\u0000${kohort.sakYtelse}`;
         const eksisterende = grupper.get(nøkkel);
         if (!eksisterende) {
             grupper.set(nøkkel, { ...kohort });
@@ -206,6 +233,11 @@ export const hentYtelser = (data: SakStatistikkResponse): string[] =>
                 ...periode.behandlingstid.map((rad) => rad.sakYtelse),
                 ...periode.beholdningsalder.map((rad) => rad.sakYtelse),
                 ...periode.omarbeid.map((rad) => rad.sakYtelse),
+                ...periode.avslagsgrunner.map((rad) => rad.sakYtelse),
+                ...periode.opphørsgrunner.map((rad) => rad.sakYtelse),
+                ...periode.klageavvisningsgrunner.map((rad) => rad.sakYtelse),
+                ...periode.klagehjemler.map((rad) => rad.sakYtelse),
+                ...periode.klageomgjøringsgrunner.map((rad) => rad.sakYtelse),
             ]),
             ...data.kohorter.map((kohort) => kohort.sakYtelse),
         ]),
