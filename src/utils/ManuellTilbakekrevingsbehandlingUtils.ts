@@ -40,6 +40,9 @@ export const erTilbakekrevingVedtaksbrevEllerSenere = (t: ManuellTilbakekrevings
 export const erTilbakekrevingAvbrutt = (t: ManuellTilbakekrevingsbehandling): boolean =>
     t.status === TilbakekrevingsbehandlingStatus.AVBRUTT;
 
+export const erTilbakekrevingAvsluttet = (t: ManuellTilbakekrevingsbehandling): boolean =>
+    t.status === TilbakekrevingsbehandlingStatus.AVBRUTT || t.status === TilbakekrevingsbehandlingStatus.IVERKSATT;
+
 export const finnNesteTilbakekrevingsstegForSaksbehandling = (t: ManuellTilbakekrevingsbehandling) => {
     switch (t.status) {
         case TilbakekrevingsbehandlingStatus.OPPRETTET:
