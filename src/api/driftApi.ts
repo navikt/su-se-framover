@@ -147,6 +147,53 @@ export async function sakStatistikk(args: { fraOgMed: string; tilOgMed: string }
     });
 }
 
+export type ErstattSakStatistikkRequest = {
+    sekvensIder: number[];
+};
+
+export type ErstattetSakStatistikk = {
+    antall: number;
+};
+
+export type ForhåndsvisErstattSakStatistikk = {
+    kanErstattes: boolean;
+    antallForespurte: number;
+    antallRaderISakStatistikk: number;
+    antallRaderIBigQuery: number;
+    manglendeISakStatistikk: number[];
+    ikkeUnikeISakStatistikk: number[];
+};
+
+export async function forhåndsvisErstattSakStatistikk(
+    body: ErstattSakStatistikkRequest,
+): Promise<ApiClientResult<ForhåndsvisErstattSakStatistikk>> {
+    return apiClient({
+        url: `/drift/statistikk/sak/erstatt/forhandsvis`,
+        method: 'POST',
+        request: {
+            headers: new Headers({
+                Accept: 'application/json',
+            }),
+        },
+        body,
+    });
+}
+
+export async function erstattSakStatistikk(
+    body: ErstattSakStatistikkRequest,
+): Promise<ApiClientResult<ErstattetSakStatistikk>> {
+    return apiClient({
+        url: `/drift/statistikk/sak/erstatt`,
+        method: 'POST',
+        request: {
+            headers: new Headers({
+                Accept: 'application/json',
+            }),
+        },
+        body,
+    });
+}
+
 type StatusResult = ApiClientResult<{
     status: string;
 }>;
