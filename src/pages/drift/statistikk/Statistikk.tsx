@@ -7,8 +7,26 @@ import styles from './statistikk.module.less';
 
 type Statistikkvisning = 'sak' | 'stønad';
 
-const Statistikk = () => {
+export const Statistikkinnhold = () => {
     const [visning, setVisning] = useState<Statistikkvisning>('sak');
+
+    return (
+        <Tabs value={visning} onChange={(value) => setVisning(value as Statistikkvisning)}>
+            <Tabs.List aria-label="Velg statistikkvisning">
+                <Tabs.Tab value="sak" label="Sak" />
+                <Tabs.Tab value="stønad" label="Stønad" />
+            </Tabs.List>
+            <Tabs.Panel value="sak">
+                <SakstatistikkPanel />
+            </Tabs.Panel>
+            <Tabs.Panel value="stønad">
+                <StønadstatistikkPanel />
+            </Tabs.Panel>
+        </Tabs>
+    );
+};
+
+const Statistikk = () => {
     const [åpen, setÅpen] = useState(false);
 
     return (
@@ -21,22 +39,7 @@ const Statistikk = () => {
                     Se utvikling i behandlinger og stønader. Statistikken er adskilt fra nøkkeltallene.
                 </ExpansionCard.Description>
             </ExpansionCard.Header>
-            <ExpansionCard.Content>
-                {åpen && (
-                    <Tabs value={visning} onChange={(value) => setVisning(value as Statistikkvisning)}>
-                        <Tabs.List aria-label="Velg statistikkvisning">
-                            <Tabs.Tab value="sak" label="Sak" />
-                            <Tabs.Tab value="stønad" label="Stønad" />
-                        </Tabs.List>
-                        <Tabs.Panel value="sak">
-                            <SakstatistikkPanel />
-                        </Tabs.Panel>
-                        <Tabs.Panel value="stønad">
-                            <StønadstatistikkPanel />
-                        </Tabs.Panel>
-                    </Tabs>
-                )}
-            </ExpansionCard.Content>
+            <ExpansionCard.Content>{åpen && <Statistikkinnhold />}</ExpansionCard.Content>
         </ExpansionCard>
     );
 };
