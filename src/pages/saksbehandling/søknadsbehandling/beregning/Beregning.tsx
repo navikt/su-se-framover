@@ -1,11 +1,11 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Alert, Button, Heading, Loader, Textarea } from '@navikt/ds-react';
+import { Alert, Button, Heading, Loader } from '@navikt/ds-react';
 import { getEq } from 'fp-ts/Array';
 import { struct } from 'fp-ts/lib/Eq';
 import * as S from 'fp-ts/lib/string';
 import { useMemo, useState } from 'react';
-import { Controller, useForm } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 
 import { Behandlingstype } from '~src/api/GrunnlagOgVilkårApi';
@@ -142,7 +142,6 @@ const Beregning = (props: VilkårsvurderingBaseProps & ExtendedBeregningProps) =
             {
                 sakId: props.sakId,
                 behandlingId: props.behandling.id,
-                begrunnelse: values.begrunnelse,
             },
             (b) => {
                 onSuccess(b);
@@ -172,7 +171,6 @@ const Beregning = (props: VilkårsvurderingBaseProps & ExtendedBeregningProps) =
                 {
                     sakId: props.sakId,
                     behandlingId: props.behandling.id,
-                    begrunnelse: form.getValues('begrunnelse'),
                 },
                 () => {
                     if (!kanSimuleres(props.behandling)) {
@@ -270,21 +268,6 @@ const Beregning = (props: VilkårsvurderingBaseProps & ExtendedBeregningProps) =
                                     null
                                 }
                                 readonly={false}
-                            />
-                        </div>
-                        <div className={styles.textareaContainer}>
-                            <Controller
-                                control={form.control}
-                                name={'begrunnelse'}
-                                render={({ field, fieldState }) => (
-                                    <Textarea
-                                        {...field}
-                                        label={formatMessage('input.label.begrunnelse')}
-                                        value={field.value ?? ''}
-                                        error={fieldState.error?.message}
-                                        description={formatMessage('input.begrunnelse.description')}
-                                    />
-                                )}
                             />
                         </div>
                         <Heading level="2" size="medium">

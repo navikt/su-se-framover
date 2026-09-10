@@ -1,11 +1,14 @@
 import { Heading } from '@navikt/ds-react';
-
+import NotatPanel from '~src/components/notat/NotatPanel.tsx';
 import { useI18n } from '~src/lib/i18n';
 import * as routes from '~src/lib/routes';
 import { ManuellTilbakekrevingsbehandling, TilbakekrevingSteg } from '~src/types/ManuellTilbakekrevingsbehandling';
-
+import { ReferanseType } from '~src/types/Notat.ts';
+import {
+    erTilbakekrevingAvsluttet,
+    erTilbakekrevingTilAttestering,
+} from '~src/utils/ManuellTilbakekrevingsbehandlingUtils';
 import messages from '../Tilbakekreving-nb';
-
 import styles from './BehandleTilbakekreving.module.less';
 import BrevForTilbakekreving from './brevForTilbakekreving/BrevForTilbakekreving';
 import ForhåndsvarsleTilbakekreving from './forhåndsvarsleTilbakekreving/ForhåndsvarsleTilbakekreving';
@@ -22,7 +25,6 @@ const BehandleTilbakekreving = (props: {
     const { behandlingId, steg } = routes.useRouteParams<typeof routes.tilbakekrevingValgtBehandling>();
 
     const behandling = props.tilbakekrevinger.find((t) => t.id === behandlingId);
-
     if (!behandling) {
         return (
             <div>
@@ -34,6 +36,13 @@ const BehandleTilbakekreving = (props: {
 
     return (
         <div className={styles.pageContainer}>
+            <NotatPanel
+                sakId={props.sakId}
+                referanseId={behandling.id}
+                referanseType={ReferanseType.TILBAKEKREVING}
+                underAttestering={erTilbakekrevingTilAttestering(behandling)}
+                kanRedigere={!erTilbakekrevingAvsluttet(behandling)}
+            />
             {steg !== TilbakekrevingSteg.Oppsummering && (
                 <>
                     <Heading level="1" size="large" className={styles.pageTittel}>
