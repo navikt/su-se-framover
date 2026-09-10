@@ -68,7 +68,7 @@ const målingstekst = (måling: Behandlingstidsmåling, kategori: SakStatistikkK
         return kategori === 'KLAGE' ? 'Klagebehandling hos oss' : 'Total behandlingstid';
     }
     if (måling === 'TID_HOS_ATTESTANT') return 'Tid hos attestant';
-    if (måling === 'SAKSBEHANDLING_FØR_ATTESTERING') return 'Registrert → til attestering';
+    if (måling === 'SAKSBEHANDLING_FØR_ATTESTERING') return 'Saksbehandling før attestering';
     return 'Tid per underkjenning → ny attestering';
 };
 
@@ -79,7 +79,7 @@ const målingsforklaring = (måling: Behandlingstidsmåling, kategori: SakStatis
             : 'Tiden fra behandlingen ble mottatt til den først ble iverksatt, avsluttet eller avbrutt.';
     }
     if (måling === 'SAKSBEHANDLING_FØR_ATTESTERING') {
-        return 'Tiden fra behandlingen ble registrert til den ble sendt til attestering.';
+        return 'Tiden i det siste sammenhengende saksbehandlingssteget før behandlingen ble sendt til attestering. Steget kan starte i «Under behandling».';
     }
     if (måling === 'TID_HOS_ATTESTANT') {
         return 'Tiden fra behandlingen ble sendt til attestering til den ble iverksatt eller underkjent.';
@@ -233,6 +233,7 @@ const SakstatistikkPanel = () => {
                     onChange={(dato) => {
                         if (dato) {
                             const nyFraOgMed = toIsoDateOnlyString(dato);
+                            if (nyFraOgMed === fraOgMed) return;
                             setPeriodevalg('EGENDEFINERT');
                             setFraOgMed(nyFraOgMed);
                             if (oppløsning === 'ÅR' && !dekkerMinstTolvMåneder(nyFraOgMed, tilOgMed)) {
@@ -249,6 +250,7 @@ const SakstatistikkPanel = () => {
                     onChange={(dato) => {
                         if (dato) {
                             const nyTilOgMed = toIsoDateOnlyString(dato);
+                            if (nyTilOgMed === tilOgMed) return;
                             setPeriodevalg('EGENDEFINERT');
                             setTilOgMed(nyTilOgMed);
                             if (oppløsning === 'ÅR' && !dekkerMinstTolvMåneder(fraOgMed, nyTilOgMed)) {
@@ -338,11 +340,9 @@ export const SakstatistikkInnhold = (props: {
             (props.ytelse === null || kohort.sakYtelse === props.ytelse),
     );
     const harPeriodedata = harSakstatistikk(perioder);
-    const totalBehandlingstidSerier = lagBehandlingstidSerier(
-        perioder,
-        props.kategori,
-        props.ytelse,
-        'TOTAL_BEHANDLINGSTID',
+    const totalBehandlingstidSerier = useMemo(
+        () => lagBehandlingstidSerier(perioder, props.kategori, props.ytelse, 'TOTAL_BEHANDLINGSTID'),
+        [perioder, props.kategori, props.ytelse],
     );
     const harTotalBehandlingstid = totalBehandlingstidSerier.some((serie) =>
         serie.punkter.some((punkt) => punkt.antall > 0),
@@ -380,6 +380,7 @@ export const SakstatistikkInnhold = (props: {
                             />
                             {harTotalBehandlingstid && (
                                 <BehandlingstidDiagram
+                                    key={`${props.kategori}-${props.ytelse ?? 'ALLE'}`}
                                     serier={totalBehandlingstidSerier}
                                     kategori={props.kategori}
                                     måling="TOTAL_BEHANDLINGSTID"
@@ -431,7 +432,7 @@ const StatistikkortGrid = (props: {
             verdi: summer(props.perioder.flatMap((periode) => periode.utfall.map((rad) => rad.antall))).toLocaleString(
                 'nb-NO',
             ),
-            detaljer: 'Behandlinger som fikk sin første avsluttende status i hele perioden.',
+            detaljer: 'Behandlinger som fikk sin første avsluttende hendelse i hele perioden.',
         },
         {
             tittel: 'Beholdning ved periodens slutt',
@@ -452,8 +453,9 @@ const StatistikkortGrid = (props: {
                     </BodyShort>
                     <BodyShort size="small">
                         Kortene måler ulike ting og skal ikke trekkes fra hverandre. Registrerte behandlinger telles på
-                        registreringsdatoen, ferdigbehandlede behandlinger telles ved første avsluttende utfall, og
-                        beholdningen er et øyeblikksbilde på sluttdatoen.
+                        registreringsdatoen. Kohortene grupperes etter mottaksdatoen, som kan være en annen dato.
+                        Tallene kan derfor avvike. Ferdigbehandlede behandlinger telles ved første avsluttende hendelse,
+                        og beholdningen er et øyeblikksbilde på sluttdatoen.
                     </BodyShort>
                 </div>
                 <HGrid columns={{ xs: 1, sm: 3 }} gap={{ xs: '4', md: '6' }}>
@@ -578,7 +580,9 @@ export const BehandlingstidDiagram = (props: {
     fraOgMed: string;
     tilOgMed: string;
 }) => {
-    const [aktivtPunkt, setAktivtPunkt] = useState<{ ytelse: string; punkt: BehandlingstidPunkt } | null>(null);
+    const [aktivtPunktNøkkel, setAktivtPunktNøkkel] = useState<{ ytelse: string; periode: string } | null>(null);
+    const aktivSerie = props.serier.find((serie) => serie.ytelse === aktivtPunktNøkkel?.ytelse);
+    const aktivtPunkt = aktivSerie?.punkter.find((punkt) => punkt.periode === aktivtPunktNøkkel?.periode);
     const allePunkter = props.serier.flatMap((serie) => serie.punkter);
     const aksePunkter = props.serier[0]?.punkter ?? [];
     const maks = Math.max(1, ...allePunkter.map((punkt) => punkt.gjennomsnittDager ?? 0));
@@ -705,8 +709,18 @@ export const BehandlingstidDiagram = (props: {
                                                     tabIndex={0}
                                                     role="button"
                                                     aria-label={`${tekstFraKode(serie.ytelse)}, ${formaterPeriode(punkt.periode, punkt.periodeTilOgMed)}. Gjennomsnitt ${formaterVarighet(punkt.gjennomsnittDager)}. Vis detaljer.`}
-                                                    onFocus={() => setAktivtPunkt({ ytelse: serie.ytelse, punkt })}
-                                                    onMouseEnter={() => setAktivtPunkt({ ytelse: serie.ytelse, punkt })}
+                                                    onFocus={() =>
+                                                        setAktivtPunktNøkkel({
+                                                            ytelse: serie.ytelse,
+                                                            periode: punkt.periode,
+                                                        })
+                                                    }
+                                                    onMouseEnter={() =>
+                                                        setAktivtPunktNøkkel({
+                                                            ytelse: serie.ytelse,
+                                                            periode: punkt.periode,
+                                                        })
+                                                    }
                                                 />
                                             ),
                                         )}
@@ -732,20 +746,18 @@ export const BehandlingstidDiagram = (props: {
                             ))}
                         </div>
                         <div className={styles.tooltip} aria-live="polite">
-                            {aktivtPunkt ? (
+                            {aktivSerie && aktivtPunkt ? (
                                 <>
                                     <strong>
-                                        {tekstFraKode(aktivtPunkt.ytelse)},{' '}
-                                        {formaterPeriode(aktivtPunkt.punkt.periode, aktivtPunkt.punkt.periodeTilOgMed)}
+                                        {tekstFraKode(aktivSerie.ytelse)},{' '}
+                                        {formaterPeriode(aktivtPunkt.periode, aktivtPunkt.periodeTilOgMed)}
                                     </strong>
-                                    <span>
-                                        Gjennomsnitt: {formaterVarighet(aktivtPunkt.punkt.gjennomsnittDager ?? 0)}
-                                    </span>
+                                    <span>Gjennomsnitt: {formaterVarighet(aktivtPunkt.gjennomsnittDager ?? 0)}</span>
                                     <span>
                                         {props.måling === 'TOTAL_BEHANDLINGSTID'
                                             ? 'Antall behandlinger'
                                             : 'Antall målinger'}
-                                        : {aktivtPunkt.punkt.antall}
+                                        : {aktivtPunkt.antall}
                                     </span>
                                 </>
                             ) : (
@@ -821,7 +833,7 @@ const aldersintervalltekst: Record<Beholdningsaldersintervall, string> = {
 };
 
 const aldersmålingstekst: Record<Beholdningsaldersmåling, string> = {
-    BEHANDLINGENS_ALDER: 'Tid siden behandlingen ble mottatt',
+    BEHANDLINGENS_ALDER: 'Liggetid siden behandlingen ble mottatt',
     TID_I_NÅVÆRENDE_STATUS: 'Tid siden behandlingen fikk nåværende status',
 };
 
@@ -904,15 +916,16 @@ const Beholdningsalder = ({ perioder }: { perioder: SakStatistikkPeriode[] }) =>
             <VStack gap="4">
                 <div>
                     <Heading id="beholdningsalder-tittel" level="3" size="medium">
-                        Alder på beholdningen
+                        Liggetid for behandlinger i restanse
                     </Heading>
                     <BodyShort>
-                        Den første tabellen viser hvor lang tid det har gått siden behandlingen ble mottatt. Den andre
-                        viser hvor lenge behandlingen har hatt statusen som står i raden. En behandling kan derfor være
-                        over 90 dager gammel, men bare ha vært «Underkjent» i 31–60 dager. For «Registrert» er målingene
-                        vanligvis like fordi behandlingen ennå ikke har fått en ny status. Det betyr ikke nødvendigvis
-                        at ingen har arbeidet med behandlingen. Tabellen viser beholdningen ved slutten av siste
-                        delperiode. Periodene summeres ikke.
+                        En behandling i restanse er mottatt, men ikke avsluttet. Liggetiden er antall dager fra
+                        behandlingen ble mottatt til slutten av rapporteringsperioden. Den første tabellen fordeler
+                        behandlingene etter liggetid. Den andre viser hvor lenge behandlingen har hatt statusen som står
+                        i raden. En behandling kan derfor ha en liggetid på over 90 dager, men bare ha vært «Underkjent»
+                        i 31–60 dager. For «Registrert» er målingene vanligvis like fordi behandlingen ennå ikke har
+                        fått en ny status. Det betyr ikke nødvendigvis at ingen har arbeidet med behandlingen. Tabellen
+                        viser restansen ved slutten av siste delperiode. Periodene summeres ikke.
                     </BodyShort>
                 </div>
                 <Alert variant="info">
@@ -920,12 +933,11 @@ const Beholdningsalder = ({ perioder }: { perioder: SakStatistikkPeriode[] }) =>
                         <Label>Slik leser du tabellene</Label>
                         <BodyShort>
                             Hver periode er et historisk øyeblikksbilde ved periodens slutt. En behandling som ble
-                            mottatt 1. januar, og fikk en ny status 10. februar, kan ha 30 dagers total alder og 30
-                            dager i «Registrert» 31. januar. Den 28. februar kan den ha 58 dagers total alder og 18
-                            dager i den nye statusen. Når behandlingen får en avsluttende status, inngår den ikke i
-                            senere beholdningsbilder. Sammenligning av periodene viser hvordan aldersfordelingen i den
-                            åpne beholdningen utvikler seg. Den følger ikke hver enkelt behandling; det gjør
-                            kohortvisningen.
+                            mottatt 1. januar, og fikk en ny status 10. februar, kan ha 30 dagers liggetid og 30 dager i
+                            «Registrert» 31. januar. Den 28. februar kan den ha 58 dagers liggetid og 18 dager i den nye
+                            statusen. Når behandlingen får en avsluttende status, inngår den ikke i senere målinger av
+                            restansen. Sammenligning av periodene viser hvordan liggetidsfordelingen i restansen
+                            utvikler seg. Den følger ikke hver enkelt behandling; det gjør kohortvisningen.
                         </BodyShort>
                     </VStack>
                 </Alert>
@@ -933,7 +945,7 @@ const Beholdningsalder = ({ perioder }: { perioder: SakStatistikkPeriode[] }) =>
                     {formaterPeriode(sistePeriode.fraOgMed, sistePeriode.tilOgMed)}
                 </Heading>
                 {sistePeriode.beholdningsalder.length === 0 ? (
-                    <Alert variant="info">Ingen aldersfordeling for beholdningen i denne perioden.</Alert>
+                    <Alert variant="info">Ingen liggetidsfordeling for restansen i denne perioden.</Alert>
                 ) : (
                     (Object.keys(aldersmålingstekst) as Beholdningsaldersmåling[]).map((måling) => (
                         <VStack key={måling} gap="3">
@@ -945,7 +957,7 @@ const Beholdningsalder = ({ perioder }: { perioder: SakStatistikkPeriode[] }) =>
                     ))
                 )}
                 {tidligerePerioder.length > 0 && (
-                    <ExpansionCard aria-label="Beholdningsalder for tidligere perioder">
+                    <ExpansionCard aria-label="Liggetid for tidligere perioder">
                         <ExpansionCard.Header>
                             <ExpansionCard.Title as="h4" size="small">
                                 Vis utvikling i tidligere perioder
@@ -960,8 +972,8 @@ const Beholdningsalder = ({ perioder }: { perioder: SakStatistikkPeriode[] }) =>
                                     <Table.Header>
                                         <Table.Row>
                                             <Table.HeaderCell>Periode</Table.HeaderCell>
-                                            <Table.HeaderCell align="right">Beholdning</Table.HeaderCell>
-                                            <Table.HeaderCell align="right">Total alder over 90 dager</Table.HeaderCell>
+                                            <Table.HeaderCell align="right">Behandlinger i restanse</Table.HeaderCell>
+                                            <Table.HeaderCell align="right">Liggetid over 90 dager</Table.HeaderCell>
                                             <Table.HeaderCell align="right">
                                                 Over 90 dager i samme status
                                             </Table.HeaderCell>
@@ -1221,10 +1233,11 @@ const Kohorter = ({
                         Behandlinger fulgt fra mottak
                     </Heading>
                     <BodyShort>
-                        Behandlinger gruppert etter når de ble mottatt. De følges til første avsluttende status:
-                        iverksatt, avsluttet eller avbrutt, og for klager også oversendt. Grunnlaget viser hvor mange
-                        som har hatt hele fristen på 30, 60 eller 90 dager. Første tabell summerer hele den valgte
-                        perioden.
+                        Behandlinger gruppert etter når de ble mottatt. De følges til første avsluttende hendelse:
+                        iverksatt eller avsluttet, og for klager også oversendt. «Avbrutt» er et resultat på en
+                        avsluttet behandling, ikke en status. Grunnlaget viser hvor mange som har hatt hele fristen på
+                        30, 60 eller 90 dager. Første tabell summerer hele den valgte perioden. Tallene kan avvike fra
+                        «Registrerte behandlinger», som grupperes etter registreringsdatoen.
                     </BodyShort>
                 </div>
                 <Alert variant="info">
@@ -1755,7 +1768,7 @@ const formaterFordelingsendring = (
     const før = hentAntall(forrige);
     const nå = hentAntall(siste);
     const differanse = nå - før;
-    if (før === 0) return nå === 0 ? 'Ingen endring' : `Fra 0 til ${nå.toLocaleString('nb-NO')}`;
+    if (før === 0) return nå === 0 ? '–' : `Fra 0 til ${nå.toLocaleString('nb-NO')}`;
     const prosent = (differanse / før) * 100;
     return `${differanse >= 0 ? '+' : ''}${differanse.toLocaleString('nb-NO')} (${prosent >= 0 ? '+' : ''}${formaterProsent(prosent)} %)`;
 };
@@ -1977,7 +1990,7 @@ const UtfallDiagram = ({
 }) => {
     const data = grupperPerPeriode(perioder, (periode) =>
         periode.utfall.map((rad) => ({
-            navn: `${rad.status}${rad.resultat ? ` / ${rad.resultat}` : ''}`,
+            navn: `${rad.status} / ${rad.resultat ?? 'MANGLER RESULTAT'}`,
             antall: rad.antall,
         })),
     );
@@ -1987,7 +2000,7 @@ const UtfallDiagram = ({
     return stabletDiagram(
         'utfall-tittel',
         'Utfall i perioden',
-        'Behandlinger som fikk sin første avsluttende status i perioden, og resultatet som ble registrert på den samme hendelsen. Hver behandling telles én gang. Utfallet kan gjelde en behandling som startet i en tidligere periode.',
+        'Behandlinger som fikk sin første avsluttende hendelse i perioden: iverksatt eller avsluttet, og for klager også oversendt. «Avbrutt» er et resultat, ikke en status. Hver behandling telles én gang. Utfallet kan gjelde en behandling som startet i en tidligere periode.',
         data,
         kolonner,
         'SUMMER_PERIODEN',

@@ -48,7 +48,8 @@ skiller ikke mellom manglende og irrelevant årsak. Frontend skjuler derfor
 ### Utfall og beholdning
 
 Utfall teller hver behandling én gang, i perioden der den første avsluttende
-hendelsen går til `IVERKSATT`, `AVSLUTTET`, `AVBRUTT` eller `OVERSENDT`.
+hendelsen går til `IVERKSATT` eller `AVSLUTTET`, og for klager også
+`OVERSENDT`. `AVBRUTT` er et resultat, ikke en status.
 Begrunnelsen hentes fra den samme hendelsen. Senere endringer påvirker ikke
 historiske utfall.
 
@@ -56,7 +57,7 @@ Hovedvisningen summerer utfallshendelser over hele den valgte perioden.
 Detaljvisningen viser hver delperiode for seg.
 
 Beholdningen er et punktmål ved slutten av perioden. Backend utelater
-`IVERKSATT`, `AVSLUTTET`, `AVBRUTT` og `OVERSENDT`. Den viser dermed
+`IVERKSATT`, `AVSLUTTET` og `OVERSENDT`. Den viser dermed
 behandlinger som fortsatt var åpne hos vedtaksinstansen. Beholdning skal ikke
 summeres mellom perioder.
 
@@ -64,22 +65,30 @@ Statusen er den siste registrerte statusen ved måletidspunktet. `REGISTRERT`
 betyr derfor at ingen senere statusovergang er registrert før periodens slutt.
 Det beviser ikke at ingen annen aktivitet har skjedd i behandlingen.
 
-Beholdningsalderen fordeler behandlingene i intervallene 0–7, 8–30, 31–60,
-61–90 og over 90 dager. Behandlingens totale alder regnes fra `mottattTid`.
+Liggetiden fordeler behandlinger i restanse i intervallene 0–7, 8–30, 31–60,
+61–90 og over 90 dager. En behandling er i restanse når den ikke er avsluttet.
+Liggetiden regnes fra `mottattTid` til rapporteringstidspunktet ved slutten av
+perioden.
 Målingen `TID_I_NÅVÆRENDE_STATUS` vises som «Tid i status ved periodens slutt»
 og regnes fra tidspunktet for siste statusovergang til den samme sluttdatoen.
 Målingene beskriver de samme behandlingene og skal ikke summeres med hverandre.
-Hovedvisningen viser siste øyeblikksbilde med begge aldersfordelingene.
+Hovedvisningen viser siste øyeblikksbilde med liggetidsfordelingen og tiden i
+nåværende status.
 Historikken viser beholdningen og antallet over 90 dager for hver tidligere
 delperiode. Dette gjør utviklingen sammenlignbar uten å gjenta to komplette
 krysstabeller per periode.
 Hvert historiske øyeblikksbilde bruker statusen og alderen behandlingen hadde
 ved slutten av den aktuelle delperioden, ikke dagens status eller alder. Når
-behandlingen får en avsluttende status, inngår den ikke i senere
+behandlingen får en avsluttende hendelse, inngår den ikke i senere
 beholdningsbilder. Sammenligning mellom periodene viser utviklingen i
-aldersfordelingen for den åpne beholdningen, ikke utviklingen til hver enkelt
+liggetidsfordelingen for behandlingene i restanse, ikke utviklingen til hver enkelt
 behandling. Kohortene brukes til å følge behandlinger fra mottak til
-avsluttende status.
+avsluttende hendelse.
+
+Responsen inneholder intervaller og antall, men ikke summen av liggedager eller
+gjennomsnittlig liggetid. Frontend skal derfor ikke anslå gjennomsnittlig
+liggetid fra intervallene. Et slikt gjennomsnitt krever et eksakt aggregat fra
+backend.
 
 For `TID_I_NÅVÆRENDE_STATUS` betyr intervallet over 90 dager at den siste
 registrerte statusovergangen skjedde for mer enn 90 dager siden. For statusen
@@ -88,7 +97,7 @@ status ved måletidspunktet.
 
 ### Omarbeid og kohorter
 
-Omarbeid omfatter behandlinger som fikk en avsluttende status i perioden. De
+Omarbeid omfatter behandlinger som fikk en avsluttende hendelse i perioden. De
 fordeles etter om de har ingen, én eller flere underkjenninger.
 Underkjenningsandelen er antall ferdigbehandlede søknadsbehandlinger eller
 revurderinger med minst én underkjenning, delt på alle ferdigbehandlede
@@ -103,11 +112,13 @@ særskilt merknad. Frontend skal ikke beregne en samlet median fra
 delperiodemedianer.
 
 Kohortene grupperer behandlinger etter perioden som inneholder `mottattTid`.
-Behandlingen følges til første avsluttende status: `IVERKSATT`, `AVSLUTTET` eller
-`AVBRUTT`, og for klage også `OVERSENDT`. For hver frist på 30, 60 og 90 dager
+Registrerte behandlinger grupperes etter `registrertTid`. Tallene kan derfor
+avvike. Behandlingen følges til første avsluttende hendelse: `IVERKSATT` eller
+`AVSLUTTET`, og for klage også `OVERSENDT`. `AVBRUTT` er et resultat, ikke en
+status. For hver frist på 30, 60 og 90 dager
 oppgir `grunnlag` hvor mange behandlinger som har hatt hele fristen, og
 `ferdige` hvor mange av disse som fikk en avsluttende status innen fristen.
-`åpneVedTilOgMed` er behandlinger uten avsluttende status ved rapportperiodens
+`åpneVedTilOgMed` er behandlinger uten avsluttende hendelse ved rapportperiodens
 slutt. Oversendte klager inngår derfor ikke. Tallet gjelder bare behandlinger
 som ble mottatt i den valgte perioden. Beholdningen kan i tillegg inneholde
 eldre behandlinger som ble mottatt før periodestart.
@@ -134,13 +145,14 @@ hendelsen per behandling.
 ### Behandlingstid
 
 Total behandlingstid går fra `mottattTid` til første
-`IVERKSATT`, `AVSLUTTET`, `AVBRUTT` eller `OVERSENDT`. For søknad og revurdering
+`IVERKSATT` eller `AVSLUTTET`, og for klage også `OVERSENDT`. For søknad og revurdering
 heter målingen «Total behandlingstid». For klage heter den «Klagebehandling hos
 oss», fordi `OVERSENDT` avslutter behandlingen hos førsteinstansen.
 
 Fasemålingene er:
 
-- registrert til sendt til attestering
+- siste sammenhengende saksbehandlingssteg før attestering; steget kan starte i
+  `UNDER_BEHANDLING`
 - tid hos attestant, fra sendt til attestering til iverksatt eller underkjent
 - underkjent til sendt til attestering på nytt
 
@@ -155,7 +167,7 @@ målingene fordi antall og verdi kan avvike.
 ### Utfall, begrunnelser og hjemler
 
 `utfall` teller hver behandling én gang, i perioden der behandlingen først
-får `IVERKSATT`, `AVSLUTTET`, `AVBRUTT` eller `OVERSENDT`. For klage betyr
+får `IVERKSATT` eller `AVSLUTTET`, og for klage også `OVERSENDT`. For klage betyr
 `OVERSENDT` at behandlingen er ferdig hos vedtaksinstansen. Senere avsluttende
 hendelser kan ikke brukes som avgang i flytbalansen.
 
@@ -166,13 +178,14 @@ utfallshendelser.
 
 For søknad kan frontend vise «andel innvilget blant søknadsvedtak» når
 utfallene er unike behandlinger. Andelen er `INNVILGET / (INNVILGET + AVSLAG)`.
-`AVVIST`, `AVBRUTT`, `BORTFALT`, `TRUKKET` og `FEILREGISTRERT` inngår ikke.
+`AVVIST`, `AVBRUTT`, `BORTFALT` og `TRUKKET` inngår ikke.
 Andre behandlingskategorier trenger egne mål.
 
-Fristene 30, 60 og 90 dager beholdes. Historiske resultatkoder skal bare
-normaliseres når de er dokumenterte synonymer, som `AVSLÅTT` til `AVSLAG`.
-`AVSLAG`, `AVVIST`, `TRUKKET`, `BORTFALT`, `FEILREGISTRERT` og `AVBRUTT`
-forblir forskjellige resultater.
+Fristene 30, 60 og 90 dager beholdes. Backend normaliserer historiske
+`OpphørtRevurdering` til `OPPHØRT`, `Feilregistrert` og `FEILREGISTRERT` til
+`BORTFALT`, og `AVSLAG` til `AVVIST` bare for klager. For søknader er `AVSLAG`
+og `AVVIST` fortsatt separate resultater fordi betydningen ikke er faglig
+avklart. Frontend viser manglende resultat eksplisitt som «MANGLER RESULTAT».
 
 Hver periode inneholder egne fordelinger for søknadsavslag,
 revurderingsopphør, avviste klager, klagehjemler og klageomgjøring. Fordelingene
@@ -193,9 +206,9 @@ siste delperiode kan fortsatt dekke bare deler av kalenderåret. Slike
 delperioder merkes med de faktiske datoene og skal ikke sammenlignes som om de
 var like lange.
 
-Aggregatversjon 4 innførte `registrertTid` for registrerte behandlinger,
-`mottattTid` for behandlingstid, kohorter og beholdningsalder samt korrigert
-håndtering av oversendte klager. Eldre cachede aggregater genereres på nytt.
+Aggregatversjon 7 grupperer kohorter etter `mottattTid` og registrerte
+behandlinger etter `registrertTid`. Den normaliserer også historiske
+resultatverdier som beskrevet over. Eldre cachede aggregater genereres på nytt.
 
 ## Stønadsstatistikk
 

@@ -16,7 +16,7 @@ const data: SakStatistikkResponse = {
     tilOgMed: '2026-02-28',
     oppløsning: 'MÅNED',
     metadata: {
-        aggregatversjon: 1,
+        aggregatversjon: 7,
         maksSekvensId: 10,
         sisteHendelseTidspunkt: '2026-02-28T12:00:00Z',
         antallBehandlinger: 2,

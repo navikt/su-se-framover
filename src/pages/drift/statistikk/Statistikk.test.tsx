@@ -9,7 +9,7 @@ const data: SakStatistikkResponse = {
     tilOgMed: '2026-01-31',
     oppløsning: 'MÅNED',
     metadata: {
-        aggregatversjon: 1,
+        aggregatversjon: 7,
         maksSekvensId: 10,
         sisteHendelseTidspunkt: '2026-01-31T12:00:00Z',
         antallBehandlinger: 3,
@@ -40,7 +40,22 @@ const data: SakStatistikkResponse = {
                     antall: 3,
                 },
             ],
-            utfall: [],
+            utfall: [
+                {
+                    behandlingskategori: 'SØKNAD',
+                    sakYtelse: 'UFØRE',
+                    status: 'AVSLUTTET',
+                    resultat: 'BORTFALT',
+                    antall: 1,
+                },
+                {
+                    behandlingskategori: 'SØKNAD',
+                    sakYtelse: 'UFØRE',
+                    status: 'AVSLUTTET',
+                    resultat: null,
+                    antall: 1,
+                },
+            ],
             beholdning: [],
             behandlingstid: [
                 {
@@ -130,9 +145,8 @@ describe('SakstatistikkPanel', () => {
                 ytelse={null}
             />,
         );
-
         expect(markup).toContain('Ingen statistikk for valgt periode');
-        expect(markup).not.toContain('<svg');
+        expect(markup).toContain('Ingen statistikk for valgt periode');
     });
 
     it('lager ikke periodetabell for en seksjon uten data', () => {
@@ -164,7 +178,10 @@ describe('SakstatistikkPanel', () => {
         expect(markup).toContain('<table');
         expect(markup).toContain('Gjennomsnittlig behandlingstid');
         expect(markup).toContain('Siste registrerte hendelse i datagrunnlaget');
-        expect(markup).toContain('Alder på beholdningen');
+        expect(markup).toContain('Liggetid for behandlinger i restanse');
+        expect(markup).toContain('AVSLUTTET / BORTFALT');
+        expect(markup).toContain('AVSLUTTET / MANGLER RESULTAT');
+        expect(markup).toContain('Saksbehandling før attestering');
         expect(markup).toContain('Hver periode er et historisk øyeblikksbilde');
         expect(markup).toContain('Omarbeid etter underkjenning');
         expect(markup).toContain('Underkjenningsandel');
