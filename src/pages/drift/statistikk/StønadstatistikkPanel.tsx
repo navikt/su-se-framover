@@ -1,5 +1,5 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import { Alert, BodyShort, Box, ExpansionCard, Heading, HGrid, Select, Table, VStack } from '@navikt/ds-react';
+import { Alert, BodyShort, Box, Button, ExpansionCard, Heading, HGrid, Select, Table, VStack } from '@navikt/ds-react';
 import { useMemo, useState } from 'react';
 
 import { MonthPicker } from '~src/components/inputs/datePicker/DatePicker';
@@ -74,7 +74,7 @@ const StønadstatistikkPanel = () => {
     const [vedtaksresultat, setVedtaksresultat] = useState<string | null>(null);
     const [stønadsklassifisering, setStønadsklassifisering] = useState<string | null>(null);
     const inkluderSammenligningsmåned = månederIPeriode(fraOgMed, tilOgMed).length < MAKS_ANTALL_MÅNEDER;
-    const status = useStønadstatistikk({
+    const { status, genererer, prøvIgjen } = useStønadstatistikk({
         fraOgMed: inkluderSammenligningsmåned ? forrigeMåned(fraOgMed) : fraOgMed,
         tilOgMed,
     });
@@ -246,20 +246,32 @@ const StønadstatistikkPanel = () => {
             </HGrid>
 
             <div className="sr-only" aria-live="polite">
-                {RemoteData.isPending(status)
-                    ? 'Henter stønadsstatistikk.'
-                    : data
-                      ? `Viser ${data.perioder.length} måneder.`
-                      : RemoteData.isFailure(status)
-                        ? 'Stønadsstatistikken kunne ikke hentes.'
-                        : null}
+                {genererer
+                    ? 'Vi lager stønadsstatistikken.'
+                    : RemoteData.isPending(status)
+                      ? 'Henter stønadsstatistikk.'
+                      : data
+                        ? `Viser ${data.perioder.length} måneder.`
+                        : RemoteData.isFailure(status)
+                          ? 'Stønadsstatistikken kunne ikke hentes.'
+                          : null}
             </div>
-            {RemoteData.isPending(status) && <Alert variant="info">Henter stønadsstatistikk.</Alert>}
+            {RemoteData.isPending(status) && !genererer && <Alert variant="info">Henter stønadsstatistikk.</Alert>}
+            {genererer && <Alert variant="info">Vi lager stønadsstatistikken. Dette kan ta litt tid.</Alert>}
             {RemoteData.isFailure(status) && (
                 <Alert variant="error">
-                    {status.error.statusCode === 400
-                        ? 'Kontroller valgt periode.'
-                        : 'Stønadsstatistikken kunne ikke hentes.'}
+                    <VStack gap="3">
+                        <BodyShort>
+                            {status.error.statusCode === 400
+                                ? 'Kontroller valgt periode.'
+                                : 'Stønadsstatistikken kunne ikke hentes.'}
+                        </BodyShort>
+                        <div>
+                            <Button size="small" variant="secondary" onClick={prøvIgjen}>
+                                Prøv igjen
+                            </Button>
+                        </div>
+                    </VStack>
                 </Alert>
             )}
             {data &&

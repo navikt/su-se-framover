@@ -1297,10 +1297,6 @@ const Datagrunnlag = ({ data }: { data: SakStatistikkResponse }) => (
                                 <Table.DataCell>{formaterPeriode(data.fraOgMed, data.tilOgMed)}</Table.DataCell>
                             </Table.Row>
                             <Table.Row>
-                                <Table.HeaderCell scope="row">Aggregatversjon</Table.HeaderCell>
-                                <Table.DataCell>{data.metadata.aggregatversjon}</Table.DataCell>
-                            </Table.Row>
-                            <Table.Row>
                                 <Table.HeaderCell scope="row">Behandlinger i datagrunnlaget</Table.HeaderCell>
                                 <Table.DataCell>
                                     {data.metadata.antallBehandlinger.toLocaleString('nb-NO')}

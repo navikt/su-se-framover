@@ -16,7 +16,6 @@ const data: SakStatistikkResponse = {
     tilOgMed: '2026-02-28',
     oppløsning: 'MÅNED',
     metadata: {
-        aggregatversjon: 7,
         maksSekvensId: 10,
         sisteHendelseTidspunkt: '2026-02-28T12:00:00Z',
         antallBehandlinger: 2,
@@ -230,14 +229,14 @@ describe('statistikkUtils', () => {
                         bestandsendringerTilgjengelig: true,
                         bestandsendringer: [
                             {
-                                stønadstype: 'UFØRE',
+                                stønadstype: 'SU_UFØR',
                                 nye: 1,
                                 videreført: 2,
                                 utgått: 3,
                                 endretStønadsklassifisering: 4,
                             },
                             {
-                                stønadstype: 'ALDER',
+                                stønadstype: 'SU_ALDER',
                                 nye: 5,
                                 videreført: 6,
                                 utgått: 7,
@@ -248,7 +247,7 @@ describe('statistikkUtils', () => {
                 ],
             },
             {
-                stønadstype: 'UFØRE',
+                stønadstype: 'SU_UFØR',
                 vedtakstype: 'REGULERING',
                 vedtaksresultat: null,
                 stønadsklassifisering: null,
@@ -257,7 +256,7 @@ describe('statistikkUtils', () => {
 
         expect(filtrert.perioder[0].bestandsendringer).toEqual([
             {
-                stønadstype: 'UFØRE',
+                stønadstype: 'SU_UFØR',
                 nye: 1,
                 videreført: 2,
                 utgått: 3,

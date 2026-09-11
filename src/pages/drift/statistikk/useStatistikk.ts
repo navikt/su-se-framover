@@ -1,7 +1,7 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { ApiError, ErrorCode } from '~src/api/apiClient';
-import { hentStønadstatistikk, pollSakstatistikk } from '~src/api/statistikkApi';
+import { pollSakstatistikk, pollStønadstatistikk } from '~src/api/statistikkApi';
 import { ApiErrorCode } from '~src/components/apiErrorAlert/apiErrorCode';
 import {
     SakStatistikkParams,
@@ -56,29 +56,33 @@ export const useSakstatistikk = (params: SakStatistikkParams) => {
 
 export const useStønadstatistikk = (params: StønadStatistikkParams) => {
     const [status, setStatus] = useState<RemoteData.RemoteData<ApiError, StønadStatistikkResponse>>(RemoteData.initial);
-    const controllerRef = useRef<AbortController | null>(null);
+    const [genererer, setGenererer] = useState(false);
+    const [forsøk, setForsøk] = useState(0);
+
+    const prøvIgjen = useCallback(() => setForsøk((verdi) => verdi + 1), []);
 
     useEffect(() => {
-        controllerRef.current?.abort();
         const controller = new AbortController();
-        controllerRef.current = controller;
         setStatus(RemoteData.pending);
+        setGenererer(false);
 
-        hentStønadstatistikk(params, controller.signal)
+        pollStønadstatistikk(params, controller.signal, () => setGenererer(true))
             .then((resultat) => {
                 if (controller.signal.aborted) return;
+                setGenererer(false);
                 setStatus(
                     resultat.status === 'ok' ? RemoteData.success(resultat.data) : RemoteData.failure(resultat.error),
                 );
             })
             .catch((error: unknown) => {
                 if (!erAvbrutt(error)) {
+                    setGenererer(false);
                     setStatus(RemoteData.failure(tilApiError(error)));
                 }
             });
 
         return () => controller.abort();
-    }, [params.fraOgMed, params.tilOgMed]);
+    }, [params.fraOgMed, params.tilOgMed, forsøk]);
 
-    return status;
+    return { status, genererer, prøvIgjen };
 };

@@ -9,7 +9,6 @@ export type Behandlingstidsmåling =
     | 'TID_ETTER_UNDERKJENNING';
 
 export interface SakStatistikkMetadata {
-    aggregatversjon: number;
     maksSekvensId: number | null;
     sisteHendelseTidspunkt: string | null;
     antallBehandlinger: number;
@@ -196,6 +195,11 @@ export interface GenerererStatistikkResponse {
     status: 'GENERERER';
 }
 
+export interface GenerererStønadstatistikkResponse {
+    aggregatIder: string[];
+    status: 'GENERERER';
+}
+
 export interface StønadStatistikkResponse {
     fraOgMed: string;
     tilOgMed: string;
@@ -213,20 +217,26 @@ export interface StønadStatistikkPeriode {
 export type StønadStatistikkDatagrunnlag = 'TILGJENGELIG' | 'MANGLER';
 
 export interface StønadStatistikkAntall {
-    stønadstype: string;
-    vedtakstype: string;
-    vedtaksresultat: string;
+    stønadstype: Stønadstype;
+    vedtakstype: StønadVedtakstype;
+    vedtaksresultat: StønadVedtaksresultat;
     stønadsklassifisering: string | null;
     antall: number;
 }
 
 export interface StønadStatistikkBestandsendring {
-    stønadstype: string;
+    stønadstype: Stønadstype;
     nye: number;
     videreført: number;
     utgått: number;
     endretStønadsklassifisering: number;
 }
+
+export type Stønadstype = 'SU_UFØR' | 'SU_ALDER';
+
+export type StønadVedtakstype = 'SØKNAD' | 'REVURDERING' | 'STANS' | 'GJENOPPTAK' | 'REGULERING';
+
+export type StønadVedtaksresultat = 'INNVILGET' | 'OPPHØRT' | 'STANSET' | 'GJENOPPTATT' | 'REGULERT';
 
 export interface SakStatistikkParams {
     fraOgMed: string;

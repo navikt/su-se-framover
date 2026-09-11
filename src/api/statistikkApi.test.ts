@@ -1,6 +1,11 @@
-import { GenerererStatistikkResponse, SakStatistikkResponse } from '~src/types/Statistikk';
+import {
+    GenerererStatistikkResponse,
+    GenerererStønadstatistikkResponse,
+    SakStatistikkResponse,
+    StønadStatistikkResponse,
+} from '~src/types/Statistikk';
 import { ApiClientResult } from './apiClient';
-import { pollSakstatistikk } from './statistikkApi';
+import { pollSakstatistikk, pollStønadstatistikk } from './statistikkApi';
 
 const params = {
     fraOgMed: '2026-01-01',
@@ -11,7 +16,6 @@ const params = {
 const ferdig: SakStatistikkResponse = {
     ...params,
     metadata: {
-        aggregatversjon: 1,
         maksSekvensId: null,
         sisteHendelseTidspunkt: null,
         antallBehandlinger: 0,
@@ -78,5 +82,44 @@ describe('pollSakstatistikk', () => {
             error: { body: { message: 'Det tok for lang tid å lage statistikken' } },
         });
         nå.mockRestore();
+    });
+});
+
+describe('pollStønadstatistikk', () => {
+    const stønadsparametre = { fraOgMed: '2026-01', tilOgMed: '2026-02' };
+    const ferdigStønad: StønadStatistikkResponse = {
+        ...stønadsparametre,
+        perioder: [],
+    };
+    const generererStønad: GenerererStønadstatistikkResponse = {
+        aggregatIder: ['9a47e889-4d01-4e51-9fb5-55f40b21cab8'],
+        status: 'GENERERER',
+    };
+
+    it('varsler om generering ved 202 og stopper polling etter 200', async () => {
+        const hent = jest
+            .fn()
+            .mockResolvedValueOnce(ok(generererStønad, 202))
+            .mockResolvedValueOnce(ok(ferdigStønad, 200));
+        const onGenererer = jest.fn();
+        const vent = jest.fn().mockResolvedValue(undefined);
+
+        await expect(
+            pollStønadstatistikk(stønadsparametre, new AbortController().signal, onGenererer, hent, vent),
+        ).resolves.toEqual(ok(ferdigStønad, 200));
+        expect(onGenererer).toHaveBeenCalledTimes(1);
+        expect(vent).toHaveBeenCalledTimes(1);
+        expect(hent).toHaveBeenCalledTimes(2);
+    });
+
+    it('returnerer feil ved en ukjent kombinasjon av HTTP-status og respons', async () => {
+        const hent = jest.fn().mockResolvedValue(ok(generererStønad, 200));
+
+        await expect(
+            pollStønadstatistikk(stønadsparametre, new AbortController().signal, jest.fn(), hent, jest.fn()),
+        ).resolves.toMatchObject({
+            status: 'error',
+            error: { body: { message: 'Statistikktjenesten svarte med et ukjent format' } },
+        });
     });
 });

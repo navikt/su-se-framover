@@ -1,6 +1,7 @@
 import { ApiErrorCode } from '~src/components/apiErrorAlert/apiErrorCode';
 import {
     GenerererStatistikkResponse,
+    GenerererStønadstatistikkResponse,
     SakStatistikkParams,
     SakStatistikkResponse,
     StønadStatistikkParams,
@@ -13,6 +14,7 @@ export const POLLING_INTERVAL_MS = 3_000;
 export const MAX_POLLING_TIME_MS = 120_000;
 
 type SakStatistikkApiResponse = SakStatistikkResponse | GenerererStatistikkResponse;
+type StønadStatistikkApiResponse = StønadStatistikkResponse | GenerererStønadstatistikkResponse;
 
 const lagApiError = (message: string, statusCode: number = ErrorCode.Unknown): ApiError => ({
     statusCode,
@@ -48,7 +50,7 @@ export const hentSakstatistikk = (
 export const hentStønadstatistikk = (
     params: StønadStatistikkParams,
     signal: AbortSignal,
-): Promise<ApiClientResult<StønadStatistikkResponse>> => {
+): Promise<ApiClientResult<StønadStatistikkApiResponse>> => {
     const query = new URLSearchParams({
         fraOgMed: params.fraOgMed,
         tilOgMed: params.tilOgMed,
@@ -64,6 +66,9 @@ export const hentStønadstatistikk = (
 };
 
 const erGenereringsrespons = (data: SakStatistikkApiResponse): data is GenerererStatistikkResponse =>
+    'status' in data && data.status === 'GENERERER';
+
+const erStønadGenereringsrespons = (data: StønadStatistikkApiResponse): data is GenerererStønadstatistikkResponse =>
     'status' in data && data.status === 'GENERERER';
 
 const vent = (millisekunder: number, signal: AbortSignal): Promise<void> =>
@@ -97,6 +102,38 @@ export async function pollSakstatistikk(
             return { status: 'ok', data: resultat.data, statusCode: resultat.statusCode };
         }
         if (resultat.statusCode !== 202 || !erGenereringsrespons(resultat.data)) {
+            return { status: 'error', error: lagApiError('Statistikktjenesten svarte med et ukjent format') };
+        }
+
+        onGenererer();
+        if (Date.now() - startet >= MAX_POLLING_TIME_MS) {
+            return {
+                status: 'error',
+                error: lagApiError('Det tok for lang tid å lage statistikken'),
+            };
+        }
+        await ventPåNesteForsøk(POLLING_INTERVAL_MS, signal);
+    }
+}
+
+export async function pollStønadstatistikk(
+    params: StønadStatistikkParams,
+    signal: AbortSignal,
+    onGenererer: () => void,
+    hent: typeof hentStønadstatistikk = hentStønadstatistikk,
+    ventPåNesteForsøk: typeof vent = vent,
+): Promise<ApiClientResult<StønadStatistikkResponse>> {
+    const startet = Date.now();
+
+    while (true) {
+        const resultat = await hent(params, signal);
+        if (resultat.status === 'error') {
+            return resultat;
+        }
+        if (resultat.statusCode === 200 && !erStønadGenereringsrespons(resultat.data)) {
+            return { status: 'ok', data: resultat.data, statusCode: resultat.statusCode };
+        }
+        if (resultat.statusCode !== 202 || !erStønadGenereringsrespons(resultat.data)) {
             return { status: 'error', error: lagApiError('Statistikktjenesten svarte med et ukjent format') };
         }
 
