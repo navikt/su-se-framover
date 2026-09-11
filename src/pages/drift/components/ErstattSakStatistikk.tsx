@@ -60,8 +60,7 @@ const antallRaderTekst = (antall: number) => `${antall} ${antall === 1 ? 'rad' :
 
 const forhåndsvisningstekst = (forhåndsvisning: ForhåndsvisErstattSakStatistikk): string => {
     const harPostgresAvvik =
-        forhåndsvisning.manglendeISakStatistikk.length > 0 ||
-        forhåndsvisning.ikkeUnikeISakStatistikk.length > 0;
+        forhåndsvisning.manglendeISakStatistikk.length > 0 || forhåndsvisning.ikkeUnikeISakStatistikk.length > 0;
     if (harPostgresAvvik) {
         return 'En eller flere ID-er mangler eller finnes flere ganger i sak_statistikk. BigQuery ble ikke kontrollert. Lista kan ikke erstattes.';
     }
@@ -147,9 +146,11 @@ const ErstattSakStatistikkModal = (props: { open: boolean; onClose: () => void }
 
     const pågår = RemoteData.isPending(forhåndsvisStatus) || RemoteData.isPending(erstattStatus);
     const forhåndsvisning = RemoteData.isSuccess(forhåndsvisStatus) ? forhåndsvisStatus.value : undefined;
+    const antallRaderIBigQuery = forhåndsvisning?.antallRaderIBigQuery;
     const kanErstattes =
         forhåndsvisning?.kanErstattes === true &&
-        forhåndsvisning.antallRaderIBigQuery !== null &&
+        antallRaderIBigQuery !== null &&
+        antallRaderIBigQuery !== undefined &&
         forhåndsvisning.manglendeIBigQuery !== null &&
         forhåndsvisning.ikkeUnikeIBigQuery !== null;
 
@@ -193,14 +194,14 @@ const ErstattSakStatistikkModal = (props: { open: boolean; onClose: () => void }
                         </Alert>
                     )}
 
-                    {sekvensIder && kanErstattes && forhåndsvisning && (
+                    {sekvensIder && kanErstattes && forhåndsvisning && typeof antallRaderIBigQuery === 'number' && (
                         <ConfirmationPanel
                             checked={bekreftet}
                             label="Jeg bekrefter at radene skal erstattes."
                             onChange={() => setBekreftet((erBekreftet) => !erBekreftet)}
                             disabled={pågår}
                         >
-                            {antallRaderTekst(forhåndsvisning.antallRaderIBigQuery)} slettes fra BigQuery, og{' '}
+                            {antallRaderTekst(antallRaderIBigQuery)} slettes fra BigQuery, og{' '}
                             {antallRaderTekst(forhåndsvisning.antallRaderISakStatistikk)} lastes på nytt fra
                             sak_statistikk.
                         </ConfirmationPanel>
