@@ -1,0 +1,238 @@
+.statistikk {
+    width: 100%;
+}
+
+.beskrivelseMedHjelp {
+    display: flex;
+    align-items: center;
+    gap: var(--a-spacing-2);
+}
+
+.panel {
+    padding-block: var(--a-spacing-6);
+}
+
+.filterGrid > *,
+.filterGrid :global(.navds-form-field),
+.filterGrid :global(.navds-select__container),
+.filterGrid :global(.navds-select__input) {
+    width: 100%;
+    min-width: 0;
+}
+
+.diagramRamme {
+    overflow-x: auto;
+    border: 1px solid var(--a-border-divider);
+    border-radius: var(--a-border-radius-medium);
+    background: var(--a-surface-default);
+}
+
+.linjediagram {
+    display: block;
+    min-width: 44rem;
+    width: 100%;
+    height: auto;
+}
+
+.akse {
+    stroke: var(--a-border-strong);
+    stroke-width: 1;
+}
+
+.aksetekst {
+    fill: var(--a-text-subtle);
+    font-size: var(--a-font-size-small);
+}
+
+.diagrampunkt {
+    cursor: pointer;
+    stroke: var(--a-surface-default);
+    stroke-width: 3;
+}
+
+.diagrampunkt:focus {
+    outline: none;
+    stroke: var(--a-border-focus);
+    stroke-width: 6;
+}
+
+.forklaring {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--a-spacing-4);
+}
+
+.linjeforklaring {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--a-spacing-2);
+}
+
+.linjeprøve {
+    width: var(--a-spacing-8);
+    height: var(--a-spacing-2);
+
+    line {
+        stroke: var(--a-text-default);
+        stroke-width: 3;
+    }
+}
+
+.fargeprøve {
+    display: inline-block;
+    width: var(--a-spacing-4);
+    height: var(--a-spacing-4);
+    border-radius: var(--a-border-radius-full);
+    vertical-align: middle;
+}
+
+.tooltip {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--a-spacing-2) var(--a-spacing-5);
+    min-height: 3rem;
+    padding: var(--a-spacing-4);
+    border-left: 4px solid var(--a-border-info);
+    background: var(--a-surface-info-subtle);
+}
+
+.tooltip strong {
+    flex-basis: 100%;
+}
+
+.tabellRamme {
+    overflow-x: auto;
+}
+
+.søylediagram {
+    display: grid;
+    gap: var(--a-spacing-6);
+}
+
+.periodegruppe {
+    display: grid;
+    gap: var(--a-spacing-3);
+}
+
+.horisontaleSøyler {
+    display: grid;
+    gap: var(--a-spacing-2);
+}
+
+.horisontalSøyleRad {
+    display: grid;
+    grid-template-columns: minmax(12rem, 18rem) minmax(4rem, 1fr) 3rem;
+    align-items: center;
+    gap: var(--a-spacing-3);
+}
+
+.søylespor {
+    display: block;
+    height: var(--a-spacing-6);
+    overflow: hidden;
+    border-radius: var(--a-border-radius-small);
+    background: var(--a-surface-neutral-subtle);
+}
+
+.søylespor > span {
+    display: block;
+    height: 100%;
+    min-width: 2px;
+}
+
+.søylefyll {
+    box-sizing: border-box;
+    border: 2px solid;
+    border-radius: var(--a-border-radius-small);
+}
+
+.månedsdiagramRamme {
+    overflow-x: auto;
+    padding: var(--a-spacing-4);
+    border: 1px solid var(--a-border-divider);
+    border-radius: var(--a-border-radius-medium);
+    background: var(--a-surface-default);
+}
+
+.månedsdiagram {
+    display: flex;
+    align-items: stretch;
+    min-width: max-content;
+    height: 14rem;
+    gap: var(--a-spacing-4);
+}
+
+.månedsSøyle {
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+    width: 5rem;
+    gap: var(--a-spacing-2);
+    text-align: center;
+}
+
+.månedsSøyleområde {
+    display: flex;
+    align-items: end;
+    justify-content: center;
+    min-height: 0;
+}
+
+.månedsSøylefyll {
+    display: block;
+    box-sizing: border-box;
+    width: var(--a-spacing-8);
+    min-height: 2px;
+    border: 2px solid;
+    border-radius: var(--a-border-radius-small) var(--a-border-radius-small) 0 0;
+}
+
+.diagramfarge1 {
+    border-color: var(--a-blue-400);
+    background: var(--a-blue-200);
+}
+
+.diagramfarge2 {
+    border-color: var(--a-orange-400);
+    background: var(--a-orange-200);
+}
+
+.diagramfarge3 {
+    border-color: var(--a-green-400);
+    background: var(--a-green-200);
+}
+
+.diagramfarge4 {
+    border-color: var(--a-purple-400);
+    background: var(--a-purple-200);
+}
+
+.diagramfarge5 {
+    border-color: var(--a-red-400);
+    background: var(--a-red-200);
+}
+
+.diagramfarge6 {
+    border-color: var(--a-deepblue-400);
+    background: var(--a-deepblue-200);
+}
+
+.diagramfarge7 {
+    border-color: var(--a-lightblue-400);
+    background: var(--a-lightblue-200);
+}
+
+.diagramfarge8 {
+    border-color: var(--a-limegreen-400);
+    background: var(--a-limegreen-200);
+}
+
+@media (max-width: 767px) {
+    .horisontalSøyleRad {
+        grid-template-columns: 1fr;
+        gap: var(--a-spacing-1);
+    }
+
+    .horisontalSøyleRad strong {
+        justify-self: end;
+    }
+}
