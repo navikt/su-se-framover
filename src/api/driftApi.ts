@@ -159,9 +159,11 @@ export type ForhåndsvisErstattSakStatistikk = {
     kanErstattes: boolean;
     antallForespurte: number;
     antallRaderISakStatistikk: number;
-    antallRaderIBigQuery: number;
+    antallRaderIBigQuery: number | null;
     manglendeISakStatistikk: number[];
     ikkeUnikeISakStatistikk: number[];
+    manglendeIBigQuery: number[] | null;
+    ikkeUnikeIBigQuery: number[] | null;
 };
 
 export async function forhåndsvisErstattSakStatistikk(

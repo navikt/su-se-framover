@@ -48,9 +48,8 @@ const backendFeilmeldinger: Record<string, string> = {
     for_mange_sekvens_ider: 'Del lista i sekvensielle kall med maksimalt 500 ID-er.',
     ugyldige_sekvens_ider: 'Fjern null, negative tall og ugyldige verdier.',
     duplikate_sekvens_ider: 'Fjern duplikater fra lista.',
-    sekvens_ider_mangler_i_sak_statistikk:
-        'En eller flere ID-er finnes ikke i Postgres. Ingen BigQuery-endring er gjort.',
-    sekvens_ider_ikke_unike_i_sak_statistikk: 'En ID finnes flere ganger i Postgres. Ingen BigQuery-endring er gjort.',
+    avvik_i_sak_statistikk:
+        'En eller flere ID-er mangler eller finnes flere ganger i sak_statistikk. Ingen BigQuery-endring er gjort.',
 };
 
 const feilmeldingFor = (error: ApiError): string => {
@@ -60,14 +59,23 @@ const feilmeldingFor = (error: ApiError): string => {
 const antallRaderTekst = (antall: number) => `${antall} ${antall === 1 ? 'rad' : 'rader'}`;
 
 const forhåndsvisningstekst = (forhåndsvisning: ForhåndsvisErstattSakStatistikk): string => {
-    if (forhåndsvisning.manglendeISakStatistikk.length > 0) {
-        return 'En eller flere ID-er finnes ikke i sak_statistikk. Lista kan ikke erstattes.';
+    const harPostgresAvvik =
+        forhåndsvisning.manglendeISakStatistikk.length > 0 ||
+        forhåndsvisning.ikkeUnikeISakStatistikk.length > 0;
+    if (harPostgresAvvik) {
+        return 'En eller flere ID-er mangler eller finnes flere ganger i sak_statistikk. BigQuery ble ikke kontrollert. Lista kan ikke erstattes.';
     }
-    if (forhåndsvisning.ikkeUnikeISakStatistikk.length > 0) {
-        return 'En eller flere ID-er finnes flere ganger i sak_statistikk. Lista kan ikke erstattes.';
+
+    if (
+        forhåndsvisning.antallRaderIBigQuery === null ||
+        forhåndsvisning.manglendeIBigQuery === null ||
+        forhåndsvisning.ikkeUnikeIBigQuery === null
+    ) {
+        return 'BigQuery ble ikke kontrollert. Lista kan ikke erstattes.';
     }
+
     if (!forhåndsvisning.kanErstattes) {
-        if (forhåndsvisning.antallRaderIBigQuery === forhåndsvisning.antallForespurte) {
+        if (forhåndsvisning.ikkeUnikeIBigQuery.length > 0) {
             return 'BigQuery-treffene samsvarer ikke med én rad per sekvens-ID. Lista kan ikke erstattes før avviket er avklart.';
         }
         return `Vi fant ${forhåndsvisning.antallRaderISakStatistikk} rader i sak_statistikk, men ${forhåndsvisning.antallRaderIBigQuery} av ${forhåndsvisning.antallForespurte} forventede rader i BigQuery. Lista kan ikke erstattes før avviket er avklart.`;
@@ -132,14 +140,18 @@ const ErstattSakStatistikkModal = (props: { open: boolean; onClose: () => void }
             !RemoteData.isSuccess(forhåndsvisStatus) ||
             !forhåndsvisStatus.value.kanErstattes
         ) {
-            setValideringsfeil('Kontroller lista og bekreft før du sender inn.');
             return;
         }
         erstatt({ sekvensIder });
     };
 
     const pågår = RemoteData.isPending(forhåndsvisStatus) || RemoteData.isPending(erstattStatus);
-    const kanErstattes = RemoteData.isSuccess(forhåndsvisStatus) && forhåndsvisStatus.value.kanErstattes;
+    const forhåndsvisning = RemoteData.isSuccess(forhåndsvisStatus) ? forhåndsvisStatus.value : undefined;
+    const kanErstattes =
+        forhåndsvisning?.kanErstattes === true &&
+        forhåndsvisning.antallRaderIBigQuery !== null &&
+        forhåndsvisning.manglendeIBigQuery !== null &&
+        forhåndsvisning.ikkeUnikeIBigQuery !== null;
 
     return (
         <Modal
@@ -181,15 +193,15 @@ const ErstattSakStatistikkModal = (props: { open: boolean; onClose: () => void }
                         </Alert>
                     )}
 
-                    {sekvensIder && kanErstattes && (
+                    {sekvensIder && kanErstattes && forhåndsvisning && (
                         <ConfirmationPanel
                             checked={bekreftet}
                             label="Jeg bekrefter at radene skal erstattes."
                             onChange={() => setBekreftet((erBekreftet) => !erBekreftet)}
                             disabled={pågår}
                         >
-                            {antallRaderTekst(forhåndsvisStatus.value.antallRaderIBigQuery)} slettes fra BigQuery, og{' '}
-                            {antallRaderTekst(forhåndsvisStatus.value.antallRaderISakStatistikk)} lastes på nytt fra
+                            {antallRaderTekst(forhåndsvisning.antallRaderIBigQuery)} slettes fra BigQuery, og{' '}
+                            {antallRaderTekst(forhåndsvisning.antallRaderISakStatistikk)} lastes på nytt fra
                             sak_statistikk.
                         </ConfirmationPanel>
                     )}
