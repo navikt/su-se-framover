@@ -58,11 +58,20 @@ const feilmeldingFor = (error: ApiError): string => {
 
 const antallRaderTekst = (antall: number) => `${antall} ${antall === 1 ? 'rad' : 'rader'}`;
 
-const forhåndsvisningstekst = (forhåndsvisning: ForhåndsvisErstattSakStatistikk): string => {
+const forhåndsvisningsmeldinger = (forhåndsvisning: ForhåndsvisErstattSakStatistikk): string[] => {
     const harPostgresAvvik =
         forhåndsvisning.manglendeISakStatistikk.length > 0 || forhåndsvisning.ikkeUnikeISakStatistikk.length > 0;
     if (harPostgresAvvik) {
-        return 'En eller flere ID-er mangler eller finnes flere ganger i sak_statistikk. BigQuery ble ikke kontrollert. Lista kan ikke erstattes.';
+        return [
+            ...(forhåndsvisning.manglendeISakStatistikk.length > 0
+                ? [`Mangler i sak_statistikk: ${forhåndsvisning.manglendeISakStatistikk.join(', ')}`]
+                : []),
+            ...(forhåndsvisning.ikkeUnikeISakStatistikk.length > 0
+                ? [`Finnes flere ganger i sak_statistikk: ${forhåndsvisning.ikkeUnikeISakStatistikk.join(', ')}`]
+                : []),
+            'BigQuery ble ikke kontrollert.',
+            'Lista kan ikke erstattes.',
+        ];
     }
 
     if (
@@ -70,19 +79,29 @@ const forhåndsvisningstekst = (forhåndsvisning: ForhåndsvisErstattSakStatisti
         forhåndsvisning.manglendeIBigQuery === null ||
         forhåndsvisning.ikkeUnikeIBigQuery === null
     ) {
-        return 'BigQuery ble ikke kontrollert. Lista kan ikke erstattes.';
+        return ['BigQuery ble ikke kontrollert.', 'Lista kan ikke erstattes.'];
     }
 
     if (!forhåndsvisning.kanErstattes) {
-        if (forhåndsvisning.ikkeUnikeIBigQuery.length > 0) {
-            return 'BigQuery-treffene samsvarer ikke med én rad per sekvens-ID. Lista kan ikke erstattes før avviket er avklart.';
-        }
-        return `Vi fant ${forhåndsvisning.antallRaderISakStatistikk} rader i sak_statistikk, men ${forhåndsvisning.antallRaderIBigQuery} av ${forhåndsvisning.antallForespurte} forventede rader i BigQuery. Lista kan ikke erstattes før avviket er avklart.`;
+        return [
+            ...(forhåndsvisning.manglendeIBigQuery.length > 0
+                ? [`Mangler i BigQuery: ${forhåndsvisning.manglendeIBigQuery.join(', ')}`]
+                : []),
+            ...(forhåndsvisning.ikkeUnikeIBigQuery.length > 0
+                ? [`Finnes flere ganger i BigQuery: ${forhåndsvisning.ikkeUnikeIBigQuery.join(', ')}`]
+                : []),
+            'Lista kan ikke erstattes før avviket er avklart.',
+        ];
     }
     if (forhåndsvisning.antallRaderIBigQuery === 0) {
-        return `Vi fant ${forhåndsvisning.antallRaderISakStatistikk} rader i sak_statistikk og ingen av de forespurte radene i BigQuery. Lista kan erstattes som et nytt forsøk.`;
+        return [
+            `Vi fant ${forhåndsvisning.antallRaderISakStatistikk} rader i sak_statistikk og ingen av de forespurte radene i BigQuery.`,
+            'Lista kan erstattes som et nytt forsøk.',
+        ];
     }
-    return `Vi fant ${forhåndsvisning.antallRaderISakStatistikk} rader i sak_statistikk og ${forhåndsvisning.antallRaderIBigQuery} rader i BigQuery.`;
+    return [
+        `Vi fant ${forhåndsvisning.antallRaderISakStatistikk} rader i sak_statistikk og ${forhåndsvisning.antallRaderIBigQuery} rader i BigQuery.`,
+    ];
 };
 
 const ErstattSakStatistikk = () => {
@@ -190,7 +209,9 @@ const ErstattSakStatistikkModal = (props: { open: boolean; onClose: () => void }
                     )}
                     {RemoteData.isSuccess(forhåndsvisStatus) && (
                         <Alert variant={kanErstattes ? 'success' : 'warning'}>
-                            {forhåndsvisningstekst(forhåndsvisStatus.value)}
+                            {forhåndsvisningsmeldinger(forhåndsvisStatus.value).map((melding) => (
+                                <BodyShort key={melding}>{melding}</BodyShort>
+                            ))}
                         </Alert>
                     )}
 
