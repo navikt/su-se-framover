@@ -9,7 +9,7 @@ export default defineConfig({
     build: {
         rollupOptions: {
             input: {
-                app: './src/index.html',
+                app: './index.html',
             },
         },
         outDir: '../dist',
@@ -19,7 +19,7 @@ export default defineConfig({
         tsconfigPaths: true,
         alias: {
             // Less-imports resolves ikke via tsconfigPaths, så @styles trenger en eksplisitt alias
-            '@styles': path.resolve(__dirname, './src/styles'),
+            '@styles': path.resolve(import.meta.dirname, './src/styles'),
         },
     },
     server: {

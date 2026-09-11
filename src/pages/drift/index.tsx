@@ -21,6 +21,7 @@ import StønadStatistikk from '~src/pages/drift/components/StønadStatistikk.tsx
 import Nøkkeltall from '~src/pages/saksbehandling/behandlingsoversikt/nøkkeltall/Nøkkeltall';
 import { toIsoDateOnlyString } from '~src/utils/date/dateUtils';
 import DokumentDistribusjon from './components/dokument/DokumentDistribusjon';
+import ErstattSakStatistikk from './components/ErstattSakStatistikk';
 import Fradragssjekk from './components/fradragssjekk/Fradragssjekk';
 import SupstønadHistorisk from './components/historisk/SupstønadHistorisk';
 import JobbOversikt from './components/jobber/JobbOversikt';
@@ -240,6 +241,7 @@ const Drift = () => {
 
                     <SakStatistikk />
                     <StønadStatistikk />
+                    <ErstattSakStatistikk />
 
                     <ResendStatistikk />
 
