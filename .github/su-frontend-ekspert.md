@@ -65,6 +65,7 @@ utbetaling, stans, opphør, regulering eller tilgang til person og sak.
 | [UI-tilstand og feilhåndtering](domenekontekst/ui-tilstand-og-feilhåndtering.md) | RemoteData, feil og tomtilstander |
 | [Observerbarhet](domenekontekst/observerbarhet.md) | korrelasjons-ID, BFF-logging og klientfeil |
 | [Aksel og tilgjengelighet](domenekontekst/aksel-og-tilgjengelighet.md) | designsystem og universell utforming |
+| [Statistikk](domenekontekst/statistikk.md) | sakstatistikk, behandlingstid, beholdning og stønadsstatistikk |
 | [Eksterne repoer](domenekontekst/eksterne-repos.md) | systemgrenser og kildestatus |
 | [Avklaringer](domenekontekst/avklaringer.md) | forhold som ikke skal brukes som gjeldende fakta |
 
