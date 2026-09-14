@@ -15,7 +15,7 @@ import {
 } from '@navikt/ds-react';
 import { useCallback, useEffect, useState } from 'react';
 
-import { ApiError } from '~src/api/apiClient';
+import { ApiError, ErrorCode } from '~src/api/apiClient';
 import {
     ferdigstillVedtak,
     fetchBakoverStatus,
@@ -25,6 +25,7 @@ import {
     SøknadResponse,
 } from '~src/api/driftApi';
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
+import { ApiErrorCode } from '~src/components/apiErrorAlert/apiErrorCode';
 import { DatePicker } from '~src/components/inputs/datePicker/DatePicker';
 import { useApiCall } from '~src/lib/hooks';
 import { Nullable } from '~src/lib/types';
@@ -60,11 +61,24 @@ const Drift = () => {
     const [statusBakover, setStatusBakover] = useState<RemoteData.RemoteData<ApiError, string>>(RemoteData.pending);
     const hentStatus = useCallback(async () => {
         setStatusBakover(RemoteData.pending);
-        const resultat = await fetchBakoverStatus();
-        if (resultat.status === 'ok') {
-            setStatusBakover(RemoteData.success(resultat.data));
-        } else {
-            setStatusBakover(RemoteData.failure(resultat.error));
+        try {
+            const resultat = await fetchBakoverStatus();
+            if (resultat.status === 'ok') {
+                setStatusBakover(RemoteData.success(resultat.data));
+            } else {
+                setStatusBakover(RemoteData.failure(resultat.error));
+            }
+        } catch {
+            setStatusBakover(
+                RemoteData.failure({
+                    statusCode: ErrorCode.Unknown,
+                    correlationId: '',
+                    body: {
+                        message: 'Kunne ikke kontakte Bakover.',
+                        code: ApiErrorCode.UKJENT_FEIL,
+                    },
+                }),
+            );
         }
     }, []);
 
@@ -100,7 +114,7 @@ const Drift = () => {
     const [konsistensavstemmingFagområde, setKonsistensavstemmingFagområde] = useState<string>('SUUFORE');
 
     return (
-        <Page.Block as="main" width="xl" gutters className={styles.side}>
+        <Page.Block width="xl" gutters className={styles.side}>
             <VStack gap={{ xs: '6', md: '8' }}>
                 {vilFikseVedtak && (
                     <VilFikseVedtakModal open={vilFikseVedtak} onClose={() => setVilFikseVedtak(false)} />

@@ -13,7 +13,7 @@ import {
     Table,
     VStack,
 } from '@navikt/ds-react';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
 import { omgjøringsgrunnerTekstMapper } from '~src/components/forms/revurdering/Omgjøringgrunner-nb';
 import { DatePicker } from '~src/components/inputs/datePicker/DatePicker';
@@ -75,8 +75,8 @@ const målingstekst = (måling: Behandlingstidsmåling, kategori: SakStatistikkK
 const målingsforklaring = (måling: Behandlingstidsmåling, kategori: SakStatistikkKategori): string => {
     if (måling === 'TOTAL_BEHANDLINGSTID') {
         return kategori === 'KLAGE'
-            ? 'Tiden fra klagen ble mottatt til den først ble iverksatt, avsluttet, avbrutt eller oversendt fra førsteinstansen.'
-            : 'Tiden fra behandlingen ble mottatt til den først ble iverksatt, avsluttet eller avbrutt.';
+            ? 'Tiden fra klagen ble mottatt til den først ble iverksatt, avsluttet eller oversendt fra førsteinstansen.'
+            : 'Tiden fra behandlingen ble mottatt til den først ble iverksatt eller avsluttet.';
     }
     if (måling === 'SAKSBEHANDLING_FØR_ATTESTERING') {
         return 'Tiden i det siste sammenhengende saksbehandlingssteget før behandlingen ble sendt til attestering. Steget kan starte i «Under behandling».';
@@ -210,6 +210,13 @@ const SakstatistikkPanel = () => {
     };
 
     const ytelser = RemoteData.isSuccess(status) ? hentYtelser(status.value) : [];
+    const gyldigYtelse = ytelse !== null && ytelser.includes(ytelse) ? ytelse : null;
+
+    useEffect(() => {
+        if (RemoteData.isSuccess(status) && ytelse !== null && !ytelser.includes(ytelse)) {
+            setYtelse(null);
+        }
+    }, [status, ytelse, ytelser]);
 
     return (
         <VStack gap={{ xs: '6', md: '8' }} className={styles.panel}>
@@ -284,7 +291,11 @@ const SakstatistikkPanel = () => {
                         </option>
                     ))}
                 </Select>
-                <Select label="Ytelse" value={ytelse ?? ''} onChange={(event) => setYtelse(event.target.value || null)}>
+                <Select
+                    label="Ytelse"
+                    value={gyldigYtelse ?? ''}
+                    onChange={(event) => setYtelse(event.target.value || null)}
+                >
                     <option value="">Alle ytelser</option>
                     {ytelser.map((verdi) => (
                         <option key={verdi} value={verdi}>
@@ -319,7 +330,7 @@ const SakstatistikkPanel = () => {
                 </Alert>
             )}
             {RemoteData.isSuccess(status) && (
-                <SakstatistikkInnhold key={kategori} data={status.value} kategori={kategori} ytelse={ytelse} />
+                <SakstatistikkInnhold key={kategori} data={status.value} kategori={kategori} ytelse={gyldigYtelse} />
             )}
         </VStack>
     );
@@ -580,9 +591,6 @@ export const BehandlingstidDiagram = (props: {
     fraOgMed: string;
     tilOgMed: string;
 }) => {
-    const [aktivtPunktNøkkel, setAktivtPunktNøkkel] = useState<{ ytelse: string; periode: string } | null>(null);
-    const aktivSerie = props.serier.find((serie) => serie.ytelse === aktivtPunktNøkkel?.ytelse);
-    const aktivtPunkt = aktivSerie?.punkter.find((punkt) => punkt.periode === aktivtPunktNøkkel?.periode);
     const allePunkter = props.serier.flatMap((serie) => serie.punkter);
     const aksePunkter = props.serier[0]?.punkter ?? [];
     const maks = Math.max(1, ...allePunkter.map((punkt) => punkt.gjennomsnittDager ?? 0));
@@ -706,21 +714,6 @@ export const BehandlingstidDiagram = (props: {
                                                     r="7"
                                                     fill={farger[serieindeks % farger.length]}
                                                     className={styles.diagrampunkt}
-                                                    tabIndex={0}
-                                                    role="button"
-                                                    aria-label={`${tekstFraKode(serie.ytelse)}, ${formaterPeriode(punkt.periode, punkt.periodeTilOgMed)}. Gjennomsnitt ${formaterVarighet(punkt.gjennomsnittDager)}. Vis detaljer.`}
-                                                    onFocus={() =>
-                                                        setAktivtPunktNøkkel({
-                                                            ytelse: serie.ytelse,
-                                                            periode: punkt.periode,
-                                                        })
-                                                    }
-                                                    onMouseEnter={() =>
-                                                        setAktivtPunktNøkkel({
-                                                            ytelse: serie.ytelse,
-                                                            periode: punkt.periode,
-                                                        })
-                                                    }
                                                 />
                                             ),
                                         )}
@@ -744,25 +737,6 @@ export const BehandlingstidDiagram = (props: {
                                     {tekstFraKode(serie.ytelse)}
                                 </span>
                             ))}
-                        </div>
-                        <div className={styles.tooltip} aria-live="polite">
-                            {aktivSerie && aktivtPunkt ? (
-                                <>
-                                    <strong>
-                                        {tekstFraKode(aktivSerie.ytelse)},{' '}
-                                        {formaterPeriode(aktivtPunkt.periode, aktivtPunkt.periodeTilOgMed)}
-                                    </strong>
-                                    <span>Gjennomsnitt: {formaterVarighet(aktivtPunkt.gjennomsnittDager ?? 0)}</span>
-                                    <span>
-                                        {props.måling === 'TOTAL_BEHANDLINGSTID'
-                                            ? 'Antall behandlinger'
-                                            : 'Antall målinger'}
-                                        : {aktivtPunkt.antall}
-                                    </span>
-                                </>
-                            ) : (
-                                <span>Velg et punkt i diagrammet for å se detaljer.</span>
-                            )}
                         </div>
                     </>
                 )}

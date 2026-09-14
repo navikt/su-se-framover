@@ -60,6 +60,11 @@ const tekstFraKode = (verdi: string): string => {
 const unikeVerdier = (data: StønadStatistikkResponse, felt: 'stønadstype' | 'vedtakstype' | 'vedtaksresultat') =>
     [...new Set(data.perioder.flatMap((periode) => periode.rader.map((rad) => rad[felt])))].sort();
 
+export const lagStønadstatistikkForespørselsperiode = (fraOgMed: string, tilOgMed: string) => ({
+    fraOgMed: månederIPeriode(fraOgMed, tilOgMed).length === 1 ? forrigeMåned(fraOgMed) : fraOgMed,
+    tilOgMed,
+});
+
 const StønadstatistikkPanel = () => {
     const nå = new Date();
     const inneværendeÅr = nå.getFullYear();
@@ -73,11 +78,9 @@ const StønadstatistikkPanel = () => {
     const [vedtakstype, setVedtakstype] = useState<string | null>(null);
     const [vedtaksresultat, setVedtaksresultat] = useState<string | null>(null);
     const [stønadsklassifisering, setStønadsklassifisering] = useState<string | null>(null);
-    const inkluderSammenligningsmåned = månederIPeriode(fraOgMed, tilOgMed).length < MAKS_ANTALL_MÅNEDER;
-    const { status, genererer, prøvIgjen } = useStønadstatistikk({
-        fraOgMed: inkluderSammenligningsmåned ? forrigeMåned(fraOgMed) : fraOgMed,
-        tilOgMed,
-    });
+    const { status, genererer, prøvIgjen } = useStønadstatistikk(
+        lagStønadstatistikkForespørselsperiode(fraOgMed, tilOgMed),
+    );
 
     const dataIValgtPeriode = useMemo(
         () => ({

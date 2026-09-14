@@ -3,6 +3,7 @@ import { renderToStaticMarkup } from 'react-dom/server';
 import { SakStatistikkResponse } from '~src/types/Statistikk';
 
 import SakstatistikkPanel, { SakstatistikkInnhold } from './SakstatistikkPanel';
+import { lagStønadstatistikkForespørselsperiode } from './StønadstatistikkPanel';
 
 const data: SakStatistikkResponse = {
     fraOgMed: '2026-01-01',
@@ -176,6 +177,8 @@ describe('SakstatistikkPanel', () => {
 
         expect(markup).toContain('<table');
         expect(markup).toContain('Gjennomsnittlig behandlingstid');
+        expect(markup).toContain('Tiden fra behandlingen ble mottatt til den først ble iverksatt eller avsluttet.');
+        expect(markup).not.toContain('role="button"');
         expect(markup).toContain('Siste registrerte hendelse i datagrunnlaget');
         expect(markup).toContain('Liggetid for behandlinger i restanse');
         expect(markup).toContain('AVSLUTTET / BORTFALT');
@@ -190,5 +193,21 @@ describe('SakstatistikkPanel', () => {
         expect(markup).toContain('Formuen er for høy');
         expect(markup).toContain('SU-loven § 8');
         expect(markup).toContain('Om datagrunnlaget');
+    });
+});
+
+describe('StønadstatistikkPanel', () => {
+    it('sender valgt årsperiode uten en ekstra sammenligningsmåned', () => {
+        expect(lagStønadstatistikkForespørselsperiode('2025-01', '2025-12')).toEqual({
+            fraOgMed: '2025-01',
+            tilOgMed: '2025-12',
+        });
+    });
+
+    it('henter foregående måned når én måned er valgt', () => {
+        expect(lagStønadstatistikkForespørselsperiode('2025-12', '2025-12')).toEqual({
+            fraOgMed: '2025-11',
+            tilOgMed: '2025-12',
+        });
     });
 });
