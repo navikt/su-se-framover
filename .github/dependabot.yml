@@ -52,6 +52,10 @@ updates:
             - "nodemon"
             - "less"
       ignore:
+          - dependency-name: "*"
+            update-types:
+                - "version-update:semver-major"
+                - "version-update:semver-minor"
           - dependency-name: 'node'
           - dependency-name: 'yup'
     - package-ecosystem: npm
@@ -93,6 +97,11 @@ updates:
             - "https-proxy-agent"
             - "@types/compression"
             - "@types/cors"
+      ignore:
+          - dependency-name: "*"
+            update-types:
+                - "version-update:semver-major"
+                - "version-update:semver-minor"
 
     - package-ecosystem: 'github-actions'
       directory: '/'

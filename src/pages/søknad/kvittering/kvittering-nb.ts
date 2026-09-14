@@ -24,4 +24,8 @@ export default {
     'vedlegg.formueIUtlandet.punkt1': 'Dokumentering av formue i utlandet',
     'vedlegg.formueIUtlandet.punkt2': 'Dokumentering av pensjon fra utlandet',
     'vedlegg.søkerManglerDok': 'Hvis søker mangler dokumentasjon kan søker ettersende dette.',
+
+    'påminnelse.ikkeSkrivPåUtskrift.tittel': 'Ikke skriv endringer på den utskrevne søknaden',
+    'påminnelse.ikkeSkrivPåUtskrift.tekst':
+        'Hvis søknaden har feil eller mangler, skal du ikke skrive inn opplysninger i den utskrevne søknaden. Send i stedet inn endringene i eget dokument .',
 };

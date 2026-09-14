@@ -27,10 +27,10 @@ export const lagreVirkningstidspunkt = createApiCallAsyncThunk<
 
 export const startBeregning = createAsyncThunk<
     Søknadsbehandling,
-    { sakId: string; behandlingId: string; begrunnelse: Nullable<string> },
+    { sakId: string; behandlingId: string },
     { rejectValue: ApiError }
->('beregning/start', async ({ sakId, behandlingId, begrunnelse }, thunkApi) => {
-    const res = await behandlingApi.startBeregning(sakId, behandlingId, { begrunnelse });
+>('beregning/start', async ({ sakId, behandlingId }, thunkApi) => {
+    const res = await behandlingApi.startBeregning(sakId, behandlingId);
     if (res.status === 'ok') {
         return res.data;
     }

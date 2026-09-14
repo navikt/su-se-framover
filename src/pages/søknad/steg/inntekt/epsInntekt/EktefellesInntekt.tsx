@@ -32,6 +32,7 @@ const EktefellesInntekt = (props: { forrigeUrl: string; nesteUrl: string; avbryt
             avbrytUrl={props.avbrytUrl}
             forrigeUrl={props.forrigeUrl}
             formatMessage={formatMessage}
+            erEps={true}
         />
     );
 };

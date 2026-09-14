@@ -5,11 +5,11 @@ export default {
 
     'forventerInntekt.label': 'Forventer ektefelle/samboer å ha arbeidsinntekt fremover?',
     'forventerInntekt.hjelpetekst': 'Gjelder all inntekt i Norge og utlandet.',
-    'forventerInntekt.beløp': 'Hvor mye regner de med å tjene i måneden?',
+    'forventerInntekt.beløp': 'Hvor mye regner ektefelle/samboer med å tjene i måneden?',
 
     'andreYtelserINAV.label': 'Har ektefelle/samboer andre ytelser fra NAV?',
     'andreYtelserINAV.ytelse': 'Hvilke ytelser?',
-    'andreYtelserINAV.beløp': 'Hvor mye penger får de utbetalt i måneden?',
+    'andreYtelserINAV.beløp': 'Hvor mye penger får ektefelle/samboer utbetalt i måneden?',
 
     'søktAndreYtelserIkkeBehandlet.label': 'Har ektefelle/samboer søkt om trygdeytelser som de ikke har fått svar på?',
     'søktAndreYtelserIkkeBehandlet.begrunnelse': 'Hvilke? ',

@@ -1,41 +1,37 @@
-@import '@styles/variables.less';
-
-.container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+.side {
     width: 100%;
-    max-width: @container-md;
-    padding: @spacing-s @spacing-l;
-    margin-bottom: @spacing-xxl;
+    padding-block: var(--a-spacing-8) var(--a-spacing-12);
+}
+
+.innledning {
+    margin-block: var(--a-spacing-2) 0;
 }
 
 .statusContainer {
     display: flex;
-    justify-content: flex-start;
-
-    > :not(:last-child) {
-        margin-right: @spacing-s;
-    }
+    align-items: center;
+    gap: var(--a-spacing-2);
+    flex-wrap: wrap;
 }
 
 .actionsContainer {
     display: grid;
-    grid-template-columns: repeat(5, 1fr);
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 14rem), 1fr));
+    gap: var(--a-spacing-3);
 
-    > :not(:last-child) {
-        margin-right: @spacing-s;
+    > * {
+        min-width: 0;
+    }
+
+    :global(.navds-button) {
+        width: 100%;
     }
 }
 
 .tabellContainer {
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-
-    > :not(:last-child) {
-        margin-bottom: @spacing-s;
-    }
+    display: grid;
+    gap: var(--a-spacing-4);
+    overflow-x: auto;
 }
 
 .tabelldata {
@@ -43,18 +39,13 @@
 }
 
 .knapp {
-    margin-bottom: @spacing;
-}
-
-.alert {
-    margin-bottom: @spacing;
+    width: 100%;
 }
 
 .modalContainer {
-    height: 700px;
-    width: 700px;
     display: flex;
     flex-direction: column;
-    gap: @spacing;
-    padding: @spacing-s;
+    gap: var(--a-spacing-4);
+    width: min(42rem, 100%);
+    padding: var(--a-spacing-2);
 }

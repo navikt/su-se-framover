@@ -70,7 +70,6 @@ export const useNotatVedlegg = (props: Props) => {
     const lukkVedleggModal = () => {
         setVisVedleggModal(false);
         setValgtFil(null);
-        console.log('ahhlo');
         setNavnPåUtklipp('');
         setFeilNavnPåUtklipp(null);
     };

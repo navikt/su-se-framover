@@ -1,4 +1,3 @@
-import { Nullable } from '~src/lib/types';
 import { UnderkjennelseGrunnBehandling } from '~src/types/Behandling';
 import {
     EksisterendeVedtaksinformasjonTidligerePeriodeRequest,
@@ -22,19 +21,10 @@ export async function startBehandling(arg: {
     });
 }
 
-export async function startBeregning(
-    sakId: string,
-    behandlingId: string,
-    arg: {
-        begrunnelse: Nullable<string>;
-    },
-): Promise<ApiClientResult<Søknadsbehandling>> {
+export async function startBeregning(sakId: string, behandlingId: string): Promise<ApiClientResult<Søknadsbehandling>> {
     return apiClient({
         url: `/saker/${sakId}/behandlinger/${behandlingId}/beregn`,
         method: 'POST',
-        body: {
-            begrunnelse: arg.begrunnelse,
-        },
     });
 }
 

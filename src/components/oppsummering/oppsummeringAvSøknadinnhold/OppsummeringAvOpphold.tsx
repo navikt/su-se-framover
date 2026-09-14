@@ -19,7 +19,7 @@ const OppsummeringAvOpphold = (props: { oppholdstillatelse: Oppholdstillatelse; 
             {!props.oppholdstillatelse.erNorskStatsborger && (
                 <OppsummeringPar
                     label={formatMessage('opphold.harOppholdstillatelse')}
-                    verdi={formatMessage(`bool.${props.oppholdstillatelse.harOppholdstillatelse!}`)}
+                    verdi={formatMessage(`bool.${props.oppholdstillatelse.harOppholdstillatelse ?? false}`)}
                 />
             )}
             {props.oppholdstillatelse.harOppholdstillatelse && (

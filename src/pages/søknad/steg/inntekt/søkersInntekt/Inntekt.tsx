@@ -43,6 +43,7 @@ const DinInntekt = (props: { forrigeUrl: string; nesteUrl: string; avbrytUrl: st
             avbrytUrl={props.avbrytUrl}
             forrigeUrl={props.forrigeUrl}
             formatMessage={formatMessage}
+            erEps={false}
         />
     );
 };
@@ -53,6 +54,7 @@ interface InntektFormInterface {
     avbrytUrl: string;
     forrigeUrl: string;
     nesteUrl: string;
+    erEps: boolean;
     formatMessage: MessageFormatter<typeof sharedI18n & typeof messages>;
 }
 
@@ -231,6 +233,7 @@ export const InntektForm = ({ form, save, formatMessage, ...props }: InntektForm
                         name="trygdeytelserIUtlandet"
                         render={({ field, fieldState }) => (
                             <TrygdeytelserInputFelter
+                                erEps={props.erEps}
                                 arr={field.value}
                                 errors={fieldState.error}
                                 feltnavn={keyOf<FormData>('trygdeytelserIUtlandet')}
@@ -289,6 +292,7 @@ export const InntektForm = ({ form, save, formatMessage, ...props }: InntektForm
                         name="pensjonsInntekt"
                         render={({ field, fieldState }) => (
                             <PensjonsInntekter
+                                erEps={props.erEps}
                                 arr={field.value}
                                 errors={fieldState.error}
                                 onLeggTilClick={() =>

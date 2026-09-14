@@ -8,7 +8,9 @@ import styles from './pensjonsinntekter.module.less';
 
 export const pensjonsinntekterMessages = {
     'mottarPensjon.fra': 'Hvem får du pengene fra?',
+    'mottarPensjon.fra.eps': 'Hvem får ektefelle/samboer pengene fra?',
     'mottarPensjon.beløp': 'Hvor mye penger får du i måneden?',
+    'mottarPensjon.beløp.eps': 'Hvor mye penger får ektefelle/samboer i måneden?',
     'button.leggTil.pensjonsgiver': 'Legg til annen pensjonsgiver',
 
     'pensjonsgiver.legend': 'Pensjon {number}',
@@ -20,6 +22,7 @@ const PensjonsInntekter = (props: {
     onChange: (element: { index: number; ordning: string; beløp: string }) => void;
     onLeggTilClick: () => void;
     onFjernClick: (index: number) => void;
+    erEps: boolean;
 }) => {
     const { formatMessage } = useI18n({ messages: pensjonsinntekterMessages });
 
@@ -48,7 +51,11 @@ const PensjonsInntekter = (props: {
                         <div className={styles.itemContainer}>
                             <TextField
                                 id={feltId('ordning')}
-                                label={formatMessage('mottarPensjon.fra')}
+                                label={
+                                    props.erEps
+                                        ? formatMessage('mottarPensjon.fra.eps')
+                                        : formatMessage('mottarPensjon.fra')
+                                }
                                 value={item.ordning}
                                 onChange={(e) =>
                                     props.onChange({
@@ -64,7 +71,11 @@ const PensjonsInntekter = (props: {
                             />
                             <TextField
                                 id={feltId('beløp')}
-                                label={formatMessage('mottarPensjon.beløp')}
+                                label={
+                                    props.erEps
+                                        ? formatMessage('mottarPensjon.beløp.eps')
+                                        : formatMessage('mottarPensjon.beløp')
+                                }
                                 value={item.beløp}
                                 onChange={(e) =>
                                     props.onChange({
