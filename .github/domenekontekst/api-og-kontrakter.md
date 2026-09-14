@@ -18,6 +18,28 @@ API-modulene dekker blant annet sak, søknad, behandling, revurdering,
 regulering, dokument, klage, tilbakekreving, kontrollsamtale, person, skatt og
 driftsoperasjoner.
 
+## Historisk alderssak
+
+`src/api/historiskAlderssakApi.ts` bruker disse personoppslagene:
+
+- `POST /historisk/alderssak/finnes`
+- `POST /historisk/alderssak/vedtaksperioder`
+
+Begge sender bare `{ fnr }`. Frontend sender ikke `importId`, `projeksjonId`
+eller `dryRun`; backend velger siste fullførte ordinære projeksjon. Den første
+ruten returnerer om en historisk alderssak finnes. Den andre returnerer
+historiske vedtaksperioder, der en tom liste betyr at ingen perioder finnes.
+Fra Drift brukes finnes-ruten før navigasjon, mens vedtaksperioder først hentes
+etter at historikkruten er åpnet.
+
+Frontendtypen bruker backendens tolkede `behandlingstype`, `resultat` og
+`bosituasjon`, med de korresponderende råfeltene som fallback ved `null`.
+Backend krever Saksbehandler eller Attestant, kontrollerer persontilgang som
+alderssak og er autoritativ for `400`, `401` og `403`.
+
+Kontrakten er `cross-repo`-verifisert 2026-09-14 mot
+`su-se-bakover@0840fd3452046dca636b67aea6c6287f10cdd799`.
+
 ## Sensitive oppslag
 
 `personApi.ts`, `skattApi.ts` og `adresseOppslagApi.ts` eksponerer
@@ -60,5 +82,8 @@ være ukjent data og skal valideres før felt brukes i domenelogikk.
 - `src/api/`
 - `src/types/`
 - `src/typeMappinger/`
+- `src/api/historiskAlderssakApi.ts`
+- `src/types/HistoriskAlderssak.ts`
 - `src/pages/søknad/steg/oppsummering/backendValidationUtils.ts`
 - `src/components/apiErrorAlert/`
+- `su-se-bakover@0840fd3452046dca636b67aea6c6287f10cdd799`

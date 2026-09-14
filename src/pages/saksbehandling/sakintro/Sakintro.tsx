@@ -1,20 +1,23 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { ChevronDownIcon, ChevronUpIcon } from '@navikt/aksel-icons';
-import { Alert, Button, LinkPanel, Popover } from '@navikt/ds-react';
+import { Alert, Button, LinkPanel, Loader, Popover } from '@navikt/ds-react';
 import { isEmpty, partition } from 'fp-ts/Array';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useOutletContext } from 'react-router-dom';
+import { sjekkOmHistoriskAlderssakFinnes } from '~src/api/historiskAlderssakApi';
 import { ÅpentBrev } from '~src/assets/Illustrations';
 import LinkAsButton from '~src/components/linkAsButton/LinkAsButton';
 import Vedtakstidslinje from '~src/components/vedtakstidslinje/VedtaksTidslinje';
 import { SaksoversiktContext } from '~src/context/SaksoversiktContext';
-import { useNotificationFromLocation } from '~src/lib/hooks';
+import HistoriskAlderssakApiErrorAlert from '~src/features/historiskAlderssak/HistoriskAlderssakApiErrorAlert';
+import { useApiCall, useNotificationFromLocation } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
 import * as Routes from '~src/lib/routes';
 import { Nullable } from '~src/lib/types';
 import Utbetalinger from '~src/pages/saksbehandling/sakintro/Utbetalinger';
 import { useAppSelector } from '~src/redux/Store.ts';
 import { KlageStatus } from '~src/types/Klage';
+import { Sakstype } from '~src/types/Sak';
 import { erKlageAvsluttet, erKlageÅpen } from '~src/utils/klage/klageUtils';
 import {
     erTilbakekrevingAvbrutt,
@@ -131,6 +134,13 @@ const Sakintro = () => {
 
     const søker = useAppSelector((s) => s.personopplysninger.søker);
     const dødsbo = RemoteData.isSuccess(søker) && søker.value.dødsbo ? søker.value.dødsbo : [];
+    const [historiskAlderssak, sjekkOmHistoriskAlderssak] = useApiCall(sjekkOmHistoriskAlderssakFinnes);
+
+    useEffect(() => {
+        if (props.sak.sakstype === Sakstype.Alder) {
+            sjekkOmHistoriskAlderssak({ fnr: props.sak.fnr });
+        }
+    }, [props.sak.fnr, props.sak.sakstype, sjekkOmHistoriskAlderssak]);
 
     return (
         <div className={styles.sakintroContainer}>
@@ -155,6 +165,19 @@ const Sakintro = () => {
                         {formatMessage('link.brev')}
                     </LinkAsButton>
 
+                    {RemoteData.isPending(historiskAlderssak) && (
+                        <Loader size="small" title="Sjekker om Infotrygd-sak finnes" />
+                    )}
+
+                    {RemoteData.isSuccess(historiskAlderssak) && historiskAlderssak.value.harHistoriskAlderssak && (
+                        <LinkAsButton
+                            variant="secondary"
+                            href={Routes.historiskAlderssak.createURL({ sakId: props.sak.id })}
+                        >
+                            Infotrygd sak
+                        </LinkAsButton>
+                    )}
+
                     <LinkAsButton variant="secondary" href={Routes.borPåAdressePage.createURL({ sakId: props.sak.id })}>
                         Adressesjekk
                     </LinkAsButton>
@@ -166,6 +189,11 @@ const Sakintro = () => {
                     )}
                 </div>
             </div>
+            {RemoteData.isFailure(historiskAlderssak) && (
+                <div className={styles.historiskOppslagFeil}>
+                    <HistoriskAlderssakApiErrorAlert error={historiskAlderssak.error} />
+                </div>
+            )}
             <div className={styles.vedtaksTidslinjeContainer}>
                 <Vedtakstidslinje vedtakerPåTidslinje={props.sak.vedtakPåTidslinje} />
             </div>
