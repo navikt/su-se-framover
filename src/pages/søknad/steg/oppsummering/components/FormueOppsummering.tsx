@@ -108,18 +108,6 @@ export const FormueOppsummering = ({
                     verdi={formue.innskuddsBeløp ? formue.innskuddsBeløp : 'Ubesvart'}
                 />
             )}
-
-            <Oppsummeringsfelt
-                label={formatMessage('sparekonto.label')}
-                verdi={formue.harSparekonto ? 'Ja' : formue.harSparekonto === false ? 'Nei' : 'Ubesvart'}
-            />
-            {formue.harSparekonto && (
-                <Oppsummeringsfelt
-                    label={formatMessage('sparekonto.beløp')}
-                    verdi={formue.sparekontoBeløp ? formue.sparekontoBeløp : 'Ubesvart'}
-                />
-            )}
-
             <Oppsummeringsfelt
                 label={formatMessage('verdipapir.label')}
                 verdi={formue.harVerdipapir ? 'Ja' : formue.harVerdipapir === false ? 'Nei' : 'Ubesvart'}
