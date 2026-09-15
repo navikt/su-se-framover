@@ -56,18 +56,4 @@ describe('historisk alderssak-visning', () => {
         expect(resultatForVisning(periode)).toBe('UKJENT_RESULTAT');
         expect(bosituasjonForVisning(periode)).toBe('UKJENT_BOSITUASJON');
     });
-
-    it('sorterer kronologisk uten å endre input og legger perioder uten dato sist', () => {
-        const utenDato = lagPeriode({ vedtakId: 'uten-dato', fraOgMed: null, registrertTidspunkt: null });
-        const ny = lagPeriode({ vedtakId: 'ny', fraOgMed: '2022-01-01' });
-        const gammel = lagPeriode({ vedtakId: 'gammel', fraOgMed: '2019-01-01' });
-        const perioder = [utenDato, ny, gammel];
-
-        expect(sorterHistoriskeVedtaksperioder(perioder).map((periode) => periode.vedtakId)).toEqual([
-            'gammel',
-            'ny',
-            'uten-dato',
-        ]);
-        expect(perioder).toEqual([utenDato, ny, gammel]);
-    });
 });

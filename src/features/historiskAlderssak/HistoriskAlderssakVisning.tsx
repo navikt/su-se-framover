@@ -44,19 +44,6 @@ const formatPeriode = (periode: HistoriskVedtaksperiode): string => {
     return 'Periode ikke registrert';
 };
 
-const formatMånedsbeløpsperiode = (periode: HistoriskMånedsbeløpsperiode): string => {
-    if (periode.fraOgMed && periode.tilOgMed) {
-        return `${formatDate(periode.fraOgMed)}–${formatDate(periode.tilOgMed)}`;
-    }
-    if (periode.fraOgMed) {
-        return `Fra ${formatDate(periode.fraOgMed)}`;
-    }
-    if (periode.tilOgMed) {
-        return `Til ${formatDate(periode.tilOgMed)}`;
-    }
-    return 'Periode ikke registrert';
-};
-
 const Månedsbeløp = (props: { perioder: HistoriskMånedsbeløpsperiode[] }) => {
     if (props.perioder.length === 0) {
         return <Alert variant="info">Ingen månedsbeløp er registrert for vedtaket.</Alert>;
@@ -70,9 +57,19 @@ const Månedsbeløp = (props: { perioder: HistoriskMånedsbeløpsperiode[] }) =>
                         <dl className={styles.månedsbeløpsdetaljer}>
                             <div>
                                 <Label as="dt" size="small">
-                                    Periode
+                                    Fra og med
                                 </Label>
-                                <BodyShort as="dd">{formatMånedsbeløpsperiode(periode)}</BodyShort>
+                                <BodyShort as="dd">
+                                    {periode.fraOgMed ? formatDate(periode.fraOgMed) : 'Ikke registrert'}
+                                </BodyShort>
+                            </div>
+                            <div>
+                                <Label as="dt" size="small">
+                                    Til og med
+                                </Label>
+                                <BodyShort as="dd">
+                                    {periode.tilOgMed ? formatDate(periode.tilOgMed) : 'Ikke registrert'}
+                                </BodyShort>
                             </div>
                             <div>
                                 <Label as="dt" size="small">
@@ -124,73 +121,84 @@ const HistoriskPeriode = (props: { periode: HistoriskVedtaksperiode }) => {
     return (
         <li className={styles.tidslinjeelement}>
             <span className={styles.tidslinjemarkør} aria-hidden />
-            <ExpansionCard
-                className={styles.vedtakskort}
-                open={åpen}
-                onToggle={handleToggle}
-                aria-label={`Vedtak for ${formatPeriode(periode)}`}
-            >
-                <ExpansionCard.Header>
-                    <ExpansionCard.Title as="h2" size="small">
-                        {formatPeriode(periode)}
-                    </ExpansionCard.Title>
-                    <ExpansionCard.Description>
-                        {behandlingstypeForVisning(periode)} – {resultatForVisning(periode)}
-                    </ExpansionCard.Description>
-                </ExpansionCard.Header>
-                <ExpansionCard.Content>
-                    <VStack gap="5">
-                        <HStack justify="end">
+            <Box background="surface-default" borderWidth="1" borderRadius="medium" padding="5">
+                <VStack gap="5">
+                    <HStack gap="4" justify="space-between" align="start" wrap>
+                        <VStack gap="1">
+                            <Heading level="2" size="small">
+                                {formatPeriode(periode)}
+                            </Heading>
+                            <BodyShort weight="semibold">{behandlingstypeForVisning(periode)}</BodyShort>
+                        </VStack>
+                        <div>
                             <Tag variant={periode.gyldig ? 'success' : 'warning'} size="small">
                                 {periode.gyldig ? 'Gyldig' : 'Ikke gyldig'}
                             </Tag>
-                        </HStack>
+                        </div>
+                    </HStack>
 
-                        <dl className={styles.detaljer}>
-                            <div>
-                                <Label as="dt" size="small">
-                                    Bosituasjon
-                                </Label>
-                                <BodyShort as="dd">{bosituasjonForVisning(periode)}</BodyShort>
-                            </div>
-                            <div>
-                                <Label as="dt" size="small">
-                                    Årlig ytelsesbeløp
-                                </Label>
-                                <BodyShort as="dd">
-                                    {periode.årligYtelsesbeløp === null
-                                        ? 'Ikke registrert'
-                                        : formatCurrency(periode.årligYtelsesbeløp, { numDecimals: 0 })}
-                                </BodyShort>
-                            </div>
-                            <div>
-                                <Label as="dt" size="small">
-                                    Registrert
-                                </Label>
-                                <BodyShort as="dd">
-                                    {periode.registrertTidspunkt
-                                        ? formatDateTime(periode.registrertTidspunkt)
-                                        : 'Ikke registrert'}
-                                </BodyShort>
-                            </div>
-                            <div>
-                                <Label as="dt" size="small">
-                                    Stønads-ID
-                                </Label>
-                                <BodyShort as="dd">{periode.stønadId}</BodyShort>
-                            </div>
-                            <div>
-                                <Label as="dt" size="small">
-                                    Vedtaks-ID
-                                </Label>
-                                <BodyShort as="dd">{periode.vedtakId}</BodyShort>
-                            </div>
-                        </dl>
-
+                    <dl className={styles.detaljer}>
                         <div>
-                            <Heading level="3" size="xsmall" spacing>
+                            <Label as="dt" size="small">
+                                Resultat
+                            </Label>
+                            <BodyShort as="dd">{resultatForVisning(periode)}</BodyShort>
+                        </div>
+                        <div>
+                            <Label as="dt" size="small">
+                                Bosituasjon
+                            </Label>
+                            <BodyShort as="dd">{bosituasjonForVisning(periode)}</BodyShort>
+                        </div>
+                        <div>
+                            <Label as="dt" size="small">
+                                Årlig ytelsesbeløp
+                            </Label>
+                            <BodyShort as="dd">
+                                {periode.årligYtelsesbeløp === null
+                                    ? 'Ikke registrert'
+                                    : formatCurrency(periode.årligYtelsesbeløp, { numDecimals: 0 })}
+                            </BodyShort>
+                        </div>
+                        <div>
+                            <Label as="dt" size="small">
+                                Registrert
+                            </Label>
+                            <BodyShort as="dd">
+                                {periode.registrertTidspunkt
+                                    ? formatDateTime(periode.registrertTidspunkt)
+                                    : 'Ikke registrert'}
+                            </BodyShort>
+                        </div>
+                        <div>
+                            <Label as="dt" size="small">
+                                Stønads-ID
+                            </Label>
+                            <BodyShort as="dd">{periode.stønadId}</BodyShort>
+                        </div>
+                        <div>
+                            <Label as="dt" size="small">
+                                Vedtaks-ID
+                            </Label>
+                            <BodyShort as="dd">{periode.vedtakId}</BodyShort>
+                        </div>
+                    </dl>
+
+                    <ExpansionCard
+                        className={styles.vedtakskort}
+                        open={åpen}
+                        onToggle={handleToggle}
+                        aria-label={`Månedsbeløp for vedtak ${formatPeriode(periode)}`}
+                    >
+                        <ExpansionCard.Header>
+                            <ExpansionCard.Title as="h3" size="small">
                                 Månedsbeløp
-                            </Heading>
+                            </ExpansionCard.Title>
+                            <ExpansionCard.Description>
+                                Vis sats, fradrag og beregnet beløp for vedtaket.
+                            </ExpansionCard.Description>
+                        </ExpansionCard.Header>
+                        <ExpansionCard.Content>
                             {pipe(
                                 månedsbeløp,
                                 RemoteData.fold(
@@ -212,10 +220,10 @@ const HistoriskPeriode = (props: { periode: HistoriskVedtaksperiode }) => {
                                     (perioder) => <Månedsbeløp perioder={perioder} />,
                                 ),
                             )}
-                        </div>
-                    </VStack>
-                </ExpansionCard.Content>
-            </ExpansionCard>
+                        </ExpansionCard.Content>
+                    </ExpansionCard>
+                </VStack>
+            </Box>
         </li>
     );
 };
@@ -225,11 +233,9 @@ const HistoriskePerioder = (props: { perioder: HistoriskVedtaksperiode[] }) => {
         return <Alert variant="info">Ingen historiske vedtaksperioder ble funnet.</Alert>;
     }
 
-    const sortertePerioder = sorterHistoriskeVedtaksperioder(props.perioder);
-
     return (
         <ol className={styles.tidslinje} aria-label="Historiske vedtaksperioder">
-            {sortertePerioder.map((periode) => (
+            {props.perioder.map((periode) => (
                 <HistoriskPeriode key={`${periode.stønadId}-${periode.vedtakId}`} periode={periode} />
             ))}
         </ol>

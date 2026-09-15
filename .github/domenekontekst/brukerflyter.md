@@ -43,10 +43,11 @@ verdier for behandlingstype, resultat og bosituasjon brukes i visningen;
 råverdien er fallback når backend ikke har kunnet tolke feltet. Frontendens
 betingede visning er bare UX-styring. Backend håndhever rolle og persontilgang.
 
-Hvert vedtak er en ekspanderbar boks. Først når boksen åpnes, hentes vedtakets
-månedsbeløpsperioder med `vedtakId`. Detaljvisningen viser periode, sats,
-fradrag, beregnet beløp og eventuell linje-ID, med egne laste-, feil- og
-tomtilstander.
+Hvert vedtak vises først som en selvstendig boks med all vedtaksinformasjon.
+Boksen har et eget nedtrekk for månedsbeløp. Først når nedtrekket åpnes, hentes
+vedtakets månedsbeløpsperioder med `vedtakId`. Detaljvisningen viser fra-og-med,
+til-og-med, sats, fradrag, beregnet beløp og eventuell linje-ID, med egne laste-,
+feil- og tomtilstander.
 
 Drift-siden har i tillegg et synlig, manuelt personoppslag for historisk stønad
 eller vedtak fra Infotrygd. Oppslaget bruker først finnes-ruten og navigerer ved

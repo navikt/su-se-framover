@@ -59,13 +59,3 @@ export const bosituasjonForVisning = (periode: HistoriskVedtaksperiode): string 
 
     return periode.bosituasjonRaw ?? 'Ikke registrert';
 };
-
-export const sorterHistoriskeVedtaksperioder = (perioder: HistoriskVedtaksperiode[]): HistoriskVedtaksperiode[] => {
-    const sorteringsnøkkel = (periode: HistoriskVedtaksperiode): string =>
-        periode.fraOgMed ?? periode.registrertTidspunkt ?? '\uffff';
-
-    return [...perioder].sort((a, b) => {
-        const sammenligning = sorteringsnøkkel(a).localeCompare(sorteringsnøkkel(b));
-        return sammenligning === 0 ? a.vedtakId.localeCompare(b.vedtakId) : sammenligning;
-    });
-};
