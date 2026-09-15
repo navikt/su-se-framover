@@ -23,12 +23,7 @@ import { formatDate, formatDateTime } from '~src/utils/date/dateUtils';
 import { formatCurrency } from '~src/utils/format/formatUtils';
 
 import HistoriskAlderssakApiErrorAlert from './HistoriskAlderssakApiErrorAlert';
-import {
-    behandlingstypeForVisning,
-    bosituasjonForVisning,
-    resultatForVisning,
-    sorterHistoriskeVedtaksperioder,
-} from './HistoriskAlderssakUtils';
+import { behandlingstypeForVisning, bosituasjonForVisning, resultatForVisning } from './HistoriskAlderssakUtils';
 import styles from './HistoriskAlderssakVisning.module.less';
 
 const formatPeriode = (periode: HistoriskVedtaksperiode): string => {

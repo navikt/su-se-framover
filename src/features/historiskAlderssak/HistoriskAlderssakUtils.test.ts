@@ -5,7 +5,6 @@ import {
     bosituasjonForVisning,
     hentFnrFraNavigasjon,
     resultatForVisning,
-    sorterHistoriskeVedtaksperioder,
 } from './HistoriskAlderssakUtils';
 
 const lagPeriode = (overrides: Partial<HistoriskVedtaksperiode> = {}): HistoriskVedtaksperiode => ({
