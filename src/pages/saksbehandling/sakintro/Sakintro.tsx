@@ -134,13 +134,14 @@ const Sakintro = () => {
 
     const søker = useAppSelector((s) => s.personopplysninger.søker);
     const dødsbo = RemoteData.isSuccess(søker) && søker.value.dødsbo ? søker.value.dødsbo : [];
+    const erAlderssak = props.sak.sakstype === Sakstype.Alder;
     const [historiskAlderssak, sjekkOmHistoriskAlderssak] = useApiCall(sjekkOmHistoriskAlderssakFinnes);
 
     useEffect(() => {
-        if (props.sak.sakstype === Sakstype.Alder) {
+        if (erAlderssak) {
             sjekkOmHistoriskAlderssak({ fnr: props.sak.fnr });
         }
-    }, [props.sak.fnr, props.sak.sakstype, sjekkOmHistoriskAlderssak]);
+    }, [erAlderssak, props.sak.fnr, sjekkOmHistoriskAlderssak]);
 
     return (
         <div className={styles.sakintroContainer}>
@@ -165,18 +166,20 @@ const Sakintro = () => {
                         {formatMessage('link.brev')}
                     </LinkAsButton>
 
-                    {RemoteData.isPending(historiskAlderssak) && (
+                    {erAlderssak && RemoteData.isPending(historiskAlderssak) && (
                         <Loader size="small" title="Sjekker om Infotrygd-sak finnes" />
                     )}
 
-                    {RemoteData.isSuccess(historiskAlderssak) && historiskAlderssak.value.harHistoriskAlderssak && (
-                        <LinkAsButton
-                            variant="secondary"
-                            href={Routes.historiskAlderssak.createURL({ sakId: props.sak.id })}
-                        >
-                            Infotrygd sak
-                        </LinkAsButton>
-                    )}
+                    {erAlderssak &&
+                        RemoteData.isSuccess(historiskAlderssak) &&
+                        historiskAlderssak.value.harHistoriskAlderssak && (
+                            <LinkAsButton
+                                variant="secondary"
+                                href={Routes.historiskAlderssak.createURL({ sakId: props.sak.id })}
+                            >
+                                Infotrygd sak
+                            </LinkAsButton>
+                        )}
 
                     <LinkAsButton variant="secondary" href={Routes.borPåAdressePage.createURL({ sakId: props.sak.id })}>
                         Adressesjekk
@@ -189,7 +192,7 @@ const Sakintro = () => {
                     )}
                 </div>
             </div>
-            {RemoteData.isFailure(historiskAlderssak) && (
+            {erAlderssak && RemoteData.isFailure(historiskAlderssak) && (
                 <div className={styles.historiskOppslagFeil}>
                     <HistoriskAlderssakApiErrorAlert error={historiskAlderssak.error} />
                 </div>
