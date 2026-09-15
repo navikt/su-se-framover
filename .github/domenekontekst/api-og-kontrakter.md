@@ -24,6 +24,7 @@ driftsoperasjoner.
 
 - `POST /historisk/alderssak/finnes`
 - `POST /historisk/alderssak/vedtaksperioder`
+- `POST /historisk/alderssak/manedsbelop`
 
 Begge sender bare `{ fnr }`. Frontend sender ikke `importId`, `projeksjonId`
 eller `dryRun`; backend velger siste fullførte ordinære projeksjon. Den første
@@ -32,13 +33,19 @@ historiske vedtaksperioder, der en tom liste betyr at ingen perioder finnes.
 Fra Drift brukes finnes-ruten før navigasjon, mens vedtaksperioder først hentes
 etter at historikkruten er åpnet.
 
+Månedsbeløpsruten sender bare `{ vedtakId }` og returnerer perioder med
+`linjeId`, `fraOgMed`, `tilOgMed`, `sats`, `fradrag` og beregnet `beløp`.
+Oppslaget gjøres først når brukeren åpner det aktuelle vedtaket. Et ukjent
+vedtak gir `404`; backend finner personidenten fra vedtaket før den håndhever
+persontilgang og logger oppslaget.
+
 Frontendtypen bruker backendens tolkede `behandlingstype`, `resultat` og
 `bosituasjon`, med de korresponderende råfeltene som fallback ved `null`.
 Backend krever Saksbehandler eller Attestant, kontrollerer persontilgang som
 alderssak og er autoritativ for `400`, `401` og `403`.
 
-Kontrakten er `cross-repo`-verifisert 2026-09-14 mot
-`su-se-bakover@0840fd3452046dca636b67aea6c6287f10cdd799`.
+Kontrakten er `cross-repo`-verifisert 2026-09-15 mot
+`su-se-bakover@21753fff73cf2d35f2b78ab1ad12417ef3fe5fd3`.
 
 ## Sensitive oppslag
 
@@ -86,4 +93,4 @@ være ukjent data og skal valideres før felt brukes i domenelogikk.
 - `src/types/HistoriskAlderssak.ts`
 - `src/pages/søknad/steg/oppsummering/backendValidationUtils.ts`
 - `src/components/apiErrorAlert/`
-- `su-se-bakover@0840fd3452046dca636b67aea6c6287f10cdd799`
+- `su-se-bakover@21753fff73cf2d35f2b78ab1ad12417ef3fe5fd3`

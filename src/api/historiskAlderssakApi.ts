@@ -1,6 +1,8 @@
 import {
     HarHistoriskAlderssakResponse,
     HistoriskAlderssakRequest,
+    HistoriskeAldersmånedsbeløpRequest,
+    HistoriskMånedsbeløpsperiode,
     HistoriskVedtaksperiode,
 } from '~src/types/HistoriskAlderssak';
 
@@ -23,5 +25,15 @@ export async function hentHistoriskeVedtaksperioder(
         url: '/historisk/alderssak/vedtaksperioder',
         method: 'POST',
         body: { fnr: request.fnr },
+    });
+}
+
+export async function hentHistoriskeMånedsbeløp(
+    request: HistoriskeAldersmånedsbeløpRequest,
+): Promise<ApiClientResult<HistoriskMånedsbeløpsperiode[]>> {
+    return apiClient({
+        url: '/historisk/alderssak/manedsbelop',
+        method: 'POST',
+        body: { vedtakId: request.vedtakId },
     });
 }

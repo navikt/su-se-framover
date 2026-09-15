@@ -1,5 +1,9 @@
 import apiClient from './apiClient';
-import { hentHistoriskeVedtaksperioder, sjekkOmHistoriskAlderssakFinnes } from './historiskAlderssakApi';
+import {
+    hentHistoriskeMånedsbeløp,
+    hentHistoriskeVedtaksperioder,
+    sjekkOmHistoriskAlderssakFinnes,
+} from './historiskAlderssakApi';
 
 jest.mock('./apiClient', () => ({
     __esModule: true,
@@ -31,6 +35,16 @@ describe('historiskAlderssakApi', () => {
             url: '/historisk/alderssak/vedtaksperioder',
             method: 'POST',
             body: { fnr: '12345678910' },
+        });
+    });
+
+    it('henter månedsbeløp med bare vedtaks-ID', async () => {
+        await hentHistoriskeMånedsbeløp({ vedtakId: 'vedtak-1' });
+
+        expect(apiClientMock).toHaveBeenCalledWith({
+            url: '/historisk/alderssak/manedsbelop',
+            method: 'POST',
+            body: { vedtakId: 'vedtak-1' },
         });
     });
 });

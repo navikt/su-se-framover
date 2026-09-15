@@ -43,6 +43,11 @@ verdier for behandlingstype, resultat og bosituasjon brukes i visningen;
 råverdien er fallback når backend ikke har kunnet tolke feltet. Frontendens
 betingede visning er bare UX-styring. Backend håndhever rolle og persontilgang.
 
+Hvert vedtak er en ekspanderbar boks. Først når boksen åpnes, hentes vedtakets
+månedsbeløpsperioder med `vedtakId`. Detaljvisningen viser periode, sats,
+fradrag, beregnet beløp og eventuell linje-ID, med egne laste-, feil- og
+tomtilstander.
+
 Drift-siden har i tillegg et synlig, manuelt personoppslag for historisk stønad
 eller vedtak fra Infotrygd. Oppslaget bruker først finnes-ruten og navigerer ved
 treff til den samme historikkvisningen under `/drift/infotrygd/`.
@@ -50,8 +55,8 @@ Fødselsnummeret overføres i navigasjonsstate og inngår ikke i URL-en. Ved
 manglende eller ugyldig state gjøres ikke periodeoppslaget; brukeren får en
 forklaring og kan søke opp personen på nytt på historikkruten.
 
-Flyten er `cross-repo`-verifisert 2026-09-14 mot frontendimplementasjonen og
-`su-se-bakover@0840fd3452046dca636b67aea6c6287f10cdd799`.
+Flyten er `cross-repo`-verifisert 2026-09-15 mot frontendimplementasjonen og
+`su-se-bakover@21753fff73cf2d35f2b78ab1ad12417ef3fe5fd3`.
 
 ## Kontroll av en flyt
 
@@ -82,4 +87,4 @@ utdatert eller tilgangen er endret.
 - `src/types/HistoriskAlderssak.ts`
 - `src/pages/drift/index.tsx`
 - `src/features/historiskAlderssak/HistoriskAlderssakVisning.tsx`
-- `su-se-bakover@0840fd3452046dca636b67aea6c6287f10cdd799`
+- `su-se-bakover@21753fff73cf2d35f2b78ab1ad12417ef3fe5fd3`

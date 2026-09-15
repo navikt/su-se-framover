@@ -2,6 +2,10 @@ export interface HistoriskAlderssakRequest {
     fnr: string;
 }
 
+export interface HistoriskeAldersmånedsbeløpRequest {
+    vedtakId: string;
+}
+
 export interface HarHistoriskAlderssakResponse {
     harHistoriskAlderssak: boolean;
 }
@@ -46,4 +50,13 @@ export interface HistoriskVedtaksperiode {
     årligYtelsesbeløp: number | null;
     registrertTidspunkt: string | null;
     gyldig: boolean;
+}
+
+export interface HistoriskMånedsbeløpsperiode {
+    linjeId: string | null;
+    fraOgMed: string | null;
+    tilOgMed: string | null;
+    sats: number;
+    fradrag: number;
+    beløp: number;
 }

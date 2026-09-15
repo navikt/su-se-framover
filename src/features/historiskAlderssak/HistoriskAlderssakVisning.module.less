@@ -34,10 +34,34 @@
     box-shadow: 0 0 0 2px var(--a-border-action);
 }
 
+.vedtakskort {
+    width: 100%;
+}
+
 .detaljer {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr));
     gap: var(--a-spacing-4) var(--a-spacing-8);
+    margin: 0;
+
+    dd {
+        margin: 0;
+        overflow-wrap: anywhere;
+    }
+}
+
+.månedsbeløpsliste {
+    display: grid;
+    gap: var(--a-spacing-3);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.månedsbeløpsdetaljer {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr));
+    gap: var(--a-spacing-3) var(--a-spacing-6);
     margin: 0;
 
     dd {
