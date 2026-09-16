@@ -57,7 +57,7 @@ Bruk verb, ikke substantiv laget av verb. Typisk mønster: -ing + av.
 - Konkret over abstrakt: «vi bygger nytt image» ikke «det kreves en tilpasning av image-artefaktet».
 - Kutt fyllord: «i bunn og grunn», «i stor grad», «på mange måter», «det er viktig å merke seg at».
 - Kutt adverb, eller bruk et sterkere verb: «kjører raskt» → «er rask» eller tallet. «forbedrer betydelig» → den målte forskjellen.
-- Si hva ting gjør, ikke hvordan det føles. «SQL du kan lese» og «databasen er alltid nær» navngir en følelse. Skriv heller mekanismen eller tallet: «`.toSQL()` returnerer strengen som sendes til databasen». Kan setningen stå uendret i dokumentasjonen til et helt annet prosjekt, sier den ingenting om dette — kutt den.
+- Si hva ting gjør, ikke hvordan det føles. «En komponent du forstår med én gang» navngir en følelse. Skriv heller mekanismen eller resultatet: «Komponenten viser valideringsfeilen ved feltet». Kan setningen stå uendret i dokumentasjonen til et helt annet prosjekt, sier den ingenting om dette — kutt den.
 
 ### Struktur
 
