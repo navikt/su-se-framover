@@ -256,5 +256,3 @@ Både sak- og stønadsstatistikk tillater maksimalt to års rapportperiode.
 - `src/api/statistikkApi.ts`
 - `src/pages/drift/statistikk/`
 - `navikt/su-se-bakover#2983`
-- `domain/src/main/kotlin/no/nav/su/se/bakover/domain/statistikk/StatistikkVisningRepo.kt`
-- `service/src/main/kotlin/no/nav/su/se/bakover/service/statistikk/StatistikkVisningService.kt`

@@ -49,6 +49,3 @@ ikke i responsen.
 - `docker-compose.yml`
 - `.nais/dev-gcp.yaml`
 - `.nais/prod-gcp.yaml`
-
-Backendens Kotlin-, database- og persistensarkitektur er utenfor denne
-frontendoversikten.
