@@ -32,6 +32,12 @@ export const drift: Route<never> = {
     createURL: () => '/drift/',
 };
 
+export const historiskAlderssakDrift: Route<never> = {
+    path: '/drift/infotrygd/',
+    absPath: '/drift/infotrygd/',
+    createURL: () => '/drift/infotrygd/',
+};
+
 export const devTools: Route<never> = {
     path: '/devTools/',
     absPath: '/devTools/',
@@ -365,6 +371,12 @@ export const borPåAdressePage: Route<{ sakId: string }> = {
     path: 'borPaaAdresse/',
     absPath: '/saksoversikt/:sakId/borPaaAdresse',
     createURL: (args) => `/saksoversikt/${args.sakId}/borPaaAdresse/`,
+};
+
+export const historiskAlderssak: Route<{ sakId: string }> = {
+    path: 'infotrygd/',
+    absPath: '/saksoversikt/:sakId/infotrygd',
+    createURL: (args) => `/saksoversikt/${args.sakId}/infotrygd/`,
 };
 
 //---------------Tilbakekreving-------------------------
