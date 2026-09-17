@@ -1,6 +1,6 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { Alert, BodyLong, Button, Heading } from '@navikt/ds-react';
-import { subMonths } from 'date-fns';
+import { isAfter, isBefore, startOfMonth, subMonths } from 'date-fns';
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styles from 'src/pages/søknad/steg/inngang/inngang.module.less';
@@ -15,6 +15,7 @@ import * as routes from '~src/lib/routes.ts';
 import nb from '~src/pages/kontrollsamtale/steg/inngang/inngang-nb.ts';
 import { KontrollsamtaleSteg } from '~src/pages/kontrollsamtale/types.ts';
 import { useAppDispatch, useAppSelector } from '~src/redux/Store.ts';
+import { KontrollsamtaleStatus } from '~src/types/Kontrollsamtale.ts';
 
 const InngangKontrollnotat = () => {
     const { formatMessage } = useI18n({ messages: nb });
@@ -39,9 +40,18 @@ const InngangKontrollnotat = () => {
 
     const kanStarteBasertPåInnkallingsdato =
         RemoteData.isSuccess(hentKontrollsamtalerStatus) &&
-        hentKontrollsamtalerStatus.value.some(
-            (kontrollsamtale) => new Date() >= subMonths(new Date(kontrollsamtale.innkallingsdato), 1),
-        );
+        hentKontrollsamtalerStatus.value.some((kontrollsamtale) => {
+            if (kontrollsamtale.status == KontrollsamtaleStatus.INNKALT) {
+                return true;
+            }
+            if (kontrollsamtale.status !== KontrollsamtaleStatus.PLANLAGT_INNKALLING) {
+                return false;
+            }
+            const idag = new Date();
+            const frist = new Date(kontrollsamtale.frist);
+            const tidligstedato = startOfMonth(subMonths(frist, 1));
+            return !isBefore(idag, tidligstedato) && !isAfter(idag, frist);
+        });
     const kanStarteKontrollnotat =
         RemoteData.isSuccess(hentSakStatus) &&
         hentSakStatus.value.length > 0 &&
@@ -53,7 +63,7 @@ const InngangKontrollnotat = () => {
             <Heading level="2" size="small" spacing>
                 {formatMessage('finnSøker.tittel')}
             </Heading>
-            <BodyLong spacing>{formatMessage('finnSøker.tekst')}</BodyLong>
+            <BodyLong spacing>{formatMessage('finnSøker.tekst')} </BodyLong>
 
             <Personsøk
                 person={søker}
