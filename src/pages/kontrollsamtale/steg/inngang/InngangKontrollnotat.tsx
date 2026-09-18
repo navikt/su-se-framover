@@ -44,13 +44,15 @@ const InngangKontrollnotat = () => {
             kontrollsamtale.lovligeStatusovergangerForSaksbehandler.includes(KontrollsamtaleStatus.GJENNOMFØRT),
         );
 
-    const harIngenKontrollsamtaler =
-        RemoteData.isSuccess(hentKontrollsamtalerStatus) && hentKontrollsamtalerStatus.value.length === 0;
-
     const harIngenInnvilgetSu =
         RemoteData.isSuccess(hentSakStatus) &&
         hentSakStatus.value.length > 0 &&
         hentSakStatus.value[0].harInnvilgetStønadsperiode;
+
+    const harIngenKontrollsamtaler =
+        !harIngenInnvilgetSu &&
+        RemoteData.isSuccess(hentKontrollsamtalerStatus) &&
+        hentKontrollsamtalerStatus.value.length === 0;
 
     const kanStarteKontrollnotat =
         RemoteData.isSuccess(hentSakStatus) &&
