@@ -1,7 +1,7 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { Alert, BodyLong, Button, Heading } from '@navikt/ds-react';
 import { isAfter, isBefore, startOfMonth, subMonths } from 'date-fns';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styles from 'src/pages/søknad/steg/inngang/inngang.module.less';
 import { hentKontrollsamtaler } from '~src/api/kontrollsamtaleApi.ts';
@@ -25,12 +25,13 @@ const InngangKontrollnotat = () => {
     const [hentPersonStatus, hentPerson] = useAsyncActionCreator(fetchPerson);
     const [hentKontrollsamtalerStatus, hentKontrollsamtalerForSak] = useApiCall(hentKontrollsamtaler);
     const navigate = useNavigate();
+    const [kontrollsamtalerSakId, setKontrollsamtalerSakId] = useState<string | null>(null);
 
     useEffect(() => {
         if (RemoteData.isSuccess(hentSakStatus) && hentSakStatus.value.length > 0) {
             const sak = hentSakStatus.value[0];
             hentPerson({ fnr: sak.fnr, sakstype: sak.sakstype });
-            hentKontrollsamtalerForSak({ sakId: sak.id });
+            hentKontrollsamtalerForSak({ sakId: sak.id }, () => setKontrollsamtalerSakId(sak.id));
         }
     }, [hentSakStatus]);
 
@@ -40,6 +41,8 @@ const InngangKontrollnotat = () => {
 
     const kanStarteBasertPåInnkallingsdato =
         RemoteData.isSuccess(hentKontrollsamtalerStatus) &&
+        RemoteData.isSuccess(hentSakStatus) &&
+        kontrollsamtalerSakId === hentSakStatus.value[0]?.id &&
         hentKontrollsamtalerStatus.value.some((kontrollsamtale) => {
             if (kontrollsamtale.status == KontrollsamtaleStatus.INNKALT) {
                 return true;
