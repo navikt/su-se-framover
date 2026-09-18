@@ -1,25 +1,26 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { BodyLong, Button, Heading, Loader, Modal } from '@navikt/ds-react';
 import { pipe } from 'fp-ts/lib/function';
-import { ReactNode, useState } from 'react';
-import { Controller } from 'react-hook-form';
+import { ReactNode, useEffect, useState } from 'react';
+import { Controller, UseFormReturn } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 
 import { ErrorCode } from '~src/api/apiClient';
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
 import { BooleanRadioGroup } from '~src/components/formElements/FormElements';
 import { FnrInput } from '~src/components/inputs/FnrInput/FnrInput';
-import MultiPeriodeVelger from '~src/components/inputs/multiPeriodeVelger/MultiPeriodeVelger';
+import MultiPeriodeVelger, { PartialName } from '~src/components/inputs/multiPeriodeVelger/MultiPeriodeVelger';
 import personSlice from '~src/features/person/person.slice';
 import sakSliceActions from '~src/features/saksoversikt/sak.slice';
 import { ApiResult } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
 import * as Routes from '~src/lib/routes';
+import { Nullable } from '~src/lib/types';
 import { FormWrapper } from '~src/pages/saksbehandling/søknadsbehandling/FormWrapper';
 import { useAppDispatch } from '~src/redux/Store';
 import { Person } from '~src/types/Person';
 import { Sakstype } from '~src/types/Sak.ts';
-import { showName } from '~src/utils/person/personUtils';
+import { harFylt67VedDato, showName } from '~src/utils/person/personUtils';
 import messages from '../VilkårOgGrunnlagForms-nb';
 import { VilkårFormProps } from '../VilkårOgGrunnlagFormUtils';
 import styles from './BosituasjonForm.module.less';
@@ -69,6 +70,9 @@ const BosituasjonForm = (props: Props) => {
                                                 props.form.setValue(`${nameAndIdx}.epsFnr`, null);
                                                 props.form.setValue(`${nameAndIdx}.erEpsFylt67`, null);
                                                 props.form.setValue(`${nameAndIdx}.erEPSUførFlyktning`, null);
+                                                // epsStatus kan ellers henge igjen fra forrige EPS (før nytt fnr
+                                                // er skrevet inn), og gjøre at erEpsFylt67 beregnes ut fra feil person.
+                                                setEpsStatus(RemoteData.initial);
                                             }}
                                         />
                                     )}
@@ -92,23 +96,11 @@ const BosituasjonForm = (props: Props) => {
                                             )}
                                         />
                                         {RemoteData.isSuccess(epsStatus) && (
-                                            <Controller
-                                                control={props.form.control}
-                                                name={`${nameAndIdx}.erEpsFylt67`}
-                                                render={({ field, fieldState }) => (
-                                                    <BooleanRadioGroup
-                                                        legend="Er ektefelle/samboer fylt 67?"
-                                                        error={fieldState.error?.message}
-                                                        {...field}
-                                                        onChange={(e) => {
-                                                            field.onChange(e);
-                                                            props.form.setValue(
-                                                                `${nameAndIdx}.erEPSUførFlyktning`,
-                                                                null,
-                                                            );
-                                                        }}
-                                                    />
-                                                )}
+                                            <ErEpsFylt67Felt
+                                                form={props.form}
+                                                nameAndIdx={nameAndIdx}
+                                                epsStatus={epsStatus}
+                                                periodeFraOgMed={watch.periode.fraOgMed}
                                             />
                                         )}
 
@@ -151,6 +143,52 @@ const BosituasjonForm = (props: Props) => {
 };
 
 export default BosituasjonForm;
+
+const ErEpsFylt67Felt = (props: {
+    form: UseFormReturn<BosituasjonGrunnlagFormData>;
+    nameAndIdx: PartialName<BosituasjonGrunnlagFormData>;
+    epsStatus: ApiResult<Person>;
+    periodeFraOgMed: Nullable<Date>;
+}) => {
+    // Beregnet fra EPS' fødselsdato og periodens fraOgMed. `null` betyr at vi ikke kan beregne
+    // det automatisk (EPS ikke hentet ennå, periode mangler, eller fødselsdato er ukjent) -
+    // i så fall må saksbehandler fylle ut verdien manuelt, og feltet låses ikke.
+    const beregnetVerdi = RemoteData.isSuccess(props.epsStatus)
+        ? harFylt67VedDato(props.periodeFraOgMed!, props.epsStatus.value.fødsel)
+        : null;
+
+    useEffect(() => {
+        if (!RemoteData.isSuccess(props.epsStatus) || !props.periodeFraOgMed) {
+            // EPS er ikke (lenger) hentet, eller periode mangler - nullstill slik at et evt.
+            // tidligere auto-utfylt svar ikke henger igjen for en annen/fjernet EPS.
+            props.form.setValue(`${props.nameAndIdx}.erEpsFylt67`, null);
+            return;
+        }
+
+        if (beregnetVerdi !== null) {
+            props.form.setValue(`${props.nameAndIdx}.erEpsFylt67`, beregnetVerdi);
+        }
+    }, [props.epsStatus, props.periodeFraOgMed]);
+
+    return (
+        <Controller
+            control={props.form.control}
+            name={`${props.nameAndIdx}.erEpsFylt67`}
+            render={({ field, fieldState }) => (
+                <BooleanRadioGroup
+                    legend="Er ektefelle/samboer fylt 67?"
+                    error={fieldState.error?.message}
+                    readOnly={beregnetVerdi !== null}
+                    {...field}
+                    onChange={(e) => {
+                        field.onChange(e);
+                        props.form.setValue(`${props.nameAndIdx}.erEPSUførFlyktning`, null);
+                    }}
+                />
+            )}
+        />
+    );
+};
 
 const EpsSkjermingModalOgPersonkort = (props: { eps: ApiResult<Person>; søker: Person }) => {
     const navigate = useNavigate();
