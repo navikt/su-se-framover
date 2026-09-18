@@ -1,6 +1,5 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { Alert, BodyLong, Button, Heading } from '@navikt/ds-react';
-import { isAfter, isBefore, startOfDay, startOfMonth, subMonths } from 'date-fns';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styles from 'src/pages/søknad/steg/inngang/inngang.module.less';
@@ -25,7 +24,7 @@ const InngangKontrollnotat = () => {
     const [hentPersonStatus, hentPerson] = useAsyncActionCreator(fetchPerson);
     const [hentKontrollsamtalerStatus, hentKontrollsamtalerForSak] = useApiCall(hentKontrollsamtaler);
     const navigate = useNavigate();
-    const [kontrollsamtalerSakId, setKontrollsamtalerSakId] = useState<string | null>(null);
+    const [, setKontrollsamtalerSakId] = useState<string | null>(null);
 
     useEffect(() => {
         if (RemoteData.isSuccess(hentSakStatus) && hentSakStatus.value.length > 0) {
@@ -41,20 +40,10 @@ const InngangKontrollnotat = () => {
 
     const kanStarteBasertPåInnkallingsdato =
         RemoteData.isSuccess(hentKontrollsamtalerStatus) &&
-        RemoteData.isSuccess(hentSakStatus) &&
-        kontrollsamtalerSakId === hentSakStatus.value[0]?.id &&
-        hentKontrollsamtalerStatus.value.some((kontrollsamtale) => {
-            if (kontrollsamtale.status == KontrollsamtaleStatus.INNKALT) {
-                return true;
-            }
-            if (kontrollsamtale.status !== KontrollsamtaleStatus.PLANLAGT_INNKALLING) {
-                return false;
-            }
-            const idag = startOfDay(new Date());
-            const frist = startOfDay(new Date(kontrollsamtale.frist));
-            const tidligstedato = startOfMonth(subMonths(frist, 1));
-            return !isBefore(idag, tidligstedato) && !isAfter(idag, frist);
-        });
+        hentKontrollsamtalerStatus.value.some((kontrollsamtale) =>
+            kontrollsamtale.lovligeStatusovergangerForSaksbehandler.includes(KontrollsamtaleStatus.GJENNOMFØRT),
+        );
+
     const kanStarteKontrollnotat =
         RemoteData.isSuccess(hentSakStatus) &&
         hentSakStatus.value.length > 0 &&
