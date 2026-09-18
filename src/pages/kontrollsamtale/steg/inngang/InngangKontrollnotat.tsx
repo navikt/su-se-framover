@@ -1,18 +1,20 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { Alert, BodyLong, Button, Heading } from '@navikt/ds-react';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styles from 'src/pages/søknad/steg/inngang/inngang.module.less';
+import { hentKontrollsamtaler } from '~src/api/kontrollsamtaleApi.ts';
 import LinkAsButton from '~src/components/linkAsButton/LinkAsButton.tsx';
 import Personsøk from '~src/components/Personsøk/Personsøk.tsx';
 import personSlice, { fetchPerson } from '~src/features/person/person.slice.ts';
 import { fetchSakByFnr } from '~src/features/saksoversikt/sak.slice.ts';
-import { useAsyncActionCreator } from '~src/lib/hooks.ts';
+import { useApiCall, useAsyncActionCreator } from '~src/lib/hooks.ts';
 import { useI18n } from '~src/lib/i18n.ts';
 import * as routes from '~src/lib/routes.ts';
 import nb from '~src/pages/kontrollsamtale/steg/inngang/inngang-nb.ts';
 import { KontrollsamtaleSteg } from '~src/pages/kontrollsamtale/types.ts';
 import { useAppDispatch, useAppSelector } from '~src/redux/Store.ts';
+import { KontrollsamtaleStatus } from '~src/types/Kontrollsamtale.ts';
 
 const InngangKontrollnotat = () => {
     const { formatMessage } = useI18n({ messages: nb });
@@ -20,12 +22,15 @@ const InngangKontrollnotat = () => {
     const dispatch = useAppDispatch();
     const [hentSakStatus, hentSak] = useAsyncActionCreator(fetchSakByFnr);
     const [hentPersonStatus, hentPerson] = useAsyncActionCreator(fetchPerson);
+    const [hentKontrollsamtalerStatus, hentKontrollsamtalerForSak] = useApiCall(hentKontrollsamtaler);
     const navigate = useNavigate();
+    const [, setKontrollsamtalerSakId] = useState<string | null>(null);
 
     useEffect(() => {
         if (RemoteData.isSuccess(hentSakStatus) && hentSakStatus.value.length > 0) {
             const sak = hentSakStatus.value[0];
             hentPerson({ fnr: sak.fnr, sakstype: sak.sakstype });
+            hentKontrollsamtalerForSak({ sakId: sak.id }, () => setKontrollsamtalerSakId(sak.id));
         }
     }, [hentSakStatus]);
 
@@ -33,15 +38,24 @@ const InngangKontrollnotat = () => {
         dispatch(personSlice.actions.resetSøkerData());
     }, [dispatch]);
 
+    const kanStarteBasertPåInnkallingsdato =
+        RemoteData.isSuccess(hentKontrollsamtalerStatus) &&
+        hentKontrollsamtalerStatus.value.some((kontrollsamtale) =>
+            kontrollsamtale.lovligeStatusovergangerForSaksbehandler.includes(KontrollsamtaleStatus.GJENNOMFØRT),
+        );
+
     const kanStarteKontrollnotat =
-        RemoteData.isSuccess(hentSakStatus) && hentSakStatus.value.length > 0 && RemoteData.isSuccess(hentPersonStatus);
+        RemoteData.isSuccess(hentSakStatus) &&
+        hentSakStatus.value.length > 0 &&
+        RemoteData.isSuccess(hentPersonStatus) &&
+        kanStarteBasertPåInnkallingsdato;
     const sakIkkeFunnet = RemoteData.isFailure(hentSakStatus);
     return (
         <div className={styles.searchContainer}>
             <Heading level="2" size="small" spacing>
                 {formatMessage('finnSøker.tittel')}
             </Heading>
-            <BodyLong spacing>{formatMessage('finnSøker.tekst')}</BodyLong>
+            <BodyLong spacing>{formatMessage('finnSøker.tekst')} </BodyLong>
 
             <Personsøk
                 person={søker}
