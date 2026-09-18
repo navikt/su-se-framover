@@ -44,11 +44,23 @@ const InngangKontrollnotat = () => {
             kontrollsamtale.lovligeStatusovergangerForSaksbehandler.includes(KontrollsamtaleStatus.GJENNOMFØRT),
         );
 
+    const harIngenInnvilgetSu =
+        RemoteData.isSuccess(hentSakStatus) &&
+        hentSakStatus.value.length > 0 &&
+        hentSakStatus.value[0].harInnvilgetStønadsperiode;
+
+    const harIngenKontrollsamtaler =
+        !harIngenInnvilgetSu &&
+        RemoteData.isSuccess(hentKontrollsamtalerStatus) &&
+        hentKontrollsamtalerStatus.value.length === 0;
+
     const kanStarteKontrollnotat =
         RemoteData.isSuccess(hentSakStatus) &&
         hentSakStatus.value.length > 0 &&
         RemoteData.isSuccess(hentPersonStatus) &&
-        kanStarteBasertPåInnkallingsdato;
+        !harIngenInnvilgetSu &&
+        (harIngenKontrollsamtaler || kanStarteBasertPåInnkallingsdato);
+
     const sakIkkeFunnet = RemoteData.isFailure(hentSakStatus);
     return (
         <div className={styles.searchContainer}>
@@ -67,6 +79,14 @@ const InngangKontrollnotat = () => {
                 }}
             />
             {sakIkkeFunnet && <Alert variant="error">Fant ingen sak for bruker, kan ikke starte kontrollskjema.</Alert>}
+            {harIngenInnvilgetSu && (
+                <Alert variant="warning" style={{ marginTop: '1rem' }}>
+                    {formatMessage('varsel.ingenInnvilgetSu')}
+                </Alert>
+            )}
+            {harIngenKontrollsamtaler && (
+                <Alert variant="warning">{formatMessage('varsel.harIngenkontrollsamtale')}</Alert>
+            )}
             <div className={styles.knapperContainer}>
                 <LinkAsButton variant={kanStarteKontrollnotat ? 'secondary' : 'primary'} href={'/soknad'}>
                     {formatMessage('knapp.forrige')}
