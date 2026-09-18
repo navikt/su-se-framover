@@ -50,7 +50,7 @@ const InngangKontrollnotat = () => {
     const harIngenInnvilgetSu =
         RemoteData.isSuccess(hentSakStatus) &&
         hentSakStatus.value.length > 0 &&
-        hentSakStatus.value[0].vedtakPåTidslinje.length === 0;
+        hentSakStatus.value[0].harInnvilgetStønadsperiode;
 
     const kanStarteKontrollnotat =
         RemoteData.isSuccess(hentSakStatus) &&

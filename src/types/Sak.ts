@@ -31,6 +31,7 @@ export interface Sak {
     versjon: number;
     tilbakekrevinger: ManuellTilbakekrevingsbehandling[];
     uteståendeKravgrunnlag: Nullable<Kravgrunnlag>;
+    harInnvilgetStønadsperiode: boolean;
 }
 
 export enum KanStansesEllerGjenopptas {
