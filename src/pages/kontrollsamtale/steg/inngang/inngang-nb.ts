@@ -4,4 +4,9 @@ export default {
 
     'feil.sakIkkeFunnet': 'Fant ingen sak for bruker, kan ikke starte kontrollskjema.',
     'knapp.forrige': 'Forrige',
+
+    'varsel.ingenInnvilgetSu':
+        'Saken har ingen innvilget periode med supplerende stønad, kan ikke starte kontrollskjema.',
+    'varsel.kontrollsamtaleKanIkkeGjennomføres':
+        'Kontrollsamtale kan ikke gjennomføres fordi den ikke er innenfor gyldig periode for gjennomføring.',
 };
