@@ -1,6 +1,6 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { Alert, BodyLong, Button, Heading } from '@navikt/ds-react';
-import { isAfter, isBefore, startOfMonth, subMonths } from 'date-fns';
+import { isAfter, isBefore, startOfDay, startOfMonth, subMonths } from 'date-fns';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styles from 'src/pages/søknad/steg/inngang/inngang.module.less';
@@ -50,8 +50,8 @@ const InngangKontrollnotat = () => {
             if (kontrollsamtale.status !== KontrollsamtaleStatus.PLANLAGT_INNKALLING) {
                 return false;
             }
-            const idag = new Date();
-            const frist = new Date(kontrollsamtale.frist);
+            const idag = startOfDay(new Date());
+            const frist = startOfDay(new Date(kontrollsamtale.frist));
             const tidligstedato = startOfMonth(subMonths(frist, 1));
             return !isBefore(idag, tidligstedato) && !isAfter(idag, frist);
         });
