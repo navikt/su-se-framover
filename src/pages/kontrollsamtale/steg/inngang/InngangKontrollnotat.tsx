@@ -113,13 +113,13 @@ const InngangKontrollnotat = () => {
                                         key={sak.sakId}
                                         onClick={() => {
                                             setValgtSak(sak.sakId);
-                                            hentPerson({ fnr: sak.fnr, sakstype: sak.sakstype });
+                                            hentPerson({ fnr: sak.fnr, sakstype: sak.type });
                                             hentKontrollsamtalerForSak({ sakId: sak.sakId }, () =>
                                                 setKontrollsamtalerSakId(sak.sakId),
                                             );
                                         }}
                                     >
-                                        Velg sakstype {sak.sakstype}
+                                        Velg sakstype {sak.type}
                                     </Button>
                                 </div>
                             ))}
