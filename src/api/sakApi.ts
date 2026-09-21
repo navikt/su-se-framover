@@ -72,7 +72,7 @@ export async function hentBegrensetSakinfo({
 
 type SakInfo = {
     sakId: string;
-    sakstype: Sakstype;
+    type: Sakstype;
     fnr: string;
     saksnummer: string;
 };
