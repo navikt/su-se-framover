@@ -158,15 +158,24 @@ const ErEpsFylt67Felt = (props: {
         : null;
 
     useEffect(() => {
+        const gjeldendeErEpsFylt67 = props.form.getValues(`${props.nameAndIdx}.erEpsFylt67`);
+
         if (!RemoteData.isSuccess(props.epsStatus) || !props.periodeFraOgMed) {
             // EPS er ikke (lenger) hentet, eller periode mangler - nullstill slik at et evt.
             // tidligere auto-utfylt svar ikke henger igjen for en annen/fjernet EPS.
-            props.form.setValue(`${props.nameAndIdx}.erEpsFylt67`, null);
+            if (gjeldendeErEpsFylt67 !== null) {
+                props.form.setValue(`${props.nameAndIdx}.erEpsFylt67`, null);
+                // erEpsFylt67 endret seg (fra en kjent verdi til ukjent) - et evt. tidligere svar
+                // om uførflyktning er ikke lenger nødvendigvis relevant/gyldig.
+                props.form.setValue(`${props.nameAndIdx}.erEPSUførFlyktning`, null);
+            }
             return;
         }
 
-        if (beregnetVerdi !== null) {
+        if (beregnetVerdi !== null && beregnetVerdi !== gjeldendeErEpsFylt67) {
             props.form.setValue(`${props.nameAndIdx}.erEpsFylt67`, beregnetVerdi);
+            // erEpsFylt67 endret seg - nullstill uførflyktning-svaret av samme grunn som over.
+            props.form.setValue(`${props.nameAndIdx}.erEPSUførFlyktning`, null);
         }
     }, [props.epsStatus, props.periodeFraOgMed]);
 
