@@ -139,10 +139,7 @@ const InngangKontrollnotat = () => {
                 {RemoteData.isFailure(hentSakStatus) && <ApiErrorAlert error={hentSakStatus.error} />}
             </div>
             {RemoteData.isSuccess(hentSakStatus) && !kanStarteBasertPåInnkallingsdato && (
-                <Alert variant={'warning'}>
-                    Personen har per nå ingen registrert åpen kontrollsamtale. Dette må registreres før du kan opprette
-                    kontrollnotat.
-                </Alert>
+                <Alert variant={'warning'}>Personen har per nå ingen åpen kontrollsamtale.</Alert>
             )}
             <div className={styles.knapperContainer}>
                 <LinkAsButton variant={kanStarteKontrollnotat ? 'secondary' : 'primary'} href={'/soknad'}>
