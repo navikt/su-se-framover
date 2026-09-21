@@ -138,7 +138,7 @@ const InngangKontrollnotat = () => {
                 {RemoteData.isPending(hentSakStatus) && <Loader />}
                 {RemoteData.isFailure(hentSakStatus) && <ApiErrorAlert error={hentSakStatus.error} />}
             </div>
-            {!kanStarteBasertPåInnkallingsdato && (
+            {RemoteData.isSuccess(hentSakStatus) && !kanStarteBasertPåInnkallingsdato && (
                 <Alert variant={'warning'}>
                     Personen har ingen registrerte gjennomførte kontrollsamtaler enda. Dette betyr at skjemaet ikke er
                     tilgjengelig.
