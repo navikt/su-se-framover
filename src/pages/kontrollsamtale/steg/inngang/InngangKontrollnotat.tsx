@@ -148,7 +148,7 @@ const InngangKontrollnotat = () => {
                 <LinkAsButton variant={kanStarteKontrollnotat ? 'secondary' : 'primary'} href={'/soknad'}>
                     {formatMessage('knapp.forrige')}
                 </LinkAsButton>
-                {kanStarteKontrollnotat && valgtSak && (
+                {valgtSak && (
                     <Button
                         type="button"
                         onClick={() => {
