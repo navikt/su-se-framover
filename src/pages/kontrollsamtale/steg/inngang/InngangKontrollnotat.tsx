@@ -1,7 +1,7 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { BodyLong, BodyShort, Button, Heading, Loader, Search, VStack } from '@navikt/ds-react';
-import { useState } from 'react';
+import { Alert, BodyLong, BodyShort, Button, Heading, Loader, Search, VStack } from '@navikt/ds-react';
+import { useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import styles from 'src/pages/søknad/steg/inngang/inngang.module.less';
@@ -63,6 +63,15 @@ const InngangKontrollnotat = () => {
         }
     };
 
+    useEffect(() => {
+        if (RemoteData.isSuccess(hentSakStatus) && hentSakStatus.value.length === 1) {
+            const sak = hentSakStatus.value[0];
+            setValgtSak(hentSakStatus.value[0].sakId);
+            hentPerson({ fnr: sak.fnr, sakstype: sak.type });
+            hentKontrollsamtalerForSak({ sakId: sak.sakId }, () => setKontrollsamtalerSakId(sak.sakId));
+        }
+    }, [hentSakStatus]);
+
     return (
         <div className={styles.searchContainer}>
             <Heading level="2" size="small" spacing>
@@ -102,7 +111,7 @@ const InngangKontrollnotat = () => {
                         ),
                     )}
                 </div>
-                {RemoteData.isSuccess(hentSakStatus) && (
+                {RemoteData.isSuccess(hentSakStatus) && hentSakStatus.value.length > 1 && (
                     <>
                         <BodyShort>Velg hvilken sak du vil opprette kontrollsamtale for</BodyShort>
                         <VStack gap="2">
@@ -129,7 +138,12 @@ const InngangKontrollnotat = () => {
                 {RemoteData.isPending(hentSakStatus) && <Loader />}
                 {RemoteData.isFailure(hentSakStatus) && <ApiErrorAlert error={hentSakStatus.error} />}
             </div>
-
+            {!kanStarteBasertPåInnkallingsdato && (
+                <Alert variant={'warning'}>
+                    Personen har ingen registrerte gjennomførte kontrollsamtaler enda. Dette betyr at skjemaet ikke er
+                    tilgjengelig.
+                </Alert>
+            )}
             <div className={styles.knapperContainer}>
                 <LinkAsButton variant={kanStarteKontrollnotat ? 'secondary' : 'primary'} href={'/soknad'}>
                     {formatMessage('knapp.forrige')}
