@@ -140,8 +140,8 @@ const InngangKontrollnotat = () => {
             </div>
             {RemoteData.isSuccess(hentSakStatus) && !kanStarteBasertPåInnkallingsdato && (
                 <Alert variant={'warning'}>
-                    Personen har per nå ingen registrert planlagt kontrollsamtale. Dette må registreres før du kan
-                    opprette kontrollnotat.
+                    Personen har per nå ingen registrert åpen kontrollsamtale. Dette må registreres før du kan opprette
+                    kontrollnotat.
                 </Alert>
             )}
             <div className={styles.knapperContainer}>
