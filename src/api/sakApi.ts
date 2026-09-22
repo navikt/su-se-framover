@@ -70,7 +70,7 @@ export async function hentBegrensetSakinfo({
     });
 }
 
-type SakInfo = {
+export type SakInfo = {
     sakId: string;
     type: Sakstype;
     fnr: string;
