@@ -1,5 +1,5 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import { BodyLong, Button, Heading, Loader, Modal } from '@navikt/ds-react';
+import { Alert, BodyLong, BodyShort, Button, Heading, Loader, Modal } from '@navikt/ds-react';
 import { pipe } from 'fp-ts/lib/function';
 import { ReactNode, useEffect, useState } from 'react';
 import { Controller, UseFormReturn } from 'react-hook-form';
@@ -20,7 +20,7 @@ import { FormWrapper } from '~src/pages/saksbehandling/søknadsbehandling/FormWr
 import { useAppDispatch } from '~src/redux/Store';
 import { Person } from '~src/types/Person';
 import { Sakstype } from '~src/types/Sak.ts';
-import { harFylt67VedDato, showName } from '~src/utils/person/personUtils';
+import { fyller67ILøpetAvPeriode, harFylt67VedDato, showName } from '~src/utils/person/personUtils';
 import messages from '../VilkårOgGrunnlagForms-nb';
 import { VilkårFormProps } from '../VilkårOgGrunnlagFormUtils';
 import styles from './BosituasjonForm.module.less';
@@ -103,6 +103,21 @@ const BosituasjonForm = (props: Props) => {
                                                 periodeFraOgMed={watch.periode.fraOgMed}
                                             />
                                         )}
+
+                                        {watch.erEpsFylt67 === false &&
+                                            RemoteData.isSuccess(epsStatus) &&
+                                            watch.periode.fraOgMed &&
+                                            watch.periode.tilOgMed &&
+                                            fyller67ILøpetAvPeriode(
+                                                { fraOgMed: watch.periode.fraOgMed, tilOgMed: watch.periode.tilOgMed },
+                                                epsStatus.value.fødsel,
+                                            ) === true && (
+                                                <Alert variant="info" className={styles.epsFyller67Alert}>
+                                                    <BodyShort>
+                                                        {formatMessage('bosituasjon.epsFyller67IPerioden')}
+                                                    </BodyShort>
+                                                </Alert>
+                                            )}
 
                                         {watch.erEpsFylt67 === false && (
                                             <Controller

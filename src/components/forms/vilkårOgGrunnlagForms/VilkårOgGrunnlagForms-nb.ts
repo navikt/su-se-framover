@@ -58,6 +58,7 @@ export default {
     'bosituasjon.delerBolig': 'Deler søker bolig med noen over 18 år?',
     'bosituasjon.erEPSUførFlyktning': 'Er ektefelle/samboer ufør flyktning?',
     'bosituasjon.epsFnr': 'Ektefelle/samboers fødelsnummer',
+    'bosituasjon.epsFyller67IPerioden': 'Ektefelle/samboer fyller 67 år i løpet av stønadsperioden.',
     'bosituasjon.harSøkerEPS': 'Har søker ektefelle eller samboer?',
     'bosituasjon.fjern.bosituasjon': 'Slett',
     'bosituasjon.ny.bosituasjon': 'Ny periode for opplysning',
