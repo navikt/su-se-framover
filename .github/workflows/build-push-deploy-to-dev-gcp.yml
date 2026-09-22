@@ -29,7 +29,7 @@ jobs:
               exit 1
             fi
     build-push-docker-image:
-        name: build-push-docker-image
+        name: tests-and-build-push-docker-image
         needs: verify-master-is-ancestor
         runs-on: ubuntu-latest
         outputs:

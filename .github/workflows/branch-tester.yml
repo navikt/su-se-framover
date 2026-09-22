@@ -1,0 +1,54 @@
+name: Kjører tester på pull requests pushes
+on:
+  push:
+    branches:
+      - '*'         # matches every branch that doesn't contain a '/'
+      - '*/*'       # matches every branch containing a single '/'
+      - '**'        # matches every branch
+      - '!gh-readonly-queue/**' # excludes GitHub merge queue branches
+      - '!master'   # excludes master
+      - '!main'     # excludes main (will probably replace master)
+    paths-ignore:
+      - '.github/**'
+      - '!.github/workflows/branch-tester.yml'
+      - '!.github/actions/build-and-test/**'
+      - '!.github/actions/setup-java/**'
+      - '.idea/**'
+      - '.editorconfig'
+      - '*.template'
+      - '.gitignore'
+      - 'alerts.yml'
+      - '*.sh'
+      - 'CODEOWNERS'
+      - 'docker-compose.yml'
+      - 'LICENSE'
+      - '*.md'
+
+jobs:
+  run-tests:
+    name: Kjører tester, ts check og linting
+    runs-on: ubuntu-latest-8-cores
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v7.0.0
+        with:
+          node-version: '24.1.0'
+      - name: Ensure npm has release-age exclusion support
+        run: |
+          npm i -g npm@11.18.0
+          npm -v
+      - name: install-deps-client
+        run: npm ci --min-release-age 20 --ignore-scripts
+      - name: install-deps-server
+        run: npm ci --min-release-age 20 --ignore-scripts --prefix server
+      - name: lint-and-typecheck
+        run: npm run lint-and-typecheck
+      - name: build-client
+        run: npm run build
+      - name: build-server
+        working-directory: server
+        run: npm run build
+      - name: tests
+        run: npm run test
