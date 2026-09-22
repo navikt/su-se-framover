@@ -70,6 +70,23 @@ export async function hentBegrensetSakinfo({
     });
 }
 
+export type SakInfo = {
+    sakId: string;
+    type: Sakstype;
+    fnr: string;
+    saksnummer: string;
+};
+
+export async function hentSakinfoPåFnr(fnr: string): Promise<ApiClientResult<SakInfo[]>> {
+    return apiClient({
+        url: `/saker/søk/info/fnr`,
+        method: 'POST',
+        body: {
+            fnr,
+        },
+    });
+}
+
 export async function registrerUtenlandsopphold(
     arg: RegistrerUtenlandsoppholdRequest,
 ): Promise<ApiClientResult<RegistrerteUtenlandsopphold>> {
