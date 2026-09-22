@@ -1,6 +1,6 @@
 import { Fødsel } from '~src/types/Person';
 
-import { harFylt67VedDato } from './personUtils';
+import { fyller67ILøpetAvPeriode, harFylt67VedDato } from './personUtils';
 
 const lagFødsel = (dato: string | null): Fødsel => ({
     dato,
@@ -33,5 +33,30 @@ describe('harFylt67VedDato', () => {
 
     it('returnerer null når fødsel er null', () => {
         expect(harFylt67VedDato(new Date(2024, 0, 1), null)).toBeNull();
+    });
+});
+
+describe('fyller67ILøpetAvPeriode', () => {
+    const periode = { fraOgMed: new Date(2024, 0, 1), tilOgMed: new Date(2024, 11, 31) };
+
+    it('returnerer true når personen ikke er fylt 67 ved periodens start, men er det ved periodens slutt', () => {
+        // Født 1957-06-15 -> fyller 67 år 2024-06-15, altså midt i perioden
+        expect(fyller67ILøpetAvPeriode(periode, lagFødsel('1957-06-15'))).toBe(true);
+    });
+
+    it('returnerer false når personen allerede er fylt 67 ved periodens start', () => {
+        expect(fyller67ILøpetAvPeriode(periode, lagFødsel('1950-05-15'))).toBe(false);
+    });
+
+    it('returnerer false når personen ikke fyller 67 i løpet av perioden', () => {
+        expect(fyller67ILøpetAvPeriode(periode, lagFødsel('1960-05-15'))).toBe(false);
+    });
+
+    it('returnerer null når fødselsdato ikke er kjent', () => {
+        expect(fyller67ILøpetAvPeriode(periode, { dato: null, år: 1957, alder: 67 })).toBeNull();
+    });
+
+    it('returnerer null når fødsel er null', () => {
+        expect(fyller67ILøpetAvPeriode(periode, null)).toBeNull();
     });
 });
