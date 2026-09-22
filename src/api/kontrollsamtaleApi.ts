@@ -50,7 +50,7 @@ export const annullerKontrollsamtale = (arg: AnnullerKontrollsamtaleRequest) =>
 
 export const lagreKontrollsamtaleNotat = (arg: LagreKontrollsamtaleNotatRequest) => {
     const { sakId, ...body } = arg;
-    return apiClient({
+    return apiClient<void>({
         url: `/saker/${sakId}/kontrollsamtaler/notat`,
         method: 'POST',
         body,
