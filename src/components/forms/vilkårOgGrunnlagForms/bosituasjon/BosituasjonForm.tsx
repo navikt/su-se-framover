@@ -68,10 +68,10 @@ const BosituasjonForm = (props: Props) => {
                                             onChange={(e) => {
                                                 field.onChange(e);
                                                 props.form.setValue(`${nameAndIdx}.epsFnr`, null);
-                                                props.form.setValue(`${nameAndIdx}.erEpsFylt67`, null);
-                                                props.form.setValue(`${nameAndIdx}.erEPSUførFlyktning`, null);
-                                                // epsStatus kan ellers henge igjen fra forrige EPS (før nytt fnr
-                                                // er skrevet inn), og gjøre at erEpsFylt67 beregnes ut fra feil person.
+                                                // Å sette epsStatus til initial trigger useEffect-en i
+                                                // ErEpsFylt67Felt, som nullstiller erEpsFylt67 og
+                                                // erEPSUførFlyktning siden epsStatus da ikke lenger er
+                                                // RemoteData.success.
                                                 setEpsStatus(RemoteData.initial);
                                             }}
                                         />
@@ -90,12 +90,10 @@ const BosituasjonForm = (props: Props) => {
                                                     name={`${nameAndIdx}.epsFnr`}
                                                     onFnrChange={(fnr) => {
                                                         field.onChange(fnr);
-                                                        // Nytt fnr betyr en annen EPS - et evt. tidligere svar om
-                                                        // uførflyktning gjaldt forrige person, og er ikke gyldig for
-                                                        // den nye, selv om erEpsFylt67 tilfeldigvis blir uendret (f.eks.
-                                                        // fortsatt "nei" for begge personer).
-                                                        props.form.setValue(`${nameAndIdx}.erEpsFylt67`, null);
-                                                        props.form.setValue(`${nameAndIdx}.erEPSUførFlyktning`, null);
+                                                        // Nytt fnr betyr en annen EPS. Å sette epsStatus til initial
+                                                        // trigger useEffect-en i ErEpsFylt67Felt, som nullstiller
+                                                        // erEpsFylt67 og erEPSUførFlyktning siden epsStatus da ikke
+                                                        // lenger er RemoteData.success (se den effekten for detaljer).
                                                         setEpsStatus(RemoteData.initial);
                                                     }}
                                                     fnr={field.value ?? ''}
@@ -128,7 +126,7 @@ const BosituasjonForm = (props: Props) => {
                                                 </Alert>
                                             )}
 
-                                        {watch.erEpsFylt67 === false && (
+                                        {watch.erEpsFylt67 === false && RemoteData.isSuccess(epsStatus) && (
                                             <Controller
                                                 control={props.form.control}
                                                 name={`${nameAndIdx}.erEPSUførFlyktning`}
