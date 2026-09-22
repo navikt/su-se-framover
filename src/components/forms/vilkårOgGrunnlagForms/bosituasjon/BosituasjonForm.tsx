@@ -88,7 +88,16 @@ const BosituasjonForm = (props: Props) => {
                                                     label={formatMessage('bosituasjon.epsFnr')}
                                                     inputId="epsFnr"
                                                     name={`${nameAndIdx}.epsFnr`}
-                                                    onFnrChange={field.onChange}
+                                                    onFnrChange={(fnr) => {
+                                                        field.onChange(fnr);
+                                                        // Nytt fnr betyr en annen EPS - et evt. tidligere svar om
+                                                        // uførflyktning gjaldt forrige person, og er ikke gyldig for
+                                                        // den nye, selv om erEpsFylt67 tilfeldigvis blir uendret (f.eks.
+                                                        // fortsatt "nei" for begge personer).
+                                                        props.form.setValue(`${nameAndIdx}.erEpsFylt67`, null);
+                                                        props.form.setValue(`${nameAndIdx}.erEPSUførFlyktning`, null);
+                                                        setEpsStatus(RemoteData.initial);
+                                                    }}
                                                     fnr={field.value ?? ''}
                                                     feil={fieldState.error?.message}
                                                     getPersonStatus={(res) => setEpsStatus(res)}
