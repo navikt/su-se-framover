@@ -54,6 +54,15 @@ const BosituasjonForm = (props: Props) => {
                     }}
                     getChild={(nameAndIdx) => {
                         const watch = props.form.watch(nameAndIdx);
+                        const nullstillEpsData = () => {
+                            props.form.setValue(`${nameAndIdx}.erEpsFylt67`, null);
+                            props.form.setValue(`${nameAndIdx}.erEPSUførFlyktning`, null);
+                            // ErEpsFylt67Felt rendres bare når epsStatus er success,
+                            // og avmonteres når den settes til initial -
+                            // da rekker ikke useEffect-en der å nullstille erEpsFylt67/erEPSUførFlyktning selv.
+                            // Derfor nullstilles de eksplisitt her, sammen med epsStatus.
+                            setEpsStatus(RemoteData.initial);
+                        };
                         return (
                             <div>
                                 <EpsSkjermingModalOgPersonkort eps={epsStatus} søker={props.søker} />
@@ -68,11 +77,9 @@ const BosituasjonForm = (props: Props) => {
                                             onChange={(e) => {
                                                 field.onChange(e);
                                                 props.form.setValue(`${nameAndIdx}.epsFnr`, null);
-                                                // Å sette epsStatus til initial trigger useEffect-en i
-                                                // ErEpsFylt67Felt, som nullstiller erEpsFylt67 og
-                                                // erEPSUførFlyktning siden epsStatus da ikke lenger er
-                                                // RemoteData.success.
-                                                setEpsStatus(RemoteData.initial);
+                                                // harEPS endret seg - fjerner/legger til EPS,
+                                                // så gjeldende EPS-data er ikke lenger gyldig.
+                                                nullstillEpsData();
                                             }}
                                         />
                                     )}
@@ -90,11 +97,8 @@ const BosituasjonForm = (props: Props) => {
                                                     name={`${nameAndIdx}.epsFnr`}
                                                     onFnrChange={(fnr) => {
                                                         field.onChange(fnr);
-                                                        // Nytt fnr betyr en annen EPS. Å sette epsStatus til initial
-                                                        // trigger useEffect-en i ErEpsFylt67Felt, som nullstiller
-                                                        // erEpsFylt67 og erEPSUførFlyktning siden epsStatus da ikke
-                                                        // lenger er RemoteData.success (se den effekten for detaljer).
-                                                        setEpsStatus(RemoteData.initial);
+                                                        // Nytt fnr betyr en annen EPS - nullstill data avledet av den forrige.
+                                                        nullstillEpsData();
                                                     }}
                                                     fnr={field.value ?? ''}
                                                     feil={fieldState.error?.message}
@@ -106,7 +110,7 @@ const BosituasjonForm = (props: Props) => {
                                             <ErEpsFylt67Felt
                                                 form={props.form}
                                                 nameAndIdx={nameAndIdx}
-                                                epsStatus={epsStatus}
+                                                eps={epsStatus.value}
                                                 periodeFraOgMed={watch.periode.fraOgMed}
                                             />
                                         )}
@@ -169,26 +173,22 @@ export default BosituasjonForm;
 const ErEpsFylt67Felt = (props: {
     form: UseFormReturn<BosituasjonGrunnlagFormData>;
     nameAndIdx: PartialName<BosituasjonGrunnlagFormData>;
-    epsStatus: ApiResult<Person>;
+    eps: Person;
     periodeFraOgMed: Nullable<Date>;
 }) => {
     // Beregnet fra EPS' fødselsdato og periodens fraOgMed. `null` betyr at vi ikke kan beregne
-    // det automatisk (EPS ikke hentet ennå, periode mangler, eller fødselsdato er ukjent) -
-    // i så fall må saksbehandler fylle ut verdien manuelt, og feltet låses ikke.
-    const beregnetVerdi = RemoteData.isSuccess(props.epsStatus)
-        ? harFylt67VedDato(props.periodeFraOgMed!, props.epsStatus.value.fødsel)
-        : null;
+    // det automatisk (periode mangler, eller fødselsdato er ukjent) - i så fall må saksbehandler
+    // fylle ut verdien manuelt, og feltet låses ikke.
+    const beregnetVerdi = props.periodeFraOgMed ? harFylt67VedDato(props.periodeFraOgMed, props.eps.fødsel) : null;
 
     useEffect(() => {
         const gjeldendeErEpsFylt67 = props.form.getValues(`${props.nameAndIdx}.erEpsFylt67`);
 
-        if (!RemoteData.isSuccess(props.epsStatus) || !props.periodeFraOgMed) {
-            // EPS er ikke (lenger) hentet, eller periode mangler - nullstill slik at et evt.
-            // tidligere auto-utfylt svar ikke henger igjen for en annen/fjernet EPS.
+        if (!props.periodeFraOgMed) {
+            // Periode mangler - nullstill slik at et evt. tidligere auto-utfylt svar ikke
+            // henger igjen når vi ikke lenger kan beregne det.
             if (gjeldendeErEpsFylt67 !== null) {
                 props.form.setValue(`${props.nameAndIdx}.erEpsFylt67`, null);
-                // erEpsFylt67 endret seg (fra en kjent verdi til ukjent) - et evt. tidligere svar
-                // om uførflyktning er ikke lenger nødvendigvis relevant/gyldig.
                 props.form.setValue(`${props.nameAndIdx}.erEPSUførFlyktning`, null);
             }
             return;
@@ -199,7 +199,7 @@ const ErEpsFylt67Felt = (props: {
             // erEpsFylt67 endret seg - nullstill uførflyktning-svaret av samme grunn som over.
             props.form.setValue(`${props.nameAndIdx}.erEPSUførFlyktning`, null);
         }
-    }, [props.epsStatus, props.periodeFraOgMed]);
+    }, [props.eps, props.periodeFraOgMed]);
 
     return (
         <Controller
