@@ -1,33 +1,20 @@
-name: Kjører tester på pull requests pushes
+name: Test branch
+
 on:
   push:
     branches:
-      - '*'         # matches every branch that doesn't contain a '/'
-      - '*/*'       # matches every branch containing a single '/'
-      - '**'        # matches every branch
-      - '!gh-readonly-queue/**' # excludes GitHub merge queue branches
-      - '!master'   # excludes master
-      - '!main'     # excludes main (will probably replace master)
-    paths-ignore:
-      - '.github/**'
-      - '!.github/workflows/branch-tester.yml'
-      - '!.github/actions/build-and-test/**'
-      - '!.github/actions/setup-java/**'
-      - '.idea/**'
-      - '.editorconfig'
-      - '*.template'
-      - '.gitignore'
-      - 'alerts.yml'
-      - '*.sh'
-      - 'CODEOWNERS'
-      - 'docker-compose.yml'
-      - 'LICENSE'
-      - '*.md'
+      - '**'
+      - '!master'
+      - '!main'
+
+permissions: {}
 
 jobs:
   run-tests:
-    name: Kjører tester, ts check og linting
-    runs-on: ubuntu-latest-8-cores
+    name: Tester, typekontroll, lint og bygg
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
     steps:
       - uses: actions/checkout@v7
         with:
@@ -39,16 +26,17 @@ jobs:
         run: |
           npm i -g npm@11.18.0
           npm -v
-      - name: install-deps-client
+      - name: Install client dependencies
         run: npm ci --min-release-age 20 --ignore-scripts
-      - name: install-deps-server
+      - name: Install server dependencies
         run: npm ci --min-release-age 20 --ignore-scripts --prefix server
-      - name: lint-and-typecheck
-        run: npm run lint-and-typecheck
-      - name: build-client
+      - name: Lint
+        run: npm run lint
+      - name: Typecheck
+        run: npm run typecheck
+      - name: Test
+        run: npm test
+      - name: Build client
         run: npm run build
-      - name: build-server
-        working-directory: server
-        run: npm run build
-      - name: tests
-        run: npm run test
+      - name: Build server
+        run: npm run build:server
