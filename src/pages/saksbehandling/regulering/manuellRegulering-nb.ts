@@ -10,6 +10,7 @@ export default {
 
     'ieu.verdi.tidligere': 'Gjeldende inntekt etter uførhet i SU',
     'knapper.tilbake': 'Tilbake',
+    'knapp.seBrev': 'Se brev',
     'knapper.send': 'Gjennomfør regulering',
     notification: 'Regulering har blitt gjennomført',
 };
