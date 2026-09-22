@@ -28,7 +28,7 @@ export const harFylt67VedDato = (dato: Date, fødsel: Nullable<Fødsel>): Nullab
         return null;
     }
 
-    const alderVedDato = alderSomPersonFyllerPåDato(dato, new Date(fødsel.dato));
+    const alderVedDato = alderSomPersonFyllerPåDato(dato, DateFns.parseISO(fødsel.dato));
     return alderVedDato >= 67;
 };
 
