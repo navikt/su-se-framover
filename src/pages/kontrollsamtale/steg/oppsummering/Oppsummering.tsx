@@ -1,8 +1,11 @@
+import * as RemoteData from '@devexperts/remote-data-ts';
 import { Textarea } from '@navikt/ds-react';
 import { useNavigate, useParams } from 'react-router-dom';
 import KontrollsamtaleOppsummering from 'src/pages/kontrollsamtale/steg/oppsummering/components/Kontrollsamtaleoppsummering/KontrollsamtaleOppsummering.tsx';
+import * as kontrollsamtaleApi from '~src/api/kontrollsamtaleApi.ts';
+import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert.tsx';
 import { fritekstUpdated } from '~src/features/kontrollsamtale/kontrollsamtale.slice.ts';
-import { sendKontrollsamtaleNotat } from '~src/features/søknad/innsending.slice.ts';
+import { useApiCall } from '~src/lib/hooks.ts';
 import { useI18n } from '~src/lib/i18n.ts';
 import messages from '~src/pages/kontrollsamtale/steg/oppsummering/oppsummering-nb.ts';
 import Bunnknapper from '~src/pages/søknad/bunnknapper/Bunnknapper.tsx';
@@ -20,11 +23,14 @@ const Oppsummering = ({ forrigeUrl, nesteUrl, avbrytUrl }: Props) => {
     const { formatMessage } = useI18n({ messages: { ...messages } });
     const dispatch = useAppDispatch();
     const kontrollsamtale = useAppSelector((state) => state.kontrollsamtale);
+    const [sendKontrollsamtaleNotatStatus, sendKontrollsamtaleNotat] = useApiCall(
+        kontrollsamtaleApi.lagreKontrollsamtaleNotat,
+    );
     const { sakId } = useParams<{
         sakId: string;
     }>();
 
-    const onSubmit = async () => {
+    const onSubmit = () => {
         if (!sakId) {
             throw new Error('Mangler sakId');
         }
@@ -44,8 +50,8 @@ const Oppsummering = ({ forrigeUrl, nesteUrl, avbrytUrl }: Props) => {
             return;
         }
 
-        const resultat = await dispatch(
-            sendKontrollsamtaleNotat({
+        sendKontrollsamtaleNotat(
+            {
                 sakId: sakId,
                 personligOppmøte: kontrollsamtale.personligOppmøte,
                 fullmaktOgLegeerklæring: kontrollsamtale.fullmaktOgLegeerklæring,
@@ -66,13 +72,11 @@ const Oppsummering = ({ forrigeUrl, nesteUrl, avbrytUrl }: Props) => {
                 andreForhold: kontrollsamtale.andreForhold,
                 skatteOpplysninger: kontrollsamtale.skatteOpplysninger,
                 fritekst: kontrollsamtale.fritekst?.trim() ? kontrollsamtale.fritekst.trim() : null,
-            }),
+            },
+            () => navigate(nesteUrl),
         );
-
-        if (sendKontrollsamtaleNotat.fulfilled.match(resultat)) {
-            navigate(nesteUrl);
-        }
     };
+
     return (
         <form
             onSubmit={(event) => {
@@ -102,11 +106,15 @@ const Oppsummering = ({ forrigeUrl, nesteUrl, avbrytUrl }: Props) => {
                     }}
                     next={{
                         label: formatMessage('sendInnSkjema'),
+                        spinner: RemoteData.isPending(sendKontrollsamtaleNotatStatus),
                     }}
                     avbryt={{
                         toRoute: avbrytUrl,
                     }}
                 />
+                {RemoteData.isFailure(sendKontrollsamtaleNotatStatus) && (
+                    <ApiErrorAlert error={sendKontrollsamtaleNotatStatus.error} />
+                )}
             </div>
         </form>
     );
