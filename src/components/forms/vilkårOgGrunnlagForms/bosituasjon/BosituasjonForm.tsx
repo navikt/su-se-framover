@@ -186,6 +186,11 @@ const ErEpsFylt67Felt = (props: {
             render={({ field, fieldState }) => (
                 <BooleanRadioGroup
                     legend="Er ektefelle/samboer fylt 67?"
+                    description={
+                        beregnetVerdi !== null
+                            ? 'Forhåndsutfylt basert på fødselsdato ved starten av søknadsperioden.'
+                            : undefined
+                    }
                     error={fieldState.error?.message}
                     readOnly={beregnetVerdi !== null}
                     {...field}
