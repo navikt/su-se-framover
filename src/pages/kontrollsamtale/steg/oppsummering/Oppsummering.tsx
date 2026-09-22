@@ -1,3 +1,4 @@
+import * as RemoteData from '@devexperts/remote-data-ts';
 import { Textarea } from '@navikt/ds-react';
 import { useNavigate, useParams } from 'react-router-dom';
 import KontrollsamtaleOppsummering from 'src/pages/kontrollsamtale/steg/oppsummering/components/Kontrollsamtaleoppsummering/KontrollsamtaleOppsummering.tsx';
@@ -20,11 +21,16 @@ const Oppsummering = ({ forrigeUrl, nesteUrl, avbrytUrl }: Props) => {
     const { formatMessage } = useI18n({ messages: { ...messages } });
     const dispatch = useAppDispatch();
     const kontrollsamtale = useAppSelector((state) => state.kontrollsamtale);
+    const kontrollsamtaleNotat = useAppSelector((state) => state.innsending.kontrollsamtaleNotat);
     const { sakId } = useParams<{
         sakId: string;
     }>();
 
     const onSubmit = async () => {
+        if (RemoteData.isPending(kontrollsamtaleNotat)) {
+            return;
+        }
+
         if (!sakId) {
             throw new Error('Mangler sakId');
         }
@@ -73,6 +79,7 @@ const Oppsummering = ({ forrigeUrl, nesteUrl, avbrytUrl }: Props) => {
             navigate(nesteUrl);
         }
     };
+
     return (
         <form
             onSubmit={(event) => {
@@ -102,6 +109,7 @@ const Oppsummering = ({ forrigeUrl, nesteUrl, avbrytUrl }: Props) => {
                     }}
                     next={{
                         label: formatMessage('sendInnSkjema'),
+                        spinner: RemoteData.isPending(kontrollsamtaleNotat),
                     }}
                     avbryt={{
                         toRoute: avbrytUrl,
