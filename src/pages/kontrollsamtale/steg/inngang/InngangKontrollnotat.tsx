@@ -1,6 +1,6 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Alert, BodyLong, BodyShort, Button, Heading, Loader, Search, VStack } from '@navikt/ds-react';
+import { BodyLong, BodyShort, Button, Heading, Loader, Search, VStack } from '@navikt/ds-react';
 import { useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
@@ -138,9 +138,6 @@ const InngangKontrollnotat = () => {
                 {RemoteData.isPending(hentSakStatus) && <Loader />}
                 {RemoteData.isFailure(hentSakStatus) && <ApiErrorAlert error={hentSakStatus.error} />}
             </div>
-            {RemoteData.isSuccess(hentSakStatus) && !kanStarteBasertPåInnkallingsdato && (
-                <Alert variant={'warning'}>Personen har per nå ingen åpen kontrollsamtale.</Alert>
-            )}
             <div className={styles.knapperContainer}>
                 <LinkAsButton variant={kanStarteKontrollnotat ? 'secondary' : 'primary'} href={'/soknad'}>
                     {formatMessage('knapp.forrige')}
