@@ -1,15 +1,21 @@
-import { HistoriskVedtaksperiode } from '~src/types/HistoriskAlderssak';
+import { HistoriskMånedsbeløpsperiode, HistoriskVedtaksperiode } from '~src/types/HistoriskAlderssak';
 
 import {
     behandlingstypeForVisning,
     bosituasjonForVisning,
+    fradragskodeForVisning,
+    fradragskoderForVisning,
     hentFnrFraNavigasjon,
+    opphørsgrunnForVisning,
     resultatForVisning,
 } from './HistoriskAlderssakUtils';
 
 const lagPeriode = (overrides: Partial<HistoriskVedtaksperiode> = {}): HistoriskVedtaksperiode => ({
     stønadId: 'stønad-1',
     vedtakId: 'vedtak-1',
+    oppdragId: 'oppdrag-1',
+    opphørskodeRaw: 'AP',
+    opphørsgrunn: 'ALDERSPENSJON',
     fraOgMed: '2020-01-01',
     tilOgMed: '2020-12-31',
     sakstype: 'ALDER',
@@ -20,8 +26,30 @@ const lagPeriode = (overrides: Partial<HistoriskVedtaksperiode> = {}): Historisk
     bosituasjonRaw: 'EN',
     bosituasjon: 'ENSLIG',
     årligYtelsesbeløp: 120_000,
+    revurderingsdato: '2020-01-02',
     registrertTidspunkt: '2020-01-02T10:15:30',
+    endringskoder: ['ENDR'],
+    saksreferanse: {
+        kontornummer: '1234',
+        saksblokk: 'A',
+        saksnummer: '5678',
+        behandlendeKontor: 'Nav test',
+    },
+    sendtTilOs: '2020-01-02T10:00:00',
+    mottattFraOs: '2020-01-02T10:05:00',
+    godkjentAvOs: '2020-01-02T10:10:00',
     gyldig: true,
+    ...overrides,
+});
+
+const lagMånedsbeløp = (overrides: Partial<HistoriskMånedsbeløpsperiode> = {}): HistoriskMånedsbeløpsperiode => ({
+    linjeId: 'linje-1',
+    fraOgMed: '2020-01-01',
+    tilOgMed: '2020-01-31',
+    sats: 10_000,
+    fradrag: 3_000,
+    fradragskoder: ['ARBM', 'FTRM'],
+    beløp: 7_000,
     ...overrides,
 });
 
@@ -39,6 +67,7 @@ describe('historisk alderssak-visning', () => {
         expect(behandlingstypeForVisning(periode)).toBe('Søknad');
         expect(resultatForVisning(periode)).toBe('Innvilget');
         expect(bosituasjonForVisning(periode)).toBe('Enslig');
+        expect(opphørsgrunnForVisning(periode)).toBe('Alderspensjon');
     });
 
     it('bruker råverdier som fallback', () => {
@@ -49,10 +78,72 @@ describe('historisk alderssak-visning', () => {
             resultatRaw: 'UKJENT_RESULTAT',
             bosituasjon: null,
             bosituasjonRaw: 'UKJENT_BOSITUASJON',
+            opphørsgrunn: null,
+            opphørskodeRaw: 'UKJENT_OPPHØRSGRUNN',
         });
 
         expect(behandlingstypeForVisning(periode)).toBe('UKJENT_BEHANDLING');
         expect(resultatForVisning(periode)).toBe('UKJENT_RESULTAT');
         expect(bosituasjonForVisning(periode)).toBe('UKJENT_BOSITUASJON');
+        expect(opphørsgrunnForVisning(periode)).toBe('UKJENT_OPPHØRSGRUNN');
+    });
+
+    it('viser ikke registrert når nullable kodeverdier mangler', () => {
+        const periode = lagPeriode({
+            bosituasjon: null,
+            bosituasjonRaw: null,
+            opphørsgrunn: null,
+            opphørskodeRaw: null,
+            oppdragId: null,
+            revurderingsdato: null,
+            endringskoder: [],
+            saksreferanse: {
+                kontornummer: null,
+                saksblokk: null,
+                saksnummer: null,
+                behandlendeKontor: null,
+            },
+            sendtTilOs: null,
+            mottattFraOs: null,
+            godkjentAvOs: null,
+        });
+
+        expect(bosituasjonForVisning(periode)).toBe('Ikke registrert');
+        expect(opphørsgrunnForVisning(periode)).toBe('Ikke registrert');
+        expect(periode.endringskoder).toEqual([]);
+    });
+
+    it.each([
+        ['ARBE', 'Arbeidsinntekt, ektefelle'],
+        ['ARBM', 'Arbeidsinntekt, stønadsmottaker'],
+        ['FTRE', 'Ytelser fra folketrygden, ektefelle'],
+        ['FTRM', 'Ytelser fra folketrygden, stønadsmottaker'],
+        ['PENE', 'Andre norske pensjoner, ektefelle'],
+        ['PENM', 'Andre norske pensjoner, stønadsmottaker'],
+        ['UTLM', 'Utenlandske pensjoner, stønadsmottaker'],
+    ])('oversetter fradragskode %s', (kode, forventetTekst) => {
+        expect(fradragskodeForVisning(kode)).toBe(forventetTekst);
+    });
+
+    it('viser ukjente fradragskoder uendret', () => {
+        expect(fradragskodeForVisning('UKJENT_KODE')).toBe('UKJENT_KODE');
+    });
+
+    it('viser flere fradragskoder og beholder ukjente koder', () => {
+        const periode = lagMånedsbeløp({
+            fradragskoder: ['ARBM', 'PENE', 'UKJENT_KODE'],
+        });
+
+        expect(fradragskoderForVisning(periode.fradragskoder)).toEqual([
+            'Arbeidsinntekt, stønadsmottaker',
+            'Andre norske pensjoner, ektefelle',
+            'UKJENT_KODE',
+        ]);
+    });
+
+    it('håndterer tom liste med fradragskoder', () => {
+        const periode = lagMånedsbeløp({ fradragskoder: [] });
+
+        expect(fradragskoderForVisning(periode.fradragskoder)).toEqual([]);
     });
 });

@@ -23,7 +23,13 @@ import { formatDate, formatDateTime } from '~src/utils/date/dateUtils';
 import { formatCurrency } from '~src/utils/format/formatUtils';
 
 import HistoriskAlderssakApiErrorAlert from './HistoriskAlderssakApiErrorAlert';
-import { behandlingstypeForVisning, bosituasjonForVisning, resultatForVisning } from './HistoriskAlderssakUtils';
+import {
+    behandlingstypeForVisning,
+    bosituasjonForVisning,
+    fradragskoderForVisning,
+    opphørsgrunnForVisning,
+    resultatForVisning,
+} from './HistoriskAlderssakUtils';
 import styles from './HistoriskAlderssakVisning.module.less';
 
 const formatPeriode = (periode: HistoriskVedtaksperiode): string => {
@@ -76,7 +82,20 @@ const Månedsbeløp = (props: { perioder: HistoriskMånedsbeløpsperiode[] }) =>
                                 <Label as="dt" size="small">
                                     Fradrag
                                 </Label>
-                                <BodyShort as="dd">{formatCurrency(periode.fradrag)}</BodyShort>
+                                <dd className={styles.fradrag}>
+                                    <BodyShort>{formatCurrency(periode.fradrag)}</BodyShort>
+                                    {periode.fradragskoder.length === 0 ? (
+                                        <BodyShort size="small">Ingen fradragskoder</BodyShort>
+                                    ) : (
+                                        <ul className={styles.kodeliste} aria-label="Fradrag som inngår">
+                                            {fradragskoderForVisning(periode.fradragskoder).map((kode, kodeindeks) => (
+                                                <li key={`${kode}-${kodeindeks}`}>
+                                                    <BodyShort size="small">{kode}</BodyShort>
+                                                </li>
+                                            ))}
+                                        </ul>
+                                    )}
+                                </dd>
                             </div>
                             <div>
                                 <Label as="dt" size="small">
@@ -176,6 +195,86 @@ const HistoriskPeriode = (props: { periode: HistoriskVedtaksperiode }) => {
                                 Vedtaks-ID
                             </Label>
                             <BodyShort as="dd">{periode.vedtakId}</BodyShort>
+                        </div>
+                        <div>
+                            <Label as="dt" size="small">
+                                Oppdrag-ID
+                            </Label>
+                            <BodyShort as="dd">{periode.oppdragId ?? 'Ikke registrert'}</BodyShort>
+                        </div>
+                        <div>
+                            <Label as="dt" size="small">
+                                Opphørsgrunn
+                            </Label>
+                            <BodyShort as="dd">{opphørsgrunnForVisning(periode)}</BodyShort>
+                        </div>
+                        <div>
+                            <Label as="dt" size="small">
+                                Revurderingsdato i Infotrygd
+                            </Label>
+                            <BodyShort as="dd">
+                                {periode.revurderingsdato ? formatDate(periode.revurderingsdato) : 'Ikke registrert'}
+                            </BodyShort>
+                        </div>
+                        <div>
+                            <Label as="dt" size="small">
+                                Endringskoder
+                            </Label>
+                            <BodyShort as="dd">
+                                {periode.endringskoder.length > 0
+                                    ? periode.endringskoder.join(', ')
+                                    : 'Ingen endringskoder'}
+                            </BodyShort>
+                        </div>
+                        <div>
+                            <Label as="dt" size="small">
+                                Kontornummer
+                            </Label>
+                            <BodyShort as="dd">{periode.saksreferanse.kontornummer ?? 'Ikke registrert'}</BodyShort>
+                        </div>
+                        <div>
+                            <Label as="dt" size="small">
+                                Saksblokk
+                            </Label>
+                            <BodyShort as="dd">{periode.saksreferanse.saksblokk ?? 'Ikke registrert'}</BodyShort>
+                        </div>
+                        <div>
+                            <Label as="dt" size="small">
+                                Saksnummer
+                            </Label>
+                            <BodyShort as="dd">{periode.saksreferanse.saksnummer ?? 'Ikke registrert'}</BodyShort>
+                        </div>
+                        <div>
+                            <Label as="dt" size="small">
+                                Behandlende kontor
+                            </Label>
+                            <BodyShort as="dd">
+                                {periode.saksreferanse.behandlendeKontor ?? 'Ikke registrert'}
+                            </BodyShort>
+                        </div>
+                        <div>
+                            <Label as="dt" size="small">
+                                Sendt til Oppdrag
+                            </Label>
+                            <BodyShort as="dd">
+                                {periode.sendtTilOs ? formatDateTime(periode.sendtTilOs) : 'Ikke registrert'}
+                            </BodyShort>
+                        </div>
+                        <div>
+                            <Label as="dt" size="small">
+                                Mottatt fra Oppdrag
+                            </Label>
+                            <BodyShort as="dd">
+                                {periode.mottattFraOs ? formatDateTime(periode.mottattFraOs) : 'Ikke registrert'}
+                            </BodyShort>
+                        </div>
+                        <div>
+                            <Label as="dt" size="small">
+                                Godkjent av Oppdrag
+                            </Label>
+                            <BodyShort as="dd">
+                                {periode.godkjentAvOs ? formatDateTime(periode.godkjentAvOs) : 'Ikke registrert'}
+                            </BodyShort>
                         </div>
                     </dl>
 

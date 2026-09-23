@@ -1,6 +1,7 @@
 import {
     HistoriskBehandlingstype,
     HistoriskBosituasjon,
+    HistoriskOpphørsgrunn,
     HistoriskResultat,
     HistoriskVedtaksperiode,
 } from '~src/types/HistoriskAlderssak';
@@ -46,6 +47,30 @@ const bosituasjonTekst: Record<HistoriskBosituasjon, string> = {
     ENSLIG_MED_BOFELLESSKAP: 'Enslig med bofellesskap',
 };
 
+const opphørsgrunnTekst: Record<HistoriskOpphørsgrunn, string> = {
+    ANNULLERT: 'Annullert',
+    ALDERSPENSJON: 'Alderspensjon',
+    ANNEN_ÅRSAK: 'Annen årsak',
+    FLYTTET: 'Flyttet',
+    HØY_INNTEKT: 'Høy inntekt',
+    INSTITUSJON: 'Institusjon',
+    LANGT_UTENLANDSOPPHOLD: 'Langt utenlandsopphold',
+    STOR_FORMUE: 'Stor formue',
+    FLYTTET_TIL_UTLANDET: 'Flyttet til utlandet',
+    DØD: 'Død',
+    UTENLANDSK_ADRESSE_ELLER_GIRONUMMER: 'Utenlandsk adresse eller gironummer',
+};
+
+const fradragskodeTekst: Partial<Record<string, string>> = {
+    ARBE: 'Arbeidsinntekt, ektefelle',
+    ARBM: 'Arbeidsinntekt, stønadsmottaker',
+    FTRE: 'Ytelser fra folketrygden, ektefelle',
+    FTRM: 'Ytelser fra folketrygden, stønadsmottaker',
+    PENE: 'Andre norske pensjoner, ektefelle',
+    PENM: 'Andre norske pensjoner, stønadsmottaker',
+    UTLM: 'Utenlandske pensjoner, stønadsmottaker',
+};
+
 export const behandlingstypeForVisning = (periode: HistoriskVedtaksperiode): string =>
     periode.behandlingstype ? behandlingstypeTekst[periode.behandlingstype] : periode.behandlingstypeRaw;
 
@@ -59,3 +84,15 @@ export const bosituasjonForVisning = (periode: HistoriskVedtaksperiode): string 
 
     return periode.bosituasjonRaw ?? 'Ikke registrert';
 };
+
+export const opphørsgrunnForVisning = (periode: HistoriskVedtaksperiode): string => {
+    if (periode.opphørsgrunn) {
+        return opphørsgrunnTekst[periode.opphørsgrunn];
+    }
+
+    return periode.opphørskodeRaw ?? 'Ikke registrert';
+};
+
+export const fradragskodeForVisning = (kode: string): string => fradragskodeTekst[kode] ?? kode;
+
+export const fradragskoderForVisning = (koder: string[]): string[] => koder.map(fradragskodeForVisning);

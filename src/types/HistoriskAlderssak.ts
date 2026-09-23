@@ -35,9 +35,32 @@ export type HistoriskResultat =
 
 export type HistoriskBosituasjon = 'ENSLIG' | 'EPS_OVER_67' | 'EPS_UNDER_67' | 'ENSLIG_MED_BOFELLESSKAP';
 
+export type HistoriskOpphørsgrunn =
+    | 'ANNULLERT'
+    | 'ALDERSPENSJON'
+    | 'ANNEN_ÅRSAK'
+    | 'FLYTTET'
+    | 'HØY_INNTEKT'
+    | 'INSTITUSJON'
+    | 'LANGT_UTENLANDSOPPHOLD'
+    | 'STOR_FORMUE'
+    | 'FLYTTET_TIL_UTLANDET'
+    | 'DØD'
+    | 'UTENLANDSK_ADRESSE_ELLER_GIRONUMMER';
+
+export interface HistoriskSaksreferanse {
+    kontornummer: string | null;
+    saksblokk: string | null;
+    saksnummer: string | null;
+    behandlendeKontor: string | null;
+}
+
 export interface HistoriskVedtaksperiode {
     stønadId: string;
     vedtakId: string;
+    oppdragId: string | null;
+    opphørskodeRaw: string | null;
+    opphørsgrunn: HistoriskOpphørsgrunn | null;
     fraOgMed: string | null;
     tilOgMed: string | null;
     sakstype: 'ALDER';
@@ -48,7 +71,13 @@ export interface HistoriskVedtaksperiode {
     bosituasjonRaw: string | null;
     bosituasjon: HistoriskBosituasjon | null;
     årligYtelsesbeløp: number | null;
+    revurderingsdato: string | null;
     registrertTidspunkt: string | null;
+    endringskoder: string[];
+    saksreferanse: HistoriskSaksreferanse;
+    sendtTilOs: string | null;
+    mottattFraOs: string | null;
+    godkjentAvOs: string | null;
     gyldig: boolean;
 }
 
@@ -58,5 +87,6 @@ export interface HistoriskMånedsbeløpsperiode {
     tilOgMed: string | null;
     sats: number;
     fradrag: number;
+    fradragskoder: string[];
     beløp: number;
 }
