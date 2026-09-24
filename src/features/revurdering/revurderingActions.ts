@@ -149,11 +149,10 @@ export const lagreBrevvalg = createAsyncThunk<
         revurderingId: string;
         valg: Valg;
         fritekst: Nullable<string>;
-        begrunnelse: Nullable<string>;
     },
     { rejectValue: ApiError }
->('revurdering/brevvalg', async ({ sakId, revurderingId, valg: valg, begrunnelse: begrunnelse }, thunkApi) => {
-    const res = await revurderingApi.lagreBrevvalg(sakId, revurderingId, valg, begrunnelse);
+>('revurdering/brevvalg', async ({ sakId, revurderingId, valg: valg }, thunkApi) => {
+    const res = await revurderingApi.lagreBrevvalg(sakId, revurderingId, valg);
     if (res.status === 'ok') {
         return res.data;
     }
