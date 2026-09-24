@@ -3,11 +3,15 @@ import { HistoriskMånedsbeløpsperiode, HistoriskVedtaksperiode } from '~src/ty
 import {
     behandlingstypeForVisning,
     bosituasjonForVisning,
+    endringskodeForVisning,
+    endringskoderForVisning,
     fradragskodeForVisning,
     fradragskoderForVisning,
+    godkjentAvOsForVisning,
     hentFnrFraNavigasjon,
     opphørsgrunnForVisning,
     resultatForVisning,
+    saksreferanseForVisning,
 } from './HistoriskAlderssakUtils';
 
 const lagPeriode = (overrides: Partial<HistoriskVedtaksperiode> = {}): HistoriskVedtaksperiode => ({
@@ -145,5 +149,56 @@ describe('historisk alderssak-visning', () => {
         const periode = lagMånedsbeløp({ fradragskoder: [] });
 
         expect(fradragskoderForVisning(periode.fradragskoder)).toEqual([]);
+    });
+
+    it('viser godkjenningskoden fra Oppdrag som tekst og beholder ukjente koder', () => {
+        expect(godkjentAvOsForVisning('J')).toBe('Ja');
+        expect(godkjentAvOsForVisning('N')).toBe('Nei');
+        expect(godkjentAvOsForVisning('UKJENT')).toBe('UKJENT');
+        expect(godkjentAvOsForVisning(null)).toBe('Ikke registrert');
+    });
+
+    it.each([
+        ['AN', 'Annullert'],
+        ['UA', 'Uaktuell'],
+        ['F', 'Førstegangsvedtak'],
+        ['O', 'Opphørt'],
+        ['E', 'Endring i beregningsgrunnlaget'],
+        ['G', 'G-regulering'],
+        ['NY', 'Ny'],
+        ['OO', 'Overført til ny løsning'],
+        ['S', 'Satsendring'],
+        ['IN', 'Nytt inntektsgrunnlag'],
+    ])('oversetter endringskode %s', (kode, forventetTekst) => {
+        expect(endringskodeForVisning(kode)).toBe(forventetTekst);
+    });
+
+    it('viser flere endringskoder og beholder ukjente koder', () => {
+        expect(endringskoderForVisning(['E', 'UKJENT_KODE'])).toEqual([
+            'Endring i beregningsgrunnlaget',
+            'UKJENT_KODE',
+        ]);
+    });
+
+    it('samler feltene i Infotrygd-saksreferansen', () => {
+        expect(
+            saksreferanseForVisning({
+                kontornummer: 'TEST-KONTOR-1',
+                saksblokk: 'A',
+                saksnummer: '1001',
+                behandlendeKontor: 'TEST-KONTOR-2',
+            }),
+        ).toBe('TEST-KONTOR-1 / A / 1001');
+    });
+
+    it('viser ikke registrert for manglende deler av saksreferansen', () => {
+        expect(
+            saksreferanseForVisning({
+                kontornummer: null,
+                saksblokk: null,
+                saksnummer: null,
+                behandlendeKontor: null,
+            }),
+        ).toBe('Ikke registrert / Ikke registrert / Ikke registrert');
     });
 });

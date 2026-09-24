@@ -3,6 +3,7 @@ import {
     HistoriskBosituasjon,
     HistoriskOpphørsgrunn,
     HistoriskResultat,
+    HistoriskSaksreferanse,
     HistoriskVedtaksperiode,
 } from '~src/types/HistoriskAlderssak';
 
@@ -71,6 +72,19 @@ const fradragskodeTekst: Partial<Record<string, string>> = {
     UTLM: 'Utenlandske pensjoner, stønadsmottaker',
 };
 
+const endringskodeTekst: Partial<Record<string, string>> = {
+    AN: 'Annullert',
+    UA: 'Uaktuell',
+    F: 'Førstegangsvedtak',
+    O: 'Opphørt',
+    E: 'Endring i beregningsgrunnlaget',
+    G: 'G-regulering',
+    NY: 'Ny',
+    OO: 'Overført til ny løsning',
+    S: 'Satsendring',
+    IN: 'Nytt inntektsgrunnlag',
+};
+
 export const behandlingstypeForVisning = (periode: HistoriskVedtaksperiode): string =>
     periode.behandlingstype ? behandlingstypeTekst[periode.behandlingstype] : periode.behandlingstypeRaw;
 
@@ -96,3 +110,18 @@ export const opphørsgrunnForVisning = (periode: HistoriskVedtaksperiode): strin
 export const fradragskodeForVisning = (kode: string): string => fradragskodeTekst[kode] ?? kode;
 
 export const fradragskoderForVisning = (koder: string[]): string[] => koder.map(fradragskodeForVisning);
+
+export const endringskodeForVisning = (kode: string): string => endringskodeTekst[kode] ?? kode;
+
+export const endringskoderForVisning = (koder: string[]): string[] => koder.map(endringskodeForVisning);
+
+export const godkjentAvOsForVisning = (kode: string | null): string => {
+    if (kode === 'J') return 'Ja';
+    if (kode === 'N') return 'Nei';
+    return kode ?? 'Ikke registrert';
+};
+
+export const saksreferanseForVisning = (saksreferanse: HistoriskSaksreferanse): string =>
+    [saksreferanse.kontornummer, saksreferanse.saksblokk, saksreferanse.saksnummer]
+        .map((verdi) => verdi ?? 'Ikke registrert')
+        .join(' / ');

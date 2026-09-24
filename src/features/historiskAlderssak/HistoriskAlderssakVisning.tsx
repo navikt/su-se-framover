@@ -26,9 +26,12 @@ import HistoriskAlderssakApiErrorAlert from './HistoriskAlderssakApiErrorAlert';
 import {
     behandlingstypeForVisning,
     bosituasjonForVisning,
+    endringskoderForVisning,
     fradragskoderForVisning,
+    godkjentAvOsForVisning,
     opphørsgrunnForVisning,
     resultatForVisning,
+    saksreferanseForVisning,
 } from './HistoriskAlderssakUtils';
 import styles from './HistoriskAlderssakVisning.module.less';
 
@@ -218,31 +221,19 @@ const HistoriskPeriode = (props: { periode: HistoriskVedtaksperiode }) => {
                         </div>
                         <div>
                             <Label as="dt" size="small">
-                                Endringskoder
+                                Endringskoder i Infotrygd
                             </Label>
                             <BodyShort as="dd">
                                 {periode.endringskoder.length > 0
-                                    ? periode.endringskoder.join(', ')
+                                    ? endringskoderForVisning(periode.endringskoder).join(', ')
                                     : 'Ingen endringskoder'}
                             </BodyShort>
                         </div>
                         <div>
                             <Label as="dt" size="small">
-                                Kontornummer
+                                Saksreferanse
                             </Label>
-                            <BodyShort as="dd">{periode.saksreferanse.kontornummer ?? 'Ikke registrert'}</BodyShort>
-                        </div>
-                        <div>
-                            <Label as="dt" size="small">
-                                Saksblokk
-                            </Label>
-                            <BodyShort as="dd">{periode.saksreferanse.saksblokk ?? 'Ikke registrert'}</BodyShort>
-                        </div>
-                        <div>
-                            <Label as="dt" size="small">
-                                Saksnummer
-                            </Label>
-                            <BodyShort as="dd">{periode.saksreferanse.saksnummer ?? 'Ikke registrert'}</BodyShort>
+                            <BodyShort as="dd">{saksreferanseForVisning(periode.saksreferanse)}</BodyShort>
                         </div>
                         <div>
                             <Label as="dt" size="small">
@@ -272,9 +263,7 @@ const HistoriskPeriode = (props: { periode: HistoriskVedtaksperiode }) => {
                             <Label as="dt" size="small">
                                 Godkjent av Oppdrag
                             </Label>
-                            <BodyShort as="dd">
-                                {periode.godkjentAvOs ? formatDateTime(periode.godkjentAvOs) : 'Ikke registrert'}
-                            </BodyShort>
+                            <BodyShort as="dd">{godkjentAvOsForVisning(periode.godkjentAvOs)}</BodyShort>
                         </div>
                     </dl>
 
@@ -351,6 +340,10 @@ const HistoriskAlderssakVisning = (props: { fnr: string; tilbakeHref: string; ti
                         Infotrygd-sak
                     </Heading>
                     <BodyShort>Historiske vedtaksperioder for alderssaken.</BodyShort>
+                    <BodyShort>
+                        Saksreferansen vises som kontornummer / saksblokk / saksnummer. Behandlende kontor vises
+                        separat.
+                    </BodyShort>
                 </div>
 
                 {pipe(
