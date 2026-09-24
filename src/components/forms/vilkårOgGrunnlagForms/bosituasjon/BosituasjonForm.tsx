@@ -1,25 +1,26 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import { BodyLong, Button, Heading, Loader, Modal } from '@navikt/ds-react';
+import { Alert, BodyLong, BodyShort, Button, Heading, Loader, Modal } from '@navikt/ds-react';
 import { pipe } from 'fp-ts/lib/function';
-import { ReactNode, useState } from 'react';
-import { Controller } from 'react-hook-form';
+import { ReactNode, useEffect, useState } from 'react';
+import { Controller, UseFormReturn } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 
 import { ErrorCode } from '~src/api/apiClient';
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
 import { BooleanRadioGroup } from '~src/components/formElements/FormElements';
 import { FnrInput } from '~src/components/inputs/FnrInput/FnrInput';
-import MultiPeriodeVelger from '~src/components/inputs/multiPeriodeVelger/MultiPeriodeVelger';
+import MultiPeriodeVelger, { PartialName } from '~src/components/inputs/multiPeriodeVelger/MultiPeriodeVelger';
 import personSlice from '~src/features/person/person.slice';
 import sakSliceActions from '~src/features/saksoversikt/sak.slice';
 import { ApiResult } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
 import * as Routes from '~src/lib/routes';
+import { Nullable } from '~src/lib/types';
 import { FormWrapper } from '~src/pages/saksbehandling/søknadsbehandling/FormWrapper';
 import { useAppDispatch } from '~src/redux/Store';
 import { Person } from '~src/types/Person';
 import { Sakstype } from '~src/types/Sak.ts';
-import { showName } from '~src/utils/person/personUtils';
+import { fyller67ILøpetAvPeriode, harFylt67VedDato, showName } from '~src/utils/person/personUtils';
 import messages from '../VilkårOgGrunnlagForms-nb';
 import { VilkårFormProps } from '../VilkårOgGrunnlagFormUtils';
 import styles from './BosituasjonForm.module.less';
@@ -53,6 +54,15 @@ const BosituasjonForm = (props: Props) => {
                     }}
                     getChild={(nameAndIdx) => {
                         const watch = props.form.watch(nameAndIdx);
+                        const nullstillEpsData = () => {
+                            props.form.setValue(`${nameAndIdx}.erEpsFylt67`, null);
+                            props.form.setValue(`${nameAndIdx}.erEPSUførFlyktning`, null);
+                            // ErEpsFylt67Felt rendres bare når epsStatus er success,
+                            // og avmonteres når den settes til initial -
+                            // da rekker ikke useEffect-en der å nullstille erEpsFylt67/erEPSUførFlyktning selv.
+                            // Derfor nullstilles de eksplisitt her, sammen med epsStatus.
+                            setEpsStatus(RemoteData.initial);
+                        };
                         return (
                             <div>
                                 <EpsSkjermingModalOgPersonkort eps={epsStatus} søker={props.søker} />
@@ -67,8 +77,9 @@ const BosituasjonForm = (props: Props) => {
                                             onChange={(e) => {
                                                 field.onChange(e);
                                                 props.form.setValue(`${nameAndIdx}.epsFnr`, null);
-                                                props.form.setValue(`${nameAndIdx}.erEpsFylt67`, null);
-                                                props.form.setValue(`${nameAndIdx}.erEPSUførFlyktning`, null);
+                                                // harEPS endret seg - fjerner/legger til EPS,
+                                                // så gjeldende EPS-data er ikke lenger gyldig.
+                                                nullstillEpsData();
                                             }}
                                         />
                                     )}
@@ -84,7 +95,11 @@ const BosituasjonForm = (props: Props) => {
                                                     label={formatMessage('bosituasjon.epsFnr')}
                                                     inputId="epsFnr"
                                                     name={`${nameAndIdx}.epsFnr`}
-                                                    onFnrChange={field.onChange}
+                                                    onFnrChange={(fnr) => {
+                                                        field.onChange(fnr);
+                                                        // Nytt fnr betyr en annen EPS - nullstill data avledet av den forrige.
+                                                        nullstillEpsData();
+                                                    }}
                                                     fnr={field.value ?? ''}
                                                     feil={fieldState.error?.message}
                                                     getPersonStatus={(res) => setEpsStatus(res)}
@@ -92,27 +107,30 @@ const BosituasjonForm = (props: Props) => {
                                             )}
                                         />
                                         {RemoteData.isSuccess(epsStatus) && (
-                                            <Controller
-                                                control={props.form.control}
-                                                name={`${nameAndIdx}.erEpsFylt67`}
-                                                render={({ field, fieldState }) => (
-                                                    <BooleanRadioGroup
-                                                        legend="Er ektefelle/samboer fylt 67?"
-                                                        error={fieldState.error?.message}
-                                                        {...field}
-                                                        onChange={(e) => {
-                                                            field.onChange(e);
-                                                            props.form.setValue(
-                                                                `${nameAndIdx}.erEPSUførFlyktning`,
-                                                                null,
-                                                            );
-                                                        }}
-                                                    />
-                                                )}
+                                            <ErEpsFylt67Felt
+                                                form={props.form}
+                                                nameAndIdx={nameAndIdx}
+                                                eps={epsStatus.value}
+                                                periodeFraOgMed={watch.periode.fraOgMed}
                                             />
                                         )}
 
-                                        {watch.erEpsFylt67 === false && (
+                                        {watch.erEpsFylt67 === false &&
+                                            RemoteData.isSuccess(epsStatus) &&
+                                            watch.periode.fraOgMed &&
+                                            watch.periode.tilOgMed &&
+                                            fyller67ILøpetAvPeriode(
+                                                { fraOgMed: watch.periode.fraOgMed, tilOgMed: watch.periode.tilOgMed },
+                                                epsStatus.value.fødsel,
+                                            ) === true && (
+                                                <Alert variant="info" className={styles.epsFyller67Alert}>
+                                                    <BodyShort>
+                                                        {formatMessage('bosituasjon.epsFyller67IPerioden')}
+                                                    </BodyShort>
+                                                </Alert>
+                                            )}
+
+                                        {watch.erEpsFylt67 === false && RemoteData.isSuccess(epsStatus) && (
                                             <Controller
                                                 control={props.form.control}
                                                 name={`${nameAndIdx}.erEPSUførFlyktning`}
@@ -151,6 +169,62 @@ const BosituasjonForm = (props: Props) => {
 };
 
 export default BosituasjonForm;
+
+const ErEpsFylt67Felt = (props: {
+    form: UseFormReturn<BosituasjonGrunnlagFormData>;
+    nameAndIdx: PartialName<BosituasjonGrunnlagFormData>;
+    eps: Person;
+    periodeFraOgMed: Nullable<Date>;
+}) => {
+    const { formatMessage } = useI18n({ messages });
+
+    // Beregnet fra EPS' fødselsdato og periodens fraOgMed.
+    // `null` betyr at vi ikke kan beregne det automatisk (periode mangler, eller fødselsdato er ukjent) -
+    // i så fall må saksbehandler fylle ut verdien manuelt, og feltet låses ikke.
+    const beregnetVerdi = props.periodeFraOgMed ? harFylt67VedDato(props.periodeFraOgMed, props.eps.fødsel) : null;
+
+    useEffect(() => {
+        const gjeldendeErEpsFylt67 = props.form.getValues(`${props.nameAndIdx}.erEpsFylt67`);
+
+        if (!props.periodeFraOgMed) {
+            // Periode mangler - nullstill slik at et evt. tidligere auto-utfylt svar ikke
+            // henger igjen når vi ikke lenger kan beregne det.
+            if (gjeldendeErEpsFylt67 !== null) {
+                props.form.setValue(`${props.nameAndIdx}.erEpsFylt67`, null);
+                props.form.setValue(`${props.nameAndIdx}.erEPSUførFlyktning`, null);
+            }
+            return;
+        }
+
+        if (beregnetVerdi !== null && beregnetVerdi !== gjeldendeErEpsFylt67) {
+            props.form.setValue(`${props.nameAndIdx}.erEpsFylt67`, beregnetVerdi);
+            // erEpsFylt67 endret seg - nullstill uførflyktning-svaret av samme grunn som over.
+            props.form.setValue(`${props.nameAndIdx}.erEPSUførFlyktning`, null);
+        }
+    }, [props.eps, props.periodeFraOgMed]);
+
+    return (
+        <Controller
+            control={props.form.control}
+            name={`${props.nameAndIdx}.erEpsFylt67`}
+            render={({ field, fieldState }) => (
+                <BooleanRadioGroup
+                    legend={formatMessage('bosituasjon.erEPSFylt67')}
+                    description={
+                        beregnetVerdi !== null ? formatMessage('bosituasjon.erEPSFylt67Forhåndsutfylt') : undefined
+                    }
+                    error={fieldState.error?.message}
+                    readOnly={beregnetVerdi !== null}
+                    {...field}
+                    onChange={(e) => {
+                        field.onChange(e);
+                        props.form.setValue(`${props.nameAndIdx}.erEPSUførFlyktning`, null);
+                    }}
+                />
+            )}
+        />
+    );
+};
 
 const EpsSkjermingModalOgPersonkort = (props: { eps: ApiResult<Person>; søker: Person }) => {
     const navigate = useNavigate();

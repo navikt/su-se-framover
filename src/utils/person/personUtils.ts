@@ -1,7 +1,7 @@
 import * as DateFns from 'date-fns';
 
 import { Nullable } from '~src/lib/types';
-import { Navn } from '~src/types/Person';
+import { Fødsel, Navn } from '~src/types/Person';
 
 export const showName = (navn: Navn) => {
     const mellomnavn = navn.mellomnavn ? ` ${navn.mellomnavn} ` : ' ';
@@ -16,3 +16,38 @@ export const alderSomPersonFyllerPåDato = (datoSomSjekkes: Date, fødselsmåned
     return DateFns.differenceInYears(datoSomSjekkes, fødselsmåned);
 };
 export const alderSomPersonFyllerIÅrDate = (årSomSjekkes: number, årFødt: number) => årSomSjekkes - årFødt;
+
+/**
+ * Beregner om en person har fylt 67 år ved en gitt dato.
+ *
+ * Returnerer `null` dersom fødselsdato ikke er kjent (kun fødselsår/alder),
+ * siden vi da ikke kan avgjøre nøyaktig hvilken måned/dag personen fyller år.
+ */
+export const harFylt67VedDato = (dato: Date, fødsel: Nullable<Fødsel>): Nullable<boolean> => {
+    if (!fødsel || !fødsel.dato) {
+        return null;
+    }
+
+    const alderVedDato = alderSomPersonFyllerPåDato(dato, DateFns.parseISO(fødsel.dato));
+    return alderVedDato >= 67;
+};
+
+/**
+ * Beregner om en person fyller 67 år i løpet av en gitt periode - altså at personen ikke er
+ * fylt 67 ved periodens `fraOgMed`, men er det ved periodens `tilOgMed`.
+ *
+ * Returnerer `null` dersom fødselsdato ikke er kjent, av samme grunn som i `harFylt67VedDato`.
+ */
+export const fyller67ILøpetAvPeriode = (
+    periode: { fraOgMed: Date; tilOgMed: Date },
+    fødsel: Nullable<Fødsel>,
+): Nullable<boolean> => {
+    const erFylt67VedFraOgMed = harFylt67VedDato(periode.fraOgMed, fødsel);
+    const erFylt67VedTilOgMed = harFylt67VedDato(periode.tilOgMed, fødsel);
+
+    if (erFylt67VedFraOgMed === null || erFylt67VedTilOgMed === null) {
+        return null;
+    }
+
+    return !erFylt67VedFraOgMed && erFylt67VedTilOgMed;
+};
