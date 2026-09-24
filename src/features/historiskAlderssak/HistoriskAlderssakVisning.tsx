@@ -1,17 +1,5 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import {
-    Alert,
-    BodyShort,
-    Box,
-    Button,
-    ExpansionCard,
-    Heading,
-    HStack,
-    Label,
-    Loader,
-    Tag,
-    VStack,
-} from '@navikt/ds-react';
+import { Alert, BodyShort, Box, Button, ExpansionCard, Heading, HStack, Label, Loader, VStack } from '@navikt/ds-react';
 import { useEffect, useState } from 'react';
 
 import { hentHistoriskeMånedsbeløp, hentHistoriskeVedtaksperioder } from '~src/api/historiskAlderssakApi';
@@ -147,11 +135,6 @@ const HistoriskPeriode = (props: { periode: HistoriskVedtaksperiode }) => {
                             </Heading>
                             <BodyShort weight="semibold">{behandlingstypeForVisning(periode)}</BodyShort>
                         </VStack>
-                        <div>
-                            <Tag variant={periode.gyldig ? 'success' : 'warning'} size="small">
-                                {periode.gyldig ? 'Gyldig' : 'Ikke gyldig'}
-                            </Tag>
-                        </div>
                     </HStack>
 
                     <dl className={styles.detaljer}>

@@ -78,7 +78,6 @@ export interface HistoriskVedtaksperiode {
     sendtTilOs: string | null;
     mottattFraOs: string | null;
     godkjentAvOs: string | null;
-    gyldig: boolean;
 }
 
 export interface HistoriskMånedsbeløpsperiode {

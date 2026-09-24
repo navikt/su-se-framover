@@ -41,8 +41,7 @@ const lagPeriode = (overrides: Partial<HistoriskVedtaksperiode> = {}): Historisk
     },
     sendtTilOs: '2020-01-02T10:00:00',
     mottattFraOs: '2020-01-02T10:05:00',
-    godkjentAvOs: '2020-01-02T10:10:00',
-    gyldig: true,
+    godkjentAvOs: 'J',
     ...overrides,
 });
 
