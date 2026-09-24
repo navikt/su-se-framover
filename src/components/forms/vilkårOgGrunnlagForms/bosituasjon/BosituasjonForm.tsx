@@ -176,9 +176,11 @@ const ErEpsFylt67Felt = (props: {
     eps: Person;
     periodeFraOgMed: Nullable<Date>;
 }) => {
-    // Beregnet fra EPS' fødselsdato og periodens fraOgMed. `null` betyr at vi ikke kan beregne
-    // det automatisk (periode mangler, eller fødselsdato er ukjent) - i så fall må saksbehandler
-    // fylle ut verdien manuelt, og feltet låses ikke.
+    const { formatMessage } = useI18n({ messages });
+
+    // Beregnet fra EPS' fødselsdato og periodens fraOgMed.
+    // `null` betyr at vi ikke kan beregne det automatisk (periode mangler, eller fødselsdato er ukjent) -
+    // i så fall må saksbehandler fylle ut verdien manuelt, og feltet låses ikke.
     const beregnetVerdi = props.periodeFraOgMed ? harFylt67VedDato(props.periodeFraOgMed, props.eps.fødsel) : null;
 
     useEffect(() => {
@@ -207,11 +209,9 @@ const ErEpsFylt67Felt = (props: {
             name={`${props.nameAndIdx}.erEpsFylt67`}
             render={({ field, fieldState }) => (
                 <BooleanRadioGroup
-                    legend="Er ektefelle/samboer fylt 67?"
+                    legend={formatMessage('bosituasjon.erEPSFylt67')}
                     description={
-                        beregnetVerdi !== null
-                            ? 'Forhåndsutfylt basert på fødselsdato ved starten av søknadsperioden.'
-                            : undefined
+                        beregnetVerdi !== null ? formatMessage('bosituasjon.erEPSFylt67Forhåndsutfylt') : undefined
                     }
                     error={fieldState.error?.message}
                     readOnly={beregnetVerdi !== null}
