@@ -1,17 +1,5 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import {
-    Alert,
-    BodyShort,
-    Box,
-    Button,
-    ExpansionCard,
-    Heading,
-    HStack,
-    Label,
-    Loader,
-    Tag,
-    VStack,
-} from '@navikt/ds-react';
+import { Alert, BodyShort, Box, Button, ExpansionCard, Heading, HStack, Label, Loader, VStack } from '@navikt/ds-react';
 import { useEffect, useState } from 'react';
 
 import { hentHistoriskeMånedsbeløp, hentHistoriskeVedtaksperioder } from '~src/api/historiskAlderssakApi';
@@ -23,7 +11,16 @@ import { formatDate, formatDateTime } from '~src/utils/date/dateUtils';
 import { formatCurrency } from '~src/utils/format/formatUtils';
 
 import HistoriskAlderssakApiErrorAlert from './HistoriskAlderssakApiErrorAlert';
-import { behandlingstypeForVisning, bosituasjonForVisning, resultatForVisning } from './HistoriskAlderssakUtils';
+import {
+    behandlingstypeForVisning,
+    bosituasjonForVisning,
+    endringskoderForVisning,
+    fradragskoderForVisning,
+    godkjentAvOsForVisning,
+    opphørsgrunnForVisning,
+    resultatForVisning,
+    saksreferanseForVisning,
+} from './HistoriskAlderssakUtils';
 import styles from './HistoriskAlderssakVisning.module.less';
 
 const formatPeriode = (periode: HistoriskVedtaksperiode): string => {
@@ -76,7 +73,20 @@ const Månedsbeløp = (props: { perioder: HistoriskMånedsbeløpsperiode[] }) =>
                                 <Label as="dt" size="small">
                                     Fradrag
                                 </Label>
-                                <BodyShort as="dd">{formatCurrency(periode.fradrag)}</BodyShort>
+                                <dd className={styles.fradrag}>
+                                    <BodyShort>{formatCurrency(periode.fradrag)}</BodyShort>
+                                    {periode.fradragskoder.length === 0 ? (
+                                        <BodyShort size="small">Ingen fradragskoder</BodyShort>
+                                    ) : (
+                                        <ul className={styles.kodeliste} aria-label="Fradrag som inngår">
+                                            {fradragskoderForVisning(periode.fradragskoder).map((kode, kodeindeks) => (
+                                                <li key={`${kode}-${kodeindeks}`}>
+                                                    <BodyShort size="small">{kode}</BodyShort>
+                                                </li>
+                                            ))}
+                                        </ul>
+                                    )}
+                                </dd>
                             </div>
                             <div>
                                 <Label as="dt" size="small">
@@ -125,11 +135,6 @@ const HistoriskPeriode = (props: { periode: HistoriskVedtaksperiode }) => {
                             </Heading>
                             <BodyShort weight="semibold">{behandlingstypeForVisning(periode)}</BodyShort>
                         </VStack>
-                        <div>
-                            <Tag variant={periode.gyldig ? 'success' : 'warning'} size="small">
-                                {periode.gyldig ? 'Gyldig' : 'Ikke gyldig'}
-                            </Tag>
-                        </div>
                     </HStack>
 
                     <dl className={styles.detaljer}>
@@ -176,6 +181,72 @@ const HistoriskPeriode = (props: { periode: HistoriskVedtaksperiode }) => {
                                 Vedtaks-ID
                             </Label>
                             <BodyShort as="dd">{periode.vedtakId}</BodyShort>
+                        </div>
+                        <div>
+                            <Label as="dt" size="small">
+                                Oppdrag-ID
+                            </Label>
+                            <BodyShort as="dd">{periode.oppdragId ?? 'Ikke registrert'}</BodyShort>
+                        </div>
+                        <div>
+                            <Label as="dt" size="small">
+                                Opphørsgrunn
+                            </Label>
+                            <BodyShort as="dd">{opphørsgrunnForVisning(periode)}</BodyShort>
+                        </div>
+                        <div>
+                            <Label as="dt" size="small">
+                                Revurderingsdato i Infotrygd
+                            </Label>
+                            <BodyShort as="dd">
+                                {periode.revurderingsdato ? formatDate(periode.revurderingsdato) : 'Ikke registrert'}
+                            </BodyShort>
+                        </div>
+                        <div>
+                            <Label as="dt" size="small">
+                                Endringskoder i Infotrygd
+                            </Label>
+                            <BodyShort as="dd">
+                                {periode.endringskoder.length > 0
+                                    ? endringskoderForVisning(periode.endringskoder).join(', ')
+                                    : 'Ingen endringskoder'}
+                            </BodyShort>
+                        </div>
+                        <div>
+                            <Label as="dt" size="small">
+                                Saksreferanse
+                            </Label>
+                            <BodyShort as="dd">{saksreferanseForVisning(periode.saksreferanse)}</BodyShort>
+                        </div>
+                        <div>
+                            <Label as="dt" size="small">
+                                Behandlende kontor
+                            </Label>
+                            <BodyShort as="dd">
+                                {periode.saksreferanse.behandlendeKontor ?? 'Ikke registrert'}
+                            </BodyShort>
+                        </div>
+                        <div>
+                            <Label as="dt" size="small">
+                                Sendt til Oppdrag
+                            </Label>
+                            <BodyShort as="dd">
+                                {periode.sendtTilOs ? formatDateTime(periode.sendtTilOs) : 'Ikke registrert'}
+                            </BodyShort>
+                        </div>
+                        <div>
+                            <Label as="dt" size="small">
+                                Mottatt fra Oppdrag
+                            </Label>
+                            <BodyShort as="dd">
+                                {periode.mottattFraOs ? formatDateTime(periode.mottattFraOs) : 'Ikke registrert'}
+                            </BodyShort>
+                        </div>
+                        <div>
+                            <Label as="dt" size="small">
+                                Godkjent av Oppdrag
+                            </Label>
+                            <BodyShort as="dd">{godkjentAvOsForVisning(periode.godkjentAvOs)}</BodyShort>
                         </div>
                     </dl>
 
@@ -252,6 +323,10 @@ const HistoriskAlderssakVisning = (props: { fnr: string; tilbakeHref: string; ti
                         Infotrygd-sak
                     </Heading>
                     <BodyShort>Historiske vedtaksperioder for alderssaken.</BodyShort>
+                    <BodyShort>
+                        Saksreferansen vises som kontornummer / saksblokk / saksnummer. Behandlende kontor vises
+                        separat.
+                    </BodyShort>
                 </div>
 
                 {pipe(
