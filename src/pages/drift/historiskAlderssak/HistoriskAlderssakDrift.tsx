@@ -19,6 +19,9 @@ const HistoriskAlderssakDrift = () => {
                 fnr={fnr}
                 tilbakeHref={Routes.drift.createURL()}
                 tilbakeTekst="Tilbake til Drift"
+                onRevurderingOpprettet={(revurderingId, sakId) =>
+                    navigate(Routes.historiskInfotrygdRevurdering.createURL({ revurderingId, sakId }))
+                }
             />
         );
     }

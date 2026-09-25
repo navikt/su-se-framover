@@ -1,5 +1,5 @@
 import { Alert, Heading, VStack } from '@navikt/ds-react';
-import { useOutletContext } from 'react-router-dom';
+import { useNavigate, useOutletContext } from 'react-router-dom';
 
 import LinkAsButton from '~src/components/linkAsButton/LinkAsButton';
 import { SaksoversiktContext } from '~src/context/SaksoversiktContext';
@@ -10,6 +10,7 @@ import { Sakstype } from '~src/types/Sak';
 
 const HistoriskAlderssak = () => {
     const { sak } = useOutletContext<SaksoversiktContext>();
+    const navigate = useNavigate();
 
     if (sak.sakstype === Sakstype.Alder) {
         return (
@@ -17,6 +18,9 @@ const HistoriskAlderssak = () => {
                 fnr={sak.fnr}
                 tilbakeHref={Routes.saksoversiktValgtSak.createURL({ sakId: sak.id })}
                 tilbakeTekst="Tilbake til saksoversikten"
+                onRevurderingOpprettet={(revurderingId, sakId) =>
+                    navigate(Routes.historiskInfotrygdRevurdering.createURL({ revurderingId, sakId }))
+                }
             />
         );
     }

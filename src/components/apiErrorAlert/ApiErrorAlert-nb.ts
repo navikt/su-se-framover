@@ -104,6 +104,21 @@ const messages: { [key in ApiErrorCode]: string } = {
     [ApiErrorCode.HELE_BEHANDLINGSPERIODEN_MÅ_HA_VURDERING]: 'Hele behandlingsperioden må ha vurderinger',
     [ApiErrorCode.HENDELSEID_ER_IKKE_SISTE_PÅ_SAKEN]:
         "Id'en på på kravgrunnlaget som skal annulleres er ikke det siste kravgrunnlaget på saken. Prøv å refreshe nettleseren for å få fatt i siste kravgrunnlag",
+    [ApiErrorCode.HISTORISK_INFOTRYGD_MÅNED_MANGLER_VEDTAK]:
+        'Det finnes ingen historiske Infotrygd-vedtaksdata for den valgte måneden.',
+    [ApiErrorCode.HISTORISK_INFOTRYGD_OVERLAPPER_ÅPEN_BEHANDLING]:
+        'Valgt periode overlapper en åpen behandling for samme person.',
+    [ApiErrorCode.HISTORISK_INFOTRYGD_OVERLAPPER_SU_APP]:
+        'Valgt periode overlapper den perioden som allerede er innvilget i SU-appen.',
+    [ApiErrorCode.HISTORISK_INFOTRYGD_PERIODEN_MÅ_BESTÅ_AV_HELE_MÅNEDER]: 'Perioden må bestå av hele måneder.',
+    [ApiErrorCode.HISTORISK_INFOTRYGD_PROJEKSJON_IKKE_FUNNET]: 'Fant ikke historiske Infotrygd-data for valgt periode.',
+    [ApiErrorCode.HISTORISK_INFOTRYGD_REVURDERING_IKKE_FUNNET]: 'Fant ikke den historiske Infotrygd-revurderingen.',
+    [ApiErrorCode.HISTORISK_INFOTRYGD_REVURDERING_UGYLDIG_TILSTAND]:
+        'Behandlingen er i en tilstand som ikke tillater denne handlingen. Last siden på nytt.',
+    [ApiErrorCode.HISTORISK_INFOTRYGD_REVURDERING_VERSJONSKONFLIKT]:
+        'En annen endring ble gjort samtidig. Last siden på nytt og prøv igjen.',
+    [ApiErrorCode.HISTORISK_INFOTRYGD_UTBETALINGSDESIGN_IKKE_AVKLART]:
+        'Simulering og iverksettelse er ikke tilgjengelig før utbetalingsløsningen er avklart.',
 
     //I
     [ApiErrorCode.IKKE_GYLDIG_FØDSELSNUMMER]: 'Ikke gyldig fødselsnummer',
@@ -172,6 +187,8 @@ const messages: { [key in ApiErrorCode]: string } = {
     [ApiErrorCode.KUNNE_IKKE_LAGE_BREV]: 'Kunne ikke lage brevutkast',
     [ApiErrorCode.KUNNE_IKKE_LAGE_FRADRAG]: 'Kunne ikke lage fradrag',
     [ApiErrorCode.KUNNE_IKKE_LAGE_PDF]: 'Kunne ikke lage pdf',
+    [ApiErrorCode.KUNNE_IKKE_LAGRE_HISTORISK_INFOTRYGD_REVURDERING]:
+        'Kunne ikke lagre den historiske Infotrygd-revurderingen. Prøv igjen.',
     [ApiErrorCode.KUNNE_IKKE_LEGGE_TIL_BOSITUASJONSGRUNNLAG]: 'Kunne ikke legge til bosituasjonsgrunnlaget',
     [ApiErrorCode.KUNNE_IKKE_LEGGE_TIL_FRADRAGSGRUNNLAG]: 'Kunne ikke legge til fradragsgrunnlaget',
     [ApiErrorCode.KUNNE_IKKE_OPPRETTE_OPPGAVE]: 'Kunne ikke opprette oppgave',
@@ -281,6 +298,10 @@ const messages: { [key in ApiErrorCode]: string } = {
     [ApiErrorCode.UGYLDIG_DATO]: 'Ugyldig dato',
     [ApiErrorCode.UGYLDIG_FØDSELSNUMMER]: 'Ugyldig fødselsnummer',
     [ApiErrorCode.UGYLDIG_GRUNN_FOR_UNDERKJENNING]: 'Ugyldig underkjennelses grunn',
+    [ApiErrorCode.UGYLDIG_HISTORISK_INFOTRYGD_GRUNNLAG]:
+        'Det historiske Infotrygd-grunnlaget er ugyldig for valgt periode.',
+    [ApiErrorCode.UGYLDIG_HISTORISK_INFOTRYGD_REVURDERING_ID]:
+        'Adressen inneholder en ugyldig ID for den historiske Infotrygd-revurderingen.',
     [ApiErrorCode.UGYLDIG_INPUT]: 'Ugyldig input',
     [ApiErrorCode.UGYLDIG_JOURNALPOSTID]: 'Ugyldig journalpostID',
     [ApiErrorCode.UGYLDIG_KOMBINASJON_BOSITUASJON_FORMUE]:

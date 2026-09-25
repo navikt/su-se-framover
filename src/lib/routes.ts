@@ -379,6 +379,12 @@ export const historiskAlderssak: Route<{ sakId: string }> = {
     createURL: (args) => `/saksoversikt/${args.sakId}/infotrygd/`,
 };
 
+export const historiskInfotrygdRevurdering: Route<{ sakId: string; revurderingId: string }> = {
+    path: 'infotrygd/revurderinger/:revurderingId/',
+    absPath: '/saksoversikt/:sakId/infotrygd/revurderinger/:revurderingId/',
+    createURL: ({ sakId, revurderingId }) => `/saksoversikt/${sakId}/infotrygd/revurderinger/${revurderingId}/`,
+};
+
 //---------------Tilbakekreving-------------------------
 export const tilbakekrevingRoot: Route<{
     sakId: string;
