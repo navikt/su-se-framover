@@ -87,7 +87,7 @@ export enum ApiErrorCode {
     HELE_BEHANDLINGSPERIODEN_MÅ_HA_VURDERING = 'hele_behandlingsperioden_må_ha_vurderinger',
     HENDELSEID_ER_IKKE_SISTE_PÅ_SAKEN = 'hendelseId_er_ikke_siste_på_saken',
     HISTORISK_INFOTRYGD_MÅNED_MANGLER_VEDTAK = 'historisk_infotrygd_maaned_mangler_vedtak',
-    HISTORISK_INFOTRYGD_OVERLAPPER_ÅPEN_BEHANDLING = 'historisk_infotrygd_overlapper_aapen_behandling',
+    HISTORISK_INFOTRYGD_REVURDERING_OVERLAPPER_ÅPEN_BEHANDLING = 'historisk_infotrygd_revurdering_overlapper_aapen_behandling',
     HISTORISK_INFOTRYGD_OVERLAPPER_SU_APP = 'historisk_infotrygd_overlapper_su_app',
     HISTORISK_INFOTRYGD_PERIODEN_MÅ_BESTÅ_AV_HELE_MÅNEDER = 'historisk_infotrygd_perioden_maa_bestaa_av_hele_maaneder',
     HISTORISK_INFOTRYGD_PROJEKSJON_IKKE_FUNNET = 'historisk_infotrygd_projeksjon_ikke_funnet',

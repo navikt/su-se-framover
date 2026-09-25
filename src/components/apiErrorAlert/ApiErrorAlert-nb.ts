@@ -106,7 +106,7 @@ const messages: { [key in ApiErrorCode]: string } = {
         "Id'en på på kravgrunnlaget som skal annulleres er ikke det siste kravgrunnlaget på saken. Prøv å refreshe nettleseren for å få fatt i siste kravgrunnlag",
     [ApiErrorCode.HISTORISK_INFOTRYGD_MÅNED_MANGLER_VEDTAK]:
         'Det finnes ingen historiske Infotrygd-vedtaksdata for den valgte måneden.',
-    [ApiErrorCode.HISTORISK_INFOTRYGD_OVERLAPPER_ÅPEN_BEHANDLING]:
+    [ApiErrorCode.HISTORISK_INFOTRYGD_REVURDERING_OVERLAPPER_ÅPEN_BEHANDLING]:
         'Valgt periode overlapper en åpen behandling for samme person.',
     [ApiErrorCode.HISTORISK_INFOTRYGD_OVERLAPPER_SU_APP]:
         'Valgt periode overlapper den perioden som allerede er innvilget i SU-appen.',

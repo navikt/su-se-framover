@@ -88,7 +88,7 @@ const OpprettHistoriskInfotrygdRevurdering = (props: Props) => {
             (revurdering) => props.onOpprettet(revurdering.id, revurdering.sakId),
             (error) => {
                 if (
-                    error.body.code === ApiErrorCode.HISTORISK_INFOTRYGD_OVERLAPPER_ÅPEN_BEHANDLING &&
+                    error.body.code === ApiErrorCode.HISTORISK_INFOTRYGD_REVURDERING_OVERLAPPER_ÅPEN_BEHANDLING &&
                     error.body.eksisterendeRevurderingId &&
                     error.body.sakId
                 ) {

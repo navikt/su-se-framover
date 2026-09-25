@@ -9,6 +9,8 @@ import {
 import LinkAsButton from '~src/components/linkAsButton/LinkAsButton';
 import HistoriskAlderssakApiErrorAlert from '~src/features/historiskAlderssak/HistoriskAlderssakApiErrorAlert';
 import historiskStyles from '~src/features/historiskAlderssak/HistoriskAlderssakVisning.module.less';
+import HistoriskInfotrygdBeregning from '~src/features/historiskAlderssak/HistoriskInfotrygdBeregning';
+import HistoriskInfotrygdEtterBeregning from '~src/features/historiskAlderssak/HistoriskInfotrygdEtterBeregning';
 import { pipe } from '~src/lib/fp';
 import { useApiCall } from '~src/lib/hooks';
 import * as Routes from '~src/lib/routes';
@@ -19,6 +21,7 @@ const statusTekst: Record<HistoriskInfotrygdRevurderingType['status'], string> =
     OPPRETTET: 'Opprettet',
     BEREGNET: 'Beregnet',
     TIL_ATTESTERING: 'Til attestering',
+    ATTESTERT: 'Attestert',
     UNDERKJENT: 'Underkjent',
     AVSLUTTET: 'Avsluttet',
 };
@@ -45,12 +48,6 @@ const Revurderingsdetaljer = (props: { revurdering: HistoriskInfotrygdRevurderin
                     Status
                 </Label>
                 <BodyShort as="dd">{statusTekst[props.revurdering.status]}</BodyShort>
-            </div>
-            <div>
-                <Label as="dt" size="small">
-                    Versjon
-                </Label>
-                <BodyShort as="dd">{props.revurdering.versjon}</BodyShort>
             </div>
             <div>
                 <Label as="dt" size="small">
@@ -147,6 +144,16 @@ const HistoriskInfotrygdRevurdering = () => {
                         (resultat) => (
                             <VStack gap="6">
                                 <Revurderingsdetaljer revurdering={resultat} />
+                                {resultat.status !== 'AVSLUTTET' && resultat.status !== 'ATTESTERT' && (
+                                    <HistoriskInfotrygdBeregning
+                                        behandling={resultat}
+                                        onOppdatert={() => hentRevurdering(resultat.id)}
+                                    />
+                                )}
+                                <HistoriskInfotrygdEtterBeregning
+                                    behandling={resultat}
+                                    onOppdatert={() => hentRevurdering(resultat.id)}
+                                />
                                 {resultat.status !== 'AVSLUTTET' && resultat.status !== 'TIL_ATTESTERING' && (
                                     <AvsluttRevurdering
                                         revurderingId={resultat.id}
