@@ -60,7 +60,8 @@ export default {
     'bosituasjon.erEPSUførFlyktning': 'Er ektefelle/samboer ufør flyktning?',
     'bosituasjon.epsFnr': 'Ektefelle/samboers fødelsnummer',
     'bosituasjon.erEPSFylt67Forhåndsutfylt': 'Forhåndsutfylt basert på fødselsdato ved starten av søknadsperioden.',
-    'bosituasjon.epsFyller67IPerioden': 'Ektefelle/samboer fyller 67 år i løpet av stønadsperioden.',
+    'bosituasjon.epsFyller67IPerioden':
+        'Ektefelle/samboer fyller 67 år i løpet av stønadsperioden. Husk å opprette fremleggsoppgave i Gosys for revurdering av satsen.',
     'bosituasjon.harSøkerEPS': 'Har søker ektefelle eller samboer?',
     'bosituasjon.fjern.bosituasjon': 'Slett',
     'bosituasjon.ny.bosituasjon': 'Ny periode for opplysning',
