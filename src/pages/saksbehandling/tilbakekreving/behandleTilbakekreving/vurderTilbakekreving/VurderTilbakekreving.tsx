@@ -9,6 +9,7 @@ import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
 import Navigasjonsknapper from '~src/components/navigasjonsknapper/Navigasjonsknapper';
 import Feiloppsummering from '~src/components/oppsummering/feiloppsummering/Feiloppsummering';
 import OppsummeringAvKravgrunnlag from '~src/components/oppsummering/kravgrunnlag/OppsummeringAvKravgrunnlag';
+import OppsummeringAvTrekk from '~src/components/oppsummering/kravgrunnlag/OppsummeringAvTrekk';
 import { OppsummeringPar } from '~src/components/oppsummering/oppsummeringpar/OppsummeringPar';
 import ToKolonner from '~src/components/toKolonner/ToKolonner';
 import { vurderTilbakekrevingsbehandling } from '~src/features/TilbakekrevingActions';
@@ -241,6 +242,8 @@ const KravgrunnlagPeriodeInfo = (props: { grunnlagsperiode: Grunnlagsperiode }) 
                     retning="vertikal"
                 />
             </div>
+
+            <OppsummeringAvTrekk grunnlagsperiode={props.grunnlagsperiode} />
 
             <OppsummeringPar
                 label={formatMessage('vurderTilbakekreving.kravgrunnlagsInfo.bruttoFeilutbetaling')}

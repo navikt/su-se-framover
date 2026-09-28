@@ -2,6 +2,7 @@ import { Accordion, Heading } from '@navikt/ds-react';
 import { AccordionItem } from '@navikt/ds-react/Accordion';
 import classNames from 'classnames';
 
+import OppsummeringAvTrekk from '~src/components/oppsummering/kravgrunnlag/OppsummeringAvTrekk';
 import Oppsummeringspanel, {
     Oppsummeringsfarge,
     Oppsummeringsikon,
@@ -214,6 +215,7 @@ const OppsummeringAvGrunnlagsperioderBasic = (props: { grunnlagsperiode: Grunnla
                             verdi={periode.bruttoTidligereUtbetalt}
                             retning="vertikal"
                         />
+                        <OppsummeringAvTrekk grunnlagsperiode={periode} />
 
                         <OppsummeringPar
                             label={formatMessage('kravgrunnlag.grunnlagsperiode.beløp.bruttoFeilutbetaling')}
@@ -354,6 +356,7 @@ const OppsummeringAvGrunnlagsPerioderAccordion = (props: {
                                 retning="vertikal"
                                 textSomSmall={props.kompakt}
                             />
+                            <OppsummeringAvTrekk grunnlagsperiode={periode} />
 
                             <OppsummeringPar
                                 label={formatMessage('kravgrunnlag.grunnlagsperiode.beløp.bruttoFeilutbetaling')}

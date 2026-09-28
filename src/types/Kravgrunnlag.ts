@@ -36,4 +36,12 @@ export interface Grunnlagsperiode {
     nettoFeilutbetaling: string;
     skatteProsent: string;
     skattFeilutbetaling: string;
+    trekk: Trekk[];
+}
+
+export interface Trekk {
+    kodeKlasse: string;
+    beløpOpprinnelig: string;
+    beløpNytt: string;
+    justeringAvBruttoFeilutbetaling: string;
 }
