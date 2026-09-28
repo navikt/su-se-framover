@@ -43,7 +43,12 @@ const DryRunPanel = () => {
     const [startDatoOmregning, setStartDatoOmregning] = useState<Nullable<Date>>(null);
     const [lagreManuelle, setLagreManuelle] = useState<boolean>(false);
     const [maksAntallSaker, setMaksAntallSaker] = useState<number | null>(null);
+    const [maksAntallSakerInput, setMaksAntallSakerInput] = useState<string>('');
     const [manglerStartDato, setManglerStartDato] = useState(false);
+
+    const maksAntallSakerErUgyldig =
+        maksAntallSakerInput !== '' &&
+        (!Number.isInteger(Number(maksAntallSakerInput)) || Number(maksAntallSakerInput) <= 0);
 
     const handleSubmit = () => {
         if (!startDatoOmregning) {
@@ -51,6 +56,9 @@ const DryRunPanel = () => {
             return;
         }
         setManglerStartDato(false);
+        if (maksAntallSakerErUgyldig) {
+            return;
+        }
         dryRun({
             startDatoOmregning: toIsoMonthOrNull(startDatoOmregning)!,
             lagreManuelle: lagreManuelle,
@@ -63,9 +71,13 @@ const DryRunPanel = () => {
             <div className={styles.inputContainers}>
                 <div className={styles.datoOgVerdiContainer}>
                     <MonthPicker
-                        label="Start dato for omregning"
+                        label="Startdato for omregning"
                         value={startDatoOmregning}
-                        onChange={(dato) => setStartDatoOmregning(dato)}
+                        onChange={(dato) => {
+                            setStartDatoOmregning(dato);
+                            setManglerStartDato(!dato);
+                        }}
+                        error={manglerStartDato ? 'Startdato for omregning må fylles ut' : undefined}
                     />
                 </div>
             </div>
@@ -78,13 +90,15 @@ const DryRunPanel = () => {
                 label="Maks antall saker"
                 type="number"
                 onChange={(val) => {
-                    const parsedValue = val ? Number(val.target.value) : null;
+                    const input = val.target.value;
+                    setMaksAntallSakerInput(input);
+                    const parsedValue = input ? Number(input) : null;
                     setMaksAntallSaker(
                         parsedValue !== null && Number.isFinite(parsedValue) && parsedValue > 0 ? parsedValue : null,
                     );
                 }}
             />
-            {manglerStartDato && <Alert variant="error">Startdato for omregning må fylles ut</Alert>}
+            {maksAntallSakerErUgyldig && <Alert variant="error">Maks antall saker må være et positivt heltall</Alert>}
             <Button onClick={handleSubmit} loading={RemoteData.isPending(dryRunStatus)}>
                 Kjør dry run
             </Button>
