@@ -194,3 +194,22 @@ export async function opprettRegulering(args: OpprettReguleringRequest): Promise
         },
     });
 }
+
+export async function dryRunOmregning(args: {
+    startDatoOmregning: string;
+    lagreManuelle: boolean;
+    maksAntallSaker: Nullable<number>;
+}) {
+    const url = `/reguleringer/automatisk/omregning/dry`;
+    const method = 'POST';
+
+    return apiClient({
+        url: url,
+        method: method,
+        body: {
+            fraOgMedMåned: args.startDatoOmregning,
+            lagreManuelle: args.lagreManuelle,
+            maksAntallSaker: args.maksAntallSaker,
+        },
+    });
+}
