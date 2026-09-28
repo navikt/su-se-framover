@@ -34,13 +34,22 @@ Fra Drift brukes finnes-ruten før navigasjon, mens vedtaksperioder først hente
 etter at historikkruten er åpnet.
 
 Månedsbeløpsruten sender bare `{ vedtakId }` og returnerer perioder med
-`linjeId`, `fraOgMed`, `tilOgMed`, `sats`, `fradrag` og beregnet `beløp`.
+`linjeId`, `fraOgMed`, `tilOgMed`, `sats`, `fradrag`, `fradragskoder` og
+beregnet `beløp`.
 Oppslaget gjøres først når brukeren åpner det aktuelle vedtaket. Et ukjent
 vedtak gir `404`; backend finner personidenten fra vedtaket før den håndhever
 persontilgang og logger oppslaget.
 
 Frontendtypen bruker backendens tolkede `behandlingstype`, `resultat` og
 `bosituasjon`, med de korresponderende råfeltene som fallback ved `null`.
+Endringskodene kommer fra `T_ENDRING.KODE`. Frontend oversetter dokumenterte
+koder og viser råverdien for ukjente koder. `GODKJENT_AV_OS` er en statuskode,
+ikke et tidspunkt; `J` og `N` vises som «Ja» og «Nei».
+
+`saksreferanse.kontornummer`, `saksreferanse.saksblokk` og
+`saksreferanse.saksnummer` utgjør Infotrygd-saksreferansen. Kontornummeret
+kommer fra `TKNR`. `saksreferanse.behandlendeKontor` kommer fra `TKNR_BEH` og
+kan derfor være forskjellig fra kontornummeret.
 Backend krever Saksbehandler eller Attestant, kontrollerer persontilgang som
 alderssak og er autoritativ for `400`, `401` og `403`.
 
