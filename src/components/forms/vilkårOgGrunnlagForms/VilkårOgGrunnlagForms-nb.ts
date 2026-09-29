@@ -143,4 +143,7 @@ export default {
     'radio.label.nei': 'Nei',
     'radio.label.uavklart': 'Uavklart',
     ...personligOppmøteÅrsakTekster,
+
+    'display.avvikFraSøknad.advarsel':
+        'Systemet har identifisert at opplysningene du har lagt til grunn, ikke samsvarer med det brukeren har opplyst i søknaden. Dette bør kommenteres i vedtaksbrevet eller eventuelt forelegges brukeren.',
 };
