@@ -57,10 +57,6 @@ const BosituasjonForm = (props: Props) => {
                         const nullstillEpsData = () => {
                             props.form.setValue(`${nameAndIdx}.erEpsFylt67`, null);
                             props.form.setValue(`${nameAndIdx}.erEPSUførFlyktning`, null);
-                            // ErEpsFylt67Felt rendres bare når epsStatus er success,
-                            // og avmonteres når den settes til initial -
-                            // da rekker ikke useEffect-en der å nullstille erEpsFylt67/erEPSUførFlyktning selv.
-                            // Derfor nullstilles de eksplisitt her, sammen med epsStatus.
                             setEpsStatus(RemoteData.initial);
                         };
                         return (

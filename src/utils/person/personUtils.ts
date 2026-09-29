@@ -17,12 +17,6 @@ export const alderSomPersonFyllerPåDato = (datoSomSjekkes: Date, fødselsmåned
 };
 export const alderSomPersonFyllerIÅrDate = (årSomSjekkes: number, årFødt: number) => årSomSjekkes - årFødt;
 
-/**
- * Beregner om en person har fylt 67 år ved en gitt dato.
- *
- * Returnerer `null` dersom fødselsdato ikke er kjent (kun fødselsår/alder),
- * siden vi da ikke kan avgjøre nøyaktig hvilken måned/dag personen fyller år.
- */
 export const harFylt67VedDato = (dato: Date, fødsel: Nullable<Fødsel>): Nullable<boolean> => {
     if (!fødsel || !fødsel.dato) {
         return null;
@@ -32,12 +26,6 @@ export const harFylt67VedDato = (dato: Date, fødsel: Nullable<Fødsel>): Nullab
     return alderVedDato >= 67;
 };
 
-/**
- * Beregner om en person fyller 67 år i løpet av en gitt periode - altså at personen ikke er
- * fylt 67 ved periodens `fraOgMed`, men er det ved periodens `tilOgMed`.
- *
- * Returnerer `null` dersom fødselsdato ikke er kjent, av samme grunn som i `harFylt67VedDato`.
- */
 export const fyller67ILøpetAvPeriode = (
     periode: { fraOgMed: Date; tilOgMed: Date },
     fødsel: Nullable<Fødsel>,
