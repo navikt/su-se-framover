@@ -10,7 +10,12 @@ export const showName = (navn: Navn) => {
 
 export const formatFnr = (fnr: string) => `${fnr.substring(0, 6)} ${fnr.substring(6, 11)}`;
 
-export const er67EllerEldre = (alder: Nullable<number>): boolean => (alder ?? 67) >= 67;
+// Fast, lovfestet aldersgrense i lov om supplerande stønad til personar med kort butid i Noreg
+// (LOV-2005-04-29-21) §§ 2, 3, 5 og 6 - uavhengig av folketrygdens fleksible alderspensjon (62-75 år).
+export const LOVFESTET_ALDERSGRENSE_SU = 67;
+
+export const er67EllerEldre = (alder: Nullable<number>): boolean =>
+    (alder ?? LOVFESTET_ALDERSGRENSE_SU) >= LOVFESTET_ALDERSGRENSE_SU;
 export const alderSomPersonFyllerIÅr = (år: number) => new Date().getFullYear() - år;
 export const alderSomPersonFyllerPåDato = (datoSomSjekkes: Date, fødselsmåned: Date) => {
     return DateFns.differenceInYears(datoSomSjekkes, fødselsmåned);
@@ -23,7 +28,7 @@ export const harFylt67VedDato = (dato: Date, fødsel: Nullable<Fødsel>): Nullab
     }
 
     const alderVedDato = alderSomPersonFyllerPåDato(dato, DateFns.parseISO(fødsel.dato));
-    return alderVedDato >= 67;
+    return alderVedDato >= LOVFESTET_ALDERSGRENSE_SU;
 };
 
 export const fyller67ILøpetAvPeriode = (
