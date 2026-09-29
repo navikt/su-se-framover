@@ -232,11 +232,9 @@ export const erNoenVurdertUavklart = (vilkårsinformasjon: Vilkårsinformasjon[]
 
 /**
  * Sjekker om saksbehandlers vurderinger avviker fra det bruker har opplyst i søknaden.
- * Vurderingene skal på forhånd være normalisert til boolean - true for oppfylt/ja,
- * false for ikke oppfylt/nei, og null for uavklart. Et avvik oppstår kun når
- * saksbehandler har konkludert med et resultat som motsier brukers svar - uavklarte
- * vurderinger (null) regnes ikke som avvik, siden saksbehandler da ikke har tatt
- * stilling ennå.
+ * Et avvik oppstår kun når saksbehandler har konkludert med et resultat som motsier
+ * brukers svar - uavklarte vurderinger (null) regnes ikke som avvik, siden saksbehandler
+ * da ikke har tatt stilling ennå.
  */
 export const harVurderingAvvikFraBrukersSvar = (
     brukersSvar: Nullable<boolean>,
