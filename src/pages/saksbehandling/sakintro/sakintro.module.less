@@ -16,6 +16,10 @@
         margin-bottom: @spacing;
     }
 
+    .historiskOppslagFeil {
+        padding: 0 10rem @spacing;
+    }
+
     .pageHeader {
         display: flex;
         justify-content: space-between;
@@ -23,12 +27,20 @@
 
         .headerKnapper {
             display: flex;
+            flex-wrap: wrap;
+            gap: @spacing;
             padding: @spacing-xs 10rem;
 
             > :not(:last-child) {
-                margin-right: @spacing;
+                margin-right: 0;
             }
         }
+    }
+}
+
+@media (max-width: 48rem) {
+    .sakintroContainer .pageHeader .headerKnapper {
+        padding-inline: @spacing-xs;
     }
 }
 

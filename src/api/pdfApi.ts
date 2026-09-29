@@ -36,6 +36,15 @@ export async function fetchBrevutkastForRevurdering(args: {
     });
 }
 
+export async function fetchBrevutkastForRegulering(args: { reguleringId: string }): Promise<ApiClientResult<Blob>> {
+    return apiClient({
+        url: `/reguleringer/manuell/${args.reguleringId}/vedtaksbrev/forhandsvis`,
+        method: 'GET',
+        request: { headers: new Headers({ Accept: 'application/pdf' }) },
+        bodyTransformer: (res) => res.blob(),
+    });
+}
+
 export async function fetchBrevutkastForForhåndsvarsel(
     sakId: string,
     revurderingId: string,

@@ -31,6 +31,7 @@ const Søknadsvelger = lazy(() => import('./pages/søknad/Søknadsvelger'));
 const StartUtfylling = lazy(() => import('./pages/søknad/steg/start-utfylling/StartUtfylling'));
 const Startutfylling = lazy(() => import('./pages/kontrollsamtale/StartUtfylling'));
 const Drift = lazy(() => import('./pages/drift'));
+const HistoriskAlderssakDrift = lazy(() => import('./pages/drift/historiskAlderssak/HistoriskAlderssakDrift'));
 const DevTools = lazy(() => import('./pages/dev/DevToolsPage'));
 const HomePage = lazy(() => import('./pages/HomePage'));
 const Saksoversikt = lazy(() => import('./pages/saksbehandling/Saksoversikt'));
@@ -58,6 +59,7 @@ const Stans = lazy(() => import('./pages/saksbehandling/stans/Stans'));
 const Gjenoppta = lazy(() => import('./pages/saksbehandling/gjenoppta/Gjenoppta'));
 const Utenlandsopphold = lazy(() => import('./pages/saksbehandling/utenlandsopphold/Utenlandsopphold'));
 const Tilbakekreving = lazy(() => import('./pages/saksbehandling/tilbakekreving/Tilbakekreving'));
+const HistoriskAlderssak = lazy(() => import('./pages/saksbehandling/historiskAlderssak/HistoriskAlderssak'));
 
 const ScrollToTop = () => {
     const { pathname } = useLocation();
@@ -154,12 +156,20 @@ const AppRoutes = () => {
                     <Route path={routes.brevPage.path} element={<BrevPage />} />
                     <Route path={routes.dødsboPage.path} element={<DødsboPage />} />
                     <Route path={routes.borPåAdressePage.path} element={<BorPåAdresse />} />
+                    <Route
+                        path={routes.historiskAlderssak.path}
+                        element={<WithDocTitle title="Infotrygd-sak" Page={HistoriskAlderssak} />}
+                    />
 
                     <Route path={routes.tilbakekrevingRoot.path} element={<Tilbakekreving />} />
                 </Route>
                 <Route
                     path={routes.saksoversiktIndex.path}
                     element={<WithDocTitle title="Behandlingsoversikt" Page={Behandlingsoversikt} />}
+                />
+                <Route
+                    path={routes.historiskAlderssakDrift.path}
+                    element={<WithDocTitle title="Infotrygd-sak" Page={HistoriskAlderssakDrift} />}
                 />
                 <Route path={routes.drift.path} element={<WithDocTitle title="Drift" Page={Drift} />} />
                 <Route path="*" element={<>404</>} />

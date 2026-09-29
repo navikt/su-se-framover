@@ -4,4 +4,6 @@ export default {
 
     'feil.sakIkkeFunnet': 'Fant ingen sak for bruker, kan ikke starte kontrollskjema.',
     'knapp.forrige': 'Forrige',
+    'input.fnr.label': 'Fødselsnummer',
+    'knapp.søk': 'Søk',
 };
