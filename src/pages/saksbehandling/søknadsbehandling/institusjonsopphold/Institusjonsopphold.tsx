@@ -1,5 +1,5 @@
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Heading } from '@navikt/ds-react';
+import { Alert, Heading } from '@navikt/ds-react';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 
@@ -12,6 +12,7 @@ import {
     institusjonsoppholdFormSchema,
     institusjonsoppholdVilkårTilFormDataEllerNy,
 } from '~src/components/forms/vilkårOgGrunnlagForms/institusjonsopphold/InstitusjonsoppholdFormUtils';
+import sharedVilkårI18n from '~src/components/forms/vilkårOgGrunnlagForms/VilkårOgGrunnlagForms-nb';
 import OppsummeringAvInnlagtPåInstitusjon from '~src/components/oppsummering/oppsummeringAvSøknadinnhold/OppsummeringAvInnlagtPåInstitusjon';
 import OppsummeringAvInstitusjonsoppholdvilkår from '~src/components/oppsummering/oppsummeringAvVilkårOgGrunnlag/OppsummeringAvInstitusjonsopphold';
 import ToKolonner from '~src/components/toKolonner/ToKolonner';
@@ -24,6 +25,7 @@ import { EksisterendeVedtaksinformasjonTidligerePeriodeResponse } from '~src/typ
 import { Vilkårstatus } from '~src/types/Vilkår.ts';
 import { Vilkårtype } from '~src/types/Vilkårsvurdering';
 import { lagDatePeriodeAvStringPeriode } from '~src/utils/periode/periodeUtils';
+import { harVurderingAvvikFraBrukersSvar, vilkårstatusTilBoolean } from '~src/utils/vilkårUtils';
 
 import EksisterendeVedtaksinformasjon from '../EksisterendeVedtaksinformasjon';
 import sharedI18n from '../sharedI18n-nb';
@@ -38,7 +40,7 @@ const Institusjonsopphold = (
     },
 ) => {
     const navigate = useNavigate();
-    const { formatMessage } = useI18n({ messages: { ...sharedI18n, ...messages } });
+    const { formatMessage } = useI18n({ messages: { ...sharedI18n, ...sharedVilkårI18n, ...messages } });
     const [status, lagre] = useAsyncActionCreator(lagreInstitusjonsoppholdVilkår);
 
     const initialValues = institusjonsoppholdVilkårTilFormDataEllerNy(
@@ -109,6 +111,11 @@ const Institusjonsopphold = (
         save(values, onSuccess);
     };
 
+    const harAvvikFraSøknad = harVurderingAvvikFraBrukersSvar(
+        props.behandling.søknad.søknadInnhold.boforhold.innlagtPåInstitusjon == null,
+        (form.watch('institusjonsopphold') ?? []).map((vurdering) => vilkårstatusTilBoolean(vurdering.resultat)),
+    );
+
     return (
         <ToKolonner tittel={formatMessage('page.tittel')}>
             {{
@@ -132,7 +139,13 @@ const Institusjonsopphold = (
                         begrensTilEnPeriode
                         skalIkkeKunneVelgePeriode
                         {...props}
-                    />
+                    >
+                        {harAvvikFraSøknad && (
+                            <Alert className={sharedStyles.avslagAdvarsel} variant="warning">
+                                {formatMessage('display.avvikFraSøknad.advarsel')}
+                            </Alert>
+                        )}
+                    </InstitusjonsoppholdForm>
                 ),
                 right: (
                     <div className={sharedStyles.toKollonerRightContainer}>
