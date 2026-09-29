@@ -5,19 +5,18 @@ import {
     Box,
     Button,
     Checkbox,
+    ExpansionCard,
     Heading,
     HStack,
     Label,
     Loader,
     Select,
-    Textarea,
     TextField,
     VStack,
 } from '@navikt/ds-react';
 import { useEffect, useState } from 'react';
 
 import {
-    bekreftHistoriskForsørgingstillegg,
     beregnHistoriskInfotrygdRevurdering,
     hentHistoriskInfotrygdMånedsgrunnlag,
 } from '~src/api/historiskAlderssakApi';
@@ -26,6 +25,7 @@ import { VelgbareFradragskategorier } from '~src/types/Fradrag';
 import {
     HistoriskInfotrygdBeregningsgrunnlagForMåned,
     HistoriskInfotrygdFradragForMåned,
+    HistoriskInfotrygdLagretBeregning,
     HistoriskInfotrygdManuellOpphørsgrunn,
     HistoriskInfotrygdMånedsgrunnlag,
     HistoriskInfotrygdRevurdering,
@@ -86,37 +86,28 @@ const lagSkjemagrunnlag = (grunnlag: HistoriskInfotrygdMånedsgrunnlag) => {
             satskategori: lagretMåned?.satskategori ?? måned.foreslåttSatskategori ?? 'EN',
             fradrag: lagretMåned?.fradrag ?? [],
             manueltOpphør: lagretMåned?.manueltOpphør ?? null,
-            gjeninnvilgelsesbegrunnelse: lagretMåned?.gjeninnvilgelsesbegrunnelse ?? null,
         };
     });
 };
 
-const Forsørgingstillegg = (props: Props & { grunnlag: HistoriskInfotrygdMånedsgrunnlag; onBekreftet: () => void }) => {
-    const [bekreftStatus, bekreft] = useApiCall(bekreftHistoriskForsørgingstillegg);
+const Forsørgingstillegg = (props: { grunnlag: HistoriskInfotrygdMånedsgrunnlag }) => {
     const berørteMåneder = props.grunnlag.måneder.filter((måned) => måned.kreverKontrollAvHistoriskForsørgingstillegg);
 
-    if (
-        !props.grunnlag.kreverKontrollAvHistoriskForsørgingstillegg ||
-        props.grunnlag.harBekreftetKontrollAvHistoriskForsørgingstillegg
-    ) {
+    if (!props.grunnlag.kreverKontrollAvHistoriskForsørgingstillegg) {
         return null;
     }
 
     return (
-        <Alert variant="warning">
+        <Alert variant="info">
             <VStack gap="4" align="start">
                 <div>
                     <Heading level="2" size="small" spacing>
-                        Kontroller mulig forsørgingstillegg
+                        Mulig forsørgingstillegg i historiske beløp
                     </Heading>
                     <BodyShort spacing>
                         Denne stønadsperioden startet før 1. januar 2015. Etter reglene som gjaldt da, kunne supplerende
                         stønad inneholde forsørgingstillegg for barn under 18 år. Historiske data viser ikke om det
                         utbetalte beløpet inneholdt et slikt tillegg.
-                    </BodyShort>
-                    <BodyShort>
-                        Kontroller månedsbeløpene før du fortsetter. Du har ansvar for at beløpet som brukes som
-                        tidligere utbetalt ytelse, er korrekt.
                     </BodyShort>
                 </div>
                 <ul>
@@ -132,19 +123,6 @@ const Forsørgingstillegg = (props: Props & { grunnlag: HistoriskInfotrygdMåned
                     mottakeren forsørget og bodde sammen med. Før avviklingen var tillegget 20 prosent av minste
                     pensjonsnivå med høy sats per barn. Kilde: Prop. 14 L (2014–2015), kapittel 7.
                 </BodyShort>
-                {RemoteData.isFailure(bekreftStatus) && <HistoriskAlderssakApiErrorAlert error={bekreftStatus.error} />}
-                <Button
-                    type="button"
-                    loading={RemoteData.isPending(bekreftStatus)}
-                    onClick={() =>
-                        bekreft(props.behandling.id, (behandling) => {
-                            props.onOppdatert(behandling);
-                            props.onBekreftet();
-                        })
-                    }
-                >
-                    Jeg har kontrollert månedsbeløpene og vurdert mulig forsørgingstillegg
-                </Button>
             </VStack>
         </Alert>
     );
@@ -154,13 +132,18 @@ const HistoriskInfotrygdBeregning = (props: Props) => {
     const [grunnlagStatus, hentGrunnlag] = useApiCall(hentHistoriskInfotrygdMånedsgrunnlag);
     const [beregnStatus, beregn] = useApiCall(beregnHistoriskInfotrygdRevurdering);
     const [måneder, setMåneder] = useState<HistoriskInfotrygdBeregningsgrunnlagForMåned[]>([]);
-    const [begrunnelse, setBegrunnelse] = useState(props.behandling.begrunnelse ?? '');
+    const [beregningEtterLagring, setBeregningEtterLagring] = useState<HistoriskInfotrygdLagretBeregning | null>(null);
     const [valideringsfeil, setValideringsfeil] = useState<string>();
+    const [resultatForPerioden, setResultatForPerioden] = useState<'YTELSE' | 'OPPHØR'>('YTELSE');
+    const [opphørsgrunnForPerioden, setOpphørsgrunnForPerioden] =
+        useState<HistoriskInfotrygdManuellOpphørsgrunn | null>(null);
 
     const lastGrunnlag = () =>
         hentGrunnlag(props.behandling.id, (grunnlag) => {
             setMåneder(lagSkjemagrunnlag(grunnlag));
-            setBegrunnelse(props.behandling.begrunnelse ?? '');
+            const lagretOpphør = grunnlag.beregning?.måneder.find((måned) => måned.manueltOpphør)?.manueltOpphør;
+            setResultatForPerioden(lagretOpphør ? 'OPPHØR' : 'YTELSE');
+            setOpphørsgrunnForPerioden(lagretOpphør?.opphørsgrunn ?? null);
         });
 
     useEffect(() => {
@@ -173,21 +156,33 @@ const HistoriskInfotrygdBeregning = (props: Props) => {
     ) => setMåneder((gjeldende) => gjeldende.map((måned, i) => (i === index ? oppdater(måned) : måned)));
 
     const handleBeregn = () => {
-        if (!begrunnelse.trim()) {
-            setValideringsfeil('Skriv en begrunnelse for revurderingen.');
-            return;
-        }
-        const ugyldigOpphør = måneder.some((måned) => måned.manueltOpphør && !måned.manueltOpphør.begrunnelse.trim());
-        if (ugyldigOpphør) {
-            setValideringsfeil('Alle manuelt valgte opphør må ha en begrunnelse.');
+        if (resultatForPerioden === 'OPPHØR' && !opphørsgrunnForPerioden) {
+            setValideringsfeil('Velg opphørsgrunn for hele perioden.');
             return;
         }
 
         setValideringsfeil(undefined);
-        beregn({ revurderingId: props.behandling.id, begrunnelse: begrunnelse.trim(), måneder }, (resultat) => {
-            props.onOppdatert(resultat.behandling);
-            lastGrunnlag();
-        });
+        const beregningsmåneder = måneder.map((måned) => ({
+            ...måned,
+            manueltOpphør:
+                resultatForPerioden === 'OPPHØR' && opphørsgrunnForPerioden
+                    ? { opphørsgrunn: opphørsgrunnForPerioden }
+                    : null,
+        }));
+
+        beregn(
+            {
+                revurderingId: props.behandling.id,
+                måneder: beregningsmåneder,
+            },
+            (resultat) => {
+                setBeregningEtterLagring({
+                    økonomiskRetning: resultat.økonomiskRetning,
+                    måneder: resultat.måneder,
+                });
+                props.onOppdatert(resultat.behandling);
+            },
+        );
     };
 
     if (RemoteData.isInitial(grunnlagStatus) || RemoteData.isPending(grunnlagStatus)) {
@@ -198,14 +193,52 @@ const HistoriskInfotrygdBeregning = (props: Props) => {
     }
 
     const grunnlag = grunnlagStatus.value;
+    const beregning = beregningEtterLagring ?? grunnlag.beregning;
     const kanRedigeres = ['OPPRETTET', 'BEREGNET', 'UNDERKJENT'].includes(props.behandling.status);
-    const kontrollMangler =
-        grunnlag.kreverKontrollAvHistoriskForsørgingstillegg &&
-        !grunnlag.harBekreftetKontrollAvHistoriskForsørgingstillegg;
 
     return (
         <VStack gap="6">
-            <Forsørgingstillegg {...props} grunnlag={grunnlag} onBekreftet={lastGrunnlag} />
+            <Forsørgingstillegg grunnlag={grunnlag} />
+            <section aria-labelledby="utfall-tittel">
+                <VStack gap="4">
+                    <Heading id="utfall-tittel" level="2" size="medium">
+                        Utfall for hele perioden
+                    </Heading>
+                    <Select
+                        label="Utfall"
+                        value={resultatForPerioden}
+                        readOnly={!kanRedigeres}
+                        onChange={(event) => {
+                            setResultatForPerioden(event.target.value as 'YTELSE' | 'OPPHØR');
+                            setValideringsfeil(undefined);
+                        }}
+                    >
+                        <option value="YTELSE">Ytelse</option>
+                        <option value="OPPHØR">Opphør</option>
+                    </Select>
+                    {resultatForPerioden === 'OPPHØR' && (
+                        <Select
+                            label="Opphørsgrunn for hele perioden"
+                            value={opphørsgrunnForPerioden ?? ''}
+                            readOnly={!kanRedigeres}
+                            error={
+                                valideringsfeil === 'Velg opphørsgrunn for hele perioden.' ? valideringsfeil : undefined
+                            }
+                            onChange={(event) => {
+                                setOpphørsgrunnForPerioden(event.target.value as HistoriskInfotrygdManuellOpphørsgrunn);
+                                setValideringsfeil(undefined);
+                            }}
+                        >
+                            <option value="">Velg opphørsgrunn</option>
+                            {opphørsgrunner.map((grunn) => (
+                                <option key={grunn.value} value={grunn.value}>
+                                    {grunn.label}
+                                </option>
+                            ))}
+                        </Select>
+                    )}
+                </VStack>
+            </section>
             <section aria-labelledby="månedsgrunnlag-tittel">
                 <VStack gap="4">
                     <Heading id="månedsgrunnlag-tittel" level="2" size="medium">
@@ -216,7 +249,7 @@ const HistoriskInfotrygdBeregning = (props: Props) => {
                         return (
                             <Box
                                 key={måned.måned}
-                                background="surface-subtle"
+                                background="surface-default"
                                 borderWidth="1"
                                 borderRadius="medium"
                                 padding="5"
@@ -247,332 +280,299 @@ const HistoriskInfotrygdBeregning = (props: Props) => {
                                             </BodyShort>
                                         </div>
                                     </dl>
-                                    <Select
-                                        label="Satskategori"
-                                        value={måned.satskategori}
-                                        readOnly={!kanRedigeres}
-                                        onChange={(event) =>
-                                            oppdaterMåned(månedIndex, (verdi) => ({
-                                                ...verdi,
-                                                satskategori: event.target.value as HistoriskInfotrygdSatskategori,
-                                            }))
-                                        }
-                                    >
-                                        {satskategorier.map((kategori) => (
-                                            <option
-                                                key={kategori.value}
-                                                value={kategori.value}
-                                                disabled={kategori.value === 'EV' && måned.måned < '2016-01'}
-                                            >
-                                                {kategori.label}
-                                            </option>
-                                        ))}
-                                    </Select>
-                                    <VStack gap="3">
-                                        <Label>Fradrag</Label>
-                                        {måned.fradrag.map((fradrag, fradragIndex) => (
-                                            <Box
-                                                key={`${måned.måned}-${fradragIndex}`}
-                                                background="surface-default"
-                                                padding="4"
-                                            >
-                                                <VStack gap="3">
-                                                    <HStack gap="4" wrap>
-                                                        <Select
-                                                            label="Type"
-                                                            value={fradrag.type}
-                                                            readOnly={!kanRedigeres}
-                                                            onChange={(event) =>
-                                                                oppdaterMåned(månedIndex, (verdi) => ({
-                                                                    ...verdi,
-                                                                    fradrag: verdi.fradrag.map((f, i) =>
-                                                                        i === fradragIndex
-                                                                            ? { ...f, type: event.target.value }
-                                                                            : f,
-                                                                    ),
-                                                                }))
-                                                            }
-                                                        >
-                                                            {Object.values(VelgbareFradragskategorier).map((type) => (
-                                                                <option key={type} value={type}>
-                                                                    {type}
-                                                                </option>
-                                                            ))}
-                                                        </Select>
-                                                        <TextField
-                                                            label="Månedsbeløp"
-                                                            inputMode="decimal"
-                                                            value={fradrag.månedsbeløp}
-                                                            readOnly={!kanRedigeres}
-                                                            onChange={(event) =>
-                                                                oppdaterMåned(månedIndex, (verdi) => ({
-                                                                    ...verdi,
-                                                                    fradrag: verdi.fradrag.map((f, i) =>
-                                                                        i === fradragIndex
-                                                                            ? {
-                                                                                  ...f,
-                                                                                  månedsbeløp: Number(
-                                                                                      event.target.value,
-                                                                                  ),
-                                                                              }
-                                                                            : f,
-                                                                    ),
-                                                                }))
-                                                            }
-                                                        />
-                                                        <Select
-                                                            label="Tilhører"
-                                                            value={fradrag.tilhører}
-                                                            readOnly={!kanRedigeres}
-                                                            onChange={(event) =>
-                                                                oppdaterMåned(månedIndex, (verdi) => ({
-                                                                    ...verdi,
-                                                                    fradrag: verdi.fradrag.map((f, i) =>
-                                                                        i === fradragIndex
-                                                                            ? {
-                                                                                  ...f,
-                                                                                  tilhører: event.target.value as
-                                                                                      | 'BRUKER'
-                                                                                      | 'EPS',
-                                                                              }
-                                                                            : f,
-                                                                    ),
-                                                                }))
-                                                            }
-                                                        >
-                                                            <option value="BRUKER">Brukeren</option>
-                                                            <option value="EPS">Ektefellen</option>
-                                                        </Select>
-                                                    </HStack>
-                                                    {fradrag.type === VelgbareFradragskategorier.Annet && (
-                                                        <TextField
-                                                            label="Beskrivelse"
-                                                            value={fradrag.beskrivelse ?? ''}
-                                                            readOnly={!kanRedigeres}
-                                                            onChange={(event) =>
-                                                                oppdaterMåned(månedIndex, (verdi) => ({
-                                                                    ...verdi,
-                                                                    fradrag: verdi.fradrag.map((f, i) =>
-                                                                        i === fradragIndex
-                                                                            ? { ...f, beskrivelse: event.target.value }
-                                                                            : f,
-                                                                    ),
-                                                                }))
-                                                            }
-                                                        />
-                                                    )}
-                                                    <Checkbox
-                                                        checked={fradrag.utenlandskInntekt !== null}
-                                                        readOnly={!kanRedigeres}
-                                                        onChange={(event) =>
-                                                            oppdaterMåned(månedIndex, (verdi) => ({
-                                                                ...verdi,
-                                                                fradrag: verdi.fradrag.map((f, i) =>
-                                                                    i === fradragIndex
-                                                                        ? {
-                                                                              ...f,
-                                                                              utenlandskInntekt: event.target.checked
-                                                                                  ? {
-                                                                                        beløpIUtenlandskValuta: 0,
-                                                                                        valuta: '',
-                                                                                        kurs: 0,
-                                                                                    }
-                                                                                  : null,
-                                                                          }
-                                                                        : f,
-                                                                ),
-                                                            }))
-                                                        }
-                                                    >
-                                                        Utenlandsk inntekt
-                                                    </Checkbox>
-                                                    {fradrag.utenlandskInntekt && (
-                                                        <HStack gap="4" wrap>
-                                                            <TextField
-                                                                label="Beløp i utenlandsk valuta"
-                                                                inputMode="decimal"
-                                                                value={fradrag.utenlandskInntekt.beløpIUtenlandskValuta}
-                                                                readOnly={!kanRedigeres}
-                                                                onChange={(event) =>
-                                                                    oppdaterMåned(månedIndex, (verdi) => ({
-                                                                        ...verdi,
-                                                                        fradrag: verdi.fradrag.map((f, i) =>
-                                                                            i === fradragIndex && f.utenlandskInntekt
-                                                                                ? {
-                                                                                      ...f,
-                                                                                      utenlandskInntekt: {
-                                                                                          ...f.utenlandskInntekt,
-                                                                                          beløpIUtenlandskValuta:
-                                                                                              Number(
-                                                                                                  event.target.value,
-                                                                                              ),
-                                                                                      },
-                                                                                  }
-                                                                                : f,
-                                                                        ),
-                                                                    }))
-                                                                }
-                                                            />
-                                                            <TextField
-                                                                label="Valuta"
-                                                                value={fradrag.utenlandskInntekt.valuta}
-                                                                readOnly={!kanRedigeres}
-                                                                onChange={(event) =>
-                                                                    oppdaterMåned(månedIndex, (verdi) => ({
-                                                                        ...verdi,
-                                                                        fradrag: verdi.fradrag.map((f, i) =>
-                                                                            i === fradragIndex && f.utenlandskInntekt
-                                                                                ? {
-                                                                                      ...f,
-                                                                                      utenlandskInntekt: {
-                                                                                          ...f.utenlandskInntekt,
-                                                                                          valuta: event.target.value,
-                                                                                      },
-                                                                                  }
-                                                                                : f,
-                                                                        ),
-                                                                    }))
-                                                                }
-                                                            />
-                                                            <TextField
-                                                                label="Kurs"
-                                                                inputMode="decimal"
-                                                                value={fradrag.utenlandskInntekt.kurs}
-                                                                readOnly={!kanRedigeres}
-                                                                onChange={(event) =>
-                                                                    oppdaterMåned(månedIndex, (verdi) => ({
-                                                                        ...verdi,
-                                                                        fradrag: verdi.fradrag.map((f, i) =>
-                                                                            i === fradragIndex && f.utenlandskInntekt
-                                                                                ? {
-                                                                                      ...f,
-                                                                                      utenlandskInntekt: {
-                                                                                          ...f.utenlandskInntekt,
-                                                                                          kurs: Number(
-                                                                                              event.target.value,
-                                                                                          ),
-                                                                                      },
-                                                                                  }
-                                                                                : f,
-                                                                        ),
-                                                                    }))
-                                                                }
-                                                            />
-                                                        </HStack>
-                                                    )}
-                                                    {kanRedigeres && (
-                                                        <Button
-                                                            type="button"
-                                                            variant="tertiary"
-                                                            onClick={() =>
-                                                                oppdaterMåned(månedIndex, (verdi) => ({
-                                                                    ...verdi,
-                                                                    fradrag: verdi.fradrag.filter(
-                                                                        (_, i) => i !== fradragIndex,
-                                                                    ),
-                                                                }))
-                                                            }
-                                                        >
-                                                            Fjern fradrag
-                                                        </Button>
-                                                    )}
-                                                </VStack>
-                                            </Box>
-                                        ))}
-                                        {kanRedigeres && (
-                                            <Button
-                                                type="button"
-                                                variant="secondary"
-                                                onClick={() =>
+                                    {resultatForPerioden === 'YTELSE' && (
+                                        <>
+                                            <Select
+                                                label="Satskategori"
+                                                value={måned.satskategori}
+                                                readOnly={!kanRedigeres}
+                                                onChange={(event) =>
                                                     oppdaterMåned(månedIndex, (verdi) => ({
                                                         ...verdi,
-                                                        fradrag: [...verdi.fradrag, tomtFradrag()],
+                                                        satskategori: event.target
+                                                            .value as HistoriskInfotrygdSatskategori,
                                                     }))
                                                 }
                                             >
-                                                Legg til fradrag
-                                            </Button>
-                                        )}
-                                    </VStack>
-                                    <Select
-                                        label="Manuelt opphør"
-                                        value={måned.manueltOpphør?.opphørsgrunn ?? ''}
-                                        readOnly={!kanRedigeres}
-                                        onChange={(event) =>
-                                            oppdaterMåned(månedIndex, (verdi) => ({
-                                                ...verdi,
-                                                manueltOpphør: event.target.value
-                                                    ? {
-                                                          opphørsgrunn: event.target
-                                                              .value as HistoriskInfotrygdManuellOpphørsgrunn,
-                                                          begrunnelse: verdi.manueltOpphør?.begrunnelse ?? '',
-                                                      }
-                                                    : null,
-                                            }))
-                                        }
-                                    >
-                                        <option value="">Ikke manuelt opphør</option>
-                                        {opphørsgrunner.map((grunn) => (
-                                            <option key={grunn.value} value={grunn.value}>
-                                                {grunn.label}
-                                            </option>
-                                        ))}
-                                    </Select>
-                                    {måned.manueltOpphør && (
-                                        <Textarea
-                                            label="Begrunnelse for opphør"
-                                            value={måned.manueltOpphør.begrunnelse}
-                                            readOnly={!kanRedigeres}
-                                            onChange={(event) =>
-                                                oppdaterMåned(månedIndex, (verdi) => ({
-                                                    ...verdi,
-                                                    manueltOpphør: verdi.manueltOpphør
-                                                        ? { ...verdi.manueltOpphør, begrunnelse: event.target.value }
-                                                        : null,
-                                                }))
-                                            }
-                                        />
+                                                {satskategorier.map((kategori) => (
+                                                    <option
+                                                        key={kategori.value}
+                                                        value={kategori.value}
+                                                        disabled={kategori.value === 'EV' && måned.måned < '2016-01'}
+                                                    >
+                                                        {kategori.label}
+                                                    </option>
+                                                ))}
+                                            </Select>
+                                            <VStack gap="3">
+                                                <Label>Fradrag</Label>
+                                                {måned.fradrag.map((fradrag, fradragIndex) => (
+                                                    <Box
+                                                        key={`${måned.måned}-${fradragIndex}`}
+                                                        background="surface-default"
+                                                        padding="4"
+                                                    >
+                                                        <VStack gap="3">
+                                                            <HStack gap="4" wrap>
+                                                                <Select
+                                                                    label="Type"
+                                                                    value={fradrag.type}
+                                                                    readOnly={!kanRedigeres}
+                                                                    onChange={(event) =>
+                                                                        oppdaterMåned(månedIndex, (verdi) => ({
+                                                                            ...verdi,
+                                                                            fradrag: verdi.fradrag.map((f, i) =>
+                                                                                i === fradragIndex
+                                                                                    ? { ...f, type: event.target.value }
+                                                                                    : f,
+                                                                            ),
+                                                                        }))
+                                                                    }
+                                                                >
+                                                                    {Object.values(VelgbareFradragskategorier).map(
+                                                                        (type) => (
+                                                                            <option key={type} value={type}>
+                                                                                {type}
+                                                                            </option>
+                                                                        ),
+                                                                    )}
+                                                                </Select>
+                                                                <TextField
+                                                                    label="Månedsbeløp"
+                                                                    inputMode="decimal"
+                                                                    value={fradrag.månedsbeløp}
+                                                                    readOnly={!kanRedigeres}
+                                                                    onChange={(event) =>
+                                                                        oppdaterMåned(månedIndex, (verdi) => ({
+                                                                            ...verdi,
+                                                                            fradrag: verdi.fradrag.map((f, i) =>
+                                                                                i === fradragIndex
+                                                                                    ? {
+                                                                                          ...f,
+                                                                                          månedsbeløp: Number(
+                                                                                              event.target.value,
+                                                                                          ),
+                                                                                      }
+                                                                                    : f,
+                                                                            ),
+                                                                        }))
+                                                                    }
+                                                                />
+                                                                <Select
+                                                                    label="Tilhører"
+                                                                    value={fradrag.tilhører}
+                                                                    readOnly={!kanRedigeres}
+                                                                    onChange={(event) =>
+                                                                        oppdaterMåned(månedIndex, (verdi) => ({
+                                                                            ...verdi,
+                                                                            fradrag: verdi.fradrag.map((f, i) =>
+                                                                                i === fradragIndex
+                                                                                    ? {
+                                                                                          ...f,
+                                                                                          tilhører: event.target
+                                                                                              .value as
+                                                                                              | 'BRUKER'
+                                                                                              | 'EPS',
+                                                                                      }
+                                                                                    : f,
+                                                                            ),
+                                                                        }))
+                                                                    }
+                                                                >
+                                                                    <option value="BRUKER">Brukeren</option>
+                                                                    <option value="EPS">Ektefellen</option>
+                                                                </Select>
+                                                            </HStack>
+                                                            {fradrag.type === VelgbareFradragskategorier.Annet && (
+                                                                <TextField
+                                                                    label="Beskrivelse"
+                                                                    value={fradrag.beskrivelse ?? ''}
+                                                                    readOnly={!kanRedigeres}
+                                                                    onChange={(event) =>
+                                                                        oppdaterMåned(månedIndex, (verdi) => ({
+                                                                            ...verdi,
+                                                                            fradrag: verdi.fradrag.map((f, i) =>
+                                                                                i === fradragIndex
+                                                                                    ? {
+                                                                                          ...f,
+                                                                                          beskrivelse:
+                                                                                              event.target.value,
+                                                                                      }
+                                                                                    : f,
+                                                                            ),
+                                                                        }))
+                                                                    }
+                                                                />
+                                                            )}
+                                                            <Checkbox
+                                                                checked={fradrag.utenlandskInntekt !== null}
+                                                                readOnly={!kanRedigeres}
+                                                                onChange={(event) =>
+                                                                    oppdaterMåned(månedIndex, (verdi) => ({
+                                                                        ...verdi,
+                                                                        fradrag: verdi.fradrag.map((f, i) =>
+                                                                            i === fradragIndex
+                                                                                ? {
+                                                                                      ...f,
+                                                                                      utenlandskInntekt: event.target
+                                                                                          .checked
+                                                                                          ? {
+                                                                                                beløpIUtenlandskValuta: 0,
+                                                                                                valuta: '',
+                                                                                                kurs: 0,
+                                                                                            }
+                                                                                          : null,
+                                                                                  }
+                                                                                : f,
+                                                                        ),
+                                                                    }))
+                                                                }
+                                                            >
+                                                                Utenlandsk inntekt
+                                                            </Checkbox>
+                                                            {fradrag.utenlandskInntekt && (
+                                                                <HStack gap="4" wrap>
+                                                                    <TextField
+                                                                        label="Beløp i utenlandsk valuta"
+                                                                        inputMode="decimal"
+                                                                        value={
+                                                                            fradrag.utenlandskInntekt
+                                                                                .beløpIUtenlandskValuta
+                                                                        }
+                                                                        readOnly={!kanRedigeres}
+                                                                        onChange={(event) =>
+                                                                            oppdaterMåned(månedIndex, (verdi) => ({
+                                                                                ...verdi,
+                                                                                fradrag: verdi.fradrag.map((f, i) =>
+                                                                                    i === fradragIndex &&
+                                                                                    f.utenlandskInntekt
+                                                                                        ? {
+                                                                                              ...f,
+                                                                                              utenlandskInntekt: {
+                                                                                                  ...f.utenlandskInntekt,
+                                                                                                  beløpIUtenlandskValuta:
+                                                                                                      Number(
+                                                                                                          event.target
+                                                                                                              .value,
+                                                                                                      ),
+                                                                                              },
+                                                                                          }
+                                                                                        : f,
+                                                                                ),
+                                                                            }))
+                                                                        }
+                                                                    />
+                                                                    <TextField
+                                                                        label="Valuta"
+                                                                        value={fradrag.utenlandskInntekt.valuta}
+                                                                        readOnly={!kanRedigeres}
+                                                                        onChange={(event) =>
+                                                                            oppdaterMåned(månedIndex, (verdi) => ({
+                                                                                ...verdi,
+                                                                                fradrag: verdi.fradrag.map((f, i) =>
+                                                                                    i === fradragIndex &&
+                                                                                    f.utenlandskInntekt
+                                                                                        ? {
+                                                                                              ...f,
+                                                                                              utenlandskInntekt: {
+                                                                                                  ...f.utenlandskInntekt,
+                                                                                                  valuta: event.target
+                                                                                                      .value,
+                                                                                              },
+                                                                                          }
+                                                                                        : f,
+                                                                                ),
+                                                                            }))
+                                                                        }
+                                                                    />
+                                                                    <TextField
+                                                                        label="Kurs"
+                                                                        inputMode="decimal"
+                                                                        value={fradrag.utenlandskInntekt.kurs}
+                                                                        readOnly={!kanRedigeres}
+                                                                        onChange={(event) =>
+                                                                            oppdaterMåned(månedIndex, (verdi) => ({
+                                                                                ...verdi,
+                                                                                fradrag: verdi.fradrag.map((f, i) =>
+                                                                                    i === fradragIndex &&
+                                                                                    f.utenlandskInntekt
+                                                                                        ? {
+                                                                                              ...f,
+                                                                                              utenlandskInntekt: {
+                                                                                                  ...f.utenlandskInntekt,
+                                                                                                  kurs: Number(
+                                                                                                      event.target
+                                                                                                          .value,
+                                                                                                  ),
+                                                                                              },
+                                                                                          }
+                                                                                        : f,
+                                                                                ),
+                                                                            }))
+                                                                        }
+                                                                    />
+                                                                </HStack>
+                                                            )}
+                                                            {kanRedigeres && (
+                                                                <Button
+                                                                    type="button"
+                                                                    variant="tertiary"
+                                                                    onClick={() =>
+                                                                        oppdaterMåned(månedIndex, (verdi) => ({
+                                                                            ...verdi,
+                                                                            fradrag: verdi.fradrag.filter(
+                                                                                (_, i) => i !== fradragIndex,
+                                                                            ),
+                                                                        }))
+                                                                    }
+                                                                >
+                                                                    Fjern fradrag
+                                                                </Button>
+                                                            )}
+                                                        </VStack>
+                                                    </Box>
+                                                ))}
+                                                {kanRedigeres && (
+                                                    <Button
+                                                        type="button"
+                                                        variant="secondary"
+                                                        onClick={() =>
+                                                            oppdaterMåned(månedIndex, (verdi) => ({
+                                                                ...verdi,
+                                                                fradrag: [...verdi.fradrag, tomtFradrag()],
+                                                            }))
+                                                        }
+                                                    >
+                                                        Legg til fradrag
+                                                    </Button>
+                                                )}
+                                            </VStack>
+                                        </>
                                     )}
-                                    <Textarea
-                                        label="Begrunnelse for gjeninnvilgelse"
-                                        description="Fylles ut når ytelsen innvilges igjen etter en opphørsperiode."
-                                        value={måned.gjeninnvilgelsesbegrunnelse ?? ''}
-                                        readOnly={!kanRedigeres}
-                                        onChange={(event) =>
-                                            oppdaterMåned(månedIndex, (verdi) => ({
-                                                ...verdi,
-                                                gjeninnvilgelsesbegrunnelse: event.target.value || null,
-                                            }))
-                                        }
-                                    />
+                                    {resultatForPerioden === 'OPPHØR' && (
+                                        <BodyShort>
+                                            Opphørsgrunn for måneden:{' '}
+                                            {opphørsgrunner.find((grunn) => grunn.value === opphørsgrunnForPerioden)
+                                                ?.label ?? 'Velg opphørsgrunn for hele perioden'}
+                                        </BodyShort>
+                                    )}
                                 </VStack>
                             </Box>
                         );
                     })}
                     {kanRedigeres && (
                         <>
-                            <Textarea
-                                label="Begrunnelse for revurderingen"
-                                value={begrunnelse}
-                                onChange={(event) => setBegrunnelse(event.target.value)}
-                                error={valideringsfeil}
-                            />
                             {RemoteData.isFailure(beregnStatus) && (
                                 <HistoriskAlderssakApiErrorAlert error={beregnStatus.error} />
                             )}
-                            <Button
-                                type="button"
-                                loading={RemoteData.isPending(beregnStatus)}
-                                disabled={kontrollMangler}
-                                onClick={handleBeregn}
-                            >
+                            <Button type="button" loading={RemoteData.isPending(beregnStatus)} onClick={handleBeregn}>
                                 Lagre og beregn
                             </Button>
                         </>
                     )}
                 </VStack>
             </section>
-            {grunnlag.beregning && (
+            {beregning && (
                 <section aria-labelledby="beregningsresultat-tittel">
                     <VStack gap="4">
                         <div>
@@ -580,25 +580,28 @@ const HistoriskInfotrygdBeregning = (props: Props) => {
                                 Beregning
                             </Heading>
                             <BodyShort>
-                                Økonomisk retning: {økonomiskRetningTekst[grunnlag.beregning.økonomiskRetning]}
+                                Økonomisk retning: {økonomiskRetningTekst[beregning.økonomiskRetning]}
                             </BodyShort>
+                            <BodyShort>Antall måneder: {beregning.måneder.length}</BodyShort>
                         </div>
-                        {grunnlag.beregning.måneder.map((resultat) =>
+                        {beregning.måneder.map((resultat) =>
                             (() => {
                                 const historisk = grunnlag.måneder.find((måned) => måned.måned === resultat.måned);
 
                                 return (
-                                    <Box
-                                        key={resultat.måned}
-                                        background="surface-subtle"
-                                        borderWidth="1"
-                                        borderRadius="medium"
-                                        padding="5"
-                                    >
-                                        <VStack gap="4">
-                                            <Heading level="3" size="small">
+                                    <ExpansionCard key={resultat.måned} aria-label={`Beregning for ${resultat.måned}`}>
+                                        <ExpansionCard.Header>
+                                            <ExpansionCard.Title as="h3" size="small">
                                                 {resultat.måned}
-                                            </Heading>
+                                            </ExpansionCard.Title>
+                                            <ExpansionCard.Description>
+                                                {resultat.nyttResultat === 'YTELSE' ? 'Ytelse' : 'Opphør'}. Gammelt
+                                                beløp: {formatCurrency(resultat.gammeltBeløp)}. Nytt beløp:{' '}
+                                                {formatCurrency(resultat.nyttBeløp)}. Differanse:{' '}
+                                                {formatCurrency(resultat.differanse)}.
+                                            </ExpansionCard.Description>
+                                        </ExpansionCard.Header>
+                                        <ExpansionCard.Content>
                                             <div className={styles.beregningssammenligning}>
                                                 <section aria-label="Grunnlag før revurderingen">
                                                     <Heading level="4" size="xsmall" spacing>
@@ -728,29 +731,11 @@ const HistoriskInfotrygdBeregning = (props: Props) => {
                                                                 <BodyShort as="dd">{resultat.opphørsgrunn}</BodyShort>
                                                             </div>
                                                         )}
-                                                        {resultat.begrunnelse && (
-                                                            <div>
-                                                                <Label as="dt" size="small">
-                                                                    Begrunnelse
-                                                                </Label>
-                                                                <BodyShort as="dd">{resultat.begrunnelse}</BodyShort>
-                                                            </div>
-                                                        )}
-                                                        {resultat.gjeninnvilgelsesbegrunnelse && (
-                                                            <div>
-                                                                <Label as="dt" size="small">
-                                                                    Begrunnelse for gjeninnvilgelse
-                                                                </Label>
-                                                                <BodyShort as="dd">
-                                                                    {resultat.gjeninnvilgelsesbegrunnelse}
-                                                                </BodyShort>
-                                                            </div>
-                                                        )}
                                                     </dl>
                                                 </section>
                                             </div>
-                                        </VStack>
-                                    </Box>
+                                        </ExpansionCard.Content>
+                                    </ExpansionCard>
                                 );
                             })(),
                         )}

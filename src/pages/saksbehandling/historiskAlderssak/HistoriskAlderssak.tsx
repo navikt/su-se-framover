@@ -18,7 +18,16 @@ const HistoriskAlderssak = () => {
                 fnr={sak.fnr}
                 tilbakeHref={Routes.saksoversiktValgtSak.createURL({ sakId: sak.id })}
                 tilbakeTekst="Tilbake til saksoversikten"
-                onRevurderingOpprettet={(revurderingId, sakId) =>
+                onRevurderingOpprettet={(revurdering) =>
+                    navigate(
+                        Routes.historiskInfotrygdRevurdering.createURL({
+                            revurderingId: revurdering.id,
+                            sakId: revurdering.sakId,
+                        }),
+                        { state: { opprettetRevurdering: revurdering } },
+                    )
+                }
+                onÅpneRevurdering={(revurderingId, sakId) =>
                     navigate(Routes.historiskInfotrygdRevurdering.createURL({ revurderingId, sakId }))
                 }
             />

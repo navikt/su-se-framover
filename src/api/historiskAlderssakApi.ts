@@ -104,15 +104,6 @@ export async function hentHistoriskInfotrygdMånedsgrunnlag(
     });
 }
 
-export async function bekreftHistoriskForsørgingstillegg(
-    revurderingId: string,
-): Promise<ApiClientResult<HistoriskInfotrygdRevurdering>> {
-    return apiClient({
-        url: `/historisk/alderssak/revurderinger/${revurderingId}/forsorgingstillegg/bekreft`,
-        method: 'POST',
-    });
-}
-
 export async function beregnHistoriskInfotrygdRevurdering(
     request: BeregnHistoriskInfotrygdRevurderingRequest,
 ): Promise<ApiClientResult<BeregnHistoriskInfotrygdRevurderingResponse>> {
@@ -120,7 +111,6 @@ export async function beregnHistoriskInfotrygdRevurdering(
         url: `/historisk/alderssak/revurderinger/${request.revurderingId}/beregning`,
         method: 'POST',
         body: {
-            begrunnelse: request.begrunnelse,
             måneder: request.måneder,
         },
     });

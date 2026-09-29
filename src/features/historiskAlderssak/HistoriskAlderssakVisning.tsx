@@ -196,7 +196,9 @@ const HistoriskeRevurderinger = (props: {
                 Historiske revurderinger
             </Heading>
             {props.revurderinger.length === 0 ? (
-                <Alert variant="info">Det finnes ingen historiske revurderinger for personen.</Alert>
+                <Alert variant="info">
+                    Det finnes ingen revurderinger gjort i SU-app for personen for infotrygd periodene.
+                </Alert>
             ) : (
                 <ul className={styles.behandlingsliste}>
                     {props.revurderinger.map((revurdering) => (
@@ -231,7 +233,8 @@ const HistoriskAlderssakVisning = (props: {
     fnr: string;
     tilbakeHref: string;
     tilbakeTekst: string;
-    onRevurderingOpprettet: (revurderingId: string, sakId: string) => void;
+    onRevurderingOpprettet: (revurdering: HistoriskInfotrygdRevurdering) => void;
+    onÅpneRevurdering: (revurderingId: string, sakId: string) => void;
 }) => {
     const [vedtaksperioder, hentVedtaksperioder] = useApiCall(hentHistoriskeVedtaksperioder);
     const [revurderinger, hentRevurderinger] = useApiCall(hentHistoriskeInfotrygdRevurderinger);
@@ -262,7 +265,7 @@ const HistoriskAlderssakVisning = (props: {
                         () => <Loader title="Henter historiske revurderinger" size="large" />,
                         (error) => <HistoriskAlderssakApiErrorAlert error={error} />,
                         (resultat) => (
-                            <HistoriskeRevurderinger revurderinger={resultat} onVelg={props.onRevurderingOpprettet} />
+                            <HistoriskeRevurderinger revurderinger={resultat} onVelg={props.onÅpneRevurdering} />
                         ),
                     ),
                 )}
@@ -279,6 +282,7 @@ const HistoriskAlderssakVisning = (props: {
                                     fnr={props.fnr}
                                     vedtaksperioder={perioder}
                                     onOpprettet={props.onRevurderingOpprettet}
+                                    onÅpneEksisterende={props.onÅpneRevurdering}
                                 />
                                 <HistoriskePerioder perioder={perioder} />
                             </VStack>

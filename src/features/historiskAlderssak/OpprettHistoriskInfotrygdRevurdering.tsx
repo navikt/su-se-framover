@@ -8,6 +8,7 @@ import { ApiErrorCode } from '~src/components/apiErrorAlert/apiErrorCode';
 import { RangePickerMonth } from '~src/components/inputs/datePicker/DatePicker';
 import { useApiCall } from '~src/lib/hooks';
 import { HistoriskVedtaksperiode } from '~src/types/HistoriskAlderssak';
+import { HistoriskInfotrygdRevurdering } from '~src/types/HistoriskInfotrygdRevurdering';
 import { NullablePeriode } from '~src/types/Periode';
 import {
     parseNonNullableIsoDateOnly,
@@ -21,28 +22,24 @@ import HistoriskAlderssakApiErrorAlert from './HistoriskAlderssakApiErrorAlert';
 interface Props {
     fnr: string;
     vedtaksperioder: HistoriskVedtaksperiode[];
-    onOpprettet: (revurderingId: string, sakId: string) => void;
+    onOpprettet: (revurdering: HistoriskInfotrygdRevurdering) => void;
+    onÅpneEksisterende: (revurderingId: string, sakId: string) => void;
 }
 
 const finnYttergrenser = (vedtaksperioder: HistoriskVedtaksperiode[]) => {
-    const perioderMedDato = vedtaksperioder.flatMap((periode) =>
-        periode.fraOgMed && periode.tilOgMed
-            ? [
-                  {
-                      fraOgMed: parseNonNullableIsoDateOnly(periode.fraOgMed),
-                      tilOgMed: parseNonNullableIsoDateOnly(periode.tilOgMed),
-                  },
-              ]
-            : [],
+    const vedtaksdatoer = vedtaksperioder.flatMap((periode) =>
+        [periode.fraOgMed, periode.tilOgMed]
+            .filter((dato): dato is string => dato !== null)
+            .map(parseNonNullableIsoDateOnly),
     );
 
-    if (perioderMedDato.length === 0) {
+    if (vedtaksdatoer.length === 0) {
         return null;
     }
 
     return {
-        fraOgMed: DateFns.min(perioderMedDato.map((periode) => periode.fraOgMed)),
-        tilOgMed: DateFns.max(perioderMedDato.map((periode) => periode.tilOgMed)),
+        fraOgMed: DateFns.min(vedtaksdatoer),
+        tilOgMed: DateFns.max(vedtaksdatoer),
     };
 };
 
@@ -85,14 +82,14 @@ const OpprettHistoriskInfotrygdRevurdering = (props: Props) => {
                     tilOgMed: toIsoDateOnlyString(sluttenAvMåneden(periode.tilOgMed)),
                 },
             },
-            (revurdering) => props.onOpprettet(revurdering.id, revurdering.sakId),
+            props.onOpprettet,
             (error) => {
                 if (
                     error.body.code === ApiErrorCode.HISTORISK_INFOTRYGD_REVURDERING_OVERLAPPER_ÅPEN_BEHANDLING &&
                     error.body.eksisterendeRevurderingId &&
                     error.body.sakId
                 ) {
-                    props.onOpprettet(error.body.eksisterendeRevurderingId, error.body.sakId);
+                    props.onÅpneEksisterende(error.body.eksisterendeRevurderingId, error.body.sakId);
                 }
             },
         );
@@ -117,6 +114,7 @@ const OpprettHistoriskInfotrygdRevurdering = (props: Props) => {
                         value={periode}
                         fromDate={yttergrenser.fraOgMed}
                         toDate={yttergrenser.tilOgMed}
+                        defaultYear={yttergrenser.tilOgMed}
                         onChange={setPeriode}
                         error={valideringsfeil}
                     />

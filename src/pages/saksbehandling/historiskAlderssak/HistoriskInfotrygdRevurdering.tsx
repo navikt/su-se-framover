@@ -1,6 +1,7 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { BodyShort, Box, Button, Heading, Label, Loader, Textarea, VStack } from '@navikt/ds-react';
-import { FormEvent, useEffect, useState } from 'react';
+import { FormEvent, useEffect, useRef, useState } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 import {
     avsluttHistoriskInfotrygdRevurdering,
@@ -90,7 +91,7 @@ const AvsluttRevurdering = (props: { revurderingId: string; onAvsluttet: () => v
     };
 
     return (
-        <Box background="surface-subtle" borderWidth="1" borderRadius="medium" padding="5">
+        <Box background="surface-default" borderWidth="1" borderRadius="medium" padding="5">
             <form onSubmit={handleSubmit}>
                 <VStack gap="4" align="start">
                     <Heading level="2" size="medium">
@@ -117,13 +118,40 @@ const AvsluttRevurdering = (props: { revurderingId: string; onAvsluttet: () => v
 
 const HistoriskInfotrygdRevurdering = () => {
     const { revurderingId, sakId } = Routes.useRouteParams<typeof Routes.historiskInfotrygdRevurdering>();
+    const location = useLocation();
+    const navigate = useNavigate();
+    const [opprettetRevurdering, setOpprettetRevurdering] = useState<HistoriskInfotrygdRevurderingType | null>(() => {
+        const state = location.state as { opprettetRevurdering?: HistoriskInfotrygdRevurderingType } | null;
+        const behandling = state?.opprettetRevurdering;
+        return behandling && behandling.id === revurderingId && behandling.sakId === sakId ? behandling : null;
+    });
+    const hoppOverFørsteHenting = useRef(opprettetRevurdering !== null);
     const [revurdering, hentRevurdering] = useApiCall(hentHistoriskInfotrygdRevurdering);
+    const [beregnetBehandling, setBeregnetBehandling] = useState<HistoriskInfotrygdRevurderingType | null>(null);
 
     useEffect(() => {
+        if (opprettetRevurdering) {
+            navigate(location.pathname, { replace: true, state: null });
+        }
+    }, []);
+
+    useEffect(() => {
+        if (hoppOverFørsteHenting.current) {
+            hoppOverFørsteHenting.current = false;
+            return;
+        }
+        setBeregnetBehandling(null);
+        setOpprettetRevurdering(null);
         if (revurderingId) {
             hentRevurdering(revurderingId);
         }
     }, [hentRevurdering, revurderingId]);
+
+    const lastRevurderingPåNytt = (id: string) => {
+        setBeregnetBehandling(null);
+        setOpprettetRevurdering(null);
+        hentRevurdering(id);
+    };
 
     return (
         <section className={historiskStyles.side} aria-labelledby="historisk-revurdering-tittel">
@@ -136,32 +164,40 @@ const HistoriskInfotrygdRevurdering = () => {
                 </div>
 
                 {pipe(
-                    revurdering,
+                    opprettetRevurdering !== null && opprettetRevurdering.id === revurderingId
+                        ? RemoteData.success(opprettetRevurdering)
+                        : revurdering,
                     RemoteData.fold(
                         () => null,
                         () => <Loader title="Henter historisk revurdering" size="large" />,
                         (error) => <HistoriskAlderssakApiErrorAlert error={error} />,
-                        (resultat) => (
-                            <VStack gap="6">
-                                <Revurderingsdetaljer revurdering={resultat} />
-                                {resultat.status !== 'AVSLUTTET' && resultat.status !== 'ATTESTERT' && (
-                                    <HistoriskInfotrygdBeregning
-                                        behandling={resultat}
-                                        onOppdatert={() => hentRevurdering(resultat.id)}
+                        (resultat) => {
+                            const gjeldendeRevurdering = beregnetBehandling ?? resultat;
+
+                            return (
+                                <VStack gap="6">
+                                    <Revurderingsdetaljer revurdering={gjeldendeRevurdering} />
+                                    {gjeldendeRevurdering.status !== 'AVSLUTTET' &&
+                                        gjeldendeRevurdering.status !== 'ATTESTERT' && (
+                                            <HistoriskInfotrygdBeregning
+                                                behandling={gjeldendeRevurdering}
+                                                onOppdatert={setBeregnetBehandling}
+                                            />
+                                        )}
+                                    <HistoriskInfotrygdEtterBeregning
+                                        behandling={gjeldendeRevurdering}
+                                        onOppdatert={() => lastRevurderingPåNytt(gjeldendeRevurdering.id)}
                                     />
-                                )}
-                                <HistoriskInfotrygdEtterBeregning
-                                    behandling={resultat}
-                                    onOppdatert={() => hentRevurdering(resultat.id)}
-                                />
-                                {resultat.status !== 'AVSLUTTET' && resultat.status !== 'TIL_ATTESTERING' && (
-                                    <AvsluttRevurdering
-                                        revurderingId={resultat.id}
-                                        onAvsluttet={() => hentRevurdering(resultat.id)}
-                                    />
-                                )}
-                            </VStack>
-                        ),
+                                    {gjeldendeRevurdering.status !== 'AVSLUTTET' &&
+                                        gjeldendeRevurdering.status !== 'TIL_ATTESTERING' && (
+                                            <AvsluttRevurdering
+                                                revurderingId={gjeldendeRevurdering.id}
+                                                onAvsluttet={() => lastRevurderingPåNytt(gjeldendeRevurdering.id)}
+                                            />
+                                        )}
+                                </VStack>
+                            );
+                        },
                     ),
                 )}
 

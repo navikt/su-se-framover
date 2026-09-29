@@ -29,9 +29,6 @@ interface Props {
 const sperregrunnTekst: Record<HistoriskInfotrygdSperregrunnForAttestering, string> = {
     MANGLER_BEREGNING: 'Behandlingen må beregnes.',
     BEREGNING_DEKKER_IKKE_HELE_PERIODEN: 'Beregningen må dekke hele behandlingsperioden.',
-    MANGLER_BEGRUNNELSE: 'Behandlingen må ha en begrunnelse.',
-    MANGLER_BEKREFTELSE_AV_HISTORISK_FORSORGINGSTILLEGG:
-        'Historisk månedsbeløp må kontrolleres for mulig forsørgingstillegg.',
     MANGLER_GYLDIG_FORHANDSVARSEL: 'Det må tas et gyldig valg om forhåndsvarsel.',
     MANGLER_VEDTAKSBREVVALG: 'Det må velges om vedtaksbrev skal sendes.',
     MANGLER_FRITEKST_TIL_VEDTAKSBREV: 'Fritekst til vedtaksbrevet må fylles ut.',
@@ -136,19 +133,44 @@ const Vedtaksbrev = (props: Props) => {
     const [lagreStatus, lagre] = useApiCall(lagreHistoriskVedtaksbrev);
     const [utkastStatus, visUtkast] = useBrevForhåndsvisning(hentHistoriskVedtaksbrevutkast);
 
-    const handleLagre = () => {
+    const vedtaksbrevRequest = {
+        revurderingId: props.behandling.id,
+        request: { valg, fritekst: valg === 'SEND' ? fritekst.trim() : fritekst.trim() || null },
+    };
+
+    const validerVedtaksbrev = () => {
         if (valg === 'SEND' && !fritekst.trim()) {
             setFeil('Skriv friteksten som skal brukes i vedtaksbrevet.');
-            return;
+            return false;
         }
         setFeil(undefined);
-        lagre(
-            {
-                revurderingId: props.behandling.id,
-                request: { valg, fritekst: valg === 'SEND' ? fritekst.trim() : fritekst.trim() || null },
-            },
-            props.onOppdatert,
-        );
+        return true;
+    };
+
+    const handleLagre = () => {
+        if (!validerVedtaksbrev()) {
+            return;
+        }
+        lagre(vedtaksbrevRequest, props.onOppdatert);
+    };
+
+    const handleForhåndsvis = () => {
+        if (valg !== 'SEND' || !validerVedtaksbrev()) {
+            return;
+        }
+
+        const fritekstErLagret =
+            props.behandling.vedtaksbrevvalg === 'SEND' && props.behandling.vedtaksbrevFritekst === fritekst.trim();
+
+        if (fritekstErLagret) {
+            visUtkast(props.behandling.id);
+            return;
+        }
+
+        lagre(vedtaksbrevRequest, () => {
+            props.onOppdatert();
+            visUtkast(props.behandling.id);
+        });
     };
 
     return (
@@ -173,8 +195,9 @@ const Vedtaksbrev = (props: Props) => {
                     <Button
                         type="button"
                         variant="secondary"
-                        loading={RemoteData.isPending(utkastStatus)}
-                        onClick={() => visUtkast(props.behandling.id)}
+                        disabled={valg !== 'SEND'}
+                        loading={RemoteData.isPending(lagreStatus) || RemoteData.isPending(utkastStatus)}
+                        onClick={handleForhåndsvis}
                     >
                         Forhåndsvis vedtaksbrev
                     </Button>
