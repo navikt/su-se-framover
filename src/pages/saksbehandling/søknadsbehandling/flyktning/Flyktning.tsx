@@ -12,6 +12,7 @@ import {
     flyktningFormSchema,
     flyktningVilkårTilFormDataEllerNy,
 } from '~src/components/forms/vilkårOgGrunnlagForms/flyktning/FlyktningFormUtils';
+import sharedVilkårI18n from '~src/components/forms/vilkårOgGrunnlagForms/VilkårOgGrunnlagForms-nb';
 import OppsummeringAvFlyktningstatus from '~src/components/oppsummering/oppsummeringAvSøknadinnhold/OppsummeringAvFlyktningstatus';
 import OppsummeringAvFlyktningvilkår from '~src/components/oppsummering/oppsummeringAvVilkårOgGrunnlag/OppsummeringAvFlyktning';
 import ToKolonner from '~src/components/toKolonner/ToKolonner';
@@ -29,12 +30,12 @@ import {
 import { Vilkårstatus } from '~src/types/Vilkår';
 import { Vilkårtype } from '~src/types/Vilkårsvurdering';
 import { lagDatePeriodeAvStringPeriode } from '~src/utils/periode/periodeUtils';
+import { harVurderingAvvikFraBrukersSvar, vilkårstatusTilBoolean } from '~src/utils/vilkårUtils';
 
 import EksisterendeVedtaksinformasjon from '../EksisterendeVedtaksinformasjon';
 import sharedI18n from '../sharedI18n-nb';
 import sharedStyles from '../sharedStyles.module.less';
 import { VilkårsvurderingBaseProps } from '../types';
-import styles from './flyktning.module.less';
 import messages from './flyktning-nb';
 
 const Flyktning = (
@@ -44,7 +45,7 @@ const Flyktning = (
     },
 ) => {
     const navigate = useNavigate();
-    const { formatMessage } = useI18n({ messages: { ...sharedI18n, ...messages } });
+    const { formatMessage } = useI18n({ messages: { ...sharedI18n, ...sharedVilkårI18n, ...messages } });
     const [status, lagre] = useAsyncActionCreator(lagreFlyktningVilkår);
 
     const initialValues = flyktningVilkårTilFormDataEllerNy(
@@ -67,6 +68,11 @@ const Flyktning = (
     const vilGiTidligAvslag =
         props.behandling.grunnlagsdataOgVilkårsvurderinger.uføre?.resultat === UføreResultat.VilkårIkkeOppfylt ||
         form.watch('flyktning')?.some((vurdering) => vurdering.resultat === Vilkårstatus.VilkårIkkeOppfylt);
+
+    const harAvvikFraSøknad = harVurderingAvvikFraBrukersSvar(
+        props.søknadInnhold.flyktningsstatus.registrertFlyktning,
+        (form.watch('flyktning') ?? []).map((vurdering) => vilkårstatusTilBoolean(vurdering.resultat)),
+    );
 
     const vedtakUrl = Routes.saksbehandlingVilkårsvurdering.createURL({
         sakId: props.sakId,
@@ -135,8 +141,13 @@ const Flyktning = (
                             url: props.avsluttUrl,
                         }}
                     >
+                        {harAvvikFraSøknad && (
+                            <Alert className={sharedStyles.avslagAdvarsel} variant="warning">
+                                {formatMessage('display.avvikFraSøknad.advarsel')}
+                            </Alert>
+                        )}
                         {vilGiTidligAvslag && (
-                            <Alert className={styles.avslagAdvarsel} variant="info">
+                            <Alert className={sharedStyles.avslagAdvarsel} variant="info">
                                 {formatMessage('display.avslag.advarsel')}
                             </Alert>
                         )}
