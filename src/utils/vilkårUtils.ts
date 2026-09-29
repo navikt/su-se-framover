@@ -1,4 +1,5 @@
 import * as Routes from '~src/lib/routes';
+import { Nullable } from '~src/lib/types';
 import { Aldersresultat } from '~src/types/grunnlagsdataOgVilkårsvurderinger/alder/Aldersvilkår';
 import { FormueStatus } from '~src/types/grunnlagsdataOgVilkårsvurderinger/formue/Formuevilkår';
 import { GrunnlagsdataOgVilkårsvurderinger } from '~src/types/grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
@@ -227,4 +228,52 @@ export const erAlleVilkårVurdert = (vilkårsinformasjon: Vilkårsinformasjon[])
 
 export const erNoenVurdertUavklart = (vilkårsinformasjon: Vilkårsinformasjon[]): boolean => {
     return vilkårsinformasjon.some((x) => x.status === VilkårVurderingStatus.Uavklart);
+};
+
+/**
+ * Sjekker om saksbehandlers vurderinger avviker fra det bruker har opplyst i søknaden.
+ * Vurderingene skal på forhånd være normalisert til boolean - true for oppfylt/ja,
+ * false for ikke oppfylt/nei, og null for uavklart. Et avvik oppstår kun når
+ * saksbehandler har konkludert med et resultat som motsier brukers svar - uavklarte
+ * vurderinger (null) regnes ikke som avvik, siden saksbehandler da ikke har tatt
+ * stilling ennå.
+ */
+export const harVurderingAvvikFraBrukersSvar = (
+    brukersSvar: Nullable<boolean>,
+    vurderinger: Nullable<boolean>[],
+): boolean => {
+    if (brukersSvar === null) {
+        return false;
+    }
+    return vurderinger.some((resultat) => resultat !== null && resultat !== brukersSvar);
+};
+
+/**
+ * Normaliserer Vilkårstatus til boolean, for bruk sammen med harVurderingAvvikFraBrukersSvar.
+ */
+export const vilkårstatusTilBoolean = (resultat: Nullable<Vilkårstatus>): Nullable<boolean> => {
+    switch (resultat) {
+        case Vilkårstatus.VilkårOppfylt:
+            return true;
+        case Vilkårstatus.VilkårIkkeOppfylt:
+            return false;
+        default:
+            return null;
+    }
+};
+
+/**
+ * Normaliserer UføreResultat til boolean, for bruk sammen med harVurderingAvvikFraBrukersSvar.
+ * HarUføresakTilBehandling regnes som uavklart (null), siden saksbehandler her ikke
+ * har konkludert med om vilkåret er oppfylt eller ikke.
+ */
+export const uføreResultatTilBoolean = (resultat: Nullable<UføreResultat>): Nullable<boolean> => {
+    switch (resultat) {
+        case UføreResultat.VilkårOppfylt:
+            return true;
+        case UføreResultat.VilkårIkkeOppfylt:
+            return false;
+        default:
+            return null;
+    }
 };
