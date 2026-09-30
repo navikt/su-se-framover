@@ -141,14 +141,12 @@ export async function sendHistoriskForhåndsvarsel(args: {
     });
 }
 
-export async function ikkeSendHistoriskForhåndsvarsel(args: {
-    revurderingId: string;
-    begrunnelse: string;
-}): Promise<ApiClientResult<HistoriskInfotrygdRevurdering>> {
+export async function ikkeSendHistoriskForhåndsvarsel(
+    revurderingId: string,
+): Promise<ApiClientResult<HistoriskInfotrygdRevurdering>> {
     return apiClient({
-        url: `/historisk/alderssak/revurderinger/${args.revurderingId}/forhandsvarsel/ikke-send`,
+        url: `/historisk/alderssak/revurderinger/${revurderingId}/forhandsvarsel/ikke-send`,
         method: 'POST',
-        body: { begrunnelse: args.begrunnelse },
     });
 }
 

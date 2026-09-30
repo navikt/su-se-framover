@@ -1,6 +1,6 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import { Alert, BodyShort, Box, Button, Heading, Radio, RadioGroup, Textarea, VStack } from '@navikt/ds-react';
-import { useState } from 'react';
+import { Alert, BodyShort, Box, Button, Heading, Loader, Radio, RadioGroup, Textarea, VStack } from '@navikt/ds-react';
+import { useEffect, useState } from 'react';
 
 import {
     attesterHistoriskRevurdering,
@@ -12,7 +12,10 @@ import {
     sendHistoriskRevurderingTilAttestering,
     underkjennHistoriskRevurdering,
 } from '~src/api/historiskAlderssakApi';
+import { Brevtype, hentMottaker } from '~src/api/mottakerClient';
+import { MottakerAlert, toMottakerAlert } from '~src/components/mottaker/mottakerUtils';
 import { useApiCall, useBrevForhåndsvisning } from '~src/lib/hooks';
+import { Mottaker } from '~src/pages/saksbehandling/mottaker/Mottaker';
 import {
     HistoriskInfotrygdRevurdering,
     HistoriskInfotrygdSperregrunnForAttestering,
@@ -32,7 +35,76 @@ const sperregrunnTekst: Record<HistoriskInfotrygdSperregrunnForAttestering, stri
     MANGLER_GYLDIG_FORHANDSVARSEL: 'Det må tas et gyldig valg om forhåndsvarsel.',
     MANGLER_VEDTAKSBREVVALG: 'Det må velges om vedtaksbrev skal sendes.',
     MANGLER_FRITEKST_TIL_VEDTAKSBREV: 'Fritekst til vedtaksbrevet må fylles ut.',
-    BLANDET_RESULTAT_MAA_BEHANDLES_SEPARAT: 'Ytelse og opphør må behandles i separate, ikke-overlappende behandlinger.',
+};
+
+const HISTORISK_REFERANSETYPE = 'HISTORISK_INFOTRYGD_REVURDERING';
+
+const HistoriskInfotrygdMottaker = (props: { sakId: string; revurderingId: string; brevtype: Brevtype }) => {
+    const [mottakerFinnes, setMottakerFinnes] = useState<boolean | null>(null);
+    const [visMottaker, setVisMottaker] = useState(false);
+    const [mottakerFeil, setMottakerFeil] = useState<MottakerAlert | null>(null);
+
+    useEffect(() => {
+        let aktiv = true;
+
+        const sjekkMottaker = async () => {
+            const resultat = await hentMottaker(
+                props.sakId,
+                HISTORISK_REFERANSETYPE,
+                props.revurderingId,
+                props.brevtype,
+            );
+
+            if (!aktiv) {
+                return;
+            }
+
+            if (resultat.status === 'ok') {
+                setMottakerFinnes(resultat.data !== null);
+                setMottakerFeil(null);
+            } else if (resultat.error.statusCode === 404) {
+                setMottakerFinnes(false);
+                setMottakerFeil(null);
+            } else {
+                setMottakerFinnes(false);
+                setMottakerFeil(toMottakerAlert(resultat.error, 'Kunne ikke hente mottaker.'));
+            }
+        };
+
+        void sjekkMottaker();
+        return () => {
+            aktiv = false;
+        };
+    }, [props.brevtype, props.revurderingId, props.sakId]);
+
+    return (
+        <VStack gap="3" align="start">
+            {mottakerFeil && (
+                <Alert variant={mottakerFeil.variant} size="small">
+                    {mottakerFeil.text}
+                </Alert>
+            )}
+            <Button
+                variant="secondary"
+                type="button"
+                size="small"
+                disabled={mottakerFinnes === null}
+                onClick={() => setVisMottaker((åpen) => !åpen)}
+            >
+                {visMottaker ? 'Lukk mottaker' : mottakerFinnes ? 'Vis mottaker' : 'Legg til mottaker'}
+                {mottakerFinnes === null && <Loader size="small" />}
+            </Button>
+            {visMottaker && (
+                <Mottaker
+                    sakId={props.sakId}
+                    referanseId={props.revurderingId}
+                    referanseType={HISTORISK_REFERANSETYPE}
+                    brevtype={props.brevtype}
+                    onClose={() => setVisMottaker(false)}
+                />
+            )}
+        </VStack>
+    );
 };
 
 const Forhåndsvarsel = (props: Props) => {
@@ -40,7 +112,6 @@ const Forhåndsvarsel = (props: Props) => {
         props.behandling.forhåndsvarsel.status === 'SENDT' ? 'SEND' : 'IKKE_SEND',
     );
     const [fritekst, setFritekst] = useState(props.behandling.forhåndsvarsel.fritekst ?? '');
-    const [begrunnelse, setBegrunnelse] = useState(props.behandling.forhåndsvarsel.begrunnelse ?? '');
     const [feil, setFeil] = useState<string>();
     const [sendStatus, send] = useApiCall(sendHistoriskForhåndsvarsel);
     const [ikkeSendStatus, ikkeSend] = useApiCall(ikkeSendHistoriskForhåndsvarsel);
@@ -56,12 +127,8 @@ const Forhåndsvarsel = (props: Props) => {
             send({ revurderingId: props.behandling.id, fritekst: fritekst.trim() }, props.onOppdatert);
             return;
         }
-        if (!begrunnelse.trim()) {
-            setFeil('Begrunn hvorfor forhåndsvarsel ikke skal sendes.');
-            return;
-        }
         setFeil(undefined);
-        ikkeSend({ revurderingId: props.behandling.id, begrunnelse: begrunnelse.trim() }, props.onOppdatert);
+        ikkeSend(props.behandling.id, props.onOppdatert);
     };
 
     return (
@@ -72,27 +139,26 @@ const Forhåndsvarsel = (props: Props) => {
                 </Heading>
                 {props.behandling.forhåndsvarsel.erUtdatert && (
                     <Alert variant="warning">
-                        Beregningsgrunnlaget er endret. Send et nytt forhåndsvarsel eller begrunn hvorfor nytt varsel
-                        ikke er nødvendig.
+                        Beregningsgrunnlaget er endret. Send et nytt forhåndsvarsel eller velg at det ikke skal sendes.
                     </Alert>
                 )}
                 <RadioGroup legend="Skal det sendes forhåndsvarsel?" value={valg} onChange={setValg}>
                     <Radio value="SEND">Ja, send forhåndsvarsel</Radio>
                     <Radio value="IKKE_SEND">Nei, ikke send forhåndsvarsel</Radio>
                 </RadioGroup>
-                {valg === 'SEND' ? (
+                {valg === 'SEND' && (
                     <Textarea
                         label="Fritekst til forhåndsvarselet"
                         value={fritekst}
                         onChange={(event) => setFritekst(event.target.value)}
                         error={feil}
                     />
-                ) : (
-                    <Textarea
-                        label="Begrunnelse"
-                        value={begrunnelse}
-                        onChange={(event) => setBegrunnelse(event.target.value)}
-                        error={feil}
+                )}
+                {valg === 'SEND' && (
+                    <HistoriskInfotrygdMottaker
+                        sakId={props.behandling.sakId}
+                        revurderingId={props.behandling.id}
+                        brevtype="FORHANDSVARSEL"
                     />
                 )}
                 {RemoteData.isFailure(sendStatus) && <HistoriskAlderssakApiErrorAlert error={sendStatus.error} />}
@@ -189,6 +255,13 @@ const Vedtaksbrev = (props: Props) => {
                     onChange={(event) => setFritekst(event.target.value)}
                     error={feil}
                 />
+                {valg === 'SEND' && (
+                    <HistoriskInfotrygdMottaker
+                        sakId={props.behandling.sakId}
+                        revurderingId={props.behandling.id}
+                        brevtype="VEDTAK"
+                    />
+                )}
                 {RemoteData.isFailure(lagreStatus) && <HistoriskAlderssakApiErrorAlert error={lagreStatus.error} />}
                 {RemoteData.isFailure(utkastStatus) && <HistoriskAlderssakApiErrorAlert error={utkastStatus.error} />}
                 <VStack gap="3" align="start">

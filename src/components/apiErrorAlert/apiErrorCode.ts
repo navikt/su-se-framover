@@ -237,6 +237,7 @@ export enum ApiErrorCode {
     UGYLDIG_GRUNN_FOR_UNDERKJENNING = 'ugyldig_grunn_for_underkjenning',
     UGYLDIG_INPUT = 'ugyldig_input',
     UGYLDIG_JOURNALPOSTID = 'ugyldig_journalpost_id',
+    UGYLDIG_HISTORISK_INFOTRYGD_BEREGNINGSGRUNNLAG = 'ugyldig_historisk_infotrygd_beregningsgrunnlag',
     UGYLDIG_KOMBINASJON_BOSITUASJON_FORMUE = 'ugyldig_kombinasjon_bosituasjon_formue',
     UGYLDIG_KOMBINASJON_BOSITUASJON_FRADRAG = 'ugyldig_kombinasjon_bosituasjon_fradrag',
     UGYLDIG_MOTTATT_DATO = 'ugyldig_mottatt_dato',

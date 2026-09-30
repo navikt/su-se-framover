@@ -15,6 +15,8 @@ import HistoriskInfotrygdEtterBeregning from '~src/features/historiskAlderssak/H
 import { pipe } from '~src/lib/fp';
 import { useApiCall } from '~src/lib/hooks';
 import * as Routes from '~src/lib/routes';
+import { VisDokumenter } from '~src/pages/saksbehandling/dokumenter/DokumenterPage';
+import { DokumentIdType } from '~src/types/dokument/Dokument';
 import { HistoriskInfotrygdRevurdering as HistoriskInfotrygdRevurderingType } from '~src/types/HistoriskInfotrygdRevurdering';
 import { formatDate, formatDateTime } from '~src/utils/date/dateUtils';
 
@@ -195,6 +197,15 @@ const HistoriskInfotrygdRevurdering = () => {
                                                 onAvsluttet={() => lastRevurderingPåNytt(gjeldendeRevurdering.id)}
                                             />
                                         )}
+                                    <section aria-labelledby="historisk-revurdering-dokumenter">
+                                        <Heading id="historisk-revurdering-dokumenter" level="2" size="medium">
+                                            Dokumenter for behandlingen
+                                        </Heading>
+                                        <VisDokumenter
+                                            id={gjeldendeRevurdering.id}
+                                            idType={DokumentIdType.HistoriskInfotrygdRevurdering}
+                                        />
+                                    </section>
                                 </VStack>
                             );
                         },

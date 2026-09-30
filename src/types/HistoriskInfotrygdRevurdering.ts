@@ -40,13 +40,11 @@ export type HistoriskInfotrygdSperregrunnForAttestering =
     | 'BEREGNING_DEKKER_IKKE_HELE_PERIODEN'
     | 'MANGLER_GYLDIG_FORHANDSVARSEL'
     | 'MANGLER_VEDTAKSBREVVALG'
-    | 'MANGLER_FRITEKST_TIL_VEDTAKSBREV'
-    | 'BLANDET_RESULTAT_MAA_BEHANDLES_SEPARAT';
+    | 'MANGLER_FRITEKST_TIL_VEDTAKSBREV';
 
 export interface HistoriskInfotrygdForhåndsvarsel {
     status: HistoriskInfotrygdForhåndsvarselstatus;
     fritekst: string | null;
-    begrunnelse: string | null;
     tidspunkt: string | null;
     erUtdatert: boolean;
 }
