@@ -109,6 +109,9 @@ const BosituasjonForm = (props: Props) => {
                                             )}
                                         />
                                         {RemoteData.isSuccess(epsStatus) && (
+                                            <div>DEBUG fødselsår: {epsStatus.value.fødsel?.år ?? 'ukjent'}</div>
+                                        )}
+                                        {RemoteData.isSuccess(epsStatus) && (
                                             <ErEpsFylt67Felt
                                                 form={props.form}
                                                 nameAndIdx={nameAndIdx}
@@ -250,7 +253,7 @@ const EpsFyller67Varsel = (props: { eps: Person; periode: { fraOgMed: Date; tilO
 
     if (kunneFylle67 && fødselsår) {
         return (
-            <Alert variant="warning" className={styles.epsFyller67Alert}>
+            <Alert variant="info" className={styles.epsFyller67Alert}>
                 <BodyShort>
                     {formatMessage('bosituasjon.epsMuligFyller67IÅr', { år: finnÅrPersonFyller67(fødselsår) })}
                 </BodyShort>
@@ -260,7 +263,7 @@ const EpsFyller67Varsel = (props: { eps: Person; periode: { fraOgMed: Date; tilO
 
     if (!fødselsår) {
         return (
-            <Alert variant="warning" className={styles.epsFyller67Alert}>
+            <Alert variant="info" className={styles.epsFyller67Alert}>
                 <BodyShort>{formatMessage('bosituasjon.epsFødselsdatoUgyldig')}</BodyShort>
             </Alert>
         );
