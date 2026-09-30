@@ -117,8 +117,7 @@ const BosituasjonForm = (props: Props) => {
                                             />
                                         )}
 
-                                        {watch.erEpsFylt67 === false &&
-                                            RemoteData.isSuccess(epsStatus) &&
+                                        {RemoteData.isSuccess(epsStatus) &&
                                             watch.periode.fraOgMed &&
                                             watch.periode.tilOgMed && (
                                                 <EpsFyller67Varsel
