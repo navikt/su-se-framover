@@ -44,3 +44,16 @@ export const fyller67ILøpetAvPeriode = (
 
     return !erFylt67VedFraOgMed && erFylt67VedTilOgMed;
 };
+
+// Fallback når fødselsdatoen mangler eller er ugyldig, men fødselsåret er kjent (f.eks. fra et
+// fnr/dnr med ugyldig dagverdi). Vi vet da ikke nøyaktig måned, så vi kan bare avgrense om det i
+// det hele tatt er mulig at personen fyller 67 i perioden.
+export const finnÅrPersonFyller67 = (fødselsår: number): number => fødselsår + LOVFESTET_ALDERSGRENSE_SU;
+
+export const kunneFylle67IPerioden = (periode: { fraOgMed: Date; tilOgMed: Date }, fødselsår: number): boolean => {
+    const årPersonFyller67 = finnÅrPersonFyller67(fødselsår);
+    const periodensFørsteÅr = periode.fraOgMed.getFullYear();
+    const periodensSisteÅr = periode.tilOgMed.getFullYear();
+
+    return årPersonFyller67 >= periodensFørsteÅr && årPersonFyller67 <= periodensSisteÅr;
+};

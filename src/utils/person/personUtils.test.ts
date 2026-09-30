@@ -1,6 +1,6 @@
 import { Fødsel } from '~src/types/Person';
 
-import { fyller67ILøpetAvPeriode, harFylt67VedDato } from './personUtils';
+import { finnÅrPersonFyller67, fyller67ILøpetAvPeriode, harFylt67VedDato, kunneFylle67IPerioden } from './personUtils';
 
 const lagFødsel = (dato: string | null): Fødsel => ({
     dato,
@@ -58,5 +58,32 @@ describe('fyller67ILøpetAvPeriode', () => {
 
     it('returnerer null når fødsel er null', () => {
         expect(fyller67ILøpetAvPeriode(periode, null)).toBeNull();
+    });
+});
+
+describe('kunneFylle67IPerioden', () => {
+    const periode = { fraOgMed: new Date(2026, 0, 1), tilOgMed: new Date(2026, 11, 31) };
+
+    it('returnerer true når personen fyller 67 innenfor periodens år', () => {
+        expect(kunneFylle67IPerioden(periode, 1959)).toBe(true);
+    });
+
+    it('returnerer true når perioden strekker seg over årsskiftet', () => {
+        const periodeOverÅrsskifte = { fraOgMed: new Date(2026, 6, 1), tilOgMed: new Date(2027, 5, 30) };
+        expect(kunneFylle67IPerioden(periodeOverÅrsskifte, 1960)).toBe(true);
+    });
+
+    it('returnerer false når personen klart fyller 67 før periodens år', () => {
+        expect(kunneFylle67IPerioden(periode, 1950)).toBe(false);
+    });
+
+    it('returnerer false når personen klart fyller 67 etter periodens år', () => {
+        expect(kunneFylle67IPerioden(periode, 1965)).toBe(false);
+    });
+});
+
+describe('finnÅrPersonFyller67', () => {
+    it('returnerer fødselsår pluss den lovfestede aldersgrensen', () => {
+        expect(finnÅrPersonFyller67(1959)).toBe(2026);
     });
 });
