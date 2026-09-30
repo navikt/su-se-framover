@@ -110,7 +110,6 @@ const messages: { [key in ApiErrorCode]: string } = {
         'Valgt periode overlapper en åpen behandling for samme person.',
     [ApiErrorCode.HISTORISK_INFOTRYGD_OVERLAPPER_SU_APP]:
         'Valgt periode overlapper den perioden som allerede er innvilget i SU-appen.',
-    [ApiErrorCode.HISTORISK_INFOTRYGD_PERIODEN_MÅ_BESTÅ_AV_HELE_MÅNEDER]: 'Perioden må bestå av hele måneder.',
     [ApiErrorCode.HISTORISK_INFOTRYGD_PROJEKSJON_IKKE_FUNNET]: 'Fant ikke historiske Infotrygd-data for valgt periode.',
     [ApiErrorCode.HISTORISK_INFOTRYGD_REVURDERING_IKKE_FUNNET]: 'Fant ikke den historiske Infotrygd-revurderingen.',
     [ApiErrorCode.HISTORISK_INFOTRYGD_REVURDERING_UGYLDIG_TILSTAND]:
