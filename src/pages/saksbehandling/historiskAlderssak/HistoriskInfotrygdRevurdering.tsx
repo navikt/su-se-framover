@@ -129,6 +129,7 @@ const HistoriskInfotrygdRevurdering = () => {
     });
     const hoppOverFørsteHenting = useRef(opprettetRevurdering !== null);
     const [revurdering, hentRevurdering] = useApiCall(hentHistoriskInfotrygdRevurdering);
+    const [oppfriskStatus, oppfriskRevurdering] = useApiCall(hentHistoriskInfotrygdRevurdering);
     const [beregnetBehandling, setBeregnetBehandling] = useState<HistoriskInfotrygdRevurderingType | null>(null);
 
     useEffect(() => {
@@ -149,10 +150,9 @@ const HistoriskInfotrygdRevurdering = () => {
         }
     }, [hentRevurdering, revurderingId]);
 
+    // Oppdaterer i bakgrunnen slik at innholdet ikke erstattes av en laster og monteres på nytt.
     const lastRevurderingPåNytt = (id: string) => {
-        setBeregnetBehandling(null);
-        setOpprettetRevurdering(null);
-        hentRevurdering(id);
+        oppfriskRevurdering(id, setBeregnetBehandling);
     };
 
     return (
@@ -179,6 +179,9 @@ const HistoriskInfotrygdRevurdering = () => {
                             return (
                                 <VStack gap="6">
                                     <Revurderingsdetaljer revurdering={gjeldendeRevurdering} />
+                                    {RemoteData.isFailure(oppfriskStatus) && (
+                                        <HistoriskAlderssakApiErrorAlert error={oppfriskStatus.error} />
+                                    )}
                                     {gjeldendeRevurdering.status !== 'AVSLUTTET' &&
                                         gjeldendeRevurdering.status !== 'ATTESTERT' && (
                                             <HistoriskInfotrygdBeregning
