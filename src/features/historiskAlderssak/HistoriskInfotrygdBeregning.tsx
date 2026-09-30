@@ -93,7 +93,8 @@ const lagSkjemagrunnlag = (grunnlag: HistoriskInfotrygdMånedsgrunnlag) => {
 const Forsørgingstillegg = (props: { grunnlag: HistoriskInfotrygdMånedsgrunnlag }) => {
     const berørteMåneder = props.grunnlag.måneder.filter((måned) => måned.kreverKontrollAvHistoriskForsørgingstillegg);
 
-    if (!props.grunnlag.kreverKontrollAvHistoriskForsørgingstillegg) {
+    // Varselet styres av månedsflaggene fra backend, ikke av et samlet flagg på grunnlaget.
+    if (berørteMåneder.length === 0) {
         return null;
     }
 
@@ -259,6 +260,39 @@ const HistoriskInfotrygdBeregning = (props: Props) => {
                                         {måned.måned}
                                     </Heading>
                                     <dl className={styles.detaljer}>
+                                        <div>
+                                            <Label as="dt" size="small">
+                                                Historisk sats
+                                            </Label>
+                                            <BodyShort as="dd">
+                                                {historisk.historiskSats === null
+                                                    ? 'Ikke registrert'
+                                                    : formatCurrency(historisk.historiskSats)}
+                                            </BodyShort>
+                                        </div>
+                                        <div>
+                                            <Label as="dt" size="small">
+                                                Historisk fradrag
+                                            </Label>
+                                            <dd className={styles.fradrag}>
+                                                <BodyShort>
+                                                    {historisk.historiskFradrag === null
+                                                        ? 'Ikke registrert'
+                                                        : formatCurrency(historisk.historiskFradrag)}
+                                                </BodyShort>
+                                                {historisk.historiskFradragskoder.length > 0 && (
+                                                    <ul className={styles.kodeliste} aria-label="Fradrag som inngår">
+                                                        {fradragskoderForVisning(historisk.historiskFradragskoder).map(
+                                                            (kode, kodeindeks) => (
+                                                                <li key={`${kode}-${kodeindeks}`}>
+                                                                    <BodyShort size="small">{kode}</BodyShort>
+                                                                </li>
+                                                            ),
+                                                        )}
+                                                    </ul>
+                                                )}
+                                            </dd>
+                                        </div>
                                         <div>
                                             <Label as="dt" size="small">
                                                 Historisk beløp

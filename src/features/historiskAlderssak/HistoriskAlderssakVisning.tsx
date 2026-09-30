@@ -1,12 +1,16 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import { Alert, BodyShort, Box, Button, Heading, HStack, Label, Loader, VStack } from '@navikt/ds-react';
-import { useEffect } from 'react';
+import { Alert, BodyShort, Box, Button, ExpansionCard, Heading, HStack, Label, Loader, VStack } from '@navikt/ds-react';
+import { useEffect, useState } from 'react';
 
-import { hentHistoriskeInfotrygdRevurderinger, hentHistoriskeVedtaksperioder } from '~src/api/historiskAlderssakApi';
+import {
+    hentHistoriskeInfotrygdRevurderinger,
+    hentHistoriskeMånedsbeløp,
+    hentHistoriskeVedtaksperioder,
+} from '~src/api/historiskAlderssakApi';
 import LinkAsButton from '~src/components/linkAsButton/LinkAsButton';
 import { pipe } from '~src/lib/fp';
 import { useApiCall } from '~src/lib/hooks';
-import { HistoriskVedtaksperiode } from '~src/types/HistoriskAlderssak';
+import { HistoriskMånedsbeløpsperiode, HistoriskVedtaksperiode } from '~src/types/HistoriskAlderssak';
 import { HistoriskInfotrygdRevurdering } from '~src/types/HistoriskInfotrygdRevurdering';
 import { formatDate, formatDateTime } from '~src/utils/date/dateUtils';
 import { formatCurrency } from '~src/utils/format/formatUtils';
@@ -16,6 +20,7 @@ import {
     behandlingstypeForVisning,
     bosituasjonForVisning,
     endringskoderForVisning,
+    fradragskoderForVisning,
     godkjentAvOsForVisning,
     opphørsgrunnForVisning,
     resultatForVisning,
@@ -37,8 +42,92 @@ const formatPeriode = (periode: HistoriskVedtaksperiode): string => {
     return 'Periode ikke registrert';
 };
 
+const Månedsbeløp = (props: { perioder: HistoriskMånedsbeløpsperiode[] }) => {
+    if (props.perioder.length === 0) {
+        return <Alert variant="info">Ingen månedsbeløp er registrert for vedtaket.</Alert>;
+    }
+
+    return (
+        <ul className={styles.månedsbeløpsliste} aria-label="Månedsbeløp for vedtaket">
+            {props.perioder.map((periode, index) => (
+                <li key={periode.linjeId ?? `${periode.fraOgMed}-${periode.tilOgMed}-${index}`}>
+                    <Box background="surface-subtle" borderWidth="1" borderRadius="medium" padding="4">
+                        <dl className={styles.månedsbeløpsdetaljer}>
+                            <div>
+                                <Label as="dt" size="small">
+                                    Fra og med
+                                </Label>
+                                <BodyShort as="dd">
+                                    {periode.fraOgMed ? formatDate(periode.fraOgMed) : 'Ikke registrert'}
+                                </BodyShort>
+                            </div>
+                            <div>
+                                <Label as="dt" size="small">
+                                    Til og med
+                                </Label>
+                                <BodyShort as="dd">
+                                    {periode.tilOgMed ? formatDate(periode.tilOgMed) : 'Ikke registrert'}
+                                </BodyShort>
+                            </div>
+                            <div>
+                                <Label as="dt" size="small">
+                                    Sats
+                                </Label>
+                                <BodyShort as="dd">{formatCurrency(periode.sats)}</BodyShort>
+                            </div>
+                            <div>
+                                <Label as="dt" size="small">
+                                    Fradrag
+                                </Label>
+                                <dd className={styles.fradrag}>
+                                    <BodyShort>{formatCurrency(periode.fradrag)}</BodyShort>
+                                    {periode.fradragskoder.length === 0 ? (
+                                        <BodyShort size="small">Ingen fradragskoder</BodyShort>
+                                    ) : (
+                                        <ul className={styles.kodeliste} aria-label="Fradrag som inngår">
+                                            {fradragskoderForVisning(periode.fradragskoder).map((kode, kodeindeks) => (
+                                                <li key={`${kode}-${kodeindeks}`}>
+                                                    <BodyShort size="small">{kode}</BodyShort>
+                                                </li>
+                                            ))}
+                                        </ul>
+                                    )}
+                                </dd>
+                            </div>
+                            <div>
+                                <Label as="dt" size="small">
+                                    Beløp
+                                </Label>
+                                <BodyShort as="dd" weight="semibold">
+                                    {formatCurrency(periode.beløp)}
+                                </BodyShort>
+                            </div>
+                            <div>
+                                <Label as="dt" size="small">
+                                    Linje-ID
+                                </Label>
+                                <BodyShort as="dd">{periode.linjeId ?? 'Ikke registrert'}</BodyShort>
+                            </div>
+                        </dl>
+                    </Box>
+                </li>
+            ))}
+        </ul>
+    );
+};
+
 const HistoriskPeriode = (props: { periode: HistoriskVedtaksperiode }) => {
     const { periode } = props;
+    const [åpen, setÅpen] = useState(false);
+    const [månedsbeløp, hentMånedsbeløp] = useApiCall(hentHistoriskeMånedsbeløp);
+
+    const handleToggle = (skalÅpnes: boolean) => {
+        setÅpen(skalÅpnes);
+
+        if (skalÅpnes && RemoteData.isInitial(månedsbeløp)) {
+            hentMånedsbeløp({ vedtakId: periode.vedtakId });
+        }
+    };
 
     return (
         <li className={styles.tidslinjeelement}>
@@ -166,6 +255,45 @@ const HistoriskPeriode = (props: { periode: HistoriskVedtaksperiode }) => {
                             <BodyShort as="dd">{godkjentAvOsForVisning(periode.godkjentAvOs)}</BodyShort>
                         </div>
                     </dl>
+
+                    <ExpansionCard
+                        className={styles.vedtakskort}
+                        open={åpen}
+                        onToggle={handleToggle}
+                        aria-label={`Månedsbeløp for vedtak ${formatPeriode(periode)}`}
+                    >
+                        <ExpansionCard.Header>
+                            <ExpansionCard.Title as="h3" size="small">
+                                Månedsbeløp
+                            </ExpansionCard.Title>
+                            <ExpansionCard.Description>
+                                Vis sats, fradrag og beregnet beløp for vedtaket.
+                            </ExpansionCard.Description>
+                        </ExpansionCard.Header>
+                        <ExpansionCard.Content>
+                            {pipe(
+                                månedsbeløp,
+                                RemoteData.fold(
+                                    () => null,
+                                    () => <Loader title="Henter månedsbeløp" size="medium" />,
+                                    (error) => (
+                                        <VStack gap="3" align="start">
+                                            <HistoriskAlderssakApiErrorAlert error={error} />
+                                            <Button
+                                                type="button"
+                                                variant="secondary"
+                                                size="small"
+                                                onClick={() => hentMånedsbeløp({ vedtakId: periode.vedtakId })}
+                                            >
+                                                Prøv igjen
+                                            </Button>
+                                        </VStack>
+                                    ),
+                                    (perioder) => <Månedsbeløp perioder={perioder} />,
+                                ),
+                            )}
+                        </ExpansionCard.Content>
+                    </ExpansionCard>
                 </VStack>
             </Box>
         </li>

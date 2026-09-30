@@ -125,7 +125,6 @@ export interface HistoriskInfotrygdMånedsgrunnlagForMåned {
 
 export interface HistoriskInfotrygdMånedsgrunnlag {
     revurderingId: string;
-    kreverKontrollAvHistoriskForsørgingstillegg: boolean;
     måneder: HistoriskInfotrygdMånedsgrunnlagForMåned[];
     beregning: HistoriskInfotrygdLagretBeregning | null;
 }
