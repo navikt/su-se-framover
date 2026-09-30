@@ -20,7 +20,13 @@ import { FormWrapper } from '~src/pages/saksbehandling/søknadsbehandling/FormWr
 import { useAppDispatch } from '~src/redux/Store';
 import { Person } from '~src/types/Person';
 import { Sakstype } from '~src/types/Sak.ts';
-import { fyller67ILøpetAvPeriode, harFylt67VedDato, showName } from '~src/utils/person/personUtils';
+import {
+    finnÅrPersonFyller67,
+    fyller67ILøpetAvPeriode,
+    harFylt67VedDato,
+    kunneFylle67IPerioden,
+    showName,
+} from '~src/utils/person/personUtils';
 import messages from '../VilkårOgGrunnlagForms-nb';
 import { VilkårFormProps } from '../VilkårOgGrunnlagFormUtils';
 import styles from './BosituasjonForm.module.less';
@@ -114,16 +120,14 @@ const BosituasjonForm = (props: Props) => {
                                         {watch.erEpsFylt67 === false &&
                                             RemoteData.isSuccess(epsStatus) &&
                                             watch.periode.fraOgMed &&
-                                            watch.periode.tilOgMed &&
-                                            fyller67ILøpetAvPeriode(
-                                                { fraOgMed: watch.periode.fraOgMed, tilOgMed: watch.periode.tilOgMed },
-                                                epsStatus.value.fødsel,
-                                            ) === true && (
-                                                <Alert variant="info" className={styles.epsFyller67Alert}>
-                                                    <BodyShort>
-                                                        {formatMessage('bosituasjon.epsFyller67IPerioden')}
-                                                    </BodyShort>
-                                                </Alert>
+                                            watch.periode.tilOgMed && (
+                                                <EpsFyller67Varsel
+                                                    eps={epsStatus.value}
+                                                    periode={{
+                                                        fraOgMed: watch.periode.fraOgMed,
+                                                        tilOgMed: watch.periode.tilOgMed,
+                                                    }}
+                                                />
                                             )}
 
                                         {watch.erEpsFylt67 === false && RemoteData.isSuccess(epsStatus) && (
@@ -220,6 +224,50 @@ const ErEpsFylt67Felt = (props: {
             )}
         />
     );
+};
+
+// Viser et varsel om at EPS fyller 67 år i perioden. Fallback-trinnene under dekker at
+// fødselsdatoen kan mangle eller være ugyldig, mens fødselsåret som regel er kjent.
+const EpsFyller67Varsel = (props: { eps: Person; periode: { fraOgMed: Date; tilOgMed: Date } }) => {
+    const { formatMessage } = useI18n({ messages });
+
+    const epsFyller67IPerioden = fyller67ILøpetAvPeriode(props.periode, props.eps.fødsel);
+
+    if (epsFyller67IPerioden === true) {
+        return (
+            <Alert variant="info" className={styles.epsFyller67Alert}>
+                <BodyShort>{formatMessage('bosituasjon.epsFyller67IPerioden')}</BodyShort>
+            </Alert>
+        );
+    }
+
+    if (epsFyller67IPerioden === false) {
+        return null;
+    }
+
+    // epsFyller67IPerioden === null: fødselsdatoen mangler eller er ugyldig.
+    const fødselsår = props.eps.fødsel?.år;
+    const kunneFylle67 = fødselsår ? kunneFylle67IPerioden(props.periode, fødselsår) : false;
+
+    if (kunneFylle67 && fødselsår) {
+        return (
+            <Alert variant="warning" className={styles.epsFyller67Alert}>
+                <BodyShort>
+                    {formatMessage('bosituasjon.epsMuligFyller67IÅr', { år: finnÅrPersonFyller67(fødselsår) })}
+                </BodyShort>
+            </Alert>
+        );
+    }
+
+    if (!fødselsår) {
+        return (
+            <Alert variant="warning" className={styles.epsFyller67Alert}>
+                <BodyShort>{formatMessage('bosituasjon.epsFødselsdatoUgyldig')}</BodyShort>
+            </Alert>
+        );
+    }
+
+    return null;
 };
 
 const EpsSkjermingModalOgPersonkort = (props: { eps: ApiResult<Person>; søker: Person }) => {
