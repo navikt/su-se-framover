@@ -19,6 +19,9 @@ import {
 
 import HistoriskAlderssakApiErrorAlert from './HistoriskAlderssakApiErrorAlert';
 
+// TODO: Oppdater grensen når backendavklaringen om siste historiske måned er ferdig.
+const SISTE_TILLATTE_DATO = new Date(2026, 5, 30);
+
 interface Props {
     fnr: string;
     vedtaksperioder: HistoriskVedtaksperiode[];
@@ -45,6 +48,9 @@ const finnYttergrenser = (vedtaksperioder: HistoriskVedtaksperiode[]) => {
 
 const OpprettHistoriskInfotrygdRevurdering = (props: Props) => {
     const yttergrenser = useMemo(() => finnYttergrenser(props.vedtaksperioder), [props.vedtaksperioder]);
+    const sisteTillatteDato = yttergrenser
+        ? DateFns.min([yttergrenser.tilOgMed, SISTE_TILLATTE_DATO])
+        : SISTE_TILLATTE_DATO;
     const [periode, setPeriode] = useState<NullablePeriode>({ fraOgMed: null, tilOgMed: null });
     const [valideringsfeil, setValideringsfeil] = useState<{
         fraOgMed?: string;
@@ -113,8 +119,8 @@ const OpprettHistoriskInfotrygdRevurdering = (props: Props) => {
                         name="periode"
                         value={periode}
                         fromDate={yttergrenser.fraOgMed}
-                        toDate={yttergrenser.tilOgMed}
-                        defaultYear={yttergrenser.tilOgMed}
+                        toDate={sisteTillatteDato}
+                        defaultYear={sisteTillatteDato}
                         onChange={setPeriode}
                         error={valideringsfeil}
                     />
