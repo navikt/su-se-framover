@@ -45,6 +45,7 @@ const DryRunPanel = () => {
     const [maksAntallSaker, setMaksAntallSaker] = useState<number | null>(null);
     const [maksAntallSakerInput, setMaksAntallSakerInput] = useState<string>('');
     const [manglerStartDato, setManglerStartDato] = useState(false);
+    const [saksnummer, setSaksnummer] = useState<string>('');
 
     const maksAntallSakerErUgyldig =
         maksAntallSakerInput !== '' &&
@@ -63,6 +64,7 @@ const DryRunPanel = () => {
             startDatoOmregning: toIsoMonthOrNull(startDatoOmregning)!,
             lagreManuelle: lagreManuelle,
             maksAntallSaker: maksAntallSaker,
+            saksnummer: saksnummer || null,
         });
     };
 
@@ -80,6 +82,7 @@ const DryRunPanel = () => {
                         error={manglerStartDato ? 'Startdato for omregning må fylles ut' : undefined}
                     />
                 </div>
+                <TextField label="Saksnummer" value={saksnummer} onChange={(e) => setSaksnummer(e.target.value)} />
             </div>
             <div className={styles.lagreManuelle}>
                 <Checkbox onChange={() => setLagreManuelle(!lagreManuelle)} checked={lagreManuelle}>
