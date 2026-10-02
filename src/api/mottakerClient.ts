@@ -1,6 +1,11 @@
 import apiClient, { ApiClientResult } from './apiClient';
 
-export type ReferanseType = 'SØKNAD' | 'REVURDERING' | 'KLAGE' | 'DØDSBO_TILBAKEKREVING';
+export type ReferanseType =
+    | 'SØKNAD'
+    | 'REVURDERING'
+    | 'HISTORISK_INFOTRYGD_REVURDERING'
+    | 'KLAGE'
+    | 'DØDSBO_TILBAKEKREVING';
 export type MottakerBrevtype = 'VEDTAK' | 'FORHANDSVARSEL' | 'OVERSENDELSE_KA';
 export type Brevtype = MottakerBrevtype;
 
