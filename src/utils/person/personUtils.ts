@@ -31,6 +31,23 @@ export const harFylt67VedDato = (dato: Date, fødsel: Nullable<Fødsel>): Nullab
     return alderVedDato >= LOVFESTET_ALDERSGRENSE_SU;
 };
 
+export const finnÅrPersonFyller67 = (fødselsår: number): number => fødselsår + LOVFESTET_ALDERSGRENSE_SU;
+
+// Brukes når fødselsdatoen er ugyldig, men fødselsåret er tilgjengelig. Sammenligner bare årstall,
+// så samme år gir `null`: vi vet ikke om bursdagen har passert.
+export const harFylt67VedÅr = (dato: Date, fødselsår: number): Nullable<boolean> => {
+    const årPersonFyller67 = finnÅrPersonFyller67(fødselsår);
+    const datoÅr = dato.getFullYear();
+
+    if (årPersonFyller67 < datoÅr) {
+        return true;
+    }
+    if (årPersonFyller67 > datoÅr) {
+        return false;
+    }
+    return null;
+};
+
 export const fyller67ILøpetAvPeriode = (
     periode: { fraOgMed: Date; tilOgMed: Date },
     fødsel: Nullable<Fødsel>,
@@ -45,10 +62,13 @@ export const fyller67ILøpetAvPeriode = (
     return !erFylt67VedFraOgMed && erFylt67VedTilOgMed;
 };
 
-// Fallback når fødselsdatoen mangler eller er ugyldig, men fødselsåret er kjent (f.eks. fra et
-// fnr/dnr med ugyldig dagverdi). Vi vet da ikke nøyaktig måned, så vi kan bare avgrense om det i
-// det hele tatt er mulig at personen fyller 67 i perioden.
-export const finnÅrPersonFyller67 = (fødselsår: number): number => fødselsår + LOVFESTET_ALDERSGRENSE_SU;
+// De tre neste tar fødselsår direkte (ikke fødsel/dato), for bruk når fødselsdatoen er ugyldig.
+export const harFylt67FørPerioden = (periode: { fraOgMed: Date; tilOgMed: Date }, fødselsår: number): boolean => {
+    const årPersonFyller67 = finnÅrPersonFyller67(fødselsår);
+    const periodensFørsteÅr = periode.fraOgMed.getFullYear();
+
+    return årPersonFyller67 < periodensFørsteÅr;
+};
 
 export const kunneFylle67IPerioden = (periode: { fraOgMed: Date; tilOgMed: Date }, fødselsår: number): boolean => {
     const årPersonFyller67 = finnÅrPersonFyller67(fødselsår);
@@ -56,4 +76,11 @@ export const kunneFylle67IPerioden = (periode: { fraOgMed: Date; tilOgMed: Date 
     const periodensSisteÅr = periode.tilOgMed.getFullYear();
 
     return årPersonFyller67 >= periodensFørsteÅr && årPersonFyller67 <= periodensSisteÅr;
+};
+
+export const skalFylle67EtterPerioden = (periode: { fraOgMed: Date; tilOgMed: Date }, fødselsår: number): boolean => {
+    const årPersonFyller67 = finnÅrPersonFyller67(fødselsår);
+    const periodensSisteÅr = periode.tilOgMed.getFullYear();
+
+    return årPersonFyller67 > periodensSisteÅr;
 };

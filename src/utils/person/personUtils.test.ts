@@ -1,6 +1,14 @@
 import { Fødsel } from '~src/types/Person';
 
-import { finnÅrPersonFyller67, fyller67ILøpetAvPeriode, harFylt67VedDato, kunneFylle67IPerioden } from './personUtils';
+import {
+    finnÅrPersonFyller67,
+    fyller67ILøpetAvPeriode,
+    harFylt67FørPerioden,
+    harFylt67VedDato,
+    harFylt67VedÅr,
+    kunneFylle67IPerioden,
+    skalFylle67EtterPerioden,
+} from './personUtils';
 
 const lagFødsel = (dato: string | null): Fødsel => ({
     dato,
@@ -85,5 +93,51 @@ describe('kunneFylle67IPerioden', () => {
 describe('finnÅrPersonFyller67', () => {
     it('returnerer fødselsår pluss den lovfestede aldersgrensen', () => {
         expect(finnÅrPersonFyller67(1959)).toBe(2026);
+    });
+});
+
+describe('harFylt67FørPerioden', () => {
+    const periode = { fraOgMed: new Date(2026, 0, 1), tilOgMed: new Date(2026, 11, 31) };
+
+    it('returnerer true når personen klart fyller 67 før periodens år', () => {
+        expect(harFylt67FørPerioden(periode, 1950)).toBe(true);
+    });
+
+    it('returnerer false når personen fyller 67 i periodens år', () => {
+        expect(harFylt67FørPerioden(periode, 1959)).toBe(false);
+    });
+
+    it('returnerer false når personen fyller 67 etter periodens år', () => {
+        expect(harFylt67FørPerioden(periode, 1965)).toBe(false);
+    });
+});
+
+describe('skalFylle67EtterPerioden', () => {
+    const periode = { fraOgMed: new Date(2026, 0, 1), tilOgMed: new Date(2026, 11, 31) };
+
+    it('returnerer true når personen klart fyller 67 etter periodens år', () => {
+        expect(skalFylle67EtterPerioden(periode, 1965)).toBe(true);
+    });
+
+    it('returnerer false når personen fyller 67 i periodens år', () => {
+        expect(skalFylle67EtterPerioden(periode, 1959)).toBe(false);
+    });
+
+    it('returnerer false når personen fyller 67 før periodens år', () => {
+        expect(skalFylle67EtterPerioden(periode, 1950)).toBe(false);
+    });
+});
+
+describe('harFylt67VedÅr', () => {
+    it('returnerer true når 67-årsåret er før datoens år', () => {
+        expect(harFylt67VedÅr(new Date(2026, 0, 1), 1950)).toBe(true);
+    });
+
+    it('returnerer false når 67-årsåret er etter datoens år', () => {
+        expect(harFylt67VedÅr(new Date(2026, 0, 1), 1965)).toBe(false);
+    });
+
+    it('returnerer null når 67-årsåret er samme år som datoen (usikkert om bursdagen har passert)', () => {
+        expect(harFylt67VedÅr(new Date(2026, 0, 1), 1959)).toBeNull();
     });
 });
