@@ -88,7 +88,7 @@ export const personligOppmøteFormDataTilRequest = (args: {
     })),
 });
 
-const toPersonligOppmøteÅrsakInnsending = (
+export const toPersonligOppmøteÅrsakInnsending = (
     møttPersonlig: Nullable<HarMøttPersonlig>,
     årsak: Nullable<PersonligOppmøteÅrsak>,
 ): PersonligOppmøteÅrsak => {

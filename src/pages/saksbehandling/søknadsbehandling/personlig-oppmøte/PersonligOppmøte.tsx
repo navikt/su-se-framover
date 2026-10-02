@@ -12,7 +12,9 @@ import {
     personligOppmøteFormDataTilRequest,
     personligOppmøteFormSchema,
     personligOppmøteVilkårTilFormDataEllerNy,
+    toPersonligOppmøteÅrsakInnsending,
 } from '~src/components/forms/vilkårOgGrunnlagForms/personligOppmøte/PersonligOppmøteFormUtils';
+import sharedVilkårI18n from '~src/components/forms/vilkårOgGrunnlagForms/VilkårOgGrunnlagForms-nb';
 import OppsummeringAvForNav from '~src/components/oppsummering/oppsummeringAvSøknadinnhold/OppsummeringAvForNav';
 import OppsummeringAvPersonligoppmøtevilkår from '~src/components/oppsummering/oppsummeringAvVilkårOgGrunnlag/OppsummeringAvPersonligOppmøte';
 import ToKolonner from '~src/components/toKolonner/ToKolonner';
@@ -22,6 +24,7 @@ import { ApiResult, useAsyncActionCreator } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
 import * as Routes from '~src/lib/routes';
 import { GrunnlagsdataOgVilkårsvurderinger } from '~src/types/grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
+import { PersonligOppmøteÅrsak } from '~src/types/grunnlagsdataOgVilkårsvurderinger/personligOppmøte/PersonligOppmøteVilkår';
 import { Sakstype } from '~src/types/Sak';
 import {
     EksisterendeVedtaksinformasjonTidligerePeriodeResponse,
@@ -30,7 +33,12 @@ import {
 } from '~src/types/Søknadsbehandling';
 import { Vilkårtype } from '~src/types/Vilkårsvurdering';
 import { lagDatePeriodeAvStringPeriode } from '~src/utils/periode/periodeUtils';
-import { erNoenVurdertUavklart, mapToVilkårsinformasjon } from '~src/utils/vilkårUtils';
+import {
+    erNoenVurdertUavklart,
+    forventetÅrsakIfølgeSøknad,
+    harVurderingAvvikFraBrukersSvar,
+    mapToVilkårsinformasjon,
+} from '~src/utils/vilkårUtils';
 
 import EksisterendeVedtaksinformasjon from '../EksisterendeVedtaksinformasjon';
 import sharedI18n from '../sharedI18n-nb';
@@ -47,7 +55,7 @@ const PersonligOppmøte = (
 ) => {
     const navigate = useNavigate();
     const advarselRef = useRef<HTMLDivElement>(null);
-    const { formatMessage } = useI18n({ messages: { ...sharedI18n, ...messages } });
+    const { formatMessage } = useI18n({ messages: { ...sharedI18n, ...sharedVilkårI18n, ...messages } });
     const [status, lagre] = useAsyncActionCreator(lagrePersonligOppmøteVilkår);
 
     const initialValues = personligOppmøteVilkårTilFormDataEllerNy(
@@ -70,6 +78,17 @@ const PersonligOppmøte = (
     const erNoenVilkårVurdertUavklart = (grunnlagsdataOgVilkårsvurderinger: GrunnlagsdataOgVilkårsvurderinger) => {
         return erNoenVurdertUavklart(mapToVilkårsinformasjon(props.sakstype, grunnlagsdataOgVilkårsvurderinger));
     };
+
+    const harAvvikFraSøknad = harVurderingAvvikFraBrukersSvar(
+        forventetÅrsakIfølgeSøknad(props.behandling.søknad.søknadInnhold.forNav),
+        (form.watch('personligOppmøte') ?? []).map((vurdering) => {
+            const årsak = toPersonligOppmøteÅrsakInnsending(
+                vurdering.møttPersonlig,
+                vurdering.årsakForManglendePersonligOppmøte,
+            );
+            return årsak === PersonligOppmøteÅrsak.Uavklart ? null : årsak;
+        }),
+    );
 
     const save = async (values: PersonligOppmøteVilkårFormData, onSuccess: (res: Søknadsbehandling) => void) => {
         lagre(
@@ -158,6 +177,11 @@ const PersonligOppmøte = (
                         skalIkkeKunneVelgePeriode
                         {...props}
                     >
+                        {harAvvikFraSøknad && (
+                            <Alert className={sharedStyles.avslagAdvarsel} variant="warning">
+                                {formatMessage('display.avvikFraSøknad.advarsel')}
+                            </Alert>
+                        )}
                         <div
                             ref={advarselRef}
                             tabIndex={-1}

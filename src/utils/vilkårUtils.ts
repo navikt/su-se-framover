@@ -1,11 +1,14 @@
+import { GrunnForPapirinnsending, Vergemål } from '~src/features/søknad/types';
 import * as Routes from '~src/lib/routes';
 import { Nullable } from '~src/lib/types';
 import { Aldersresultat } from '~src/types/grunnlagsdataOgVilkårsvurderinger/alder/Aldersvilkår';
 import { FormueStatus } from '~src/types/grunnlagsdataOgVilkårsvurderinger/formue/Formuevilkår';
 import { GrunnlagsdataOgVilkårsvurderinger } from '~src/types/grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
+import { PersonligOppmøteÅrsak } from '~src/types/grunnlagsdataOgVilkårsvurderinger/personligOppmøte/PersonligOppmøteVilkår';
 import { UføreResultat } from '~src/types/grunnlagsdataOgVilkårsvurderinger/uføre/Uførevilkår';
 import { Utenlandsoppholdstatus } from '~src/types/grunnlagsdataOgVilkårsvurderinger/utenlandsopphold/Utenlandsopphold';
 import { Sakstype } from '~src/types/Sak';
+import { ForNav, Søknadstype } from '~src/types/Søknadinnhold';
 import { Søknadsbehandling, SøknadsbehandlingStatus } from '~src/types/Søknadsbehandling';
 import { Vilkårstatus } from '~src/types/Vilkår';
 import { Vilkårtype, VilkårVurderingStatus } from '~src/types/Vilkårsvurdering';
@@ -236,10 +239,7 @@ export const erNoenVurdertUavklart = (vilkårsinformasjon: Vilkårsinformasjon[]
  * brukers svar - uavklarte vurderinger (null) regnes ikke som avvik, siden saksbehandler
  * da ikke har tatt stilling ennå.
  */
-export const harVurderingAvvikFraBrukersSvar = (
-    brukersSvar: Nullable<boolean>,
-    vurderinger: Nullable<boolean>[],
-): boolean => {
+export const harVurderingAvvikFraBrukersSvar = <T>(brukersSvar: Nullable<T>, vurderinger: Nullable<T>[]): boolean => {
     if (brukersSvar === null) {
         return false;
     }
@@ -271,6 +271,32 @@ export const uføreResultatTilBoolean = (resultat: Nullable<UføreResultat>): Nu
             return true;
         case UføreResultat.VilkårIkkeOppfylt:
             return false;
+        default:
+            return null;
+    }
+};
+
+/**
+ * Returnerer null når søknaden ikke gir noen entydig forventning: Vergemål.Fullmektig og
+ * GrunnForPapirinnsending.Annet kan begge bety flere ulike årsaker, f.eks. sykdom.
+ */
+export const forventetÅrsakIfølgeSøknad = (forNav: ForNav): Nullable<PersonligOppmøteÅrsak> => {
+    if (forNav.type === Søknadstype.Papirsøknad) {
+        switch (forNav.grunnForPapirinnsending) {
+            case GrunnForPapirinnsending.VergeHarSøktPåVegneAvBruker:
+                return PersonligOppmøteÅrsak.IkkeMøttMenVerge;
+            case GrunnForPapirinnsending.MidlertidigUnntakFraOppmøteplikt:
+                return PersonligOppmøteÅrsak.IkkeMøttMenMidlertidigUnntakFraOppmøteplikt;
+            default:
+                return null;
+        }
+    }
+
+    switch (forNav.harFullmektigEllerVerge) {
+        case null:
+            return PersonligOppmøteÅrsak.MøttPersonlig;
+        case Vergemål.Verge:
+            return PersonligOppmøteÅrsak.IkkeMøttMenVerge;
         default:
             return null;
     }
