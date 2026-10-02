@@ -61,17 +61,17 @@ export default {
     'bosituasjon.epsFnr': 'Ektefelle/samboers fødelsnummer',
     'bosituasjon.erEPSFylt67Forhåndsutfylt': 'Forhåndsutfylt basert på fødselsdato ved starten av søknadsperioden.',
     'bosituasjon.erEPSFylt67ForhåndsutfyltUsikkert':
-        'Foreslått basert på fødselsår, siden fødselsdatoen er ugyldig. Bekreft om opplysningen stemmer.',
+        'Foreslått basert på fødselsår, da eksakt fødselsdato er ugyldig. Bekreft om opplysningen stemmer.',
     'bosituasjon.epsFyller67IPerioden':
         'Ektefelle/samboer fyller 67 år i løpet av stønadsperioden. Husk å opprette fremleggsoppgave i Gosys for revurdering av satsen.',
     'bosituasjon.epsFødselsdatoUgyldig':
-        'Fødselsdatoen er ugyldig. Sjekk selv om ektefelle/samboer fyller 67 år i løpet av stønadsperioden.',
+        'Fødselsdatoen er ugyldig. Sjekk om ektefelle/samboer fyller 67 år i løpet av stønadsperioden.',
     'bosituasjon.epsMuligFyller67IPerioden':
-        'Fødselsdatoen er ugyldig, men ektefelle/samboer fyller 67 år i {år}. Sjekk selv om det er i løpet av stønadsperioden.',
+        'Eksakt fødselsdato er ugyldig. Basert på fødselsår fyller ektefelle/samboer 67 år i {år}. Sjekk om dette skjer i løpet av stønadsperioden.',
     'bosituasjon.epsMuligHarFylt67FørPerioden':
-        'Fødselsdatoen er ugyldig, men ektefelle/samboer fylte 67 år i {år}, før stønadsperioden startet.',
+        'Eksakt fødselsdato er ugyldig. Basert på fødselsår fylte ektefelle/samboer 67 år i {år}, før stønadsperioden startet.',
     'bosituasjon.epsMuligFyller67EtterPerioden':
-        'Fødselsdatoen er ugyldig, men ektefelle/samboer fyller 67 år i {år}, etter at stønadsperioden er avsluttet.',
+        'Eksakt fødselsdato er ugyldig. Basert på fødselsår fyller ektefelle/samboer 67 år i {år}, etter at stønadsperioden er avsluttet.',
     'bosituasjon.harSøkerEPS': 'Har søker ektefelle eller samboer?',
     'bosituasjon.fjern.bosituasjon': 'Slett',
     'bosituasjon.ny.bosituasjon': 'Ny periode for opplysning',

@@ -111,9 +111,7 @@ const BosituasjonForm = (props: Props) => {
                                                 />
                                             )}
                                         />
-                                        {RemoteData.isSuccess(epsStatus) && (
-                                            <div>DEBUG fødselsår: {epsStatus.value.fødsel?.år ?? 'ukjent'}</div>
-                                        )}
+
                                         {RemoteData.isSuccess(epsStatus) && (
                                             <ErEpsFylt67Felt
                                                 form={props.form}
