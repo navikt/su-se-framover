@@ -319,8 +319,20 @@ const SaksbehandlerAttestering = (props: Props) => {
 
 const AttestantHandlinger = (props: Props) => {
     const [begrunnelse, setBegrunnelse] = useState('');
+    const [begrunnelseFeil, setBegrunnelseFeil] = useState<string>();
     const [underkjennStatus, underkjenn] = useApiCall(underkjennHistoriskRevurdering);
     const [attesterStatus, attester] = useApiCall(attesterHistoriskRevurdering);
+    const kallPågår = RemoteData.isPending(attesterStatus) || RemoteData.isPending(underkjennStatus);
+
+    const handleUnderkjenn = () => {
+        const trimmetBegrunnelse = begrunnelse.trim();
+        if (!trimmetBegrunnelse) {
+            setBegrunnelseFeil('Skriv hvorfor behandlingen underkjennes.');
+            return;
+        }
+        setBegrunnelseFeil(undefined);
+        underkjenn({ revurderingId: props.behandling.id, begrunnelse: trimmetBegrunnelse }, props.onOppdatert);
+    };
 
     return (
         <Box background="surface-default" borderWidth="1" borderRadius="medium" padding="5">
@@ -332,6 +344,7 @@ const AttestantHandlinger = (props: Props) => {
                     label="Begrunnelse for underkjenning"
                     value={begrunnelse}
                     onChange={(event) => setBegrunnelse(event.target.value)}
+                    error={begrunnelseFeil}
                 />
                 {RemoteData.isFailure(underkjennStatus) && (
                     <HistoriskAlderssakApiErrorAlert error={underkjennStatus.error} />
@@ -343,7 +356,8 @@ const AttestantHandlinger = (props: Props) => {
                     <Button
                         type="button"
                         loading={RemoteData.isPending(attesterStatus)}
-                        onClick={() => attester(props.behandling.id, props.onOppdatert)}
+                        disabled={RemoteData.isPending(underkjennStatus)}
+                        onClick={() => !kallPågår && attester(props.behandling.id, props.onOppdatert)}
                     >
                         Attester behandlingsgrunnlaget
                     </Button>
@@ -351,13 +365,8 @@ const AttestantHandlinger = (props: Props) => {
                         type="button"
                         variant="secondary"
                         loading={RemoteData.isPending(underkjennStatus)}
-                        onClick={() =>
-                            begrunnelse.trim() &&
-                            underkjenn(
-                                { revurderingId: props.behandling.id, begrunnelse: begrunnelse.trim() },
-                                props.onOppdatert,
-                            )
-                        }
+                        disabled={RemoteData.isPending(attesterStatus)}
+                        onClick={() => !kallPågår && handleUnderkjenn()}
                     >
                         Underkjenn
                     </Button>
