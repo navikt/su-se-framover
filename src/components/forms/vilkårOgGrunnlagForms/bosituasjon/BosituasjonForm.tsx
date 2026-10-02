@@ -23,9 +23,12 @@ import { Sakstype } from '~src/types/Sak.ts';
 import {
     finnÅrPersonFyller67,
     fyller67ILøpetAvPeriode,
+    harFylt67FørPerioden,
     harFylt67VedDato,
+    harFylt67VedÅr,
     kunneFylle67IPerioden,
     showName,
+    skalFylle67EtterPerioden,
 } from '~src/utils/person/personUtils';
 import messages from '../VilkårOgGrunnlagForms-nb';
 import { VilkårFormProps } from '../VilkårOgGrunnlagFormUtils';
@@ -180,10 +183,14 @@ const ErEpsFylt67Felt = (props: {
 }) => {
     const { formatMessage } = useI18n({ messages });
 
-    // Beregnet fra EPS' fødselsdato og periodens fraOgMed.
-    // `null` betyr at vi ikke kan beregne det automatisk (periode mangler, eller fødselsdato er ukjent) -
-    // i så fall må saksbehandler fylle ut verdien manuelt, og feltet låses ikke.
-    const beregnetVerdi = props.periodeFraOgMed ? harFylt67VedDato(props.periodeFraOgMed, props.eps.fødsel) : null;
+    // Feltet låses bare når EPS har en gyldig fødselsdato. Mangler den, kan vi bare anslå svaret
+    // fra fødselsåret (vi vet ikke nøyaktig bursdag), og saksbehandler må bekrefte det selv.
+    const fødselsår = props.eps.fødsel?.år;
+    const beregnetVerdi = props.periodeFraOgMed
+        ? (harFylt67VedDato(props.periodeFraOgMed, props.eps.fødsel) ??
+          (fødselsår != null ? harFylt67VedÅr(props.periodeFraOgMed, fødselsår) : null))
+        : null;
+    const erLåst = props.eps.fødsel?.dato != null;
 
     useEffect(() => {
         const gjeldendeErEpsFylt67 = props.form.getValues(`${props.nameAndIdx}.erEpsFylt67`);
@@ -213,10 +220,16 @@ const ErEpsFylt67Felt = (props: {
                 <BooleanRadioGroup
                     legend={formatMessage('bosituasjon.erEPSFylt67')}
                     description={
-                        beregnetVerdi !== null ? formatMessage('bosituasjon.erEPSFylt67Forhåndsutfylt') : undefined
+                        beregnetVerdi === null
+                            ? undefined
+                            : formatMessage(
+                                  erLåst
+                                      ? 'bosituasjon.erEPSFylt67Forhåndsutfylt'
+                                      : 'bosituasjon.erEPSFylt67ForhåndsutfyltUsikkert',
+                              )
                     }
                     error={fieldState.error?.message}
-                    readOnly={beregnetVerdi !== null}
+                    readOnly={erLåst}
                     {...field}
                     onChange={(e) => {
                         field.onChange(e);
@@ -233,38 +246,60 @@ const ErEpsFylt67Felt = (props: {
 const EpsFyller67Varsel = (props: { eps: Person; periode: { fraOgMed: Date; tilOgMed: Date } }) => {
     const { formatMessage } = useI18n({ messages });
 
-    const epsFyller67IPerioden = fyller67ILøpetAvPeriode(props.periode, props.eps.fødsel);
+    if (props.eps.fødsel) {
+        const epsFyller67IPerioden = fyller67ILøpetAvPeriode(props.periode, props.eps.fødsel);
 
-    if (epsFyller67IPerioden === true) {
+        if (epsFyller67IPerioden === true) {
+            return (
+                <Alert variant="info" className={styles.epsFyller67Alert}>
+                    <BodyShort>{formatMessage('bosituasjon.epsFyller67IPerioden')}</BodyShort>
+                </Alert>
+            );
+        }
+
+        if (epsFyller67IPerioden === false) {
+            return null;
+        }
+    }
+
+    const fødselsår = props.eps.fødsel?.år;
+
+    if (fødselsår == null) {
         return (
             <Alert variant="info" className={styles.epsFyller67Alert}>
-                <BodyShort>{formatMessage('bosituasjon.epsFyller67IPerioden')}</BodyShort>
+                <BodyShort>{formatMessage('bosituasjon.epsFødselsdatoUgyldig')}</BodyShort>
             </Alert>
         );
     }
 
-    if (epsFyller67IPerioden === false) {
-        return null;
-    }
-
-    // epsFyller67IPerioden === null: fødselsdatoen mangler eller er ugyldig.
-    const fødselsår = props.eps.fødsel?.år;
-    const kunneFylle67 = fødselsår ? kunneFylle67IPerioden(props.periode, fødselsår) : false;
-
-    if (kunneFylle67 && fødselsår) {
+    if (harFylt67FørPerioden(props.periode, fødselsår)) {
         return (
             <Alert variant="info" className={styles.epsFyller67Alert}>
                 <BodyShort>
-                    {formatMessage('bosituasjon.epsMuligFyller67IÅr', { år: finnÅrPersonFyller67(fødselsår) })}
+                    {formatMessage('bosituasjon.epsMuligHarFylt67FørPerioden', { år: finnÅrPersonFyller67(fødselsår) })}
                 </BodyShort>
             </Alert>
         );
     }
 
-    if (!fødselsår) {
+    if (kunneFylle67IPerioden(props.periode, fødselsår)) {
         return (
             <Alert variant="info" className={styles.epsFyller67Alert}>
-                <BodyShort>{formatMessage('bosituasjon.epsFødselsdatoUgyldig')}</BodyShort>
+                <BodyShort>
+                    {formatMessage('bosituasjon.epsMuligFyller67IPerioden', { år: finnÅrPersonFyller67(fødselsår) })}
+                </BodyShort>
+            </Alert>
+        );
+    }
+
+    if (skalFylle67EtterPerioden(props.periode, fødselsår)) {
+        return (
+            <Alert variant="info" className={styles.epsFyller67Alert}>
+                <BodyShort>
+                    {formatMessage('bosituasjon.epsMuligFyller67EtterPerioden', {
+                        år: finnÅrPersonFyller67(fødselsår),
+                    })}
+                </BodyShort>
             </Alert>
         );
     }
