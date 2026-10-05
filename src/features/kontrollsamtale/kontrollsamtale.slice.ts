@@ -1,4 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { v4 as uuid } from 'uuid';
 import { Nullable } from '~src/lib/types.ts';
 
 export type ReiseDato = {
@@ -7,6 +8,7 @@ export type ReiseDato = {
 };
 
 export interface KontrollsamtaleState {
+    id: string;
     personligOppmøte: Nullable<boolean>;
     fullmaktOgLegeerklæring: Nullable<boolean>;
     originalPass: Nullable<boolean>;
@@ -26,6 +28,8 @@ export interface KontrollsamtaleState {
 }
 
 const initialState: KontrollsamtaleState = {
+    // Replaced with a new UUID when the user clicks "Start skjema".
+    id: uuid(),
     personligOppmøte: null,
     fullmaktOgLegeerklæring: null,
     originalPass: null,
@@ -48,6 +52,9 @@ const kontrollsamtaleSlice = createSlice({
     name: 'kontrollsamtale',
     initialState,
     reducers: {
+        kontrollsamtaleStarted(state, action: PayloadAction<string>) {
+            state.id = action.payload;
+        },
         personligOppmøteUpdated(state, action: PayloadAction<boolean | null>) {
             state.personligOppmøte = action.payload;
         },
@@ -98,6 +105,7 @@ const kontrollsamtaleSlice = createSlice({
 });
 
 export const {
+    kontrollsamtaleStarted,
     personligOppmøteUpdated,
     fullmaktOgLegeerklæringUpdated,
     originalPassUpdated,
