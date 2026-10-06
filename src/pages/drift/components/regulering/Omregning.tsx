@@ -1,7 +1,7 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import { Alert, Button, Checkbox, Modal, TextField } from '@navikt/ds-react';
+import { Alert, Button, Checkbox, Modal, Tabs, TextField } from '@navikt/ds-react';
 import { useState } from 'react';
-import { dryRunOmregning } from '~src/api/reguleringApi.ts';
+import { dryRunOmregning, startOmregning } from '~src/api/reguleringApi.ts';
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert.tsx';
 import { MonthPicker } from '~src/components/inputs/datePicker/DatePicker.tsx';
 import { useApiCall } from '~src/lib/hooks.ts';
@@ -32,9 +32,52 @@ const OmregningsModal = (props: { visModal: boolean; onClose: () => void }) => {
     return (
         <Modal open={props.visModal} onClose={props.onClose} header={{ heading: 'Omregning' }}>
             <Modal.Body className={styles.modalBody}>
-                <DryRunPanel />
+                <Tabs defaultValue="dry-run">
+                    <Tabs.List>
+                        <Tabs.Tab value="dry-run" label="Dry-Run" />
+                        <Tabs.Tab value="omregning" label="Omregning" />
+                    </Tabs.List>
+                    <OmregningPanel />
+                    <Tabs.Panel value="dry-run" className={styles.tabPanel}>
+                        <DryRunPanel />
+                    </Tabs.Panel>
+                </Tabs>
             </Modal.Body>
         </Modal>
+    );
+};
+
+const OmregningPanel = () => {
+    const [startDato, setStartDato] = useState<Nullable<Date>>(null);
+    const [omregingStatus, omregn] = useApiCall(startOmregning);
+
+    const handleSubmit = () => {
+        if (startDato) {
+            omregn({
+                fraOgMedMåned: toIsoMonthOrNull(startDato)!,
+            });
+        } else {
+            console.log('Du må velge en startdato før du kan omregne.');
+        }
+    };
+
+    return (
+        <Tabs.Panel value="omregning" className={styles.tabPanel}>
+            <div className={styles.panelInnholdContainer}>
+                <MonthPicker label="Velg omregningsdato" value={startDato} onChange={(dato) => setStartDato(dato)} />
+                <Button
+                    onClick={handleSubmit}
+                    loading={RemoteData.isPending(omregingStatus)}
+                    disabled={!RemoteData.isInitial(omregingStatus)}
+                >
+                    Start omregning
+                </Button>
+                {RemoteData.isSuccess(omregingStatus) && (
+                    <Alert variant="success">Omregning startet. Sjekk logg for detaljer.</Alert>
+                )}
+                {RemoteData.isFailure(omregingStatus) && <ApiErrorAlert error={omregingStatus.error} />}
+            </div>
+        </Tabs.Panel>
     );
 };
 
@@ -69,47 +112,53 @@ const DryRunPanel = () => {
     };
 
     return (
-        <div className={styles.panelInnholdContainer}>
-            <div className={styles.inputContainers}>
-                <div className={styles.datoOgVerdiContainer}>
-                    <MonthPicker
-                        label="Startdato for omregning"
-                        value={startDatoOmregning}
-                        onChange={(dato) => {
-                            setStartDatoOmregning(dato);
-                            setManglerStartDato(!dato);
-                        }}
-                        error={manglerStartDato ? 'Startdato for omregning må fylles ut' : undefined}
-                    />
+        <Tabs.Panel value="dry-run" className={styles.tabPanel}>
+            <div className={styles.panelInnholdContainer}>
+                <div className={styles.inputContainers}>
+                    <div className={styles.datoOgVerdiContainer}>
+                        <MonthPicker
+                            label="Startdato for omregning"
+                            value={startDatoOmregning}
+                            onChange={(dato) => {
+                                setStartDatoOmregning(dato);
+                                setManglerStartDato(!dato);
+                            }}
+                            error={manglerStartDato ? 'Startdato for omregning må fylles ut' : undefined}
+                        />
+                    </div>
+                    <TextField label="Saksnummer" value={saksnummer} onChange={(e) => setSaksnummer(e.target.value)} />
                 </div>
-                <TextField label="Saksnummer" value={saksnummer} onChange={(e) => setSaksnummer(e.target.value)} />
+                <div className={styles.lagreManuelle}>
+                    <Checkbox onChange={() => setLagreManuelle(!lagreManuelle)} checked={lagreManuelle}>
+                        Lagre manuelle behandlinger (gjelder ikke prod)
+                    </Checkbox>
+                </div>
+                <TextField
+                    label="Maks antall saker"
+                    type="number"
+                    onChange={(val) => {
+                        const input = val.target.value;
+                        setMaksAntallSakerInput(input);
+                        const parsedValue = input ? Number(input) : null;
+                        setMaksAntallSaker(
+                            parsedValue !== null && Number.isFinite(parsedValue) && parsedValue > 0
+                                ? parsedValue
+                                : null,
+                        );
+                    }}
+                />
+                {maksAntallSakerErUgyldig && (
+                    <Alert variant="error">Maks antall saker må være et positivt heltall</Alert>
+                )}
+                <Button onClick={handleSubmit} loading={RemoteData.isPending(dryRunStatus)}>
+                    Kjør dry run
+                </Button>
+                {RemoteData.isSuccess(dryRunStatus) && (
+                    <Alert variant="success"> Nice 👍. Dry run omregning startet. Sjekk logg for detaljer. </Alert>
+                )}
+                {RemoteData.isFailure(dryRunStatus) && <ApiErrorAlert error={dryRunStatus.error} />}
             </div>
-            <div className={styles.lagreManuelle}>
-                <Checkbox onChange={() => setLagreManuelle(!lagreManuelle)} checked={lagreManuelle}>
-                    Lagre manuelle behandlinger (gjelder ikke prod)
-                </Checkbox>
-            </div>
-            <TextField
-                label="Maks antall saker"
-                type="number"
-                onChange={(val) => {
-                    const input = val.target.value;
-                    setMaksAntallSakerInput(input);
-                    const parsedValue = input ? Number(input) : null;
-                    setMaksAntallSaker(
-                        parsedValue !== null && Number.isFinite(parsedValue) && parsedValue > 0 ? parsedValue : null,
-                    );
-                }}
-            />
-            {maksAntallSakerErUgyldig && <Alert variant="error">Maks antall saker må være et positivt heltall</Alert>}
-            <Button onClick={handleSubmit} loading={RemoteData.isPending(dryRunStatus)}>
-                Kjør dry run
-            </Button>
-            {RemoteData.isSuccess(dryRunStatus) && (
-                <Alert variant="success"> Nice 👍. Dry run omregning startet. Sjekk logg for detaljer. </Alert>
-            )}
-            {RemoteData.isFailure(dryRunStatus) && <ApiErrorAlert error={dryRunStatus.error} />}
-        </div>
+        </Tabs.Panel>
     );
 };
 

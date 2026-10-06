@@ -195,6 +195,17 @@ export async function opprettRegulering(args: OpprettReguleringRequest): Promise
     });
 }
 
+export async function startOmregning(args: { fraOgMedMåned: string }) {
+    const url = `/reguleringer/automatisk/omregning`;
+    const method = 'POST';
+    return apiClient({
+        url: url,
+        method: method,
+        body: {
+            fraOgMedMåned: args.fraOgMedMåned,
+        },
+    });
+}
 export async function dryRunOmregning(args: {
     startDatoOmregning: string;
     lagreManuelle: boolean;
