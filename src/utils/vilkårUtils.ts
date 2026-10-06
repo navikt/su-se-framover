@@ -1,3 +1,4 @@
+import { FormuegrunnlagVerdierFormData } from '~src/components/forms/vilkårOgGrunnlagForms/formue/FormueFormUtils';
 import { GrunnForPapirinnsending, Vergemål } from '~src/features/søknad/types';
 import * as Routes from '~src/lib/routes';
 import { Nullable } from '~src/lib/types';
@@ -8,7 +9,7 @@ import { PersonligOppmøteÅrsak } from '~src/types/grunnlagsdataOgVilkårsvurde
 import { UføreResultat } from '~src/types/grunnlagsdataOgVilkårsvurderinger/uføre/Uførevilkår';
 import { Utenlandsoppholdstatus } from '~src/types/grunnlagsdataOgVilkårsvurderinger/utenlandsopphold/Utenlandsopphold';
 import { Sakstype } from '~src/types/Sak';
-import { ForNav, Søknadstype } from '~src/types/Søknadinnhold';
+import { Formue, ForNav, Søknadstype } from '~src/types/Søknadinnhold';
 import { Søknadsbehandling, SøknadsbehandlingStatus } from '~src/types/Søknadsbehandling';
 import { Vilkårstatus } from '~src/types/Vilkår';
 import { Vilkårtype, VilkårVurderingStatus } from '~src/types/Vilkårsvurdering';
@@ -300,4 +301,79 @@ export const forventetÅrsakIfølgeSøknad = (forNav: ForNav): Nullable<Personli
         default:
             return null;
     }
+};
+
+/**
+ * Sjekker om saksbehandler har endret noen av de pre-utfylte formue-tallene fra søknaden.
+ * Kjøretøy sammenlignes som sum, siden søknaden lister hvert kjøretøy for seg, mens
+ * vurderingen har én samlet verdi. Returnerer feltnavnene (nøklene i FormuegrunnlagVerdierFormData)
+ * det er avvik på, slik at varselet kan si hvilke felter det gjelder.
+ */
+export const formueFelterMedAvvikFraSøknad = (
+    søknadsFormue: Nullable<Formue>,
+    vurderinger: Nullable<FormuegrunnlagVerdierFormData>[],
+): (keyof FormuegrunnlagVerdierFormData)[] => {
+    const oppgitteVurderinger = vurderinger.filter((v): v is FormuegrunnlagVerdierFormData => v !== null);
+    const søknadsVerdiKjøretøy = (søknadsFormue?.kjøretøy ?? []).reduce((sum, k) => sum + k.verdiPåKjøretøy, 0);
+
+    const feltOgAvvik: [keyof FormuegrunnlagVerdierFormData, boolean][] = [
+        [
+            'verdiIkkePrimærbolig',
+            harVurderingAvvikFraBrukersSvar(
+                søknadsFormue?.verdiPåBolig ?? 0,
+                oppgitteVurderinger.map((v) => Number(v.verdiIkkePrimærbolig)),
+            ),
+        ],
+        [
+            'verdiEiendommer',
+            harVurderingAvvikFraBrukersSvar(
+                søknadsFormue?.verdiPåEiendom ?? 0,
+                oppgitteVurderinger.map((v) => Number(v.verdiEiendommer)),
+            ),
+        ],
+        [
+            'verdiKjøretøy',
+            harVurderingAvvikFraBrukersSvar(
+                søknadsVerdiKjøretøy,
+                oppgitteVurderinger.map((v) => Number(v.verdiKjøretøy)),
+            ),
+        ],
+        [
+            'innskudd',
+            harVurderingAvvikFraBrukersSvar(
+                søknadsFormue?.innskuddsBeløp ?? 0,
+                oppgitteVurderinger.map((v) => Number(v.innskudd)),
+            ),
+        ],
+        [
+            'verdipapir',
+            harVurderingAvvikFraBrukersSvar(
+                søknadsFormue?.verdipapirBeløp ?? 0,
+                oppgitteVurderinger.map((v) => Number(v.verdipapir)),
+            ),
+        ],
+        [
+            'pengerSkyldt',
+            harVurderingAvvikFraBrukersSvar(
+                søknadsFormue?.skylderNoenMegPengerBeløp ?? 0,
+                oppgitteVurderinger.map((v) => Number(v.pengerSkyldt)),
+            ),
+        ],
+        [
+            'kontanter',
+            harVurderingAvvikFraBrukersSvar(
+                søknadsFormue?.kontanterBeløp ?? 0,
+                oppgitteVurderinger.map((v) => Number(v.kontanter)),
+            ),
+        ],
+        [
+            'depositumskonto',
+            harVurderingAvvikFraBrukersSvar(
+                søknadsFormue?.depositumsBeløp ?? 0,
+                oppgitteVurderinger.map((v) => Number(v.depositumskonto)),
+            ),
+        ],
+    ];
+
+    return feltOgAvvik.filter(([, harAvvik]) => harAvvik).map(([felt]) => felt);
 };
