@@ -181,14 +181,17 @@ const ErEpsFylt67Felt = (props: {
 }) => {
     const { formatMessage } = useI18n({ messages });
 
-    // Feltet låses bare når EPS har en gyldig fødselsdato. Mangler den, kan vi bare anslå svaret
-    // fra fødselsåret (vi vet ikke nøyaktig bursdag), og saksbehandler må bekrefte det selv.
-    const fødselsår = props.eps.fødsel?.år;
-    const beregnetVerdi = props.periodeFraOgMed
-        ? (harFylt67VedDato(props.periodeFraOgMed, props.eps.fødsel) ??
+    // Feltet låses bare når EPS har en gyldig fødselsdato. Mangler den, kan vi bare anslå om EPS har fylt 67 år
+    // basert på fødselsåret (vi vet ikke nøyaktig bursdag), og saksbehandler må bekrefte det selv.
+    const epsFødsel = props.eps.fødsel;
+    const fødselsår = epsFødsel?.år;
+
+    const beregnetHarFylt67 = props.periodeFraOgMed
+        ? (harFylt67VedDato(props.periodeFraOgMed, epsFødsel) ??
           (fødselsår != null ? harFylt67VedÅr(props.periodeFraOgMed, fødselsår) : null))
         : null;
-    const erLåst = props.eps.fødsel?.dato != null;
+
+    const erLåst = epsFødsel?.dato != null;
 
     useEffect(() => {
         const gjeldendeErEpsFylt67 = props.form.getValues(`${props.nameAndIdx}.erEpsFylt67`);
@@ -203,8 +206,8 @@ const ErEpsFylt67Felt = (props: {
             return;
         }
 
-        if (beregnetVerdi !== null && beregnetVerdi !== gjeldendeErEpsFylt67) {
-            props.form.setValue(`${props.nameAndIdx}.erEpsFylt67`, beregnetVerdi);
+        if (beregnetHarFylt67 !== null && beregnetHarFylt67 !== gjeldendeErEpsFylt67) {
+            props.form.setValue(`${props.nameAndIdx}.erEpsFylt67`, beregnetHarFylt67);
             // erEpsFylt67 endret seg - nullstill uførflyktning-svaret av samme grunn som over.
             props.form.setValue(`${props.nameAndIdx}.erEPSUførFlyktning`, null);
         }
@@ -218,7 +221,7 @@ const ErEpsFylt67Felt = (props: {
                 <BooleanRadioGroup
                     legend={formatMessage('bosituasjon.erEPSFylt67')}
                     description={
-                        beregnetVerdi === null
+                        beregnetHarFylt67 === null
                             ? undefined
                             : formatMessage(
                                   erLåst
@@ -244,8 +247,10 @@ const ErEpsFylt67Felt = (props: {
 const EpsFyller67Varsel = (props: { eps: Person; periode: { fraOgMed: Date; tilOgMed: Date } }) => {
     const { formatMessage } = useI18n({ messages });
 
-    if (props.eps.fødsel) {
-        const epsFyller67IPerioden = fyller67ILøpetAvPeriode(props.periode, props.eps.fødsel);
+    const epsFødsel = props.eps.fødsel;
+
+    if (epsFødsel) {
+        const epsFyller67IPerioden = fyller67ILøpetAvPeriode(props.periode, epsFødsel);
 
         if (epsFyller67IPerioden === true) {
             return (
@@ -260,7 +265,7 @@ const EpsFyller67Varsel = (props: { eps: Person; periode: { fraOgMed: Date; tilO
         }
     }
 
-    const fødselsår = props.eps.fødsel?.år;
+    const fødselsår = epsFødsel?.år;
 
     if (fødselsår == null) {
         return (
