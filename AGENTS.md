@@ -190,6 +190,3 @@ erstatning for den.
 - [Endringshistorikk](.github/ai-historikk/endringer.jsonl) gjelder bare
   AI-regler, agentprofiler og domenedokumentasjon. Git er historikken for
   ordinære kodeendringer.
-
-Backendens Kotlin-, Flyway-, SQL-, Kotliquery-, database-session-, transaksjons-
-og persistensregler er ikke frontendregler og skal ikke kopieres hit.

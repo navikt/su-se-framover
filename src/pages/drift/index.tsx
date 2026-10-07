@@ -2,6 +2,7 @@ import * as RemoteData from '@devexperts/remote-data-ts';
 import {
     Alert,
     BodyShort,
+    Box,
     Button,
     ExpansionCard,
     Heading,
@@ -14,6 +15,7 @@ import {
     VStack,
 } from '@navikt/ds-react';
 import { useCallback, useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 import { ApiError, ErrorCode } from '~src/api/apiClient';
 import {
@@ -27,9 +29,12 @@ import {
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
 import { ApiErrorCode } from '~src/components/apiErrorAlert/apiErrorCode';
 import { DatePicker } from '~src/components/inputs/datePicker/DatePicker';
+import HistoriskAlderssakPersonoppslag from '~src/features/historiskAlderssak/HistoriskAlderssakPersonoppslag';
 import { useApiCall } from '~src/lib/hooks';
+import * as Routes from '~src/lib/routes';
 import { Nullable } from '~src/lib/types';
 import KontrollsamtaleOversikt from '~src/pages/drift/components/KontrollsamtaleOversikt.tsx';
+import Omregning from '~src/pages/drift/components/regulering/Omregning.tsx';
 import SakStatistikk from '~src/pages/drift/components/SakStatistikk.tsx';
 import StønadStatistikk from '~src/pages/drift/components/StønadStatistikk.tsx';
 import Nøkkeltall from '~src/pages/saksbehandling/behandlingsoversikt/nøkkeltall/Nøkkeltall';
@@ -57,6 +62,7 @@ enum Knapp {
 }
 
 const Drift = () => {
+    const navigate = useNavigate();
     const [knappTrykket, settKnappTrykket] = useState<Nullable<Knapp>>();
     const [statusBakover, setStatusBakover] = useState<RemoteData.RemoteData<ApiError, string>>(RemoteData.pending);
     const hentStatus = useCallback(async () => {
@@ -154,6 +160,12 @@ const Drift = () => {
                     )}
                 </div>
 
+                <Box background="surface-default" padding="6" borderWidth="1" borderRadius="medium">
+                    <HistoriskAlderssakPersonoppslag
+                        onTreff={(fnr) => navigate(Routes.historiskAlderssakDrift.createURL(), { state: { fnr } })}
+                    />
+                </Box>
+
                 <ExpansionCard aria-label="Driftsoppgaver">
                     <ExpansionCard.Header>
                         <ExpansionCard.Title as="h2" size="medium">
@@ -228,6 +240,7 @@ const Drift = () => {
                                         Fiks vedtak
                                     </Button>
                                     <SendUtbetalingsIder />
+                                    <Omregning />
                                 </div>
                             </section>
 

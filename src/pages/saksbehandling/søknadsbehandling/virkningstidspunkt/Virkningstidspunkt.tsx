@@ -82,6 +82,12 @@ const Virkningstidspunkt = (
             eqBehandlingsperiode.equals(values, initialValues),
         );
 
+    // Bosituasjonens draft kan inneholde utfylte EPS-relaterte svar (f.eks. "er EPS fylt 67",
+    // "er EPS ufør flyktning") som ble fylt ut for en annen periode. Backend re-vurderer ikke
+    // disse verdiene når stønadsperioden endres, så draften må nullstilles her for å hindre at
+    // utdaterte svar gjenbrukes i Bosituasjon-steget.
+    const { clearDraft: clearBosituasjonDraft } = useSøknadsbehandlingDraftContextFor(Vilkårtype.Bosituasjon);
+
     const form = useForm<VirkningstidspunktFormData>({
         defaultValues: draft ?? initialValues,
         resolver: yupResolver(virkningstidspunktSchema),
@@ -102,6 +108,7 @@ const Virkningstidspunkt = (
             },
             () => {
                 clearDraft();
+                clearBosituasjonDraft();
                 onSuccess();
             },
         );
