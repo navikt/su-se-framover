@@ -50,6 +50,17 @@
     }
 }
 
+.beregningssammenligning {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 22rem), 1fr));
+    gap: var(--a-spacing-6);
+}
+
+.beregningsfradrag {
+    margin: 0;
+    padding-left: var(--a-spacing-5);
+}
+
 .månedsbeløpsliste {
     display: grid;
     gap: var(--a-spacing-3);
@@ -81,6 +92,14 @@
 .kodeliste {
     margin: var(--a-spacing-1) 0 0;
     padding-left: var(--a-spacing-5);
+}
+
+.behandlingsliste {
+    display: grid;
+    gap: var(--a-spacing-3);
+    margin: 0;
+    padding: 0;
+    list-style: none;
 }
 
 @media (max-width: 48rem) {

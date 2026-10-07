@@ -2,11 +2,16 @@ import * as RemoteData from '@devexperts/remote-data-ts';
 import { Alert, BodyShort, Box, Button, ExpansionCard, Heading, HStack, Label, Loader, VStack } from '@navikt/ds-react';
 import { useEffect, useState } from 'react';
 
-import { hentHistoriskeMånedsbeløp, hentHistoriskeVedtaksperioder } from '~src/api/historiskAlderssakApi';
+import {
+    hentHistoriskeInfotrygdRevurderinger,
+    hentHistoriskeMånedsbeløp,
+    hentHistoriskeVedtaksperioder,
+} from '~src/api/historiskAlderssakApi';
 import LinkAsButton from '~src/components/linkAsButton/LinkAsButton';
 import { pipe } from '~src/lib/fp';
 import { useApiCall } from '~src/lib/hooks';
 import { HistoriskMånedsbeløpsperiode, HistoriskVedtaksperiode } from '~src/types/HistoriskAlderssak';
+import { HistoriskInfotrygdRevurdering } from '~src/types/HistoriskInfotrygdRevurdering';
 import { formatDate, formatDateTime } from '~src/utils/date/dateUtils';
 import { formatCurrency } from '~src/utils/format/formatUtils';
 
@@ -22,6 +27,7 @@ import {
     saksreferanseForVisning,
 } from './HistoriskAlderssakUtils';
 import styles from './HistoriskAlderssakVisning.module.less';
+import OpprettHistoriskInfotrygdRevurdering from './OpprettHistoriskInfotrygdRevurdering';
 
 const formatPeriode = (periode: HistoriskVedtaksperiode): string => {
     if (periode.fraOgMed && periode.tilOgMed) {
@@ -308,12 +314,63 @@ const HistoriskePerioder = (props: { perioder: HistoriskVedtaksperiode[] }) => {
     );
 };
 
-const HistoriskAlderssakVisning = (props: { fnr: string; tilbakeHref: string; tilbakeTekst: string }) => {
+const HistoriskeRevurderinger = (props: {
+    revurderinger: HistoriskInfotrygdRevurdering[];
+    onVelg: (revurderingId: string, sakId: string) => void;
+}) => (
+    <section aria-labelledby="historiske-revurderinger-tittel">
+        <VStack gap="4">
+            <Heading id="historiske-revurderinger-tittel" level="2" size="medium">
+                Historiske revurderinger
+            </Heading>
+            {props.revurderinger.length === 0 ? (
+                <Alert variant="info">
+                    Det finnes ingen revurderinger gjort i SU-app for personen for infotrygd periodene.
+                </Alert>
+            ) : (
+                <ul className={styles.behandlingsliste}>
+                    {props.revurderinger.map((revurdering) => (
+                        <li key={revurdering.id}>
+                            <Box background="surface-default" borderWidth="1" borderRadius="medium" padding="4">
+                                <HStack gap="4" align="center" justify="space-between" wrap>
+                                    <div>
+                                        <Heading level="3" size="small">
+                                            {formatDate(revurdering.periode.fraOgMed)}–
+                                            {formatDate(revurdering.periode.tilOgMed)}
+                                        </Heading>
+                                        <BodyShort>{revurdering.status.replaceAll('_', ' ').toLowerCase()}</BodyShort>
+                                    </div>
+                                    <Button
+                                        type="button"
+                                        variant="secondary"
+                                        onClick={() => props.onVelg(revurdering.id, revurdering.sakId)}
+                                    >
+                                        Åpne behandling
+                                    </Button>
+                                </HStack>
+                            </Box>
+                        </li>
+                    ))}
+                </ul>
+            )}
+        </VStack>
+    </section>
+);
+
+const HistoriskAlderssakVisning = (props: {
+    fnr: string;
+    tilbakeHref: string;
+    tilbakeTekst: string;
+    onRevurderingOpprettet: (revurdering: HistoriskInfotrygdRevurdering) => void;
+    onÅpneRevurdering: (revurderingId: string, sakId: string) => void;
+}) => {
     const [vedtaksperioder, hentVedtaksperioder] = useApiCall(hentHistoriskeVedtaksperioder);
+    const [revurderinger, hentRevurderinger] = useApiCall(hentHistoriskeInfotrygdRevurderinger);
 
     useEffect(() => {
         hentVedtaksperioder({ fnr: props.fnr });
-    }, [hentVedtaksperioder, props.fnr]);
+        hentRevurderinger({ fnr: props.fnr });
+    }, [hentRevurderinger, hentVedtaksperioder, props.fnr]);
 
     return (
         <section className={styles.side} aria-labelledby="infotrygd-tittel">
@@ -330,12 +387,34 @@ const HistoriskAlderssakVisning = (props: { fnr: string; tilbakeHref: string; ti
                 </div>
 
                 {pipe(
+                    revurderinger,
+                    RemoteData.fold(
+                        () => null,
+                        () => <Loader title="Henter historiske revurderinger" size="large" />,
+                        (error) => <HistoriskAlderssakApiErrorAlert error={error} />,
+                        (resultat) => (
+                            <HistoriskeRevurderinger revurderinger={resultat} onVelg={props.onÅpneRevurdering} />
+                        ),
+                    ),
+                )}
+
+                {pipe(
                     vedtaksperioder,
                     RemoteData.fold(
                         () => null,
                         () => <Loader title="Henter historiske vedtaksperioder" size="large" />,
                         (error) => <HistoriskAlderssakApiErrorAlert error={error} />,
-                        (perioder) => <HistoriskePerioder perioder={perioder} />,
+                        (perioder) => (
+                            <VStack gap="6">
+                                <OpprettHistoriskInfotrygdRevurdering
+                                    fnr={props.fnr}
+                                    vedtaksperioder={perioder}
+                                    onOpprettet={props.onRevurderingOpprettet}
+                                    onÅpneEksisterende={props.onÅpneRevurdering}
+                                />
+                                <HistoriskePerioder perioder={perioder} />
+                            </VStack>
+                        ),
                     ),
                 )}
 
