@@ -43,11 +43,11 @@ export default {
     'velg-kontrollsamtale-tittel': 'Gi informasjon om kontrollsamtale',
     'ufør-beskrivelse': 'Er du ufør og har flyktningsstatus kan du få supplerende stønad',
     'kontrollsamtale-beskrivelse':
-        'Sende kontrollnotat med informasjon om personen innkalt til samtale på lokalkontoret',
+        'Her skal du fylle ut og sende informasjon om personen som er innkalt til kontrollsamtale. Du trenger ikke lenger å skrive ut og fylle ut skjemaet på papir.',
     'alder-lenke': 'Start søknad for person over 67 år',
     'ufør-lenke': 'Start søknad for uføre flyktninger',
-    'kontrollsamtale-lenke': 'Innsending av kontrollnotat',
-    'kontrollsamtaleSkjema-lenke': 'Start skjema for kontrollsamtale',
+    'kontrollsamtale-lenke': 'Send inn kontrollnotat',
+    'kontrollsamtaleSkjema-lenke': 'Send inn kontrollnotat',
     'velg-undertittel': 'Velg alternativet som passer for deg',
 
     'innsending-kontrollnotat': 'Innsending av kontrollnotat',

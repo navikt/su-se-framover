@@ -1,17 +1,36 @@
 name: Deploy to dev-gcp
 
 on:
-    push:
-        branches-ignore:
-            - 'gh-readonly-queue/**'
     workflow_dispatch:
 
 permissions: {}
 
 jobs:
+    verify-master-is-ancestor:
+      permissions:
+        contents: read
+      runs-on: ubuntu-latest
+      steps:
+        - uses: actions/checkout@v7
+          with:
+            fetch-depth: 0
+        - run: | # git merge-base returns 0 when master is ancestor, 1 if it is not (other positive numbers on error)
+            set +e
+            origin_master="$(git rev-parse origin/master)"
+            head="$(git rev-parse HEAD)"
+            echo "Hash for origin master: ${origin_master}. Hash for HEAD: ${head}."
+            merge_base="$(git merge-base $origin_master HEAD)"
+            echo "Merge-base: ${merge_base}"
+            git merge-base --is-ancestor $origin_master HEAD
+            return_code=$?
+            echo "Return code of 'git merge-base': ${return_code}"
+            if [[ return_code -gt 0 ]]; then
+              echo "You have to merge origin/master before you can deploy a branch."
+              exit 1
+            fi
     build-push-docker-image:
-        if: github.event_name == 'workflow_dispatch'
-        name: build-push-docker-image
+        name: tests-and-build-push-docker-image
+        needs: verify-master-is-ancestor
         runs-on: ubuntu-latest
         outputs:
             image: ${{ steps.docker-build-push.outputs.image }}
@@ -42,7 +61,6 @@ jobs:
               working-directory: server
               run: npm run build
             - name: Build and publish Docker image
-              if: github.event_name == 'workflow_dispatch'
               uses: nais/docker-build-push@v0
               id: docker-build-push
               with:
@@ -54,7 +72,6 @@ jobs:
                   # for å unngå at re-runs overskriver eksisterende image
 
     deploy-to-dev-gcp:
-        if: github.event_name == 'workflow_dispatch'
         name: deploy-to-dev-gcp
         permissions:
             contents: read
