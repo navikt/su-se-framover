@@ -116,8 +116,6 @@ export async function beregnHistoriskInfotrygdRevurdering(
     });
 }
 
-const historiskPdfTransformer = (response: Response) => response.blob();
-
 export async function hentHistoriskForhåndsvarselutkast(args: {
     revurderingId: string;
     fritekst: string;
@@ -126,7 +124,7 @@ export async function hentHistoriskForhåndsvarselutkast(args: {
         url: `/historisk/alderssak/revurderinger/${args.revurderingId}/forhandsvarsel/utkast`,
         method: 'POST',
         body: { fritekst: args.fritekst },
-        bodyTransformer: historiskPdfTransformer,
+        bodyTransformer: (res) => res.blob(),
     });
 }
 
@@ -165,7 +163,7 @@ export async function hentHistoriskVedtaksbrevutkast(revurderingId: string): Pro
     return apiClient({
         url: `/historisk/alderssak/revurderinger/${revurderingId}/vedtaksbrevutkast`,
         method: 'GET',
-        bodyTransformer: historiskPdfTransformer,
+        bodyTransformer: (res) => res.blob(),
     });
 }
 

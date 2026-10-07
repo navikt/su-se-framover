@@ -1,122 +1,21 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import { BodyShort, Box, Button, Heading, Label, Loader, Textarea, VStack } from '@navikt/ds-react';
-import { FormEvent, useEffect, useRef, useState } from 'react';
+import { BodyShort, Heading, Loader, VStack } from '@navikt/ds-react';
+import { useEffect, useRef, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-
-import {
-    avsluttHistoriskInfotrygdRevurdering,
-    hentHistoriskInfotrygdRevurdering,
-} from '~src/api/historiskAlderssakApi';
+import { hentHistoriskInfotrygdRevurdering } from '~src/api/historiskAlderssakApi';
 import LinkAsButton from '~src/components/linkAsButton/LinkAsButton';
+import AvsluttHistoriskInfotrygdRevurdering from '~src/features/historiskAlderssak/AvsluttHistoriskInfotrygdRevurdering';
 import HistoriskAlderssakApiErrorAlert from '~src/features/historiskAlderssak/HistoriskAlderssakApiErrorAlert';
 import historiskStyles from '~src/features/historiskAlderssak/HistoriskAlderssakVisning.module.less';
 import HistoriskInfotrygdBeregning from '~src/features/historiskAlderssak/HistoriskInfotrygdBeregning';
 import HistoriskInfotrygdEtterBeregning from '~src/features/historiskAlderssak/HistoriskInfotrygdEtterBeregning';
+import HistoriskInfotrygdRevurderingsdetaljer from '~src/features/historiskAlderssak/HistoriskInfotrygdRevurderingsdetaljer';
 import { pipe } from '~src/lib/fp';
 import { useApiCall } from '~src/lib/hooks';
 import * as Routes from '~src/lib/routes';
 import { VisDokumenter } from '~src/pages/saksbehandling/dokumenter/DokumenterPage';
 import { DokumentIdType } from '~src/types/dokument/Dokument';
 import { HistoriskInfotrygdRevurdering as HistoriskInfotrygdRevurderingType } from '~src/types/HistoriskInfotrygdRevurdering';
-import { formatDate, formatDateTime } from '~src/utils/date/dateUtils';
-
-const statusTekst: Record<HistoriskInfotrygdRevurderingType['status'], string> = {
-    OPPRETTET: 'Opprettet',
-    BEREGNET: 'Beregnet',
-    TIL_ATTESTERING: 'Til attestering',
-    ATTESTERT: 'Attestert',
-    UNDERKJENT: 'Underkjent',
-    AVSLUTTET: 'Avsluttet',
-};
-
-const Revurderingsdetaljer = (props: { revurdering: HistoriskInfotrygdRevurderingType }) => (
-    <Box background="surface-default" borderWidth="1" borderRadius="medium" padding="5">
-        <dl className={historiskStyles.detaljer}>
-            <div>
-                <Label as="dt" size="small">
-                    Behandlings-ID
-                </Label>
-                <BodyShort as="dd">{props.revurdering.id}</BodyShort>
-            </div>
-            <div>
-                <Label as="dt" size="small">
-                    Periode
-                </Label>
-                <BodyShort as="dd">
-                    {formatDate(props.revurdering.periode.fraOgMed)}–{formatDate(props.revurdering.periode.tilOgMed)}
-                </BodyShort>
-            </div>
-            <div>
-                <Label as="dt" size="small">
-                    Status
-                </Label>
-                <BodyShort as="dd">{statusTekst[props.revurdering.status]}</BodyShort>
-            </div>
-            <div>
-                <Label as="dt" size="small">
-                    Opprettet
-                </Label>
-                <BodyShort as="dd">{formatDateTime(props.revurdering.opprettet)}</BodyShort>
-            </div>
-            <div>
-                <Label as="dt" size="small">
-                    Sist oppdatert
-                </Label>
-                <BodyShort as="dd">{formatDateTime(props.revurdering.oppdatert)}</BodyShort>
-            </div>
-        </dl>
-    </Box>
-);
-
-const AvsluttRevurdering = (props: { revurderingId: string; onAvsluttet: () => void }) => {
-    const [begrunnelse, setBegrunnelse] = useState('');
-    const [begrunnelseFeil, setBegrunnelseFeil] = useState<string>();
-    const [avsluttStatus, avslutt] = useApiCall(avsluttHistoriskInfotrygdRevurdering);
-
-    const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
-        event.preventDefault();
-        const trimmetBegrunnelse = begrunnelse.trim();
-
-        if (!trimmetBegrunnelse) {
-            setBegrunnelseFeil('Skriv hvorfor behandlingen skal avsluttes.');
-            return;
-        }
-
-        setBegrunnelseFeil(undefined);
-        avslutt(
-            {
-                revurderingId: props.revurderingId,
-                body: { begrunnelse: trimmetBegrunnelse },
-            },
-            props.onAvsluttet,
-        );
-    };
-
-    return (
-        <Box background="surface-default" borderWidth="1" borderRadius="medium" padding="5">
-            <form onSubmit={handleSubmit}>
-                <VStack gap="4" align="start">
-                    <Heading level="2" size="medium">
-                        Avslutt behandlingen
-                    </Heading>
-                    <Textarea
-                        label="Begrunnelse"
-                        description="Forklar hvorfor behandlingen skal avsluttes."
-                        value={begrunnelse}
-                        onChange={(event) => setBegrunnelse(event.target.value)}
-                        error={begrunnelseFeil}
-                    />
-                    {RemoteData.isFailure(avsluttStatus) && (
-                        <HistoriskAlderssakApiErrorAlert error={avsluttStatus.error} />
-                    )}
-                    <Button type="submit" variant="danger" loading={RemoteData.isPending(avsluttStatus)}>
-                        Avslutt behandlingen
-                    </Button>
-                </VStack>
-            </form>
-        </Box>
-    );
-};
 
 const HistoriskInfotrygdRevurdering = () => {
     const { revurderingId, sakId } = Routes.useRouteParams<typeof Routes.historiskInfotrygdRevurdering>();
@@ -178,7 +77,7 @@ const HistoriskInfotrygdRevurdering = () => {
 
                             return (
                                 <VStack gap="6">
-                                    <Revurderingsdetaljer revurdering={gjeldendeRevurdering} />
+                                    <HistoriskInfotrygdRevurderingsdetaljer revurdering={gjeldendeRevurdering} />
                                     {RemoteData.isFailure(oppfriskStatus) && (
                                         <HistoriskAlderssakApiErrorAlert error={oppfriskStatus.error} />
                                     )}
@@ -195,7 +94,7 @@ const HistoriskInfotrygdRevurdering = () => {
                                     />
                                     {gjeldendeRevurdering.status !== 'AVSLUTTET' &&
                                         gjeldendeRevurdering.status !== 'TIL_ATTESTERING' && (
-                                            <AvsluttRevurdering
+                                            <AvsluttHistoriskInfotrygdRevurdering
                                                 revurderingId={gjeldendeRevurdering.id}
                                                 onAvsluttet={() => lastRevurderingPåNytt(gjeldendeRevurdering.id)}
                                             />
