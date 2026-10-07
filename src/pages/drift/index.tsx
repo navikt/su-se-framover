@@ -34,6 +34,7 @@ import { useApiCall } from '~src/lib/hooks';
 import * as Routes from '~src/lib/routes';
 import { Nullable } from '~src/lib/types';
 import KontrollsamtaleOversikt from '~src/pages/drift/components/KontrollsamtaleOversikt.tsx';
+import Omregning from '~src/pages/drift/components/regulering/Omregning.tsx';
 import SakStatistikk from '~src/pages/drift/components/SakStatistikk.tsx';
 import StønadStatistikk from '~src/pages/drift/components/StønadStatistikk.tsx';
 import Nøkkeltall from '~src/pages/saksbehandling/behandlingsoversikt/nøkkeltall/Nøkkeltall';
@@ -239,6 +240,7 @@ const Drift = () => {
                                         Fiks vedtak
                                     </Button>
                                     <SendUtbetalingsIder />
+                                    <Omregning />
                                 </div>
                             </section>
 

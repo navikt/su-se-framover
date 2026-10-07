@@ -64,12 +64,14 @@ export const MonthPicker = (props: {
     size?: 'medium' | 'small';
     fromDate?: Nullable<Date>;
     toDate?: Nullable<Date>;
+    defaultYear?: Date;
     onChange: (date: Nullable<Date>) => void;
     error?: string;
 }) => {
     const { monthpickerProps, inputProps } = useMonthpicker({
         fromDate: props.fromDate ?? new Date(2000, 0, 1),
         toDate: props.toDate ?? new Date(2099, 11, 31),
+        defaultYear: props.defaultYear,
         onMonthChange: (d) => props.onChange(d ?? null),
         defaultSelected: props.value ?? undefined,
     });
@@ -103,6 +105,7 @@ export const RangePickerMonth = (props: {
     value: { fraOgMed: Nullable<Date>; tilOgMed: Nullable<Date> };
     fromDate?: Nullable<Date>;
     toDate?: Nullable<Date>;
+    defaultYear?: Date;
     onChange: (periode: NullablePeriode) => void;
     error?: { fraOgMed?: string; tilOgMed?: string };
 }) => {

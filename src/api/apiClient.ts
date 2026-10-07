@@ -22,6 +22,8 @@ export interface ErrorMessage {
     message: string;
     code: ApiErrorCode;
     errors?: BackendValideringsfeil[];
+    eksisterendeRevurderingId?: string;
+    sakId?: string;
 }
 
 export type ApiClientResult<TSuccess> = ApiClientSuccessResult<TSuccess> | ApiClientFailureResult;

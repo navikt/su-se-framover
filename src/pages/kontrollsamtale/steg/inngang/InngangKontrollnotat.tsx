@@ -5,11 +5,13 @@ import { useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import styles from 'src/pages/søknad/steg/inngang/inngang.module.less';
+import { v4 as uuid } from 'uuid';
 import { hentKontrollsamtaler } from '~src/api/kontrollsamtaleApi.ts';
 import { hentSakinfoPåFnr } from '~src/api/sakApi.ts';
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert.tsx';
 import LinkAsButton from '~src/components/linkAsButton/LinkAsButton.tsx';
 import { Personkort } from '~src/components/personkort/Personkort.tsx';
+import { kontrollsamtaleStarted } from '~src/features/kontrollsamtale/kontrollsamtale.slice.ts';
 import { fetchPerson } from '~src/features/person/person.slice.ts';
 import { pipe } from '~src/lib/fp.ts';
 import { useApiCall, useAsyncActionCreator } from '~src/lib/hooks.ts';
@@ -18,6 +20,7 @@ import * as routes from '~src/lib/routes.ts';
 import yup from '~src/lib/validering.ts';
 import nb from '~src/pages/kontrollsamtale/steg/inngang/inngang-nb.ts';
 import { KontrollsamtaleSteg } from '~src/pages/kontrollsamtale/types.ts';
+import { useAppDispatch } from '~src/redux/Store.ts';
 import { KontrollsamtaleStatus } from '~src/types/Kontrollsamtale.ts';
 import { removeSpaces } from '~src/utils/format/formatUtils.ts';
 
@@ -35,6 +38,7 @@ const InngangKontrollnotat = () => {
     const [hentPersonStatus, hentPerson] = useAsyncActionCreator(fetchPerson);
     const [hentKontrollsamtalerStatus, hentKontrollsamtalerForSak] = useApiCall(hentKontrollsamtaler);
     const navigate = useNavigate();
+    const dispatch = useAppDispatch();
     const [, setKontrollsamtalerSakId] = useState<string | null>(null);
     const [valgtSak, setValgtSak] = useState<string | null>(null);
 
@@ -146,6 +150,7 @@ const InngangKontrollnotat = () => {
                     <Button
                         type="button"
                         onClick={() => {
+                            dispatch(kontrollsamtaleStarted(uuid()));
                             navigate(
                                 routes.kontrollsamtaleUtfylling.createURL({
                                     step: KontrollsamtaleSteg.PersonligOppmøte,
