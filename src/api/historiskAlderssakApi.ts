@@ -5,6 +5,15 @@ import {
     HistoriskMånedsbeløpsperiode,
     HistoriskVedtaksperiode,
 } from '~src/types/HistoriskAlderssak';
+import {
+    BeregnHistoriskInfotrygdRevurderingRequest,
+    BeregnHistoriskInfotrygdRevurderingResponse,
+    HistoriskInfotrygdAvsluttRequest,
+    HistoriskInfotrygdMånedsgrunnlag,
+    HistoriskInfotrygdRevurdering,
+    HistoriskInfotrygdRevurderingRequest,
+    OppdaterHistoriskInfotrygdVedtaksbrevRequest,
+} from '~src/types/HistoriskInfotrygdRevurdering';
 
 import apiClient, { ApiClientResult } from './apiClient';
 
@@ -35,5 +44,154 @@ export async function hentHistoriskeMånedsbeløp(
         url: '/historisk/alderssak/manedsbelop',
         method: 'POST',
         body: { vedtakId: request.vedtakId },
+    });
+}
+
+export async function opprettHistoriskInfotrygdRevurdering(
+    request: HistoriskInfotrygdRevurderingRequest,
+): Promise<ApiClientResult<HistoriskInfotrygdRevurdering>> {
+    return apiClient({
+        url: '/historisk/alderssak/revurderinger',
+        method: 'POST',
+        body: {
+            fnr: request.fnr,
+            periode: {
+                fraOgMed: request.periode.fraOgMed,
+                tilOgMed: request.periode.tilOgMed,
+            },
+        },
+    });
+}
+
+export async function hentHistoriskInfotrygdRevurdering(
+    revurderingId: string,
+): Promise<ApiClientResult<HistoriskInfotrygdRevurdering>> {
+    return apiClient({
+        url: `/historisk/alderssak/revurderinger/${revurderingId}`,
+        method: 'GET',
+    });
+}
+
+export async function avsluttHistoriskInfotrygdRevurdering(args: {
+    revurderingId: string;
+    body: HistoriskInfotrygdAvsluttRequest;
+}): Promise<ApiClientResult<HistoriskInfotrygdRevurdering>> {
+    return apiClient({
+        url: `/historisk/alderssak/revurderinger/${args.revurderingId}/avslutt`,
+        method: 'POST',
+        body: {
+            begrunnelse: args.body.begrunnelse,
+        },
+    });
+}
+
+export async function hentHistoriskeInfotrygdRevurderinger(
+    request: HistoriskAlderssakRequest,
+): Promise<ApiClientResult<HistoriskInfotrygdRevurdering[]>> {
+    return apiClient({
+        url: '/historisk/alderssak/revurderinger/oversikt',
+        method: 'POST',
+        body: { fnr: request.fnr },
+    });
+}
+
+export async function hentHistoriskInfotrygdMånedsgrunnlag(
+    revurderingId: string,
+): Promise<ApiClientResult<HistoriskInfotrygdMånedsgrunnlag>> {
+    return apiClient({
+        url: `/historisk/alderssak/revurderinger/${revurderingId}/maanedsgrunnlag`,
+        method: 'GET',
+    });
+}
+
+export async function beregnHistoriskInfotrygdRevurdering(
+    request: BeregnHistoriskInfotrygdRevurderingRequest,
+): Promise<ApiClientResult<BeregnHistoriskInfotrygdRevurderingResponse>> {
+    return apiClient({
+        url: `/historisk/alderssak/revurderinger/${request.revurderingId}/beregning`,
+        method: 'POST',
+        body: {
+            måneder: request.måneder,
+        },
+    });
+}
+
+export async function hentHistoriskForhåndsvarselutkast(args: {
+    revurderingId: string;
+    fritekst: string;
+}): Promise<ApiClientResult<Blob>> {
+    return apiClient({
+        url: `/historisk/alderssak/revurderinger/${args.revurderingId}/forhandsvarsel/utkast`,
+        method: 'POST',
+        body: { fritekst: args.fritekst },
+        bodyTransformer: (res) => res.blob(),
+    });
+}
+
+export async function sendHistoriskForhåndsvarsel(args: {
+    revurderingId: string;
+    fritekst: string;
+}): Promise<ApiClientResult<HistoriskInfotrygdRevurdering>> {
+    return apiClient({
+        url: `/historisk/alderssak/revurderinger/${args.revurderingId}/forhandsvarsel/send`,
+        method: 'POST',
+        body: { fritekst: args.fritekst },
+    });
+}
+
+export async function ikkeSendHistoriskForhåndsvarsel(
+    revurderingId: string,
+): Promise<ApiClientResult<HistoriskInfotrygdRevurdering>> {
+    return apiClient({
+        url: `/historisk/alderssak/revurderinger/${revurderingId}/forhandsvarsel/ikke-send`,
+        method: 'POST',
+    });
+}
+
+export async function lagreHistoriskVedtaksbrev(args: {
+    revurderingId: string;
+    request: OppdaterHistoriskInfotrygdVedtaksbrevRequest;
+}): Promise<ApiClientResult<HistoriskInfotrygdRevurdering>> {
+    return apiClient({
+        url: `/historisk/alderssak/revurderinger/${args.revurderingId}/vedtaksbrev`,
+        method: 'POST',
+        body: args.request,
+    });
+}
+
+export async function hentHistoriskVedtaksbrevutkast(revurderingId: string): Promise<ApiClientResult<Blob>> {
+    return apiClient({
+        url: `/historisk/alderssak/revurderinger/${revurderingId}/vedtaksbrevutkast`,
+        method: 'GET',
+        bodyTransformer: (res) => res.blob(),
+    });
+}
+
+export async function sendHistoriskRevurderingTilAttestering(
+    revurderingId: string,
+): Promise<ApiClientResult<HistoriskInfotrygdRevurdering>> {
+    return apiClient({
+        url: `/historisk/alderssak/revurderinger/${revurderingId}/send-til-attestering`,
+        method: 'POST',
+    });
+}
+
+export async function underkjennHistoriskRevurdering(args: {
+    revurderingId: string;
+    begrunnelse: string;
+}): Promise<ApiClientResult<HistoriskInfotrygdRevurdering>> {
+    return apiClient({
+        url: `/historisk/alderssak/revurderinger/${args.revurderingId}/underkjenn`,
+        method: 'POST',
+        body: { begrunnelse: args.begrunnelse },
+    });
+}
+
+export async function attesterHistoriskRevurdering(
+    revurderingId: string,
+): Promise<ApiClientResult<HistoriskInfotrygdRevurdering>> {
+    return apiClient({
+        url: `/historisk/alderssak/revurderinger/${revurderingId}/attester`,
+        method: 'POST',
     });
 }
