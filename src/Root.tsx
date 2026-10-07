@@ -60,6 +60,9 @@ const Gjenoppta = lazy(() => import('./pages/saksbehandling/gjenoppta/Gjenoppta'
 const Utenlandsopphold = lazy(() => import('./pages/saksbehandling/utenlandsopphold/Utenlandsopphold'));
 const Tilbakekreving = lazy(() => import('./pages/saksbehandling/tilbakekreving/Tilbakekreving'));
 const HistoriskAlderssak = lazy(() => import('./pages/saksbehandling/historiskAlderssak/HistoriskAlderssak'));
+const HistoriskInfotrygdRevurdering = lazy(
+    () => import('./pages/saksbehandling/historiskAlderssak/HistoriskInfotrygdRevurdering'),
+);
 
 const ScrollToTop = () => {
     const { pathname } = useLocation();
@@ -159,6 +162,10 @@ const AppRoutes = () => {
                     <Route
                         path={routes.historiskAlderssak.path}
                         element={<WithDocTitle title="Infotrygd-sak" Page={HistoriskAlderssak} />}
+                    />
+                    <Route
+                        path={routes.historiskInfotrygdRevurdering.path}
+                        element={<WithDocTitle title="Historisk revurdering" Page={HistoriskInfotrygdRevurdering} />}
                     />
 
                     <Route path={routes.tilbakekrevingRoot.path} element={<Tilbakekreving />} />
