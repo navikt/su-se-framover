@@ -6,7 +6,11 @@ import { Nullable } from '~src/lib/types';
 import yup from '~src/lib/validering';
 import { eqNullableDatePeriode, NullablePeriode } from '~src/types/Periode';
 import { Stønadsperiode, Søknadsbehandling } from '~src/types/Søknadsbehandling';
-import { alderSomPersonFyllerIÅrDate, alderSomPersonFyllerPåDato } from '~src/utils/person/personUtils';
+import {
+    alderSomPersonFyllerIÅrDate,
+    alderSomPersonFyllerPåDato,
+    LOVFESTET_ALDERSGRENSE_SU,
+} from '~src/utils/person/personUtils';
 import { maskinellVurderingGirBehovForSaksbehandlerAvgjørelse } from '~src/utils/SøknadsbehandlingUtils';
 
 export interface VirkningstidspunktFormData {
@@ -24,11 +28,11 @@ export const er67PlusOgStønadsperiodeTilOgMedErLengerEnnFødselsmåned = (
     stønadsperiodeTilOgMed: Date,
     fødselsdato: Date,
 ) => {
-    if (alderSomPersonFyllerPåDato(stønadsperiodeTilOgMed, new Date(fødselsdato)) > 67) {
+    if (alderSomPersonFyllerPåDato(stønadsperiodeTilOgMed, new Date(fødselsdato)) > LOVFESTET_ALDERSGRENSE_SU) {
         return true;
     }
 
-    if (alderSomPersonFyllerPåDato(stønadsperiodeTilOgMed, new Date(fødselsdato)) === 67) {
+    if (alderSomPersonFyllerPåDato(stønadsperiodeTilOgMed, new Date(fødselsdato)) === LOVFESTET_ALDERSGRENSE_SU) {
         return stønadsperiodeTilOgMed.getMonth() > new Date(fødselsdato).getMonth();
     }
 
@@ -36,7 +40,7 @@ export const er67PlusOgStønadsperiodeTilOgMedErLengerEnnFødselsmåned = (
 };
 
 export const fyller67PlusVedStønadsperiodeTilOgMed = (stønadsperiodeTilOgMed: Date, fødselsår: number) =>
-    alderSomPersonFyllerIÅrDate(stønadsperiodeTilOgMed.getFullYear(), fødselsår) >= 67;
+    alderSomPersonFyllerIÅrDate(stønadsperiodeTilOgMed.getFullYear(), fødselsår) >= LOVFESTET_ALDERSGRENSE_SU;
 
 export const skalViseBekreftelsesPanel = (arg: { s: Søknadsbehandling; angittPeriode: NullablePeriode<string> }) =>
     arg.s.aldersvurdering !== null &&
