@@ -191,6 +191,7 @@ export async function opprettRegulering(args: OpprettReguleringRequest): Promise
         method: 'POST',
         body: {
             begrunnelse: args.begrunnelse,
+            reguleringsvariant: args.reguleringsvariant,
         },
     });
 }
