@@ -18,7 +18,7 @@ export default {
 
     'kjøretøy.label': 'Eier du bil, campingvogn eller andre kjøretøy?',
 
-    'innskudd.label': 'Har du penger på konto?',
+    'innskudd.label': 'Har du penger på konto? Dette gjelder alle kontoer i Norge eller i utlandet.',
     'innskudd.pengerPåKontoInkludertDepositum': 'Har du penger på konto (inkludert depositumskonto)?',
     'innskudd.beløp': 'Hvor mye penger er det på konto?',
 

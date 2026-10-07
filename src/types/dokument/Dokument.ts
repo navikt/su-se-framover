@@ -14,6 +14,7 @@ export enum DokumentIdType {
     Vedtak = 'VEDTAK',
     Søknad = 'SØKNAD',
     Revurdering = 'REVURDERING',
+    HistoriskInfotrygdRevurdering = 'HISTORISK_INFOTRYGD_REVURDERING',
     Klage = 'KLAGE',
 }
 

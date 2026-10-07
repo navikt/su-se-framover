@@ -1,10 +1,18 @@
+import { randomUUID } from 'node:crypto';
+
 import { type Logger, pino } from 'pino';
 import { pinoHttp } from 'pino-http';
 
 import * as Config from './config.js';
 
 const fnrReplacePattern = [/^(\/api\/(?:person|skatt|saker\/info)\/)(\d{11})()/, /^(.*fnr=)(\d{11})()/];
+
+function safeRequestUrl(url: string | undefined): string | undefined {
+    return url?.split('?', 1)[0]?.replaceAll(/\d{11}/g, '***********');
+}
+
 export const logger: Logger = pino({
+    level: Config.server.logLevel,
     ...(Config.isDev
         ? {
               transport: {
@@ -13,7 +21,6 @@ export const logger: Logger = pino({
                       colorize: true,
                   },
               },
-              level: Config.server.logLevel,
           }
         : {}),
     formatters: {
@@ -35,6 +42,20 @@ export const logger: Logger = pino({
 
 export const httpLogger = pinoHttp({
     logger: logger,
+    serializers: {
+        req(req) {
+            return {
+                id: req.id,
+                method: req.method,
+                url: safeRequestUrl(req.url),
+            };
+        },
+        res(res) {
+            return {
+                statusCode: res.statusCode,
+            };
+        },
+    },
     customLogLevel(_req, res, err) {
         if (err || res.statusCode >= 500) {
             return 'error';
@@ -45,6 +66,6 @@ export const httpLogger = pinoHttp({
         return 'info';
     },
     genReqId(req) {
-        return req.headers['x-correlation-id'] || req.id;
+        return req.headers['x-correlation-id'] || req.id || randomUUID();
     },
 });
