@@ -16,6 +16,7 @@ export interface Regulering {
     saksnummer: number;
     periode: Periode<string>;
     reguleringstype: Reguleringstype;
+    reguleringsvariant: Reguleringsvariant;
     erFerdigstilt: boolean;
     beregning: Nullable<Beregning>;
     simulering: Nullable<Simulering>;
@@ -49,6 +50,11 @@ export interface ReguleringOversiktsstatus {
 export enum Reguleringstype {
     AUTOMATISK = 'AUTOMATISK',
     MANUELL = 'MANUELL',
+}
+
+export enum Reguleringsvariant {
+    GRUNNBELØP = 'GRUNNBELØP',
+    ALDERSFRADRAG = 'ALDERSFRADRAG',
 }
 
 export enum ÅrsakTilManuellReguleringKategori {

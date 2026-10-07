@@ -1,6 +1,6 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Alert, Button, Loader, Radio, RadioGroup, Textarea } from '@navikt/ds-react';
+import { Alert, Button, Loader, Radio, RadioGroup } from '@navikt/ds-react';
 import { useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
@@ -38,7 +38,6 @@ import messages from './SendTilAttestering-nb';
 export interface BrevvalgFormData {
     valg: Valg;
     fritekst: Nullable<string>;
-    begrunnelse: Nullable<string>;
 }
 
 const UNDERSCORE_REGEX = /^((?!_____)[\s\S])*$/;
@@ -63,13 +62,6 @@ const brevvalgSchema = (revurdering: InformasjonsRevurdering) =>
                 then: yup.string().required(),
                 otherwise: yup.string().nullable().notRequired(),
             }),
-        begrunnelse: yup
-            .string()
-            .when('begrunnValg', {
-                is: true,
-                then: yup.string().required().nullable(),
-            })
-            .defined(),
     });
 
 const SendTilAttestering = (props: {
@@ -101,7 +93,6 @@ const SendTilAttestering = (props: {
                 revurderingId: props.revurdering.id,
                 valg: values.valg,
                 fritekst: values.valg === Valg.IKKE_SEND ? null : values.fritekst,
-                begrunnelse: values.begrunnelse,
             },
             onSuccess,
         );
@@ -138,7 +129,6 @@ const SendTilAttestering = (props: {
                 : erRevurderingOpphørPgaManglendeDokumentasjon(props.revurdering)
                   ? formatMessage('opplysningsplikt.forhåndstekst')
                   : null,
-            begrunnelse: props.revurdering.brevvalg.begrunnelse,
         },
         resolver: yupResolver(brevvalgSchema(props.revurdering)),
     });
@@ -320,18 +310,6 @@ const SendTilAttestering = (props: {
                                         )}
                                     </div>
                                 )}
-                                <Controller
-                                    control={form.control}
-                                    name={'begrunnelse'}
-                                    render={({ field, fieldState }) => (
-                                        <Textarea
-                                            {...field}
-                                            label={formatMessage('begrunnelse')}
-                                            value={field.value ?? ''}
-                                            error={fieldState.error?.message}
-                                        />
-                                    )}
-                                />
                             </div>
 
                             {RemoteData.isFailure(lagreBrevStatus) && <ApiErrorAlert error={lagreBrevStatus.error} />}

@@ -3,6 +3,7 @@ import { Alert, BodyShort, Button, Heading, Label, Loader, TextField } from '@na
 import { useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useNavigate, useOutletContext } from 'react-router-dom';
+import * as pdfApi from '~src/api/pdfApi';
 import * as reguleringApi from '~src/api/reguleringApi';
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
 import { EksterneFradrag } from '~src/components/forms/vilkårOgGrunnlagForms/fradrag/EksterneFradrag.tsx';
@@ -20,7 +21,7 @@ import Oppsummeringspanel, {
 import UnderkjenteAttesteringer from '~src/components/underkjenteAttesteringer/UnderkjenteAttesteringer';
 import { SaksoversiktContext } from '~src/context/SaksoversiktContext';
 import * as sakSlice from '~src/features/saksoversikt/sak.slice';
-import { useApiCall, useAsyncActionCreator } from '~src/lib/hooks';
+import { useApiCall, useAsyncActionCreator, useBrevForhåndsvisning } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
 import * as Routes from '~src/lib/routes';
 import { Nullable } from '~src/lib/types';
@@ -48,6 +49,7 @@ const ManuellRegulering = () => {
     const [manuellReguleringStatus, hentManuellRegulering] = useApiCall(reguleringApi.hentManuellRegulering);
     const [tilAttesteringStatus, tilAttestering] = useApiCall(reguleringApi.tilAttestering);
     const [beregnStatus, beregn] = useApiCall(reguleringApi.beregnRegulering);
+    const [seBrevStatus, seBrev] = useBrevForhåndsvisning(pdfApi.fetchBrevutkastForRegulering);
 
     const navigate = useNavigate();
     const navigateBack = () => navigate(Routes.saksoversiktValgtSak.createURL({ sakId: props.sak.id }));
@@ -256,6 +258,24 @@ const ManuellRegulering = () => {
 
                             {RemoteData.isFailure(tilAttesteringStatus) && (
                                 <ApiErrorAlert error={tilAttesteringStatus.error} />
+                            )}
+                            {RemoteData.isFailure(seBrevStatus) && <ApiErrorAlert error={seBrevStatus.error} />}
+                            {regulering.reguleringsvariant === 'ALDERSFRADRAG' && (
+                                <div className={styles.knapper}>
+                                    <Button
+                                        variant="secondary"
+                                        type="button"
+                                        disabled={!regulering.beregning}
+                                        onClick={() =>
+                                            seBrev({
+                                                reguleringId: regulering.id,
+                                            })
+                                        }
+                                        loading={RemoteData.isPending(seBrevStatus)}
+                                    >
+                                        {formatMessage('knapp.seBrev')}
+                                    </Button>
+                                </div>
                             )}
                             {!underAttestering && (
                                 <div className={styles.knapper}>

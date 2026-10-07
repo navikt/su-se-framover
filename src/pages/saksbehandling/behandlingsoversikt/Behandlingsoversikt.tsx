@@ -1,6 +1,14 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import { CurrencyExchangeIcon, FileCheckmarkIcon, FileIcon, NumberListIcon, TableIcon } from '@navikt/aksel-icons';
+import {
+    BarChartIcon,
+    CurrencyExchangeIcon,
+    FileCheckmarkIcon,
+    FileIcon,
+    NumberListIcon,
+    TableIcon,
+} from '@navikt/aksel-icons';
 import { Heading, Tabs } from '@navikt/ds-react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { Person as PersonIkon } from '~src/assets/Icons';
@@ -12,6 +20,7 @@ import * as sakSlice from '~src/features/saksoversikt/sak.slice';
 import { useAsyncActionCreator } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
 import * as Routes from '~src/lib/routes';
+import { Statistikkinnhold } from '~src/pages/drift/statistikk/Statistikk';
 import { useAppDispatch, useAppSelector } from '~src/redux/Store';
 import styles from './behandlingsoversikt.module.less';
 import messages from './behandlingsoversikt-nb';
@@ -26,6 +35,7 @@ enum Tab {
     NØKKELTALL = 'NØKKELTALL',
     REGULERING = 'REGULERING',
     SKATT = 'SKATT',
+    STATISTIKK = 'STATISTIKK',
 }
 
 const Behandlingsoversikt = () => {
@@ -40,6 +50,13 @@ const Behandlingsoversikt = () => {
     const lagretTab = Object.values(Tab).includes(lagretTabFraLocalStorage as Tab)
         ? (lagretTabFraLocalStorage as Tab)
         : Tab.ÅPNE_BEHANDLINGER;
+    const [valgtTab, setValgtTab] = useState(lagretTab);
+
+    const velgTab = (value: string) => {
+        const tab = value as Tab;
+        setValgtTab(tab);
+        localStorage.setItem('saksoversiktTab', tab);
+    };
 
     return (
         <div className={styles.saksoversiktForside}>
@@ -74,38 +91,26 @@ const Behandlingsoversikt = () => {
                 )}
             </div>
 
-            <Tabs defaultValue={lagretTab}>
+            <Tabs value={valgtTab} onChange={velgTab}>
                 <Tabs.List>
                     <Tabs.Tab
                         value={Tab.ÅPNE_BEHANDLINGER}
                         label={formatMessage('åpneBehandlinger')}
                         icon={<FileIcon />}
-                        onClick={() => localStorage.setItem('saksoversiktTab', Tab.ÅPNE_BEHANDLINGER)}
                     />
                     <Tabs.Tab
                         value={Tab.FERDIGE_BEHANDLINGER}
                         label={formatMessage('ferdigeBehandlinger')}
                         icon={<FileCheckmarkIcon />}
-                        onClick={() => localStorage.setItem('saksoversiktTab', Tab.FERDIGE_BEHANDLINGER)}
                     />
-                    <Tabs.Tab
-                        value={Tab.NØKKELTALL}
-                        label={formatMessage('nøkkeltall')}
-                        icon={<NumberListIcon />}
-                        onClick={() => localStorage.setItem('saksoversiktTab', Tab.NØKKELTALL)}
-                    />
+                    <Tabs.Tab value={Tab.NØKKELTALL} label={formatMessage('nøkkeltall')} icon={<NumberListIcon />} />
                     <Tabs.Tab
                         value={Tab.REGULERING}
                         label={formatMessage('regulering')}
                         icon={<CurrencyExchangeIcon />}
-                        onClick={() => localStorage.setItem('saksoversiktTab', Tab.REGULERING)}
                     />
-                    <Tabs.Tab
-                        value={Tab.SKATT}
-                        label={formatMessage('skatt')}
-                        icon={<TableIcon />}
-                        onClick={() => localStorage.setItem('saksoversiktTab', Tab.SKATT)}
-                    />
+                    <Tabs.Tab value={Tab.SKATT} label={formatMessage('skatt')} icon={<TableIcon />} />
+                    <Tabs.Tab value={Tab.STATISTIKK} label={formatMessage('statistikk')} icon={<BarChartIcon />} />
                 </Tabs.List>
                 <div className={styles.panelContainer}>
                     <Tabs.Panel value={Tab.ÅPNE_BEHANDLINGER}>
@@ -122,6 +127,9 @@ const Behandlingsoversikt = () => {
                     </Tabs.Panel>
                     <Tabs.Panel value={Tab.SKATT}>
                         <HentOgVisSkattegrunnlag />
+                    </Tabs.Panel>
+                    <Tabs.Panel value={Tab.STATISTIKK}>
+                        {valgtTab === Tab.STATISTIKK && <Statistikkinnhold />}
                     </Tabs.Panel>
                 </div>
             </Tabs>

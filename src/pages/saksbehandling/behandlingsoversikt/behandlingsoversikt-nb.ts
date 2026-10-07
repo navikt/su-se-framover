@@ -5,4 +5,5 @@ export default {
     nøkkeltall: 'Nøkkeltall',
     regulering: 'Saker til G-regulering',
     skatt: 'Skattegrunnlag',
+    statistikk: 'Statistikk',
 };

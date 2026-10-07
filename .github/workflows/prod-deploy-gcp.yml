@@ -9,7 +9,7 @@ permissions: { }
 
 jobs:
   build-push-docker-image:
-    name: build-push-docker-image
+    name: tests-and-build-push-docker-image
     runs-on: ubuntu-latest
     outputs:
       image: ${{ steps.docker-build-push.outputs.image }}

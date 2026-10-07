@@ -18,7 +18,7 @@ export default {
 
     'kjøretøy.label': 'Eier ektefelle/samboer bil, campingvogn eller andre kjøretøy?',
 
-    'innskudd.label': 'Har ektefelle/samboer penger på konto?',
+    'innskudd.label': 'Har ektefelle/samboer penger på konto? Dette gjelder alle kontoer i Norge eller i utlandet.',
     'innskudd.pengerPåKontoInkludertDepositum': 'Har ektefelle/samboer penger på konto (inkludert depositumskonto)?',
     'innskudd.beløp': 'Hvor mye penger er det på konto?',
 
