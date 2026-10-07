@@ -1,5 +1,5 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import { Alert, Button, Checkbox, Modal, Tabs, TextField } from '@navikt/ds-react';
+import { Alert, Button, Modal, Tabs, TextField } from '@navikt/ds-react';
 import { useState } from 'react';
 import { dryRunOmregning, startOmregning } from '~src/api/reguleringApi.ts';
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert.tsx';
@@ -34,13 +34,11 @@ const OmregningsModal = (props: { visModal: boolean; onClose: () => void }) => {
             <Modal.Body className={styles.modalBody}>
                 <Tabs defaultValue="dry-run">
                     <Tabs.List>
-                        <Tabs.Tab value="dry-run" label="Dry-Run" />
+                        <Tabs.Tab value="dry-run" label="Dry-run" />
                         <Tabs.Tab value="omregning" label="Omregning" />
                     </Tabs.List>
                     <OmregningPanel />
-                    <Tabs.Panel value="dry-run" className={styles.tabPanel}>
-                        <DryRunPanel />
-                    </Tabs.Panel>
+                    <DryRunPanel />
                 </Tabs>
             </Modal.Body>
         </Modal>
@@ -84,7 +82,6 @@ const OmregningPanel = () => {
 const DryRunPanel = () => {
     const [dryRunStatus, dryRun] = useApiCall(dryRunOmregning);
     const [startDatoOmregning, setStartDatoOmregning] = useState<Nullable<Date>>(null);
-    const [lagreManuelle, setLagreManuelle] = useState<boolean>(false);
     const [maksAntallSaker, setMaksAntallSaker] = useState<number | null>(null);
     const [maksAntallSakerInput, setMaksAntallSakerInput] = useState<string>('');
     const [manglerStartDato, setManglerStartDato] = useState(false);
@@ -105,7 +102,6 @@ const DryRunPanel = () => {
         }
         dryRun({
             startDatoOmregning: toIsoMonthOrNull(startDatoOmregning)!,
-            lagreManuelle: lagreManuelle,
             maksAntallSaker: maksAntallSaker,
             saksnummer: saksnummer || null,
         });
@@ -127,11 +123,6 @@ const DryRunPanel = () => {
                         />
                     </div>
                     <TextField label="Saksnummer" value={saksnummer} onChange={(e) => setSaksnummer(e.target.value)} />
-                </div>
-                <div className={styles.lagreManuelle}>
-                    <Checkbox onChange={() => setLagreManuelle(!lagreManuelle)} checked={lagreManuelle}>
-                        Lagre manuelle behandlinger (gjelder ikke prod)
-                    </Checkbox>
                 </div>
                 <TextField
                     label="Maks antall saker"
