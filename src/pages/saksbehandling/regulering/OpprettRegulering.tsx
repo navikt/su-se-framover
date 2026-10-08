@@ -11,7 +11,7 @@ import { useAsyncActionCreator } from '~src/lib/hooks.ts';
 import * as routes from '~src/lib/routes.ts';
 import { Nullable } from '~src/lib/types.ts';
 import { Reguleringsvariant, reguleringsvarianter } from '~src/types/Regulering.ts';
-import { toIsoMonth } from '~src/utils/date/dateUtils.ts';
+import { toIsoMonthOrNull } from '~src/utils/date/dateUtils.ts';
 import styles from './opprettRegulering.module.less';
 
 const OpprettRegulering = () => {
@@ -33,7 +33,7 @@ const OpprettRegulering = () => {
                 sakId: sak.id,
                 begrunnelse: begrunnelse,
                 reguleringsvariant: reguleringsvariant,
-                fraOgMed: fraOgMed ? toIsoMonth(fraOgMed) : null,
+                fraOgMed: toIsoMonthOrNull(fraOgMed),
             },
             (res) => {
                 navigate(
