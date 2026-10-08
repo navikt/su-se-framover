@@ -4,10 +4,12 @@ import { useState } from 'react';
 import { useNavigate, useOutletContext } from 'react-router-dom';
 
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
+import { DatePicker } from '~src/components/inputs/datePicker/DatePicker.tsx';
 import { SaksoversiktContext } from '~src/context/SaksoversiktContext.ts';
 import { opprettRegulering } from '~src/features/ReguleringAction.ts';
 import { useAsyncActionCreator } from '~src/lib/hooks.ts';
 import * as routes from '~src/lib/routes.ts';
+import { Nullable } from '~src/lib/types.ts';
 import { Reguleringsvariant, reguleringsvarianter } from '~src/types/Regulering.ts';
 import styles from './opprettRegulering.module.less';
 
@@ -19,15 +21,24 @@ const OpprettRegulering = () => {
     const [begrunnelse, setBegrunnelse] = useState('');
     const [reguleringsvariant, setReguleringsvariant] = useState<Reguleringsvariant>(Reguleringsvariant.GRUNNBELØP);
 
+    const mai = new Date(new Date().getFullYear(), 4, 1);
+    const [fraOgMed, setFraOgMed] = useState<Nullable<Date>>(mai);
+
     const handleSubmit = () => {
-        opprett({ sakId: sak.id, begrunnelse: begrunnelse, reguleringsvariant: reguleringsvariant }, (res) => {
-            navigate(
-                routes.manuellRegulering.createURL({
-                    sakId: sak.id,
-                    reguleringId: res.regulering.id,
-                }),
-            );
-        });
+        if (!fraOgMed) {
+            return;
+        }
+        opprett(
+            { sakId: sak.id, begrunnelse: begrunnelse, reguleringsvariant: reguleringsvariant, fraOgMed: fraOgMed },
+            (res) => {
+                navigate(
+                    routes.manuellRegulering.createURL({
+                        sakId: sak.id,
+                        reguleringId: res.regulering.id,
+                    }),
+                );
+            },
+        );
     };
 
     return (
@@ -46,10 +57,11 @@ const OpprettRegulering = () => {
                     borderRadius="small"
                     className={styles.panelContentContainer}
                 >
-                    <Textarea
-                        label="Begrunnelse"
-                        value={begrunnelse}
-                        onChange={(e) => setBegrunnelse(e.target.value)}
+                    <DatePicker
+                        label="Gjeldende sats fra og med"
+                        hjelpetekst="Bestemmer hvilken gjelden sats som skal brukes i reguleringen"
+                        value={fraOgMed}
+                        onChange={setFraOgMed}
                     />
 
                     <Select
@@ -64,6 +76,12 @@ const OpprettRegulering = () => {
                             </option>
                         ))}
                     </Select>
+
+                    <Textarea
+                        label="Begrunnelse"
+                        value={begrunnelse}
+                        onChange={(e) => setBegrunnelse(e.target.value)}
+                    />
 
                     <div className={styles.knappContainer}>
                         <Button loading={RemoteData.isPending(opprettStatus)} onClick={handleSubmit}>

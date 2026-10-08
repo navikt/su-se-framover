@@ -192,6 +192,7 @@ export async function opprettRegulering(args: OpprettReguleringRequest): Promise
         body: {
             begrunnelse: args.begrunnelse,
             reguleringsvariant: args.reguleringsvariant,
+            fraOgMed: args.fraOgMed,
         },
     });
 }
