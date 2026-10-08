@@ -115,5 +115,5 @@ export interface OpprettReguleringRequest {
     sakId: string;
     begrunnelse: string;
     reguleringsvariant: Reguleringsvariant;
-    fraOgMed: Date;
+    fraOgMed: Nullable<Date>;
 }

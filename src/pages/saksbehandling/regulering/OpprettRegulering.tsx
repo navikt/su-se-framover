@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { useNavigate, useOutletContext } from 'react-router-dom';
 
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
-import { DatePicker } from '~src/components/inputs/datePicker/DatePicker.tsx';
+import { MonthPicker } from '~src/components/inputs/datePicker/DatePicker.tsx';
 import { SaksoversiktContext } from '~src/context/SaksoversiktContext.ts';
 import { opprettRegulering } from '~src/features/ReguleringAction.ts';
 import { useAsyncActionCreator } from '~src/lib/hooks.ts';
@@ -20,13 +20,12 @@ const OpprettRegulering = () => {
     const [opprettStatus, opprett] = useAsyncActionCreator(opprettRegulering);
     const [begrunnelse, setBegrunnelse] = useState('');
     const [reguleringsvariant, setReguleringsvariant] = useState<Reguleringsvariant>(Reguleringsvariant.GRUNNBELØP);
-
-    const mai = new Date(new Date().getFullYear(), 4, 1);
-    const [fraOgMed, setFraOgMed] = useState<Nullable<Date>>(mai);
+    const [omregnFraOgMed, setOmregnFraOgMed] = useState<Nullable<Date>>(null);
 
     const handleSubmit = () => {
-        if (!fraOgMed) {
-            return;
+        let fraOgMed = omregnFraOgMed;
+        if (reguleringsvariant == Reguleringsvariant.GRUNNBELØP) {
+            fraOgMed = null;
         }
         opprett(
             { sakId: sak.id, begrunnelse: begrunnelse, reguleringsvariant: reguleringsvariant, fraOgMed: fraOgMed },
@@ -57,13 +56,6 @@ const OpprettRegulering = () => {
                     borderRadius="small"
                     className={styles.panelContentContainer}
                 >
-                    <DatePicker
-                        label="Gjeldende sats fra og med"
-                        hjelpetekst="Bestemmer hvilken gjelden sats som skal brukes i reguleringen"
-                        value={fraOgMed}
-                        onChange={setFraOgMed}
-                    />
-
                     <Select
                         label="Reguleringsvariant"
                         onChange={(event) => {
@@ -76,6 +68,15 @@ const OpprettRegulering = () => {
                             </option>
                         ))}
                     </Select>
+
+                    {reguleringsvariant != Reguleringsvariant.GRUNNBELØP && (
+                        <MonthPicker
+                            label="Omregnes fra og med"
+                            hjelpetekst="Omregnes fra og med. Kan kun være mai for grunnbeløp."
+                            value={omregnFraOgMed}
+                            onChange={setOmregnFraOgMed}
+                        />
+                    )}
 
                     <Textarea
                         label="Begrunnelse"
