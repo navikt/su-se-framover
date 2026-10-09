@@ -1,3 +1,4 @@
+import { BosituasjonFormItemData } from '~src/components/forms/vilkårOgGrunnlagForms/bosituasjon/BosituasjonFormUtils';
 import { FormuegrunnlagVerdierFormData } from '~src/components/forms/vilkårOgGrunnlagForms/formue/FormueFormUtils';
 import { GrunnForPapirinnsending, Vergemål } from '~src/features/søknad/types';
 import * as Routes from '~src/lib/routes';
@@ -9,7 +10,7 @@ import { PersonligOppmøteÅrsak } from '~src/types/grunnlagsdataOgVilkårsvurde
 import { UføreResultat } from '~src/types/grunnlagsdataOgVilkårsvurderinger/uføre/Uførevilkår';
 import { Utenlandsoppholdstatus } from '~src/types/grunnlagsdataOgVilkårsvurderinger/utenlandsopphold/Utenlandsopphold';
 import { Sakstype } from '~src/types/Sak';
-import { Formue, ForNav, Søknadstype } from '~src/types/Søknadinnhold';
+import { Boforhold, Formue, ForNav, Søknadstype } from '~src/types/Søknadinnhold';
 import { Søknadsbehandling, SøknadsbehandlingStatus } from '~src/types/Søknadsbehandling';
 import { Vilkårstatus } from '~src/types/Vilkår';
 import { Vilkårtype, VilkårVurderingStatus } from '~src/types/Vilkårsvurdering';
@@ -301,6 +302,52 @@ export const forventetÅrsakIfølgeSøknad = (forNav: ForNav): Nullable<Personli
         default:
             return null;
     }
+};
+
+/**
+ * Sjekker om saksbehandler har endret noen av de strukturelle bosituasjon-svarene fra søknaden.
+ * harEPS avledes av om søknaden har et ektefellePartnerSamboer-objekt; erEPSUførFlyktning sjekkes
+ * bare når søknaden faktisk har en EPS (ellers finnes det ikke noe svar å avvike fra).
+ */
+export const bosituasjonFelterMedAvvikFraSøknad = (
+    boforhold: Boforhold,
+    vurderinger: Nullable<BosituasjonFormItemData>[],
+): (keyof BosituasjonFormItemData)[] => {
+    const oppgitteVurderinger = vurderinger.filter((v): v is BosituasjonFormItemData => v !== null);
+    const søknadHarEps = boforhold.ektefellePartnerSamboer !== null;
+
+    const feltOgAvvik: [keyof BosituasjonFormItemData, boolean][] = [
+        [
+            'delerBolig',
+            harVurderingAvvikFraBrukersSvar(
+                boforhold.delerBoligMedVoksne,
+                oppgitteVurderinger.map((v) => v.delerBolig),
+            ),
+        ],
+        [
+            'harEPS',
+            harVurderingAvvikFraBrukersSvar(
+                søknadHarEps,
+                oppgitteVurderinger.map((v) => v.harEPS),
+            ),
+        ],
+        [
+            'epsFnr',
+            harVurderingAvvikFraBrukersSvar(
+                boforhold.ektefellePartnerSamboer?.fnr ?? null,
+                oppgitteVurderinger.map((v) => v.epsFnr),
+            ),
+        ],
+        [
+            'erEPSUførFlyktning',
+            harVurderingAvvikFraBrukersSvar(
+                boforhold.ektefellePartnerSamboer?.erUførFlyktning ?? null,
+                oppgitteVurderinger.map((v) => v.erEPSUførFlyktning),
+            ),
+        ],
+    ];
+
+    return feltOgAvvik.filter(([, harAvvik]) => harAvvik).map(([felt]) => felt);
 };
 
 /**
