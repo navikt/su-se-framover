@@ -1,5 +1,5 @@
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Heading } from '@navikt/ds-react';
+import { Alert, Heading } from '@navikt/ds-react';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 
@@ -12,8 +12,9 @@ import {
     fastOppholdFormSchema,
     fastOppholdVilkårTilFormDataEllerNy,
 } from '~src/components/forms/vilkårOgGrunnlagForms/fastOpphold/FastOppholdFormUtils';
-import OppsummeringAvOpphold from '~src/components/oppsummering/oppsummeringAvSøknadinnhold/OppsummeringAvOpphold';
+import sharedVilkårI18n from '~src/components/forms/vilkårOgGrunnlagForms/VilkårOgGrunnlagForms-nb';
 import OppsummeringAvFastOppholdvilkår from '~src/components/oppsummering/oppsummeringAvVilkårOgGrunnlag/OppsummeringAvFastOpphold';
+import { OppsummeringPar } from '~src/components/oppsummering/oppsummeringpar/OppsummeringPar';
 import ToKolonner from '~src/components/toKolonner/ToKolonner';
 import { useSøknadsbehandlingDraftContextFor } from '~src/context/søknadsbehandlingDraftContext';
 import { lagreFastOppholdVilkår } from '~src/features/grunnlagsdataOgVilkårsvurderinger/GrunnlagOgVilkårActions';
@@ -22,12 +23,11 @@ import { useI18n } from '~src/lib/i18n';
 import { EksisterendeVedtaksinformasjonTidligerePeriodeResponse } from '~src/types/Søknadsbehandling';
 import { Vilkårtype } from '~src/types/Vilkårsvurdering';
 import { lagDatePeriodeAvStringPeriode } from '~src/utils/periode/periodeUtils';
-
+import { harVurderingAvvikFraBrukersSvar, vilkårstatusTilBoolean } from '~src/utils/vilkårUtils.ts';
 import EksisterendeVedtaksinformasjon from '../EksisterendeVedtaksinformasjon';
 import sharedI18n from '../sharedI18n-nb';
 import sharedStyles from '../sharedStyles.module.less';
 import { VilkårsvurderingBaseProps } from '../types';
-
 import messages from './fastOppholdINorge-nb';
 
 const FastOppholdINorge = (
@@ -36,7 +36,7 @@ const FastOppholdINorge = (
     },
 ) => {
     const navigate = useNavigate();
-    const { formatMessage } = useI18n({ messages: { ...sharedI18n, ...messages } });
+    const { formatMessage } = useI18n({ messages: { ...sharedI18n, ...sharedVilkårI18n, ...messages } });
     const [status, lagre] = useAsyncActionCreator(lagreFastOppholdVilkår);
 
     const initialValues = fastOppholdVilkårTilFormDataEllerNy(
@@ -89,6 +89,11 @@ const FastOppholdINorge = (
 
     useDraftFormSubscribe(form.watch);
 
+    const harAvvikFraSøknad = harVurderingAvvikFraBrukersSvar(
+        props.behandling.søknad.søknadInnhold.boforhold.borOgOppholderSegINorge,
+        (form.watch('fastOpphold') ?? []).map((vurdering) => vilkårstatusTilBoolean(vurdering.resultat)),
+    );
+
     return (
         <ToKolonner tittel={formatMessage('page.tittel')}>
             {{
@@ -112,14 +117,25 @@ const FastOppholdINorge = (
                         begrensTilEnPeriode
                         skalIkkeKunneVelgePeriode
                         {...props}
-                    />
+                    >
+                        {harAvvikFraSøknad && (
+                            <Alert className={sharedStyles.avslagAdvarsel} variant="warning">
+                                {formatMessage('display.avvikFraSøknad.advarsel')}
+                            </Alert>
+                        )}
+                    </FastOppholdForm>
                 ),
                 right: (
                     <div className={sharedStyles.toKollonerRightContainer}>
                         <div>
                             <Heading size={'small'}>{formatMessage('oppsummering.fraSøknad')}</Heading>
-                            <OppsummeringAvOpphold
-                                oppholdstillatelse={props.behandling.søknad.søknadInnhold.oppholdstillatelse}
+                            <OppsummeringPar
+                                label={formatMessage('fastOpphold.vilkår')}
+                                verdi={formatMessage(
+                                    props.behandling.søknad.søknadInnhold.boforhold.borOgOppholderSegINorge
+                                        ? 'radio.label.ja'
+                                        : 'radio.label.nei',
+                                )}
                             />
                         </div>
                         <EksisterendeVedtaksinformasjon
