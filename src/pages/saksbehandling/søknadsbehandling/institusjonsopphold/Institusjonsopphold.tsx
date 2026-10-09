@@ -1,5 +1,5 @@
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Alert, Heading } from '@navikt/ds-react';
+import { Heading } from '@navikt/ds-react';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 
@@ -25,7 +25,6 @@ import { EksisterendeVedtaksinformasjonTidligerePeriodeResponse } from '~src/typ
 import { Vilkårstatus } from '~src/types/Vilkår.ts';
 import { Vilkårtype } from '~src/types/Vilkårsvurdering';
 import { lagDatePeriodeAvStringPeriode } from '~src/utils/periode/periodeUtils';
-import { harVurderingAvvikFraBrukersSvar, vilkårstatusTilBoolean } from '~src/utils/vilkårUtils';
 
 import EksisterendeVedtaksinformasjon from '../EksisterendeVedtaksinformasjon';
 import sharedI18n from '../sharedI18n-nb';
@@ -111,11 +110,6 @@ const Institusjonsopphold = (
         save(values, onSuccess);
     };
 
-    const harAvvikFraSøknad = harVurderingAvvikFraBrukersSvar(
-        props.behandling.søknad.søknadInnhold.boforhold.innlagtPåInstitusjon == null,
-        (form.watch('institusjonsopphold') ?? []).map((vurdering) => vilkårstatusTilBoolean(vurdering.resultat)),
-    );
-
     return (
         <ToKolonner tittel={formatMessage('page.tittel')}>
             {{
@@ -139,13 +133,7 @@ const Institusjonsopphold = (
                         begrensTilEnPeriode
                         skalIkkeKunneVelgePeriode
                         {...props}
-                    >
-                        {harAvvikFraSøknad && (
-                            <Alert className={sharedStyles.avslagAdvarsel} variant="warning">
-                                {formatMessage('display.avvikFraSøknad.advarsel')}
-                            </Alert>
-                        )}
-                    </InstitusjonsoppholdForm>
+                    />
                 ),
                 right: (
                     <div className={sharedStyles.toKollonerRightContainer}>
