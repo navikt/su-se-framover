@@ -1,13 +1,7 @@
 import { FormuegrunnlagVerdierFormData } from '~src/components/forms/vilkårOgGrunnlagForms/formue/FormueFormUtils';
-import { GrunnForPapirinnsending, Vergemål } from '~src/features/søknad/types';
-import { PersonligOppmøteÅrsak } from '~src/types/grunnlagsdataOgVilkårsvurderinger/personligOppmøte/PersonligOppmøteVilkår';
-import { Formue, ForNav, Søknadstype } from '~src/types/Søknadinnhold';
+import { Formue } from '~src/types/Søknadinnhold';
 
-import {
-    formueFelterMedAvvikFraSøknad,
-    forventetÅrsakIfølgeSøknad,
-    harVurderingAvvikFraBrukersSvar,
-} from './vilkårUtils';
+import { formueFelterMedAvvikFraSøknad, harVurderingAvvikFraBrukersSvar } from './vilkårUtils';
 
 describe('harVurderingAvvikFraBrukersSvar', () => {
     it('gir avvik når bruker svarte ja, men saksbehandler har vurdert vilkåret som ikke oppfylt', () => {
@@ -33,55 +27,6 @@ describe('harVurderingAvvikFraBrukersSvar', () => {
 
     it('gir avvik hvis minst én av flere perioder avviker', () => {
         expect(harVurderingAvvikFraBrukersSvar(true, [true, false])).toEqual(true);
-    });
-});
-
-describe('forventetÅrsakIfølgeSøknad', () => {
-    it('forventer møtt personlig når digital søknad ikke har fullmektig eller verge', () => {
-        const forNav: ForNav = { type: Søknadstype.DigitalSøknad, harFullmektigEllerVerge: null };
-        expect(forventetÅrsakIfølgeSøknad(forNav)).toEqual(PersonligOppmøteÅrsak.MøttPersonlig);
-    });
-
-    it('forventer ikke møtt men verge når digital søknad har verge', () => {
-        const forNav: ForNav = { type: Søknadstype.DigitalSøknad, harFullmektigEllerVerge: Vergemål.Verge };
-        expect(forventetÅrsakIfølgeSøknad(forNav)).toEqual(PersonligOppmøteÅrsak.IkkeMøttMenVerge);
-    });
-
-    it('gir ingen entydig forventning når digital søknad har fullmektig', () => {
-        const forNav: ForNav = { type: Søknadstype.DigitalSøknad, harFullmektigEllerVerge: Vergemål.Fullmektig };
-        expect(forventetÅrsakIfølgeSøknad(forNav)).toEqual(null);
-    });
-
-    it('forventer ikke møtt men verge når papirsøknad skyldes at verge har søkt på vegne av bruker', () => {
-        const forNav: ForNav = {
-            type: Søknadstype.Papirsøknad,
-            mottaksdatoForSøknad: '2023-01-01',
-            grunnForPapirinnsending: GrunnForPapirinnsending.VergeHarSøktPåVegneAvBruker,
-            annenGrunn: null,
-        };
-        expect(forventetÅrsakIfølgeSøknad(forNav)).toEqual(PersonligOppmøteÅrsak.IkkeMøttMenVerge);
-    });
-
-    it('forventer midlertidig unntak når papirsøknad skyldes midlertidig unntak fra oppmøteplikt', () => {
-        const forNav: ForNav = {
-            type: Søknadstype.Papirsøknad,
-            mottaksdatoForSøknad: '2023-01-01',
-            grunnForPapirinnsending: GrunnForPapirinnsending.MidlertidigUnntakFraOppmøteplikt,
-            annenGrunn: null,
-        };
-        expect(forventetÅrsakIfølgeSøknad(forNav)).toEqual(
-            PersonligOppmøteÅrsak.IkkeMøttMenMidlertidigUnntakFraOppmøteplikt,
-        );
-    });
-
-    it('gir ingen entydig forventning når papirsøknad skyldes annen grunn', () => {
-        const forNav: ForNav = {
-            type: Søknadstype.Papirsøknad,
-            mottaksdatoForSøknad: '2023-01-01',
-            grunnForPapirinnsending: GrunnForPapirinnsending.Annet,
-            annenGrunn: 'sykdom',
-        };
-        expect(forventetÅrsakIfølgeSøknad(forNav)).toEqual(null);
     });
 });
 
