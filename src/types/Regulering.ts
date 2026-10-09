@@ -115,4 +115,5 @@ export interface OpprettReguleringRequest {
     sakId: string;
     begrunnelse: string;
     reguleringsvariant: Reguleringsvariant;
+    fraOgMed: Nullable<string>;
 }
