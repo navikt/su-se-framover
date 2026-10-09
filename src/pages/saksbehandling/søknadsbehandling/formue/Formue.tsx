@@ -1,6 +1,6 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Heading } from '@navikt/ds-react';
+import { Alert, BodyShort, Heading } from '@navikt/ds-react';
 import { pipe } from 'fp-ts/lib/function';
 import { UseFormReturn, useForm } from 'react-hook-form';
 
@@ -14,6 +14,7 @@ import {
     formueVilkårFormTilRequest,
     getInitialFormueVilkårOgDelvisBosituasjon,
 } from '~src/components/forms/vilkårOgGrunnlagForms/formue/FormueFormUtils';
+import sharedVilkårI18n from '~src/components/forms/vilkårOgGrunnlagForms/VilkårOgGrunnlagForms-nb';
 import OppsummeringAvEksternGrunnlagSkatt from '~src/components/oppsummering/oppsummeringAvEksternGrunnlag/OppsummeringAvEksternGrunnlagSkatt';
 import OppsummeringAvFormue from '~src/components/oppsummering/oppsummeringAvSøknadinnhold/OppsummeringAvFormue';
 import OppsummeringAvFormueVilkår from '~src/components/oppsummering/oppsummeringAvVilkårOgGrunnlag/OppsummeringAvFormue';
@@ -29,8 +30,10 @@ import { Sakstype } from '~src/types/Sak.ts';
 import { EksisterendeVedtaksinformasjonTidligerePeriodeResponse } from '~src/types/Søknadsbehandling';
 import { Vilkårtype } from '~src/types/Vilkårsvurdering';
 import { lagDatePeriodeAvStringPeriode } from '~src/utils/periode/periodeUtils';
+import { formueFelterMedAvvikFraSøknad } from '~src/utils/vilkårUtils';
 import EksisterendeVedtaksinformasjon from '../EksisterendeVedtaksinformasjon';
 import sharedI18n from '../sharedI18n-nb';
+import sharedStyles from '../sharedStyles.module.less';
 import styles from './Formue.module.less';
 import messages from './formue-nb';
 
@@ -41,7 +44,7 @@ const Formue = (
         sakstype: Sakstype;
     },
 ) => {
-    const { formatMessage } = useI18n({ messages: { ...sharedI18n, ...messages } });
+    const { formatMessage } = useI18n({ messages: { ...sharedI18n, ...sharedVilkårI18n, ...messages } });
     const [lagreFormueStatus, lagreFormue] = useAsyncActionCreator(GrunnlagOgVilkårActions.lagreFormuegrunnlag);
     const [nyStatus, ny] = useAsyncActionCreator(hentNySkattegrunnlag);
 
@@ -62,6 +65,15 @@ const Formue = (
     });
 
     useDraftFormSubscribe(form.watch);
+
+    const søkersFormueFelterMedAvvik = formueFelterMedAvvikFraSøknad(
+        props.behandling.søknad.søknadInnhold.formue,
+        form.watch('formue').map((v) => v.søkersFormue),
+    );
+    const epsFormueFelterMedAvvik = formueFelterMedAvvikFraSøknad(
+        props.behandling.søknad.søknadInnhold.ektefelle?.formue ?? null,
+        form.watch('formue').map((v) => v.epsFormue),
+    );
 
     const handleSave = async (values: FormueVilkårFormData, onSuccess: () => void) => {
         /*
@@ -116,7 +128,40 @@ const Formue = (
                         formuegrenser={props.behandling.grunnlagsdataOgVilkårsvurderinger.formue.formuegrenser}
                         bosituasjonsgrunnlag={props.behandling.grunnlagsdataOgVilkårsvurderinger.bosituasjon}
                         {...props}
-                    />
+                    >
+                        {(søkersFormueFelterMedAvvik.length > 0 || epsFormueFelterMedAvvik.length > 0) && (
+                            <Alert className={sharedStyles.avslagAdvarsel} variant="warning">
+                                <div className={styles.avvikFraSøknadInnhold}>
+                                    <BodyShort>{formatMessage('display.avvikFraSøknad.formue.intro')}</BodyShort>
+                                    {søkersFormueFelterMedAvvik.length > 0 && (
+                                        <div>
+                                            <BodyShort>
+                                                {formatMessage('display.avvikFraSøknad.formue.søkerOpplysteForSegSelv')}
+                                            </BodyShort>
+                                            <ul className={styles.avvikFraSøknadListe}>
+                                                {søkersFormueFelterMedAvvik.map((felt) => (
+                                                    <li key={felt}>{formatMessage(`formue.grunnlag.verdi.${felt}`)}</li>
+                                                ))}
+                                            </ul>
+                                        </div>
+                                    )}
+                                    {epsFormueFelterMedAvvik.length > 0 && (
+                                        <div>
+                                            <BodyShort>
+                                                {formatMessage('display.avvikFraSøknad.formue.søkerOpplysteForEps')}
+                                            </BodyShort>
+                                            <ul className={styles.avvikFraSøknadListe}>
+                                                {epsFormueFelterMedAvvik.map((felt) => (
+                                                    <li key={felt}>{formatMessage(`formue.grunnlag.verdi.${felt}`)}</li>
+                                                ))}
+                                            </ul>
+                                        </div>
+                                    )}
+                                    <BodyShort>{formatMessage('display.avvikFraSøknad.formue.oppfordring')}</BodyShort>
+                                </div>
+                            </Alert>
+                        )}
+                    </FormueForm>
                 ),
                 right: (
                     <div className={styles.rightContainer}>

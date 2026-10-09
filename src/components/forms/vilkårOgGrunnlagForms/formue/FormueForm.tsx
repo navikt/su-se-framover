@@ -1,7 +1,7 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { RemoteSuccess } from '@devexperts/remote-data-ts';
 import { Accordion, BodyShort, Button, Checkbox, Label, Loader, TextField } from '@navikt/ds-react';
-import { useEffect, useMemo, useState } from 'react';
+import { ReactNode, useEffect, useMemo, useState } from 'react';
 import { Control, Controller, UseFormTrigger, useWatch } from 'react-hook-form';
 
 import { RevurderingOgFeilmeldinger } from '~src/api/GrunnlagOgVilkårApi';
@@ -34,6 +34,7 @@ import {
 import styles from './formueForm.module.less';
 
 interface Props extends VilkårFormProps<FormueVilkårFormData> {
+    children?: ReactNode;
     begrensTilEnPeriode?: boolean;
     skalIkkeKunneVelgePeriode?: boolean;
     formuegrenser: Formuegrenser[];
@@ -81,7 +82,7 @@ const FormueForm = (props: Props) => {
                     )}
                     {...props}
                 />
-
+                {props.children}
                 {/* Fordi formue ved søkadsbehandling skal være så spesiell, blir vanskelig å gjøre formet generisk. */}
                 {/* Vi vet dermed hva retur typene på Api-kallene ved revurdering er alltid, og dermed bare gjør et kasting helvete */}
                 {props.søknadsbehandlingEllerRevurdering === 'Revurdering' &&

@@ -1,10 +1,14 @@
+import { BosituasjonFormItemData } from '~src/components/forms/vilkårOgGrunnlagForms/bosituasjon/BosituasjonFormUtils';
+import { FormuegrunnlagVerdierFormData } from '~src/components/forms/vilkårOgGrunnlagForms/formue/FormueFormUtils';
 import * as Routes from '~src/lib/routes';
+import { Nullable } from '~src/lib/types';
 import { Aldersresultat } from '~src/types/grunnlagsdataOgVilkårsvurderinger/alder/Aldersvilkår';
 import { FormueStatus } from '~src/types/grunnlagsdataOgVilkårsvurderinger/formue/Formuevilkår';
 import { GrunnlagsdataOgVilkårsvurderinger } from '~src/types/grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
 import { UføreResultat } from '~src/types/grunnlagsdataOgVilkårsvurderinger/uføre/Uførevilkår';
 import { Utenlandsoppholdstatus } from '~src/types/grunnlagsdataOgVilkårsvurderinger/utenlandsopphold/Utenlandsopphold';
 import { Sakstype } from '~src/types/Sak';
+import { Boforhold, Formue } from '~src/types/Søknadinnhold';
 import { Søknadsbehandling, SøknadsbehandlingStatus } from '~src/types/Søknadsbehandling';
 import { Vilkårstatus } from '~src/types/Vilkår';
 import { Vilkårtype, VilkårVurderingStatus } from '~src/types/Vilkårsvurdering';
@@ -227,4 +231,168 @@ export const erAlleVilkårVurdert = (vilkårsinformasjon: Vilkårsinformasjon[])
 
 export const erNoenVurdertUavklart = (vilkårsinformasjon: Vilkårsinformasjon[]): boolean => {
     return vilkårsinformasjon.some((x) => x.status === VilkårVurderingStatus.Uavklart);
+};
+
+/**
+ * Sjekker om saksbehandlers vurderinger avviker fra det bruker har opplyst i søknaden.
+ * Et avvik oppstår kun når saksbehandler har konkludert med et resultat som motsier
+ * brukers svar - uavklarte vurderinger (null) regnes ikke som avvik, siden saksbehandler
+ * da ikke har tatt stilling ennå.
+ */
+export const harVurderingAvvikFraBrukersSvar = <T>(brukersSvar: Nullable<T>, vurderinger: Nullable<T>[]): boolean => {
+    if (brukersSvar === null) {
+        return false;
+    }
+    return vurderinger.some((resultat) => resultat !== null && resultat !== brukersSvar);
+};
+
+/**
+ * Normaliserer Vilkårstatus til boolean, for bruk sammen med harVurderingAvvikFraBrukersSvar.
+ */
+export const vilkårstatusTilBoolean = (resultat: Nullable<Vilkårstatus>): Nullable<boolean> => {
+    switch (resultat) {
+        case Vilkårstatus.VilkårOppfylt:
+            return true;
+        case Vilkårstatus.VilkårIkkeOppfylt:
+            return false;
+        default:
+            return null;
+    }
+};
+
+/**
+ * Normaliserer UføreResultat til boolean, for bruk sammen med harVurderingAvvikFraBrukersSvar.
+ * HarUføresakTilBehandling regnes som uavklart (null), siden saksbehandler her ikke
+ * har konkludert med om vilkåret er oppfylt eller ikke.
+ */
+export const uføreResultatTilBoolean = (resultat: Nullable<UføreResultat>): Nullable<boolean> => {
+    switch (resultat) {
+        case UføreResultat.VilkårOppfylt:
+            return true;
+        case UføreResultat.VilkårIkkeOppfylt:
+            return false;
+        default:
+            return null;
+    }
+};
+
+/**
+ * Sjekker om saksbehandler har endret noen av de strukturelle bosituasjon-svarene fra søknaden.
+ * harEPS avledes av om søknaden har et ektefellePartnerSamboer-objekt; erEPSUførFlyktning sjekkes
+ * bare når søknaden faktisk har en EPS (ellers finnes det ikke noe svar å avvike fra).
+ */
+export const bosituasjonFelterMedAvvikFraSøknad = (
+    boforhold: Boforhold,
+    vurderinger: Nullable<BosituasjonFormItemData>[],
+): (keyof BosituasjonFormItemData)[] => {
+    const oppgitteVurderinger = vurderinger.filter((v): v is BosituasjonFormItemData => v !== null);
+    const søknadHarEps = boforhold.ektefellePartnerSamboer !== null;
+
+    const feltOgAvvik: [keyof BosituasjonFormItemData, boolean][] = [
+        [
+            'delerBolig',
+            harVurderingAvvikFraBrukersSvar(
+                boforhold.delerBoligMedVoksne,
+                oppgitteVurderinger.map((v) => v.delerBolig),
+            ),
+        ],
+        [
+            'harEPS',
+            harVurderingAvvikFraBrukersSvar(
+                søknadHarEps,
+                oppgitteVurderinger.map((v) => v.harEPS),
+            ),
+        ],
+        [
+            'epsFnr',
+            harVurderingAvvikFraBrukersSvar(
+                boforhold.ektefellePartnerSamboer?.fnr ?? null,
+                oppgitteVurderinger.map((v) => v.epsFnr),
+            ),
+        ],
+        [
+            'erEPSUførFlyktning',
+            harVurderingAvvikFraBrukersSvar(
+                boforhold.ektefellePartnerSamboer?.erUførFlyktning ?? null,
+                oppgitteVurderinger.map((v) => v.erEPSUførFlyktning),
+            ),
+        ],
+    ];
+
+    return feltOgAvvik.filter(([, harAvvik]) => harAvvik).map(([felt]) => felt);
+};
+
+/**
+ * Sjekker om saksbehandler har endret noen av de pre-utfylte formue-tallene fra søknaden.
+ * Kjøretøy sammenlignes som sum, siden søknaden lister hvert kjøretøy for seg, mens
+ * vurderingen har én samlet verdi. Returnerer feltnavnene (nøklene i FormuegrunnlagVerdierFormData)
+ * det er avvik på, slik at varselet kan si hvilke felter det gjelder.
+ */
+export const formueFelterMedAvvikFraSøknad = (
+    søknadsFormue: Nullable<Formue>,
+    vurderinger: Nullable<FormuegrunnlagVerdierFormData>[],
+): (keyof FormuegrunnlagVerdierFormData)[] => {
+    const oppgitteVurderinger = vurderinger.filter((v): v is FormuegrunnlagVerdierFormData => v !== null);
+    const søknadsVerdiKjøretøy = (søknadsFormue?.kjøretøy ?? []).reduce((sum, k) => sum + k.verdiPåKjøretøy, 0);
+
+    const feltOgAvvik: [keyof FormuegrunnlagVerdierFormData, boolean][] = [
+        [
+            'verdiIkkePrimærbolig',
+            harVurderingAvvikFraBrukersSvar(
+                søknadsFormue?.verdiPåBolig ?? 0,
+                oppgitteVurderinger.map((v) => Number(v.verdiIkkePrimærbolig)),
+            ),
+        ],
+        [
+            'verdiEiendommer',
+            harVurderingAvvikFraBrukersSvar(
+                søknadsFormue?.verdiPåEiendom ?? 0,
+                oppgitteVurderinger.map((v) => Number(v.verdiEiendommer)),
+            ),
+        ],
+        [
+            'verdiKjøretøy',
+            harVurderingAvvikFraBrukersSvar(
+                søknadsVerdiKjøretøy,
+                oppgitteVurderinger.map((v) => Number(v.verdiKjøretøy)),
+            ),
+        ],
+        [
+            'innskudd',
+            harVurderingAvvikFraBrukersSvar(
+                søknadsFormue?.innskuddsBeløp ?? 0,
+                oppgitteVurderinger.map((v) => Number(v.innskudd)),
+            ),
+        ],
+        [
+            'verdipapir',
+            harVurderingAvvikFraBrukersSvar(
+                søknadsFormue?.verdipapirBeløp ?? 0,
+                oppgitteVurderinger.map((v) => Number(v.verdipapir)),
+            ),
+        ],
+        [
+            'pengerSkyldt',
+            harVurderingAvvikFraBrukersSvar(
+                søknadsFormue?.skylderNoenMegPengerBeløp ?? 0,
+                oppgitteVurderinger.map((v) => Number(v.pengerSkyldt)),
+            ),
+        ],
+        [
+            'kontanter',
+            harVurderingAvvikFraBrukersSvar(
+                søknadsFormue?.kontanterBeløp ?? 0,
+                oppgitteVurderinger.map((v) => Number(v.kontanter)),
+            ),
+        ],
+        [
+            'depositumskonto',
+            harVurderingAvvikFraBrukersSvar(
+                søknadsFormue?.depositumsBeløp ?? 0,
+                oppgitteVurderinger.map((v) => Number(v.depositumskonto)),
+            ),
+        ],
+    ];
+
+    return feltOgAvvik.filter(([, harAvvik]) => harAvvik).map(([felt]) => felt);
 };

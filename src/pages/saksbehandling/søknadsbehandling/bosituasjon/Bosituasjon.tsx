@@ -1,5 +1,5 @@
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Heading } from '@navikt/ds-react';
+import { Alert, Heading } from '@navikt/ds-react';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 
@@ -12,6 +12,7 @@ import {
     bosituasjongrunnlagTilFormDataEllerNy,
     eqBosituasjonGrunnlagFormData,
 } from '~src/components/forms/vilkårOgGrunnlagForms/bosituasjon/BosituasjonFormUtils';
+import sharedVilkårI18n from '~src/components/forms/vilkårOgGrunnlagForms/VilkårOgGrunnlagForms-nb';
 import OppsummeringAvBoforhold from '~src/components/oppsummering/oppsummeringAvSøknadinnhold/OppsummeringAvBoforhold';
 import OppsummeringAvBosituasjongrunnlag from '~src/components/oppsummering/oppsummeringAvVilkårOgGrunnlag/OppsummeringAvBosituasjon';
 import ToKolonner from '~src/components/toKolonner/ToKolonner';
@@ -27,6 +28,8 @@ import {
 } from '~src/types/Søknadsbehandling';
 import { Vilkårtype } from '~src/types/Vilkårsvurdering';
 import { lagDatePeriodeAvStringPeriode } from '~src/utils/periode/periodeUtils';
+import { bosituasjonFelterMedAvvikFraSøknad } from '~src/utils/vilkårUtils';
+
 import EksisterendeVedtaksinformasjon from '../EksisterendeVedtaksinformasjon';
 import sharedI18n from '../sharedI18n-nb';
 import sharedStyles from '../sharedStyles.module.less';
@@ -42,7 +45,7 @@ const Bosituasjon = (
 ) => {
     const navigate = useNavigate();
     const [status, lagre] = useAsyncActionCreator(lagreBosituasjongrunnlag);
-    const { formatMessage } = useI18n({ messages: { ...messages, ...sharedI18n } });
+    const { formatMessage } = useI18n({ messages: { ...sharedI18n, ...sharedVilkårI18n, ...messages } });
 
     const initialValues = bosituasjongrunnlagTilFormDataEllerNy(
         props.behandling.grunnlagsdataOgVilkårsvurderinger.bosituasjon,
@@ -99,6 +102,11 @@ const Bosituasjon = (
         save(values, onSuccess);
     };
 
+    const bosituasjonFelterMedAvvik = bosituasjonFelterMedAvvikFraSøknad(
+        props.behandling.søknad.søknadInnhold.boforhold,
+        form.watch('bosituasjoner') ?? [],
+    );
+
     return (
         <ToKolonner tittel={formatMessage('page.tittel')}>
             {{
@@ -117,7 +125,13 @@ const Bosituasjon = (
                         tilbake={{ url: props.forrigeUrl }}
                         lagreOgfortsettSenere={{ onClick: handleLagreOgFortsettSenere, url: props.avsluttUrl }}
                         {...props}
-                    />
+                    >
+                        {bosituasjonFelterMedAvvik.length > 0 && (
+                            <Alert className={sharedStyles.avslagAdvarsel} variant="warning">
+                                {formatMessage('display.avvikFraSøknad.advarsel')}
+                            </Alert>
+                        )}
+                    </BosituasjonForm>
                 ),
                 right: (
                     <div className={sharedStyles.toKollonerRightContainer}>
