@@ -281,14 +281,16 @@ export const uføreResultatTilBoolean = (resultat: Nullable<UføreResultat>): Nu
  * harEPS avledes av om søknaden har et ektefellePartnerSamboer-objekt; erEPSUførFlyktning sjekkes
  * bare når søknaden faktisk har en EPS (ellers finnes det ikke noe svar å avvike fra).
  */
+export type BosituasjonFeltMedAvvik = 'delerBolig' | 'harEPS' | 'epsFnr' | 'erEPSUførFlyktning';
+
 export const bosituasjonFelterMedAvvikFraSøknad = (
     boforhold: Boforhold,
     vurderinger: Nullable<BosituasjonFormItemData>[],
-): (keyof BosituasjonFormItemData)[] => {
+): BosituasjonFeltMedAvvik[] => {
     const oppgitteVurderinger = vurderinger.filter((v): v is BosituasjonFormItemData => v !== null);
     const søknadHarEps = boforhold.ektefellePartnerSamboer !== null;
 
-    const feltOgAvvik: [keyof BosituasjonFormItemData, boolean][] = [
+    const feltOgAvvik: [BosituasjonFeltMedAvvik, boolean][] = [
         [
             'delerBolig',
             harVurderingAvvikFraBrukersSvar(
@@ -297,7 +299,7 @@ export const bosituasjonFelterMedAvvikFraSøknad = (
             ),
         ],
         [
-            'harSøkerEPS',
+            'harEPS',
             harVurderingAvvikFraBrukersSvar(
                 søknadHarEps,
                 oppgitteVurderinger.map((v) => v.harEPS),

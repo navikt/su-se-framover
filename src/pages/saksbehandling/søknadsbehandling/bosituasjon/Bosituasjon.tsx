@@ -36,6 +36,13 @@ import sharedStyles from '../sharedStyles.module.less';
 import { VilkårsvurderingBaseProps } from '../types';
 import messages from './Bosituasjon-nb';
 
+const bosituasjonFeltTilMeldingsnøkkel = {
+    delerBolig: 'bosituasjon.delerBolig',
+    harEPS: 'bosituasjon.harSøkerEPS',
+    epsFnr: 'bosituasjon.epsFnr',
+    erEPSUførFlyktning: 'bosituasjon.erEPSUførFlyktning',
+} as const;
+
 const Bosituasjon = (
     props: VilkårsvurderingBaseProps & {
         søker: Person;
@@ -135,7 +142,7 @@ const Bosituasjon = (
 
                                     <ul className={styles.avvikFraSøknadListe}>
                                         {bosituasjonFelterMedAvvik.map((felt) => (
-                                            <li key={felt}>{formatMessage(`bosituasjon.${felt}`)}</li>
+                                            <li key={felt}>{formatMessage(bosituasjonFeltTilMeldingsnøkkel[felt])}</li>
                                         ))}
                                     </ul>
 
