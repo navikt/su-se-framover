@@ -1,5 +1,5 @@
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Alert, Heading } from '@navikt/ds-react';
+import { Alert, BodyShort, Heading } from '@navikt/ds-react';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 
@@ -20,6 +20,7 @@ import { useSøknadsbehandlingDraftContextFor } from '~src/context/søknadsbehan
 import { lagreBosituasjongrunnlag } from '~src/features/grunnlagsdataOgVilkårsvurderinger/GrunnlagOgVilkårActions';
 import { ApiResult, useAsyncActionCreator } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
+import styles from '~src/pages/saksbehandling/søknadsbehandling/formue/Formue.module.less';
 import { Person } from '~src/types/Person';
 import { Sakstype } from '~src/types/Sak.ts';
 import {
@@ -29,7 +30,6 @@ import {
 import { Vilkårtype } from '~src/types/Vilkårsvurdering';
 import { lagDatePeriodeAvStringPeriode } from '~src/utils/periode/periodeUtils';
 import { bosituasjonFelterMedAvvikFraSøknad } from '~src/utils/vilkårUtils';
-
 import EksisterendeVedtaksinformasjon from '../EksisterendeVedtaksinformasjon';
 import sharedI18n from '../sharedI18n-nb';
 import sharedStyles from '../sharedStyles.module.less';
@@ -128,7 +128,19 @@ const Bosituasjon = (
                     >
                         {bosituasjonFelterMedAvvik.length > 0 && (
                             <Alert className={sharedStyles.avslagAdvarsel} variant="warning">
-                                {formatMessage('display.avvikFraSøknad.advarsel')}
+                                <div className={styles.avvikFraSøknadInnhold}>
+                                    <BodyShort>
+                                        {formatMessage('display.avvikFraSøknad.formue.søkerOpplysteForSegSelv')}
+                                    </BodyShort>
+
+                                    <ul className={styles.avvikFraSøknadListe}>
+                                        {bosituasjonFelterMedAvvik.map((felt) => (
+                                            <li key={felt}>{formatMessage(`bosituasjon.${felt}`)}</li>
+                                        ))}
+                                    </ul>
+
+                                    <BodyShort>{formatMessage('display.avvikFraSøknad.formue.oppfordring')}</BodyShort>
+                                </div>
                             </Alert>
                         )}
                     </BosituasjonForm>

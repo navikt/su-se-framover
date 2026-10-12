@@ -297,7 +297,7 @@ export const bosituasjonFelterMedAvvikFraSøknad = (
             ),
         ],
         [
-            'harEPS',
+            'harSøkerEPS',
             harVurderingAvvikFraBrukersSvar(
                 søknadHarEps,
                 oppgitteVurderinger.map((v) => v.harEPS),
