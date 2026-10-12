@@ -59,14 +59,18 @@ const OppholdIUtlandet = (
 
     // Både allerede gjennomførte og planlagte utenlandsopphold telles med, siden "i stønadsperioden"
     // kan dekke opphold som skjedde før søknadstidspunktet men fortsatt innenfor stønadsperioden.
-    const harAvvikFraSøknad = harVurderingAvvikFraBrukersSvar(
+    const totalAntallDagerIUtlandetFraSøknad =
         kalkulerTotaltAntallDagerIUtlandet(props.behandling.søknad.søknadInnhold.utenlandsopphold.registrertePerioder) +
-            kalkulerTotaltAntallDagerIUtlandet(
-                props.behandling.søknad.søknadInnhold.utenlandsopphold.planlagtePerioder,
-            ) <=
-            90,
-        (form.watch('utenlandsopphold') ?? []).map((vurdering) => vilkårstatusTilBoolean(vurdering.resultat)),
-    );
+        kalkulerTotaltAntallDagerIUtlandet(props.behandling.søknad.søknadInnhold.utenlandsopphold.planlagtePerioder);
+
+    const harAvvikFraSøknad =
+        totalAntallDagerIUtlandetFraSøknad === 0 &&
+        harVurderingAvvikFraBrukersSvar(
+            true,
+            (form.watch('utenlandsopphold') ?? []).map((vurdering) => vilkårstatusTilBoolean(vurdering.resultat)),
+        );
+
+    const harBrukerLagtInnOppholdIUtlandet = totalAntallDagerIUtlandetFraSøknad > 0;
 
     const save = async (values: UtenlandsoppholdVilkårFormData, onSuccess: () => void) => {
         lagre(
@@ -126,6 +130,11 @@ const OppholdIUtlandet = (
                         skalIkkeKunneVelgePeriode
                         {...props}
                     >
+                        {harBrukerLagtInnOppholdIUtlandet && (
+                            <Alert className={sharedStyles.avslagAdvarsel} variant="warning">
+                                {formatMessage('display.brukerLagtInnOppholdIUtlandet.info')}
+                            </Alert>
+                        )}
                         {harAvvikFraSøknad && (
                             <Alert className={sharedStyles.avslagAdvarsel} variant="warning">
                                 {formatMessage('display.avvikFraSøknad.advarsel')}

@@ -146,6 +146,8 @@ export default {
 
     'display.avvikFraSøknad.advarsel':
         'Systemet har identifisert at opplysningene du har lagt til grunn, ikke samsvarer med det brukeren har opplyst i søknaden. Dette bør kommenteres i vedtaksbrevet eller eventuelt forelegges brukeren.',
+    'display.brukerLagtInnOppholdIUtlandet.info':
+        'Systemet har identifisert at brukeren har oppgitt planlagte eller gjennomførte dager. Det bør vurderes om dette påvirker retten til supplerende stønad.',
 
     'display.avvikFraSøknad.formue.intro':
         'Systemet har identifisert at opplysningene du har lagt til grunn, ikke samsvarer med det brukeren har opplyst i søknaden.',
