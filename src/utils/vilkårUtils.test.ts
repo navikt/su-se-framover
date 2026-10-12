@@ -1,7 +1,13 @@
+import { BosituasjonFormItemData } from '~src/components/forms/vilkårOgGrunnlagForms/bosituasjon/BosituasjonFormUtils';
 import { FormuegrunnlagVerdierFormData } from '~src/components/forms/vilkårOgGrunnlagForms/formue/FormueFormUtils';
-import { Formue } from '~src/types/Søknadinnhold';
+import { DelerBoligMed } from '~src/features/søknad/types';
+import { Boforhold, Formue } from '~src/types/Søknadinnhold';
 
-import { formueFelterMedAvvikFraSøknad, harVurderingAvvikFraBrukersSvar } from './vilkårUtils';
+import {
+    bosituasjonFelterMedAvvikFraSøknad,
+    formueFelterMedAvvikFraSøknad,
+    harVurderingAvvikFraBrukersSvar,
+} from './vilkårUtils';
 
 describe('harVurderingAvvikFraBrukersSvar', () => {
     it('gir avvik når bruker svarte ja, men saksbehandler har vurdert vilkåret som ikke oppfylt', () => {
@@ -109,5 +115,99 @@ describe('formueFelterMedAvvikFraSøknad', () => {
             depositumskonto: '0',
         };
         expect(formueFelterMedAvvikFraSøknad(null, [tomVurdering])).toEqual([]);
+    });
+});
+
+describe('bosituasjonFelterMedAvvikFraSøknad', () => {
+    const lagBoforhold = (overrides: Partial<Boforhold> = {}): Boforhold => ({
+        borOgOppholderSegINorge: true,
+        delerBoligMedVoksne: true,
+        delerBoligMed: DelerBoligMed.EKTEMAKE_SAMBOER,
+        ektefellePartnerSamboer: {
+            fnr: '98765431312',
+            erUførFlyktning: false,
+        },
+        innlagtPåInstitusjon: null,
+        borPåAdresse: null,
+        ingenAdresseGrunn: null,
+        ...overrides,
+    });
+
+    const lagVurdering = (overrides: Partial<BosituasjonFormItemData> = {}): BosituasjonFormItemData => ({
+        periode: {
+            fraOgMed: null,
+            tilOgMed: null,
+        },
+        harEPS: true,
+        epsFnr: '98765431312',
+        delerBolig: null,
+        erEpsFylt67: false,
+        erEPSUførFlyktning: false,
+        ...overrides,
+    });
+
+    it('gir ingen avvik når vurderingen samsvarer med søknaden', () => {
+        expect(bosituasjonFelterMedAvvikFraSøknad(lagBoforhold(), [lagVurdering()])).toEqual([]);
+    });
+
+    it('gir avvik når saksbehandler har vurdert at søkeren ikke har EPS', () => {
+        expect(bosituasjonFelterMedAvvikFraSøknad(lagBoforhold(), [lagVurdering({ harEPS: false })])).toEqual([
+            'harEPS',
+        ]);
+    });
+
+    it('gir avvik når EPS-fødselsnummeret er endret', () => {
+        expect(bosituasjonFelterMedAvvikFraSøknad(lagBoforhold(), [lagVurdering({ epsFnr: '12345678901' })])).toEqual([
+            'epsFnr',
+        ]);
+    });
+
+    it('gir avvik når vurderingen av om EPS er ufør flyktning, er endret', () => {
+        expect(
+            bosituasjonFelterMedAvvikFraSøknad(lagBoforhold(), [lagVurdering({ erEPSUførFlyktning: true })]),
+        ).toEqual(['erEPSUførFlyktning']);
+    });
+
+    it('gir avvik når vurderingen av om søkeren deler bolig, er endret', () => {
+        const boforholdUtenEps = lagBoforhold({
+            delerBoligMed: DelerBoligMed.VOKSNE_BARN,
+            ektefellePartnerSamboer: null,
+        });
+        const vurderingUtenEps = lagVurdering({
+            harEPS: false,
+            epsFnr: null,
+            delerBolig: false,
+            erEPSUførFlyktning: null,
+        });
+
+        expect(bosituasjonFelterMedAvvikFraSøknad(boforholdUtenEps, [vurderingUtenEps])).toEqual(['delerBolig']);
+    });
+
+    it('sjekker ikke EPS-felter når søknaden ikke har EPS', () => {
+        const boforholdUtenEps = lagBoforhold({
+            delerBoligMed: DelerBoligMed.VOKSNE_BARN,
+            ektefellePartnerSamboer: null,
+        });
+        const vurderingUtenEps = lagVurdering({
+            harEPS: false,
+            epsFnr: '12345678901',
+            delerBolig: true,
+            erEPSUførFlyktning: true,
+        });
+
+        expect(bosituasjonFelterMedAvvikFraSøknad(boforholdUtenEps, [vurderingUtenEps])).toEqual([]);
+    });
+
+    it('gir avvik hvis minst én av flere perioder avviker', () => {
+        expect(
+            bosituasjonFelterMedAvvikFraSøknad(lagBoforhold(), [
+                lagVurdering(),
+                lagVurdering({ erEPSUførFlyktning: true }),
+            ]),
+        ).toEqual(['erEPSUførFlyktning']);
+    });
+
+    it('filtrerer bort vurderinger som er null', () => {
+        expect(bosituasjonFelterMedAvvikFraSøknad(lagBoforhold(), [null])).toEqual([]);
     });
 });
