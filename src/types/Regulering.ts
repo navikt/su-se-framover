@@ -56,6 +56,8 @@ export enum Reguleringsvariant {
     ALDERSFRADRAG = 'ALDERSFRADRAG',
 }
 
+export const reguleringsvarianter = [Reguleringsvariant.GRUNNBELØP, Reguleringsvariant.ALDERSFRADRAG];
+
 export enum ÅrsakTilManuellReguleringKategori {
     OpprettetAvSaksbehandler = 'OpprettetAvSaksbehandler',
     ManglerRegulertBeløpForFradrag = 'ManglerRegulertBeløpForFradrag',
@@ -111,4 +113,6 @@ export interface SisteGrunnbeløpOgSatser {
 export interface OpprettReguleringRequest {
     sakId: string;
     begrunnelse: string;
+    reguleringsvariant: Reguleringsvariant;
+    fraOgMed: Nullable<string>;
 }

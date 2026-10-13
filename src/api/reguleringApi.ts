@@ -191,13 +191,25 @@ export async function opprettRegulering(args: OpprettReguleringRequest): Promise
         method: 'POST',
         body: {
             begrunnelse: args.begrunnelse,
+            reguleringsvariant: args.reguleringsvariant,
+            fraOgMed: args.fraOgMed,
         },
     });
 }
 
+export async function startOmregning(args: { fraOgMedMåned: string }) {
+    const url = `/reguleringer/automatisk/omregning`;
+    const method = 'POST';
+    return apiClient({
+        url: url,
+        method: method,
+        body: {
+            fraOgMedMåned: args.fraOgMedMåned,
+        },
+    });
+}
 export async function dryRunOmregning(args: {
     startDatoOmregning: string;
-    lagreManuelle: boolean;
     maksAntallSaker: Nullable<number>;
     saksnummer: Nullable<string>;
 }) {
@@ -209,7 +221,6 @@ export async function dryRunOmregning(args: {
         method: method,
         body: {
             fraOgMedMåned: args.startDatoOmregning,
-            lagreManuelle: args.lagreManuelle,
             maksAntallSaker: args.maksAntallSaker,
             saksnummer: args.saksnummer,
         },
