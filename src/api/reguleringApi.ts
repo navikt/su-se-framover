@@ -212,6 +212,7 @@ export async function dryRunOmregning(args: {
     startDatoOmregning: string;
     maksAntallSaker: Nullable<number>;
     saksnummer: Nullable<string>;
+    sakstype: Nullable<Sakstype>;
 }) {
     const url = `/reguleringer/automatisk/omregning/dry`;
     const method = 'POST';
@@ -223,6 +224,7 @@ export async function dryRunOmregning(args: {
             fraOgMedMåned: args.startDatoOmregning,
             maksAntallSaker: args.maksAntallSaker,
             saksnummer: args.saksnummer,
+            sakstype: args.sakstype,
         },
     });
 }
