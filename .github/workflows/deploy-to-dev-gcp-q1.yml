@@ -8,7 +8,7 @@ permissions: {}
 jobs:
     build-push-docker-image:
         name: build-push-docker-image
-        runs-on: ubuntu-latest
+        runs-on: ubuntu-26.04
         outputs:
             image: ${{ steps.docker-build-push.outputs.image }}
         permissions:
@@ -55,7 +55,7 @@ jobs:
             contents: read
             id-token: write
         needs: build-push-docker-image
-        runs-on: ubuntu-latest
+        runs-on: ubuntu-26.04
         steps:
             - uses: actions/checkout@v7
             - uses: nais/deploy/actions/deploy@v2
