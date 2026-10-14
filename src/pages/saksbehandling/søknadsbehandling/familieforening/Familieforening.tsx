@@ -21,7 +21,7 @@ import { EksisterendeVedtaksinformasjonTidligerePeriodeResponse } from '~src/typ
 import { Vilkårstatus } from '~src/types/Vilkår.ts';
 import { Vilkårtype } from '~src/types/Vilkårsvurdering.ts';
 import { lagDatePeriodeAvStringPeriode } from '~src/utils/periode/periodeUtils.ts';
-import { harVurderingAvvikFraBrukersSvar, vilkårstatusTilBoolean } from '~src/utils/vilkårUtils.ts';
+import { familiegjenforeningVurderingTilSvar, harVurderingAvvikFraBrukersSvar } from '~src/utils/vilkårUtils.ts';
 import sharedMessages from '../sharedI18n-nb';
 import sharedStyles from '../sharedStyles.module.less';
 import { VilkårsvurderingBaseProps } from '../types';
@@ -86,7 +86,7 @@ const Familieforening = (
     const harAvvikFraSøknad = harVurderingAvvikFraBrukersSvar(
         props.søknadInnhold.oppholdstillatelseAlder.familieforening,
         (form.watch('familiegjenforening') ?? []).map((vurdering) =>
-            vilkårstatusTilBoolean(vurdering.familiegjenforening),
+            familiegjenforeningVurderingTilSvar(vurdering.familiegjenforening),
         ),
     );
 

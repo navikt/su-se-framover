@@ -277,6 +277,21 @@ export const uføreResultatTilBoolean = (resultat: Nullable<UføreResultat>): Nu
 };
 
 /**
+ * Gjør vilkårstatusen om til saksbehandlerens ja/nei-svar.
+ * Ikke oppfylt betyr ja, og oppfylt betyr nei.
+ */
+export const familiegjenforeningVurderingTilSvar = (resultat: Nullable<Vilkårstatus>): Nullable<boolean> => {
+    switch (resultat) {
+        case Vilkårstatus.VilkårOppfylt:
+            return false;
+        case Vilkårstatus.VilkårIkkeOppfylt:
+            return true;
+        default:
+            return null;
+    }
+};
+
+/**
  * Sjekker om saksbehandler har endret noen av de strukturelle bosituasjon-svarene fra søknaden.
  * harEPS avledes av om søknaden har et ektefellePartnerSamboer-objekt; erEPSUførFlyktning sjekkes
  * bare når søknaden faktisk har en EPS (ellers finnes det ikke noe svar å avvike fra).

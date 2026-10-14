@@ -2,9 +2,11 @@ import { BosituasjonFormItemData } from '~src/components/forms/vilkårOgGrunnlag
 import { FormuegrunnlagVerdierFormData } from '~src/components/forms/vilkårOgGrunnlagForms/formue/FormueFormUtils';
 import { DelerBoligMed } from '~src/features/søknad/types';
 import { Boforhold, Formue } from '~src/types/Søknadinnhold';
+import { Vilkårstatus } from '~src/types/Vilkår';
 
 import {
     bosituasjonFelterMedAvvikFraSøknad,
+    familiegjenforeningVurderingTilSvar,
     formueFelterMedAvvikFraSøknad,
     harVurderingAvvikFraBrukersSvar,
 } from './vilkårUtils';
@@ -33,6 +35,21 @@ describe('harVurderingAvvikFraBrukersSvar', () => {
 
     it('gir avvik hvis minst én av flere perioder avviker', () => {
         expect(harVurderingAvvikFraBrukersSvar(true, [true, false])).toEqual(true);
+    });
+});
+
+describe('familiegjenforeningVurderingTilSvar', () => {
+    it('gjør ikke oppfylt om til ja', () => {
+        expect(familiegjenforeningVurderingTilSvar(Vilkårstatus.VilkårIkkeOppfylt)).toEqual(true);
+    });
+
+    it('gjør oppfylt om til nei', () => {
+        expect(familiegjenforeningVurderingTilSvar(Vilkårstatus.VilkårOppfylt)).toEqual(false);
+    });
+
+    it('beholder uavklart og null som null', () => {
+        expect(familiegjenforeningVurderingTilSvar(Vilkårstatus.Uavklart)).toEqual(null);
+        expect(familiegjenforeningVurderingTilSvar(null)).toEqual(null);
     });
 });
 
