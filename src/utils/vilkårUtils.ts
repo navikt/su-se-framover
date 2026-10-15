@@ -2,7 +2,11 @@ import { BosituasjonFormItemData } from '~src/components/forms/vilkårOgGrunnlag
 import { FormuegrunnlagVerdierFormData } from '~src/components/forms/vilkårOgGrunnlagForms/formue/FormueFormUtils';
 import * as Routes from '~src/lib/routes';
 import { Nullable } from '~src/lib/types';
-import { Aldersresultat } from '~src/types/grunnlagsdataOgVilkårsvurderinger/alder/Aldersvilkår';
+import {
+    Aldersresultat,
+    PensjonsOpplysningerSvar,
+    PensjonsOpplysningerUtvidetSvar,
+} from '~src/types/grunnlagsdataOgVilkårsvurderinger/alder/Aldersvilkår';
 import { FormueStatus } from '~src/types/grunnlagsdataOgVilkårsvurderinger/formue/Formuevilkår';
 import { GrunnlagsdataOgVilkårsvurderinger } from '~src/types/grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
 import { UføreResultat } from '~src/types/grunnlagsdataOgVilkårsvurderinger/uføre/Uførevilkår';
@@ -286,6 +290,17 @@ export const familiegjenforeningVurderingTilSvar = (resultat: Nullable<Vilkårst
             return false;
         case Vilkårstatus.VilkårIkkeOppfylt:
             return true;
+        default:
+            return null;
+    }
+};
+
+export const alderspensjonVurderingTilSvar = (resultat: Nullable<PensjonsOpplysningerSvar>): Nullable<boolean> => {
+    switch (resultat) {
+        case PensjonsOpplysningerUtvidetSvar.JA:
+            return true;
+        case PensjonsOpplysningerUtvidetSvar.NEI:
+            return false;
         default:
             return null;
     }

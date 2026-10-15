@@ -1,10 +1,12 @@
 import { BosituasjonFormItemData } from '~src/components/forms/vilkårOgGrunnlagForms/bosituasjon/BosituasjonFormUtils';
 import { FormuegrunnlagVerdierFormData } from '~src/components/forms/vilkårOgGrunnlagForms/formue/FormueFormUtils';
 import { DelerBoligMed } from '~src/features/søknad/types';
+import { PensjonsOpplysningerUtvidetSvar } from '~src/types/grunnlagsdataOgVilkårsvurderinger/alder/Aldersvilkår';
 import { Boforhold, Formue } from '~src/types/Søknadinnhold';
 import { Vilkårstatus } from '~src/types/Vilkår';
 
 import {
+    alderspensjonVurderingTilSvar,
     bosituasjonFelterMedAvvikFraSøknad,
     familiegjenforeningVurderingTilSvar,
     formueFelterMedAvvikFraSøknad,
@@ -50,6 +52,20 @@ describe('familiegjenforeningVurderingTilSvar', () => {
     it('beholder uavklart og null som null', () => {
         expect(familiegjenforeningVurderingTilSvar(Vilkårstatus.Uavklart)).toEqual(null);
         expect(familiegjenforeningVurderingTilSvar(null)).toEqual(null);
+    });
+});
+
+describe('alderspensjonVurderingTilSvar', () => {
+    it('gjør ja om til true', () => {
+        expect(alderspensjonVurderingTilSvar(PensjonsOpplysningerUtvidetSvar.JA)).toEqual(true);
+    });
+
+    it('gjør nei om til false', () => {
+        expect(alderspensjonVurderingTilSvar(PensjonsOpplysningerUtvidetSvar.NEI)).toEqual(false);
+    });
+
+    it('beholder null som null', () => {
+        expect(alderspensjonVurderingTilSvar(null)).toEqual(null);
     });
 });
 
