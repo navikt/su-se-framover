@@ -1,5 +1,6 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { TextField } from '@navikt/ds-react';
+import { ReactNode } from 'react';
 import { Controller } from 'react-hook-form';
 
 import MultiPeriodeVelger from '~src/components/inputs/multiPeriodeVelger/MultiPeriodeVelger';
@@ -14,7 +15,11 @@ import { VilkårFormProps } from '../VilkårOgGrunnlagFormUtils';
 import { lagTomUføreperiode, UførhetFormData } from './UførhetFormUtils';
 import styles from './uførhet.module.less';
 
-export const UførhetForm = ({ form, ...props }: VilkårFormProps<UførhetFormData>) => {
+export const UførhetForm = ({
+    form,
+    children,
+    ...props
+}: VilkårFormProps<UførhetFormData> & { children?: ReactNode }) => {
     const { formatMessage } = useI18n({ messages });
 
     return (
@@ -77,6 +82,7 @@ export const UførhetForm = ({ form, ...props }: VilkårFormProps<UførhetFormDa
                         </div>
                     )}
                 />
+                {children}
                 {RemoteData.isSuccess(props.neste.savingState) && 'feilmeldinger' in props.neste.savingState.value && (
                     <UtfallSomIkkeStøttes feilmeldinger={props.neste.savingState.value.feilmeldinger} />
                 )}
