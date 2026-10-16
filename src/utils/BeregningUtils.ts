@@ -15,19 +15,15 @@ export const erIGyldigStatusForÅKunneBeregne = (behandling: Søknadsbehandling)
 /**
  * Sjekker om brukeren har oppgitt noen inntekt for segselv eller eps.
  */
-export type OppgitteInntekter =
-    | 'forventetInntekt'
-    | 'andreYtelserINav'
-    | 'søktAndreYtelserIkkeBehandletBegrunnelse'
-    | 'trygdeytelserIUtlandet'
-    | 'pensjon';
+// Returverdiene brukes som tekstnøkler i inntektsvarselet. `andreYtelserINavBeløp` har ingen egen tekstnøkkel fordi beløpet bare avgjør om `andreYtelserINav` skal vises.
+type InntektOgPensjonFelt = Exclude<keyof InntektOgPensjon, 'andreYtelserINavBeløp'>;
 
-export const inntektFelter = (inntektOgPensjon: Nullable<InntektOgPensjon>): OppgitteInntekter[] => {
+export const inntektFelter = (inntektOgPensjon: Nullable<InntektOgPensjon>): InntektOgPensjonFelt[] => {
     if (inntektOgPensjon === null) {
         return [];
     }
 
-    const feltErOppgitt: [OppgitteInntekter, boolean][] = [
+    const feltErOppgitt: [InntektOgPensjonFelt, boolean][] = [
         ['forventetInntekt', (inntektOgPensjon.forventetInntekt ?? 0) > 0],
         ['andreYtelserINav', (inntektOgPensjon.andreYtelserINavBeløp ?? 0) > 0],
         [
