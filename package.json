@@ -72,7 +72,7 @@
     "react-router-dom": "7.18.4",
     "redux": "5.0.1",
     "reset-css": "5.0.2",
-    "uuid": "14.0.1",
+    "uuid": "14.0.2",
     "yup": "0.29.3"
   },
   "devDependencies": {
