@@ -1,5 +1,5 @@
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Heading } from '@navikt/ds-react';
+import { Alert, Heading } from '@navikt/ds-react';
 import { useForm } from 'react-hook-form';
 
 import { Behandlingstype } from '~src/api/GrunnlagOgVilkårApi.ts';
@@ -8,6 +8,7 @@ import {
     familieforeningSchema,
 } from '~src/components/forms/vilkårOgGrunnlagForms/familieforening/FamilieforeningFormUtils';
 import { FamiliegjenforeningForm } from '~src/components/forms/vilkårOgGrunnlagForms/familieforening/FamiliegjenforeningForm.tsx';
+import sharedVilkårI18n from '~src/components/forms/vilkårOgGrunnlagForms/VilkårOgGrunnlagForms-nb';
 import OppsummeringAvOppholdstillatelseAlder from '~src/components/oppsummering/oppsummeringAvSøknadinnhold/OppsummeringAvOppholdstillatelseAlder';
 import ToKolonner from '~src/components/toKolonner/ToKolonner';
 import * as GrunnlagOgVilkårActions from '~src/features/grunnlagsdataOgVilkårsvurderinger/GrunnlagOgVilkårActions';
@@ -20,7 +21,9 @@ import { EksisterendeVedtaksinformasjonTidligerePeriodeResponse } from '~src/typ
 import { Vilkårstatus } from '~src/types/Vilkår.ts';
 import { Vilkårtype } from '~src/types/Vilkårsvurdering.ts';
 import { lagDatePeriodeAvStringPeriode } from '~src/utils/periode/periodeUtils.ts';
+import { familiegjenforeningVurderingTilSvar, harVurderingAvvikFraBrukersSvar } from '~src/utils/vilkårUtils.ts';
 import sharedMessages from '../sharedI18n-nb';
+import sharedStyles from '../sharedStyles.module.less';
 import { VilkårsvurderingBaseProps } from '../types';
 import messages from './familieforening-nb';
 
@@ -30,7 +33,7 @@ const Familieforening = (
         tidligerePeriodeData: ApiResult<EksisterendeVedtaksinformasjonTidligerePeriodeResponse>;
     },
 ) => {
-    const { formatMessage } = useI18n({ messages: { ...messages, ...sharedMessages } });
+    const { formatMessage } = useI18n({ messages: { ...messages, ...sharedVilkårI18n, ...sharedMessages } });
     const [lagreFamilieforeninggrunnlagStatus, lagreFamilieforeninggrunnlag] = useAsyncActionCreator(
         GrunnlagOgVilkårActions.lagreFamilieforeninggrunnlag,
     );
@@ -80,6 +83,13 @@ const Familieforening = (
         return props.nesteUrl;
     };
 
+    const harAvvikFraSøknad = harVurderingAvvikFraBrukersSvar(
+        props.søknadInnhold.oppholdstillatelseAlder.familieforening,
+        (form.watch('familiegjenforening') ?? []).map((vurdering) =>
+            familiegjenforeningVurderingTilSvar(vurdering.familiegjenforening),
+        ),
+    );
+
     return (
         <ToKolonner tittel={formatMessage('page.tittel')}>
             {{
@@ -103,7 +113,13 @@ const Familieforening = (
                         begrensTilEnPeriode
                         skalIkkeKunneVelgePeriode
                         {...props}
-                    />
+                    >
+                        {harAvvikFraSøknad && (
+                            <Alert className={sharedStyles.avslagAdvarsel} variant="warning">
+                                {formatMessage('display.avvikFraSøknad.advarsel')}
+                            </Alert>
+                        )}
+                    </FamiliegjenforeningForm>
                 ),
                 right: (
                     <>

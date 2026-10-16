@@ -82,8 +82,9 @@ const BosituasjonForm = (props: Props) => {
                                             onChange={(e) => {
                                                 field.onChange(e);
                                                 props.form.setValue(`${nameAndIdx}.epsFnr`, null);
-                                                // harEPS endret seg - fjerner/legger til EPS,
-                                                // så gjeldende EPS-data er ikke lenger gyldig.
+                                                // harEPS endret seg - både EPS-data og delerBolig (som bare er
+                                                // relevant/synlig når harEPS er false) er ikke lenger gyldig.
+                                                props.form.setValue(`${nameAndIdx}.delerBolig`, null);
                                                 nullstillEpsData();
                                             }}
                                         />

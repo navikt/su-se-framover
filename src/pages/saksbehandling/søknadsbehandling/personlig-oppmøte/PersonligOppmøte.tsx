@@ -13,6 +13,7 @@ import {
     personligOppmøteFormSchema,
     personligOppmøteVilkårTilFormDataEllerNy,
 } from '~src/components/forms/vilkårOgGrunnlagForms/personligOppmøte/PersonligOppmøteFormUtils';
+import sharedVilkårI18n from '~src/components/forms/vilkårOgGrunnlagForms/VilkårOgGrunnlagForms-nb';
 import OppsummeringAvForNav from '~src/components/oppsummering/oppsummeringAvSøknadinnhold/OppsummeringAvForNav';
 import OppsummeringAvPersonligoppmøtevilkår from '~src/components/oppsummering/oppsummeringAvVilkårOgGrunnlag/OppsummeringAvPersonligOppmøte';
 import ToKolonner from '~src/components/toKolonner/ToKolonner';
@@ -47,7 +48,7 @@ const PersonligOppmøte = (
 ) => {
     const navigate = useNavigate();
     const advarselRef = useRef<HTMLDivElement>(null);
-    const { formatMessage } = useI18n({ messages: { ...sharedI18n, ...messages } });
+    const { formatMessage } = useI18n({ messages: { ...sharedI18n, ...sharedVilkårI18n, ...messages } });
     const [status, lagre] = useAsyncActionCreator(lagrePersonligOppmøteVilkår);
 
     const initialValues = personligOppmøteVilkårTilFormDataEllerNy(
