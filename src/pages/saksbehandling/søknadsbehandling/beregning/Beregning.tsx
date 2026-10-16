@@ -1,6 +1,6 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Alert, Button, Heading, Loader } from '@navikt/ds-react';
+import { Alert, BodyShort, Button, Heading, Loader } from '@navikt/ds-react';
 import { getEq } from 'fp-ts/Array';
 import { struct } from 'fp-ts/lib/Eq';
 import * as S from 'fp-ts/lib/string';
@@ -34,6 +34,7 @@ import { ApiResult, useAsyncActionCreator } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
 import { eqNullable, Nullable } from '~src/lib/types';
 import yup, { hookFormErrorsTilFeiloppsummering } from '~src/lib/validering';
+import sharedStyles from '~src/pages/saksbehandling/søknadsbehandling/sharedStyles.module.less';
 import { VilkårsvurderingBaseProps } from '~src/pages/saksbehandling/søknadsbehandling/types';
 import { Fradrag } from '~src/types/Fradrag';
 import { bosituasjonHarEps } from '~src/types/grunnlagsdataOgVilkårsvurderinger/bosituasjon/Bosituasjongrunnlag.ts';
@@ -45,7 +46,7 @@ import {
     SøknadsbehandlingStatus,
 } from '~src/types/Søknadsbehandling';
 import { Vilkårtype } from '~src/types/Vilkårsvurdering';
-import { erIGyldigStatusForÅKunneBeregne } from '~src/utils/BeregningUtils';
+import { erIGyldigStatusForÅKunneBeregne, inntektFelter } from '~src/utils/BeregningUtils';
 import * as DateUtils from '~src/utils/date/dateUtils';
 import { fjernFradragSomIkkeErVelgbareEkskludertNavYtelserTilLivsopphold } from '~src/utils/fradrag/fradragUtil';
 import { kanSimuleres } from '~src/utils/SøknadsbehandlingUtils';
@@ -235,6 +236,10 @@ const Beregning = (props: VilkårsvurderingBaseProps & ExtendedBeregningProps) =
     const harEps = props.behandling.grunnlagsdataOgVilkårsvurderinger.bosituasjon.find((bosituasjon) =>
         bosituasjonHarEps(bosituasjon),
     );
+
+    const søkersInntektFelter = inntektFelter(props.behandling.søknad.søknadInnhold.inntektOgPensjon);
+    const epsInntektFelter = inntektFelter(props.behandling.søknad.søknadInnhold.ektefelle?.inntektOgPensjon ?? null);
+
     return (
         <ToKolonner tittel={formatMessage('page.tittel')}>
             {{
@@ -270,6 +275,44 @@ const Beregning = (props: VilkårsvurderingBaseProps & ExtendedBeregningProps) =
                                 readonly={false}
                             />
                         </div>
+
+                        {(søkersInntektFelter.length > 0 || epsInntektFelter.length > 0) && (
+                            <Alert className={sharedStyles.avslagAdvarsel} variant="warning">
+                                <div className={styles.avvikFraSøknadInnhold}>
+                                    <BodyShort>{formatMessage('display.fraSøknad.inntekt.intro')}</BodyShort>
+                                    {søkersInntektFelter.length > 0 && (
+                                        <div>
+                                            <BodyShort>
+                                                {formatMessage('display.fraSøknad.inntekt.søkerOpplysteForSegSelv')}
+                                            </BodyShort>
+                                            <ul className={styles.avvikFraSøknadListe}>
+                                                {søkersInntektFelter.map((felt) => (
+                                                    <li key={felt}>
+                                                        {formatMessage(`display.fraSøknad.inntekt.${felt}`)}
+                                                    </li>
+                                                ))}
+                                            </ul>
+                                        </div>
+                                    )}
+                                    {epsInntektFelter.length > 0 && (
+                                        <div>
+                                            <BodyShort>
+                                                {formatMessage('display.fraSøknad.inntekt.søkerOpplysteForEps')}
+                                            </BodyShort>
+                                            <ul className={styles.avvikFraSøknadListe}>
+                                                {epsInntektFelter.map((felt) => (
+                                                    <li key={felt}>
+                                                        {formatMessage(`display.fraSøknad.inntekt.${felt}`)}
+                                                    </li>
+                                                ))}
+                                            </ul>
+                                        </div>
+                                    )}
+                                    <BodyShort>{formatMessage('display.fraSøknad.inntekt.oppfordring')}</BodyShort>
+                                </div>
+                            </Alert>
+                        )}
+
                         <Heading level="2" size="medium">
                             Beregning
                             {props.behandling.beregning &&

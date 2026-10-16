@@ -1,4 +1,5 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
+import { ReactNode } from 'react';
 
 import MultiPeriodeVelger from '~src/components/inputs/multiPeriodeVelger/MultiPeriodeVelger';
 import VilkårsResultatRadioGroup from '~src/components/vilkårsResultatRadioGroup/VilkårsresultatRadioGroup';
@@ -15,6 +16,7 @@ import {
 } from './LovligOppholdFormUtils';
 
 interface Props extends VilkårFormProps<LovligOppholdVilkårFormData> {
+    children?: ReactNode;
     begrensTilEnPeriode?: boolean;
     skalIkkeKunneVelgePeriode?: boolean;
 }
@@ -45,6 +47,7 @@ const LovligOppholdForm = (props: Props) => {
                     )}
                     {...props}
                 />
+                {props.children}
                 {RemoteData.isSuccess(props.neste.savingState) && 'feilmeldinger' in props.neste.savingState.value && (
                     <UtfallSomIkkeStøttes feilmeldinger={props.neste.savingState.value.feilmeldinger} />
                 )}

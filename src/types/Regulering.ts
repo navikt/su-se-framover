@@ -39,7 +39,6 @@ export enum Reguleringsstatus {
 
 export interface ReguleringOversiktsstatus {
     saksnummer: number;
-    fnr: string;
     fradragsKategori: Fradragskategori[];
     årsakTilManuellRegulering: ÅrsakTilManuellReguleringKategori[];
     status: Reguleringsstatus;

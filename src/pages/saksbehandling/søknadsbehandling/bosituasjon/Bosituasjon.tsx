@@ -1,5 +1,5 @@
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Heading } from '@navikt/ds-react';
+import { Alert, BodyShort, Heading } from '@navikt/ds-react';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 
@@ -12,6 +12,7 @@ import {
     bosituasjongrunnlagTilFormDataEllerNy,
     eqBosituasjonGrunnlagFormData,
 } from '~src/components/forms/vilkårOgGrunnlagForms/bosituasjon/BosituasjonFormUtils';
+import sharedVilkårI18n from '~src/components/forms/vilkårOgGrunnlagForms/VilkårOgGrunnlagForms-nb';
 import OppsummeringAvBoforhold from '~src/components/oppsummering/oppsummeringAvSøknadinnhold/OppsummeringAvBoforhold';
 import OppsummeringAvBosituasjongrunnlag from '~src/components/oppsummering/oppsummeringAvVilkårOgGrunnlag/OppsummeringAvBosituasjon';
 import ToKolonner from '~src/components/toKolonner/ToKolonner';
@@ -19,6 +20,7 @@ import { useSøknadsbehandlingDraftContextFor } from '~src/context/søknadsbehan
 import { lagreBosituasjongrunnlag } from '~src/features/grunnlagsdataOgVilkårsvurderinger/GrunnlagOgVilkårActions';
 import { ApiResult, useAsyncActionCreator } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
+import styles from '~src/pages/saksbehandling/søknadsbehandling/formue/Formue.module.less';
 import { Person } from '~src/types/Person';
 import { Sakstype } from '~src/types/Sak.ts';
 import {
@@ -27,11 +29,19 @@ import {
 } from '~src/types/Søknadsbehandling';
 import { Vilkårtype } from '~src/types/Vilkårsvurdering';
 import { lagDatePeriodeAvStringPeriode } from '~src/utils/periode/periodeUtils';
+import { bosituasjonFelterMedAvvikFraSøknad } from '~src/utils/vilkårUtils';
 import EksisterendeVedtaksinformasjon from '../EksisterendeVedtaksinformasjon';
 import sharedI18n from '../sharedI18n-nb';
 import sharedStyles from '../sharedStyles.module.less';
 import { VilkårsvurderingBaseProps } from '../types';
 import messages from './Bosituasjon-nb';
+
+const bosituasjonFeltTilMeldingsnøkkel = {
+    delerBolig: 'bosituasjon.delerBolig',
+    harEPS: 'bosituasjon.harSøkerEPS',
+    epsFnr: 'bosituasjon.epsFnr',
+    erEPSUførFlyktning: 'bosituasjon.erEPSUførFlyktning',
+} as const;
 
 const Bosituasjon = (
     props: VilkårsvurderingBaseProps & {
@@ -42,7 +52,7 @@ const Bosituasjon = (
 ) => {
     const navigate = useNavigate();
     const [status, lagre] = useAsyncActionCreator(lagreBosituasjongrunnlag);
-    const { formatMessage } = useI18n({ messages: { ...messages, ...sharedI18n } });
+    const { formatMessage } = useI18n({ messages: { ...sharedI18n, ...sharedVilkårI18n, ...messages } });
 
     const initialValues = bosituasjongrunnlagTilFormDataEllerNy(
         props.behandling.grunnlagsdataOgVilkårsvurderinger.bosituasjon,
@@ -99,6 +109,11 @@ const Bosituasjon = (
         save(values, onSuccess);
     };
 
+    const bosituasjonFelterMedAvvik = bosituasjonFelterMedAvvikFraSøknad(
+        props.behandling.søknad.søknadInnhold.boforhold,
+        form.watch('bosituasjoner') ?? [],
+    );
+
     return (
         <ToKolonner tittel={formatMessage('page.tittel')}>
             {{
@@ -117,7 +132,25 @@ const Bosituasjon = (
                         tilbake={{ url: props.forrigeUrl }}
                         lagreOgfortsettSenere={{ onClick: handleLagreOgFortsettSenere, url: props.avsluttUrl }}
                         {...props}
-                    />
+                    >
+                        {bosituasjonFelterMedAvvik.length > 0 && (
+                            <Alert className={sharedStyles.avslagAdvarsel} variant="warning">
+                                <div className={styles.avvikFraSøknadInnhold}>
+                                    <BodyShort>
+                                        {formatMessage('display.avvikFraSøknad.formue.søkerOpplysteForSegSelv')}
+                                    </BodyShort>
+
+                                    <ul className={styles.avvikFraSøknadListe}>
+                                        {bosituasjonFelterMedAvvik.map((felt) => (
+                                            <li key={felt}>{formatMessage(bosituasjonFeltTilMeldingsnøkkel[felt])}</li>
+                                        ))}
+                                    </ul>
+
+                                    <BodyShort>{formatMessage('display.avvikFraSøknad.formue.oppfordring')}</BodyShort>
+                                </div>
+                            </Alert>
+                        )}
+                    </BosituasjonForm>
                 ),
                 right: (
                     <div className={sharedStyles.toKollonerRightContainer}>

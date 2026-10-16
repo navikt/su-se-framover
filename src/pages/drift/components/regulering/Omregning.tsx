@@ -1,5 +1,5 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import { Alert, Button, Modal, Tabs, TextField } from '@navikt/ds-react';
+import { Alert, Button, Modal, Radio, RadioGroup, Tabs, TextField } from '@navikt/ds-react';
 import { useState } from 'react';
 import { dryRunOmregning, startOmregning } from '~src/api/reguleringApi.ts';
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert.tsx';
@@ -7,6 +7,7 @@ import { MonthPicker } from '~src/components/inputs/datePicker/DatePicker.tsx';
 import { useApiCall } from '~src/lib/hooks.ts';
 import { Nullable } from '~src/lib/types.ts';
 import sharedStyles from '~src/pages/drift/index.module.less';
+import { Sakstype } from '~src/types/Sak.ts';
 import { toIsoMonthOrNull } from '~src/utils/date/dateUtils.ts';
 import styles from './G-regulering.module.less';
 
@@ -86,6 +87,7 @@ const DryRunPanel = () => {
     const [maksAntallSakerInput, setMaksAntallSakerInput] = useState<string>('');
     const [manglerStartDato, setManglerStartDato] = useState(false);
     const [saksnummer, setSaksnummer] = useState<string>('');
+    const [kunSakstype, setKunSakstype] = useState<Nullable<Sakstype>>(null);
 
     const maksAntallSakerErUgyldig =
         maksAntallSakerInput !== '' &&
@@ -104,6 +106,7 @@ const DryRunPanel = () => {
             startDatoOmregning: toIsoMonthOrNull(startDatoOmregning)!,
             maksAntallSaker: maksAntallSaker,
             saksnummer: saksnummer || null,
+            sakstype: kunSakstype || null,
         });
     };
 
@@ -123,6 +126,15 @@ const DryRunPanel = () => {
                         />
                     </div>
                     <TextField label="Saksnummer" value={saksnummer} onChange={(e) => setSaksnummer(e.target.value)} />
+                    <RadioGroup
+                        legend="Kun sakstype"
+                        value={kunSakstype ?? ''}
+                        onChange={(val) => setKunSakstype(val === 'alder' || val === 'uføre' ? val : null)}
+                    >
+                        <Radio value="">Alle</Radio>
+                        <Radio value="alder">Alder</Radio>
+                        <Radio value="uføre">Uføre</Radio>
+                    </RadioGroup>
                 </div>
                 <TextField
                     label="Maks antall saker"
