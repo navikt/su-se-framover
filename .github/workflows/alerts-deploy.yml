@@ -20,14 +20,14 @@ jobs:
             - name: Checkout code
               uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
             - name: deploy to dev
-              uses: nais/deploy/actions/deploy@v2
+              uses: nais/deploy/actions/deploy@v3
               env:
                   CLUSTER: dev-gcp
                   RESOURCE: alerts.yml
                   VAR: SLACK_ALERTS_CHANNEL=#su_alerts_dev,LOGS_URL_LOKI=https://grafana.nav.cloud.nais.io/goto/efq0y6eulatc0c?orgId=1,K8S_CLUSTER_NAME=dev
 
             - name: deploy to prod
-              uses: nais/deploy/actions/deploy@v2
+              uses: nais/deploy/actions/deploy@v3
               env:
                   CLUSTER: prod-gcp
                   RESOURCE: alerts.yml

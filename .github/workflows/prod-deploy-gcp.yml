@@ -64,7 +64,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
-      - uses: nais/deploy/actions/deploy@v2
+      - uses: nais/deploy/actions/deploy@v3
         env:
           CLUSTER: dev-gcp
           RESOURCE: .nais/dev-gcp.yaml
@@ -79,7 +79,7 @@ jobs:
         id-token: write
     steps:
         - uses: actions/checkout@v7
-        - uses: nais/deploy/actions/deploy@v2
+        - uses: nais/deploy/actions/deploy@v3
           env:
               #se https://console.cloud.google.com/artifacts/docker/nais-management-233d/europe-north1/supstonad?authuser=1&inv=1&invt=AbybBg&project=supstonad-prod-9599
               # Tidligere: image=europe-north1-docker.pkg.dev/nais-management-233d/supstonad/su-se-framover-app:${{ github.sha }}
