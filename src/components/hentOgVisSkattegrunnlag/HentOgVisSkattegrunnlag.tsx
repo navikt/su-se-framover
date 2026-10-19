@@ -133,7 +133,7 @@ const HentOfVisSkattegrunnlagForFrioppslag = () => {
                                             <HelpText>
                                                 <BodyShort>
                                                     Dersom du henter skattedata for søker og EPS, vil begge sitt
-                                                    skattegrunnlaget bli journalført på søker.
+                                                    skattegrunnlag bli journalført på søker.
                                                 </BodyShort>
                                                 <BodyShort>
                                                     Ellers blir skattegrunnlaget journalført på fødselsnummeret du har
