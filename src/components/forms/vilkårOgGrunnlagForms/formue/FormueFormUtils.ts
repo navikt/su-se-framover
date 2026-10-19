@@ -23,7 +23,7 @@ import {
 import { GrunnlagsdataOgVilkårsvurderinger } from '~src/types/grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
 import { eqNullableDatePeriode, NullablePeriode, Periode } from '~src/types/Periode';
 import { SøknadInnhold } from '~src/types/Søknadinnhold';
-import { parseStringAsInt } from '~src/utils/NumberUtls.ts';
+import { parseStringAsInt, parseStringOrIntAsInt } from '~src/utils/NumberUtils.ts';
 import { lagTomPeriode, periodeTilIsoDateString } from '~src/utils/periode/periodeUtils';
 import {
     hentBosituasjongrunnlag,
@@ -218,8 +218,8 @@ export const regnUtFormuegrunnlagVerdier = (
     //https://trello.com/c/cKPqPVXP/513-saksbehandling-formue-depositumskonto-trekkes-ikke-ifra-innskudd-p%C3%A5-konto
     //"depositum trekkes fra innskudd på konto(men det kan ikke bli minusbeløp), så summeres innskudd på konto med resten."
     const innskudd = Math.max(
-        (verdier.innskudd ? Number(verdier.innskudd) : 0) -
-            (verdier.depositumskonto ? Number(verdier.depositumskonto) : 0),
+        (verdier.innskudd ? parseStringOrIntAsInt(verdier.innskudd) : 0) -
+            (verdier.depositumskonto ? parseStringOrIntAsInt(verdier.depositumskonto) : 0),
         0,
     );
 
@@ -232,7 +232,7 @@ export const regnUtFormuegrunnlagVerdier = (
         verdier.kontanter,
     ];
 
-    const skalAdderesParsed = skalAdderes.map((verdi) => (typeof verdi === 'string' ? parseStringAsInt(verdi) : verdi));
+    const skalAdderesParsed = skalAdderes.map((verdi) => parseStringOrIntAsInt(verdi));
 
     const formue = [...skalAdderesParsed, innskudd];
 
@@ -243,6 +243,7 @@ const getInitialVerdierFraGrunnlagEllerSøknad = (
     verdier: Nullable<FormuegrunnlagVerdier>,
     søknadsFormue: Nullable<SøknadInnhold['formue']>,
 ): FormuegrunnlagVerdierFormData => ({
+    // TODO parse her?
     verdiIkkePrimærbolig: (verdier?.verdiIkkePrimærbolig ?? søknadsFormue?.verdiPåBolig ?? 0).toString(),
     verdiEiendommer: (verdier?.verdiEiendommer ?? søknadsFormue?.verdiPåEiendom ?? 0).toString(),
     verdiKjøretøy: verdier?.verdiKjøretøy?.toString() ?? (søknadsFormue?.kjøretøy?.length ? '' : 0).toString(),
@@ -297,7 +298,7 @@ const verdierFormDataValidering = yup
                 if (!depositum) {
                     return false;
                 }
-                return parseInt(depositum, 10) <= parseInt(innskudd, 10);
+                return parseStringAsInt(depositum, 10) <= parseStringAsInt(innskudd, 10);
             },
         ),
     })
