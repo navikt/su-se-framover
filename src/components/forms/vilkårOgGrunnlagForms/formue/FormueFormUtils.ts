@@ -23,6 +23,7 @@ import {
 import { GrunnlagsdataOgVilkårsvurderinger } from '~src/types/grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
 import { eqNullableDatePeriode, NullablePeriode, Periode } from '~src/types/Periode';
 import { SøknadInnhold } from '~src/types/Søknadinnhold';
+import { parseStringAsInt } from '~src/utils/NumberUtls.ts';
 import { lagTomPeriode, periodeTilIsoDateString } from '~src/utils/periode/periodeUtils';
 import {
     hentBosituasjongrunnlag,
@@ -169,14 +170,14 @@ export const formueVilkårFormTilRequest = (
 });
 
 const formuegrunnlagVerdierTilRequest = (verdier: FormuegrunnlagVerdierFormData): FormuegrunnlagVerdierRequest => ({
-    verdiIkkePrimærbolig: Number.parseInt(verdier.verdiIkkePrimærbolig, 0),
-    verdiEiendommer: Number.parseInt(verdier.verdiEiendommer, 0),
-    verdiKjøretøy: Number.parseInt(verdier.verdiKjøretøy, 0),
-    innskudd: Number.parseInt(verdier.innskudd, 0),
-    verdipapir: Number.parseInt(verdier.verdipapir, 0),
-    kontanter: Number.parseInt(verdier.kontanter, 0),
-    pengerSkyldt: Number.parseInt(verdier.pengerSkyldt, 0),
-    depositumskonto: Number.parseInt(verdier.depositumskonto, 0),
+    verdiIkkePrimærbolig: parseStringAsInt(verdier.verdiIkkePrimærbolig),
+    verdiEiendommer: parseStringAsInt(verdier.verdiEiendommer),
+    verdiKjøretøy: parseStringAsInt(verdier.verdiKjøretøy),
+    innskudd: parseStringAsInt(verdier.innskudd),
+    verdipapir: parseStringAsInt(verdier.verdipapir),
+    kontanter: parseStringAsInt(verdier.kontanter),
+    pengerSkyldt: parseStringAsInt(verdier.pengerSkyldt),
+    depositumskonto: parseStringAsInt(verdier.depositumskonto),
 });
 
 //hvis fraOgMed ikke er utfyllt, eller vi ikke finner en match for fraOgMed,
@@ -204,7 +205,7 @@ const summerFormue = (formue: number[]) => {
             return prev + 0;
         }
         return prev + current;
-    }, 0);
+    });
 };
 
 export const regnUtFormuegrunnlagVerdier = (
@@ -231,9 +232,7 @@ export const regnUtFormuegrunnlagVerdier = (
         verdier.kontanter,
     ];
 
-    const skalAdderesParsed = skalAdderes.map((verdi) =>
-        typeof verdi === 'string' ? Number.parseInt(verdi, 0) : verdi,
-    );
+    const skalAdderesParsed = skalAdderes.map((verdi) => (typeof verdi === 'string' ? parseStringAsInt(verdi) : verdi));
 
     const formue = [...skalAdderesParsed, innskudd];
 
@@ -298,7 +297,6 @@ const verdierFormDataValidering = yup
                 if (!depositum) {
                     return false;
                 }
-
                 return parseInt(depositum, 10) <= parseInt(innskudd, 10);
             },
         ),
