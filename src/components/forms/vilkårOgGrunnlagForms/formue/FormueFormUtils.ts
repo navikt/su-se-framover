@@ -23,6 +23,7 @@ import {
 import { GrunnlagsdataOgVilkårsvurderinger } from '~src/types/grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
 import { eqNullableDatePeriode, NullablePeriode, Periode } from '~src/types/Periode';
 import { SøknadInnhold } from '~src/types/Søknadinnhold';
+import { parseStringAsInt, parseStringOrIntAsInt } from '~src/utils/NumberUtils.ts';
 import { lagTomPeriode, periodeTilIsoDateString } from '~src/utils/periode/periodeUtils';
 import {
     hentBosituasjongrunnlag,
@@ -169,14 +170,14 @@ export const formueVilkårFormTilRequest = (
 });
 
 const formuegrunnlagVerdierTilRequest = (verdier: FormuegrunnlagVerdierFormData): FormuegrunnlagVerdierRequest => ({
-    verdiIkkePrimærbolig: Number.parseInt(verdier.verdiIkkePrimærbolig, 0),
-    verdiEiendommer: Number.parseInt(verdier.verdiEiendommer, 0),
-    verdiKjøretøy: Number.parseInt(verdier.verdiKjøretøy, 0),
-    innskudd: Number.parseInt(verdier.innskudd, 0),
-    verdipapir: Number.parseInt(verdier.verdipapir, 0),
-    kontanter: Number.parseInt(verdier.kontanter, 0),
-    pengerSkyldt: Number.parseInt(verdier.pengerSkyldt, 0),
-    depositumskonto: Number.parseInt(verdier.depositumskonto, 0),
+    verdiIkkePrimærbolig: parseStringAsInt(verdier.verdiIkkePrimærbolig),
+    verdiEiendommer: parseStringAsInt(verdier.verdiEiendommer),
+    verdiKjøretøy: parseStringAsInt(verdier.verdiKjøretøy),
+    innskudd: parseStringAsInt(verdier.innskudd),
+    verdipapir: parseStringAsInt(verdier.verdipapir),
+    kontanter: parseStringAsInt(verdier.kontanter),
+    pengerSkyldt: parseStringAsInt(verdier.pengerSkyldt),
+    depositumskonto: parseStringAsInt(verdier.depositumskonto),
 });
 
 //hvis fraOgMed ikke er utfyllt, eller vi ikke finner en match for fraOgMed,
@@ -204,7 +205,7 @@ const summerFormue = (formue: number[]) => {
             return prev + 0;
         }
         return prev + current;
-    }, 0);
+    });
 };
 
 export const regnUtFormuegrunnlagVerdier = (
@@ -217,8 +218,8 @@ export const regnUtFormuegrunnlagVerdier = (
     //https://trello.com/c/cKPqPVXP/513-saksbehandling-formue-depositumskonto-trekkes-ikke-ifra-innskudd-p%C3%A5-konto
     //"depositum trekkes fra innskudd på konto(men det kan ikke bli minusbeløp), så summeres innskudd på konto med resten."
     const innskudd = Math.max(
-        (verdier.innskudd ? Number(verdier.innskudd) : 0) -
-            (verdier.depositumskonto ? Number(verdier.depositumskonto) : 0),
+        (verdier.innskudd ? parseStringOrIntAsInt(verdier.innskudd) : 0) -
+            (verdier.depositumskonto ? parseStringOrIntAsInt(verdier.depositumskonto) : 0),
         0,
     );
 
@@ -231,9 +232,7 @@ export const regnUtFormuegrunnlagVerdier = (
         verdier.kontanter,
     ];
 
-    const skalAdderesParsed = skalAdderes.map((verdi) =>
-        typeof verdi === 'string' ? Number.parseInt(verdi, 0) : verdi,
-    );
+    const skalAdderesParsed = skalAdderes.map((verdi) => parseStringOrIntAsInt(verdi));
 
     const formue = [...skalAdderesParsed, innskudd];
 
@@ -244,6 +243,7 @@ const getInitialVerdierFraGrunnlagEllerSøknad = (
     verdier: Nullable<FormuegrunnlagVerdier>,
     søknadsFormue: Nullable<SøknadInnhold['formue']>,
 ): FormuegrunnlagVerdierFormData => ({
+    // TODO parse her?
     verdiIkkePrimærbolig: (verdier?.verdiIkkePrimærbolig ?? søknadsFormue?.verdiPåBolig ?? 0).toString(),
     verdiEiendommer: (verdier?.verdiEiendommer ?? søknadsFormue?.verdiPåEiendom ?? 0).toString(),
     verdiKjøretøy: verdier?.verdiKjøretøy?.toString() ?? (søknadsFormue?.kjøretøy?.length ? '' : 0).toString(),
@@ -298,8 +298,7 @@ const verdierFormDataValidering = yup
                 if (!depositum) {
                     return false;
                 }
-
-                return parseInt(depositum, 10) <= parseInt(innskudd, 10);
+                return parseStringAsInt(depositum, 10) <= parseStringAsInt(innskudd, 10);
             },
         ),
     })
