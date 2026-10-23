@@ -110,9 +110,41 @@ const HistoriskInfotrygdBeregningsresultat = ({ grunnlag, beregning }: Props) =>
                                     <dl className={styles.detaljer}>
                                         <div>
                                             <Label as="dt" size="small">
-                                                Satskategori
+                                                Bosituasjon
                                             </Label>
-                                            <BodyShort as="dd">{resultat.satskategori}</BodyShort>
+                                            <BodyShort as="dd">{resultat.bosituasjon}</BodyShort>
+                                        </div>
+                                        {resultat.satskategori !== null && (
+                                            <div>
+                                                <Label as="dt" size="small">
+                                                    Historisk Infotrygd-satskategori
+                                                </Label>
+                                                <BodyShort as="dd">{resultat.satskategori}</BodyShort>
+                                            </div>
+                                        )}
+                                        <div>
+                                            <Label as="dt" size="small">
+                                                Sats
+                                            </Label>
+                                            <BodyShort as="dd">{formatCurrency(resultat.sats)}</BodyShort>
+                                        </div>
+                                        <div>
+                                            <Label as="dt" size="small">
+                                                EPS-fribeløp
+                                            </Label>
+                                            <BodyShort as="dd">{formatCurrency(resultat.epsFribeløp)}</BodyShort>
+                                        </div>
+                                        <div>
+                                            <Label as="dt" size="small">
+                                                EPS-fradrag
+                                            </Label>
+                                            <BodyShort as="dd">{formatCurrency(resultat.epsFradrag)}</BodyShort>
+                                        </div>
+                                        <div>
+                                            <Label as="dt" size="small">
+                                                Sum fradrag
+                                            </Label>
+                                            <BodyShort as="dd">{formatCurrency(resultat.sumFradrag)}</BodyShort>
                                         </div>
                                         <div>
                                             <Label as="dt" size="small">

@@ -1,9 +1,9 @@
 import { BodyShort, Box, Heading, Label, VStack } from '@navikt/ds-react';
 import {
-    HistoriskInfotrygdBeregningsgrunnlagForMåned,
     HistoriskInfotrygdManuellOpphørsgrunn,
     HistoriskInfotrygdMånedsgrunnlagForMåned,
     HistoriskInfotrygdMånedsresultat,
+    HistoriskInfotrygdMånedsutkast,
 } from '~src/types/HistoriskInfotrygdRevurdering';
 import { formatCurrency } from '~src/utils/format/formatUtils';
 import { fradragskoderForVisning } from './HistoriskAlderssakUtils';
@@ -12,14 +12,12 @@ import { HistoriskInfotrygdOpphørsgrunnForMåned } from './HistoriskInfotrygdOp
 import HistoriskInfotrygdYtelse from './HistoriskInfotrygdYtelse';
 
 interface Props {
-    måned: HistoriskInfotrygdBeregningsgrunnlagForMåned;
+    måned: HistoriskInfotrygdMånedsutkast;
     historisk: HistoriskInfotrygdMånedsgrunnlagForMåned;
     kanRedigeres: boolean;
     resultatForPerioden: HistoriskInfotrygdMånedsresultat;
     opphørsgrunnForPerioden: HistoriskInfotrygdManuellOpphørsgrunn | null;
-    onOppdatert: (
-        oppdater: (måned: HistoriskInfotrygdBeregningsgrunnlagForMåned) => HistoriskInfotrygdBeregningsgrunnlagForMåned,
-    ) => void;
+    onOppdatert: (oppdater: (måned: HistoriskInfotrygdMånedsutkast) => HistoriskInfotrygdMånedsutkast) => void;
 }
 
 const HistoriskInfotrygdMåned = ({
