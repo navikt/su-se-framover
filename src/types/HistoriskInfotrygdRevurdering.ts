@@ -9,6 +9,12 @@ export type HistoriskInfotrygdRevurderingStatus =
     | 'AVSLUTTET';
 
 export type HistoriskInfotrygdSatskategori = 'EN' | 'EU' | 'EO' | 'EV';
+export type HistoriskInfotrygdRevurderingsbosituasjon =
+    | 'ENSLIG'
+    | 'EPS_UNDER_67'
+    | 'EPS_OVER_67'
+    | 'ENSLIG_MED_BOFELLESSKAP'
+    | 'EPS_UNDER_67_UFØR_FLYKTNING';
 export type HistoriskInfotrygdØkonomiskRetning = 'INGEN_ENDRING' | 'ETTERBETALING' | 'FEILUTBETALING';
 export type HistoriskInfotrygdMånedsresultat = 'YTELSE' | 'OPPHØR';
 export type HistoriskInfotrygdOpprinneligResultat = 'YTELSE' | 'INGEN_YTELSE';
@@ -89,12 +95,21 @@ export interface HistoriskInfotrygdManueltOpphør {
 
 export interface HistoriskInfotrygdBeregningsgrunnlagForMåned {
     måned: string;
-    satskategori: HistoriskInfotrygdSatskategori;
+    bosituasjon: HistoriskInfotrygdRevurderingsbosituasjon;
     fradrag: HistoriskInfotrygdFradragForMåned[];
     manueltOpphør: HistoriskInfotrygdManueltOpphør | null;
 }
 
+export type HistoriskInfotrygdMånedsutkast = Omit<HistoriskInfotrygdBeregningsgrunnlagForMåned, 'bosituasjon'> & {
+    bosituasjon: HistoriskInfotrygdRevurderingsbosituasjon | null;
+};
+
 export interface HistoriskInfotrygdBeregningForMåned extends HistoriskInfotrygdBeregningsgrunnlagForMåned {
+    satskategori: HistoriskInfotrygdSatskategori | null;
+    sats: number;
+    epsFribeløp: number;
+    epsFradrag: number;
+    sumFradrag: number;
     gammeltBeløp: number;
     nyttBeløp: number;
     differanse: number;
@@ -119,6 +134,7 @@ export interface HistoriskInfotrygdMånedsgrunnlagForMåned {
     historiskFradrag: number | null;
     historiskFradragskoder: string[];
     historiskBeløp: number | null;
+    foreslåttBosituasjon: HistoriskInfotrygdRevurderingsbosituasjon | null;
     foreslåttSatskategori: HistoriskInfotrygdSatskategori | null;
     kreverKontrollAvHistoriskForsørgingstillegg: boolean;
 }
