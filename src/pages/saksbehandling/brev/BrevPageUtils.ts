@@ -11,6 +11,7 @@ import { Distribusjonstype } from '~src/types/dokument/Dokument';
 export interface DokumentFormData {
     tittel: string;
     vilHellerLasteOppPdf: boolean;
+    leggVedVedlegg: boolean;
     fritekst: string;
     fileObject: Nullable<FileObject>;
     skalSendeTilAnnenAdresse: boolean;
@@ -21,6 +22,7 @@ export interface DokumentFormData {
 export const dokumentSchema = yup.object<DokumentFormData>({
     tittel: yup.string().required(),
     vilHellerLasteOppPdf: yup.boolean().required(),
+    leggVedVedlegg: yup.boolean().required(),
     fritekst: yup.string().defined().when('vilHellerLasteOppPdf', {
         is: false,
         then: yup.string().required(),
