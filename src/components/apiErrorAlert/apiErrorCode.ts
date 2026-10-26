@@ -170,7 +170,6 @@ export enum ApiErrorCode {
     NYE_OVERLAPPENDE_VEDTAK = 'nye_overlappende_vedtak',
 
     //O
-    OPPDATERING_AV_STØNADSPERIODE = 'oppdatering_av_stønadsperiode',
     OPPDRAG_STENGT_ELLER_NEDE = 'simulering_feilet_oppdrag_stengt_eller_nede',
     OPPDRAGET_FINNES_IKKE = 'simulering_feilet_oppdraget_finnes_ikke',
     OPPHOLDSTILLATELSE_ER_IKKE_UTFYLT = 'oppholdstillatelse_er_ikke_utfylt',
