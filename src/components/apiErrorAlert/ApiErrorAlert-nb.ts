@@ -217,7 +217,6 @@ const messages: { [key in ApiErrorCode]: string } = {
         'Det har kommet nye vedtak i revurderingsperioden etter revurderingen ble opprettet/oppdatert. Revurderingen må sendes tilbake til saksbehandler som igjen må "starte revurdering på nytt"',
 
     //O
-    [ApiErrorCode.OPPDATERING_AV_STØNADSPERIODE]: 'Feil ved oppdatering av stønadsperiode',
     [ApiErrorCode.OPPDRAG_STENGT_ELLER_NEDE]:
         'Simulering feilet. Oppdrag/UR er stengt eller nede. Prøv på nytt eller prøv igjen i Oppdrags åpningstid',
     [ApiErrorCode.OPPDRAGET_FINNES_IKKE]:
@@ -331,6 +330,11 @@ const messages: { [key in ApiErrorCode]: string } = {
     [ApiErrorCode.USPESIFISIERT_FRADRAG_KREVER_BESKRIVELSE]: 'Et fradrag som er "Annet" må spesifiseres',
     [ApiErrorCode.UTBETALING_ALLEREDE_OPPHØRT]: 'Utbetaling allerede opphørt',
     [ApiErrorCode.UTBETALING_ALLEREDE_STANSET]: 'Utbetaling allerede stanset',
+    [ApiErrorCode.UTBETALING_AVVENTER_KVITTERING]: 'Tidligere utbetaling mangler kvittering. Prøv igjen senere.',
+    [ApiErrorCode.UTBETALING_HAR_FEILKVITTERING]:
+        'Tidligere utbetaling har feilkvittering som må avklares før du kan fortsette.',
+    [ApiErrorCode.UTBETALING_HAR_FEILKVITTERING_OG_AVVENTER_KVITTERING]:
+        'Tidligere utbetalinger har feilkvittering og mangler kvittering. Feilkvitteringen må avklares, og manglende kvittering må mottas før du kan fortsette.',
     [ApiErrorCode.UTDATERT_SAKSVERSJON]:
         'Saksversjonen er utdatert. Det har muligens skjedd en endring i bakgrunnen. Vennligst refresher nettleseren / hent saken på nytt.',
     [ApiErrorCode.UTDATERT_VERSJON]: 'Saksversjonen er utdatert. Vennligst prøv å refreshe siden.',
@@ -369,4 +373,7 @@ export const statusFeilmeldinger = {
     'feilmelding.generisk': 'Feilet med status {statusCode}',
     'feilmelding.fantIkkeSak': 'Fant ingen sak for denne brukeren',
     'feilmelding.feilOppstod': 'En feil oppstod',
+    'feilmelding.eps.ikkeTilgang': 'Du har ikke tilgang til å hente opplysninger om ektefelle eller samboer.',
+    'feilmelding.eps.ikkeFunnet': 'Fant ikke personen. Kontroller fødselsnummeret.',
+    'feilmelding.eps.teknisk': 'Det oppstod en teknisk feil ved oppslag av ektefelle eller samboer. Prøv igjen senere.',
 };

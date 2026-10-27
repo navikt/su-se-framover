@@ -38,7 +38,6 @@ export const trimIdAndOpprettetFromList = <T>(obj: T[]) =>
 
 export const trimIdFromObject = <T>(obj: T) => {
     if (harId(obj)) {
-        // biome-ignore lint/correctness/noUnusedVariables: opprettet is intentionally ignored
         const { id, ...rest } = obj;
         return rest;
     }
@@ -47,7 +46,6 @@ export const trimIdFromObject = <T>(obj: T) => {
 
 export const trimOpprettetFromObject = <T>(obj: T) => {
     if (harOpprettetTidspunkt(obj)) {
-        // biome-ignore lint/correctness/noUnusedVariables: opprettet is intentionally ignored
         const { opprettet, ...rest } = obj;
         return rest;
     }
