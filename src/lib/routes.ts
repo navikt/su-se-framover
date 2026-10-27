@@ -38,6 +38,12 @@ export const historiskAlderssakDrift: Route<never> = {
     createURL: () => '/drift/infotrygd/',
 };
 
+export const historiskInfotrygdRevurderingDrift: Route<{ sakId: string; revurderingId: string }> = {
+    path: '/drift/infotrygd/:sakId/revurderinger/:revurderingId/',
+    absPath: '/drift/infotrygd/:sakId/revurderinger/:revurderingId/',
+    createURL: ({ sakId, revurderingId }) => `/drift/infotrygd/${sakId}/revurderinger/${revurderingId}/`,
+};
+
 export const devTools: Route<never> = {
     path: '/devTools/',
     absPath: '/devTools/',

@@ -178,6 +178,10 @@ const AppRoutes = () => {
                     path={routes.historiskAlderssakDrift.path}
                     element={<WithDocTitle title="Infotrygd-sak" Page={HistoriskAlderssakDrift} />}
                 />
+                <Route
+                    path={routes.historiskInfotrygdRevurderingDrift.path}
+                    element={<WithDocTitle title="Historisk revurdering" Page={HistoriskInfotrygdRevurdering} />}
+                />
                 <Route path={routes.drift.path} element={<WithDocTitle title="Drift" Page={Drift} />} />
                 <Route path="*" element={<>404</>} />
             </Routes>

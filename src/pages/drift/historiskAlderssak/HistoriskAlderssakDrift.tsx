@@ -21,7 +21,7 @@ const HistoriskAlderssakDrift = () => {
                 tilbakeTekst="Tilbake til Drift"
                 onRevurderingOpprettet={(revurdering) =>
                     navigate(
-                        Routes.historiskInfotrygdRevurdering.createURL({
+                        Routes.historiskInfotrygdRevurderingDrift.createURL({
                             revurderingId: revurdering.id,
                             sakId: revurdering.sakId,
                         }),
@@ -29,7 +29,7 @@ const HistoriskAlderssakDrift = () => {
                     )
                 }
                 onÅpneRevurdering={(revurderingId, sakId) =>
-                    navigate(Routes.historiskInfotrygdRevurdering.createURL({ revurderingId, sakId }))
+                    navigate(Routes.historiskInfotrygdRevurderingDrift.createURL({ revurderingId, sakId }))
                 }
             />
         );
