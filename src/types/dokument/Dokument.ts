@@ -31,7 +31,7 @@ export interface OpprettDokumentRequest {
     pdf: Nullable<File>;
     adresse: Nullable<AdresseRequest>;
     distribusjonstype: Distribusjonstype;
-    leggVedVedlegg: boolean;
+    leggVedForsideSomVedlegg: boolean;
 }
 
 interface AdresseRequest {

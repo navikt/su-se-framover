@@ -45,7 +45,7 @@ const BrevPage = () => {
             tittel: '',
             fritekst: '',
             vilHellerLasteOppPdf: false,
-            leggVedVedlegg: false,
+            leggVedForsideSomVedlegg: false,
             fileObject: null,
             skalSendeTilAnnenAdresse: false,
             adresse: {
@@ -73,7 +73,7 @@ const BrevPage = () => {
             {
                 sakId: context.sak.id,
                 tittel: data.tittel!,
-                leggVedVedlegg: data.leggVedVedlegg,
+                leggVedForsideSomVedlegg: data.leggVedForsideSomVedlegg,
                 fritekst: data.vilHellerLasteOppPdf ? null : data.fritekst!,
                 pdf: data.vilHellerLasteOppPdf ? data.fileObject!.file : null,
                 adresse: data.skalSendeTilAnnenAdresse
@@ -160,10 +160,10 @@ const BrevPage = () => {
 
                 <Controller
                     control={form.control}
-                    name={'leggVedVedlegg'}
+                    name={'leggVedForsideSomVedlegg'}
                     render={({ field }) => (
                         <Checkbox {...field} checked={field.value}>
-                            Legg ved forside vedlegg
+                            Legg ved førsteside til skanning
                         </Checkbox>
                     )}
                 />
@@ -204,7 +204,7 @@ const BrevPage = () => {
                                     adresse: null,
                                     //distibusjonstype har ikke noe å si for visning av brevet
                                     distribusjonstype: Distribusjonstype.ANNET,
-                                    leggVedVedlegg: form.watch('leggVedVedlegg'),
+                                    leggVedForsideSomVedlegg: form.watch('leggVedForsideSomVedlegg'),
                                 }),
                             status: BrevStatus,
                         }}

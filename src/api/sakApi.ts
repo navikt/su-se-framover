@@ -142,7 +142,7 @@ export async function lagreOgSendFritekstDokument(arg: OpprettDokumentRequest): 
                 fritekst: arg.fritekst,
                 adresse: arg.adresse,
                 distribusjonstype: arg.distribusjonstype,
-                leggVedVedlegg: arg.leggVedVedlegg,
+                leggVedForsideSomVedlegg: arg.leggVedForsideSomVedlegg,
             },
         });
     } else {
@@ -150,7 +150,7 @@ export async function lagreOgSendFritekstDokument(arg: OpprettDokumentRequest): 
         const formData = new FormData();
         formData.append('tittel', arg.tittel);
         formData.append('distribusjonstype', arg.distribusjonstype);
-        formData.append('leggVedVedlegg', String(arg.leggVedVedlegg));
+        formData.append('leggVedForsideSomVedlegg', String(arg.leggVedForsideSomVedlegg));
         formData.append('pdf', arg.pdf!);
         if (arg.adresse) {
             formData.append('adresse', JSON.stringify(arg.adresse));
@@ -174,7 +174,7 @@ export async function opprettFritekstDokument(arg: OpprettDokumentRequest): Prom
             fritekst: arg.fritekst,
             adresse: arg.adresse,
             distribusjonstype: arg.distribusjonstype,
-            leggVedVedlegg: arg.leggVedVedlegg,
+            leggVedForsideSomVedlegg: arg.leggVedForsideSomVedlegg,
         },
         bodyTransformer: (res) => res.blob(),
     });
