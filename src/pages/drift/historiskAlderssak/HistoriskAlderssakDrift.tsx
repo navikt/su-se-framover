@@ -25,11 +25,13 @@ const HistoriskAlderssakDrift = () => {
                             revurderingId: revurdering.id,
                             sakId: revurdering.sakId,
                         }),
-                        { state: { opprettetRevurdering: revurdering } },
+                        { state: { fnr, opprettetRevurdering: revurdering } },
                     )
                 }
                 onÅpneRevurdering={(revurderingId, sakId) =>
-                    navigate(Routes.historiskInfotrygdRevurderingDrift.createURL({ revurderingId, sakId }))
+                    navigate(Routes.historiskInfotrygdRevurderingDrift.createURL({ revurderingId, sakId }), {
+                        state: { fnr },
+                    })
                 }
             />
         );

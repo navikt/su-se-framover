@@ -6,6 +6,7 @@ import { hentHistoriskInfotrygdRevurdering } from '~src/api/historiskAlderssakAp
 import LinkAsButton from '~src/components/linkAsButton/LinkAsButton';
 import AvsluttHistoriskInfotrygdRevurdering from '~src/features/historiskAlderssak/AvsluttHistoriskInfotrygdRevurdering';
 import HistoriskAlderssakApiErrorAlert from '~src/features/historiskAlderssak/HistoriskAlderssakApiErrorAlert';
+import { hentFnrFraNavigasjon } from '~src/features/historiskAlderssak/HistoriskAlderssakUtils';
 import historiskStyles from '~src/features/historiskAlderssak/HistoriskAlderssakVisning.module.less';
 import HistoriskInfotrygdBeregning from '~src/features/historiskAlderssak/HistoriskInfotrygdBeregning';
 import HistoriskInfotrygdEtterBeregning from '~src/features/historiskAlderssak/HistoriskInfotrygdEtterBeregning';
@@ -22,6 +23,7 @@ const HistoriskInfotrygdRevurdering = () => {
     const erDriftsinngang = useMatch(Routes.historiskInfotrygdRevurderingDrift.absPath) !== null;
     const location = useLocation();
     const navigate = useNavigate();
+    const fnr = erDriftsinngang ? hentFnrFraNavigasjon(location.state) : null;
     const [opprettetRevurdering, setOpprettetRevurdering] = useState<HistoriskInfotrygdRevurderingType | null>(() => {
         const state = location.state as { opprettetRevurdering?: HistoriskInfotrygdRevurderingType } | null;
         const behandling = state?.opprettetRevurdering;
@@ -34,7 +36,7 @@ const HistoriskInfotrygdRevurdering = () => {
 
     useEffect(() => {
         if (opprettetRevurdering) {
-            navigate(location.pathname, { replace: true, state: null });
+            navigate(location.pathname, { replace: true, state: fnr ? { fnr } : null });
         }
     }, []);
 
@@ -119,6 +121,7 @@ const HistoriskInfotrygdRevurdering = () => {
                     <div>
                         <LinkAsButton
                             variant="secondary"
+                            state={fnr ? { fnr } : undefined}
                             href={
                                 erDriftsinngang
                                     ? Routes.historiskAlderssakDrift.createURL()
