@@ -1,5 +1,5 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import { Button, Heading, Loader, Select, VStack } from '@navikt/ds-react';
+import { Alert, Button, Heading, Loader, Select, VStack } from '@navikt/ds-react';
 import { useEffect, useState } from 'react';
 import {
     beregnHistoriskInfotrygdRevurdering,
@@ -11,6 +11,7 @@ import {
     HistoriskInfotrygdLagretBeregning,
     HistoriskInfotrygdManuellOpphørsgrunn,
     HistoriskInfotrygdMånedsgrunnlag,
+    HistoriskInfotrygdMånedsutkast,
     HistoriskInfotrygdRevurdering,
 } from '~src/types/HistoriskInfotrygdRevurdering';
 import HistoriskAlderssakApiErrorAlert from './HistoriskAlderssakApiErrorAlert';
@@ -27,11 +28,11 @@ interface Props {
 const lagSkjemagrunnlag = (grunnlag: HistoriskInfotrygdMånedsgrunnlag) => {
     const lagret = new Map(grunnlag.beregning?.måneder.map((måned) => [måned.måned, måned]));
 
-    return grunnlag.måneder.map<HistoriskInfotrygdBeregningsgrunnlagForMåned>((måned) => {
+    return grunnlag.måneder.map<HistoriskInfotrygdMånedsutkast>((måned) => {
         const lagretMåned = lagret.get(måned.måned);
         return {
             måned: måned.måned,
-            satskategori: lagretMåned?.satskategori ?? måned.foreslåttSatskategori ?? 'EN',
+            bosituasjon: lagretMåned?.bosituasjon ?? måned.foreslåttBosituasjon,
             fradrag: lagretMåned?.fradrag ?? [],
             manueltOpphør: lagretMåned?.manueltOpphør ?? null,
         };
@@ -41,7 +42,7 @@ const lagSkjemagrunnlag = (grunnlag: HistoriskInfotrygdMånedsgrunnlag) => {
 const HistoriskInfotrygdBeregning = (props: Props) => {
     const [grunnlagStatus, hentGrunnlag] = useApiCall(hentHistoriskInfotrygdMånedsgrunnlag);
     const [beregnStatus, beregn] = useApiCall(beregnHistoriskInfotrygdRevurdering);
-    const [måneder, setMåneder] = useState<HistoriskInfotrygdBeregningsgrunnlagForMåned[]>([]);
+    const [måneder, setMåneder] = useState<HistoriskInfotrygdMånedsutkast[]>([]);
     const [beregningEtterLagring, setBeregningEtterLagring] = useState<HistoriskInfotrygdLagretBeregning | null>(null);
     const [valideringsfeil, setValideringsfeil] = useState<string>();
     const [resultatForPerioden, setResultatForPerioden] = useState<'YTELSE' | 'OPPHØR'>('YTELSE');
@@ -62,23 +63,38 @@ const HistoriskInfotrygdBeregning = (props: Props) => {
 
     const oppdaterMåned = (
         index: number,
-        oppdater: (måned: HistoriskInfotrygdBeregningsgrunnlagForMåned) => HistoriskInfotrygdBeregningsgrunnlagForMåned,
+        oppdater: (måned: HistoriskInfotrygdMånedsutkast) => HistoriskInfotrygdMånedsutkast,
     ) => setMåneder((gjeldende) => gjeldende.map((måned, i) => (i === index ? oppdater(måned) : måned)));
 
     const handleBeregn = () => {
+        const månederMedBosituasjon = måneder.filter(
+            (
+                måned,
+            ): måned is HistoriskInfotrygdMånedsutkast & {
+                bosituasjon: NonNullable<HistoriskInfotrygdMånedsutkast['bosituasjon']>;
+            } => måned.bosituasjon !== null,
+        );
+        if (månederMedBosituasjon.length !== måneder.length) {
+            setValideringsfeil('Velg bosituasjon for hver måned før du beregner.');
+            return;
+        }
         if (resultatForPerioden === 'OPPHØR' && !opphørsgrunnForPerioden) {
             setValideringsfeil('Velg opphørsgrunn for hele perioden.');
             return;
         }
 
         setValideringsfeil(undefined);
-        const beregningsmåneder = måneder.map((måned) => ({
-            ...måned,
-            manueltOpphør:
-                resultatForPerioden === 'OPPHØR' && opphørsgrunnForPerioden
-                    ? { opphørsgrunn: opphørsgrunnForPerioden }
-                    : null,
-        }));
+        const beregningsmåneder: HistoriskInfotrygdBeregningsgrunnlagForMåned[] = månederMedBosituasjon.map(
+            (måned) => ({
+                måned: måned.måned,
+                bosituasjon: måned.bosituasjon,
+                fradrag: måned.fradrag,
+                manueltOpphør:
+                    resultatForPerioden === 'OPPHØR' && opphørsgrunnForPerioden
+                        ? { opphørsgrunn: opphørsgrunnForPerioden }
+                        : null,
+            }),
+        );
 
         beregn(
             {
@@ -135,6 +151,9 @@ const HistoriskInfotrygdBeregning = (props: Props) => {
                             setValideringsfeil={setValideringsfeil}
                         />
                     )}
+                    {valideringsfeil && resultatForPerioden === 'YTELSE' && (
+                        <Alert variant="error">{valideringsfeil}</Alert>
+                    )}
                 </VStack>
             </section>
             <section aria-labelledby="månedsgrunnlag-tittel">
@@ -152,7 +171,10 @@ const HistoriskInfotrygdBeregning = (props: Props) => {
                                 kanRedigeres={kanRedigeres}
                                 resultatForPerioden={resultatForPerioden}
                                 opphørsgrunnForPerioden={opphørsgrunnForPerioden}
-                                onOppdatert={(oppdater) => oppdaterMåned(månedIndex, oppdater)}
+                                onOppdatert={(oppdater) => {
+                                    oppdaterMåned(månedIndex, oppdater);
+                                    setValideringsfeil(undefined);
+                                }}
                             />
                         );
                     })}
