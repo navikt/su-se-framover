@@ -1,5 +1,5 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import { Alert, Button, Heading, Loader, Select, VStack } from '@navikt/ds-react';
+import { Alert, BodyShort, Button, Heading, Loader, Select, VStack } from '@navikt/ds-react';
 import { useEffect, useState } from 'react';
 import {
     beregnHistoriskInfotrygdRevurdering,
@@ -14,6 +14,7 @@ import {
     HistoriskInfotrygdMånedsutkast,
     HistoriskInfotrygdRevurdering,
 } from '~src/types/HistoriskInfotrygdRevurdering';
+import { formatMonthYear, parseNonNullableIsoDateOnly } from '~src/utils/date/dateUtils';
 import HistoriskAlderssakApiErrorAlert from './HistoriskAlderssakApiErrorAlert';
 import HistoriskInfotrygdBeregningsresultat from './HistoriskInfotrygdBeregningsresultat';
 import HistoriskInfotrygdForsørgingstillegg from './HistoriskInfotrygdForsørgingstillegg';
@@ -25,56 +26,82 @@ interface Props {
     onOppdatert: (behandling: HistoriskInfotrygdRevurdering) => void;
 }
 
-const lagSkjemagrunnlag = (grunnlag: HistoriskInfotrygdMånedsgrunnlag) => {
-    const lagret = new Map(grunnlag.beregning?.måneder.map((måned) => [måned.måned, måned]));
+const lagMånedsutkastForRevurdering = (grunnlag: HistoriskInfotrygdMånedsgrunnlag) => {
+    const lagredeBeregningsmåneder = new Map(grunnlag.beregning?.måneder.map((måned) => [måned.måned, måned]));
 
-    return grunnlag.måneder.map<HistoriskInfotrygdMånedsutkast>((måned) => {
-        const lagretMåned = lagret.get(måned.måned);
+    return grunnlag.måneder.map<HistoriskInfotrygdMånedsutkast>((historiskMåned) => {
+        const lagretBeregningsmåned = lagredeBeregningsmåneder.get(historiskMåned.måned);
         return {
-            måned: måned.måned,
-            bosituasjon: lagretMåned?.bosituasjon ?? måned.foreslåttBosituasjon,
-            fradrag: lagretMåned?.fradrag ?? [],
-            manueltOpphør: lagretMåned?.manueltOpphør ?? null,
+            måned: historiskMåned.måned,
+            bosituasjon: lagretBeregningsmåned?.bosituasjon ?? historiskMåned.foreslåttBosituasjon,
+            fradrag: lagretBeregningsmåned?.fradrag ?? [],
+            manueltOpphør: lagretBeregningsmåned?.manueltOpphør ?? null,
         };
     });
+};
+
+const finnMånederMedHistoriskeFradragMenIngenNye = (
+    grunnlag: HistoriskInfotrygdMånedsgrunnlag,
+    nyeMånedsutkast: HistoriskInfotrygdMånedsutkast[],
+): string[] => {
+    const månederFørRevurdering = grunnlag.måneder;
+
+    return månederFørRevurdering
+        .filter((månedFørRevurdering) => {
+            const haddeFradrag =
+                månedFørRevurdering.historiskFradrag !== null && månedFørRevurdering.historiskFradrag > 0;
+            if (!haddeFradrag) {
+                return false;
+            }
+
+            const nyttMånedsutkast = nyeMånedsutkast.find((utkast) => utkast.måned === månedFørRevurdering.måned);
+
+            return nyttMånedsutkast !== undefined && nyttMånedsutkast.fradrag.length === 0;
+        })
+        .map((månedFørRevurdering) => månedFørRevurdering.måned);
 };
 
 const HistoriskInfotrygdBeregning = (props: Props) => {
     const [grunnlagStatus, hentGrunnlag] = useApiCall(hentHistoriskInfotrygdMånedsgrunnlag);
     const [beregnStatus, beregn] = useApiCall(beregnHistoriskInfotrygdRevurdering);
-    const [måneder, setMåneder] = useState<HistoriskInfotrygdMånedsutkast[]>([]);
+    // Redigerbart utkast for denne revurderingen. Historiske fradrag kopieres ikke inn;
+    // fradrag hentes fra en lagret beregning på revurderingen, ellers starter listen tom.
+    const [månedsutkast, setMånedsutkast] = useState<HistoriskInfotrygdMånedsutkast[]>([]);
     const [beregningEtterLagring, setBeregningEtterLagring] = useState<HistoriskInfotrygdLagretBeregning | null>(null);
+    const [månederMedFradragsvarsel, setMånederMedFradragsvarsel] = useState<string[]>([]);
     const [valideringsfeil, setValideringsfeil] = useState<string>();
     const [resultatForPerioden, setResultatForPerioden] = useState<'YTELSE' | 'OPPHØR'>('YTELSE');
     const [opphørsgrunnForPerioden, setOpphørsgrunnForPerioden] =
         useState<HistoriskInfotrygdManuellOpphørsgrunn | null>(null);
 
-    const lastGrunnlag = () =>
+    const lastMånedsgrunnlag = () =>
         hentGrunnlag(props.behandling.id, (grunnlag) => {
-            setMåneder(lagSkjemagrunnlag(grunnlag));
+            setMånedsutkast(lagMånedsutkastForRevurdering(grunnlag));
             const lagretOpphør = grunnlag.beregning?.måneder.find((måned) => måned.manueltOpphør)?.manueltOpphør;
             setResultatForPerioden(lagretOpphør ? 'OPPHØR' : 'YTELSE');
             setOpphørsgrunnForPerioden(lagretOpphør?.opphørsgrunn ?? null);
         });
 
     useEffect(() => {
-        lastGrunnlag();
+        setMånederMedFradragsvarsel([]);
+        lastMånedsgrunnlag();
     }, [props.behandling.id]);
 
     const oppdaterMåned = (
         index: number,
         oppdater: (måned: HistoriskInfotrygdMånedsutkast) => HistoriskInfotrygdMånedsutkast,
-    ) => setMåneder((gjeldende) => gjeldende.map((måned, i) => (i === index ? oppdater(måned) : måned)));
+    ) => setMånedsutkast((gjeldende) => gjeldende.map((måned, i) => (i === index ? oppdater(måned) : måned)));
 
     const handleBeregn = () => {
-        const månederMedBosituasjon = måneder.filter(
+        setMånederMedFradragsvarsel([]);
+        const månederMedBosituasjon = månedsutkast.filter(
             (
                 måned,
             ): måned is HistoriskInfotrygdMånedsutkast & {
                 bosituasjon: NonNullable<HistoriskInfotrygdMånedsutkast['bosituasjon']>;
             } => måned.bosituasjon !== null,
         );
-        if (månederMedBosituasjon.length !== måneder.length) {
+        if (månederMedBosituasjon.length !== månedsutkast.length) {
             setValideringsfeil('Velg bosituasjon for hver måned før du beregner.');
             return;
         }
@@ -95,6 +122,8 @@ const HistoriskInfotrygdBeregning = (props: Props) => {
                         : null,
             }),
         );
+
+        setMånederMedFradragsvarsel(finnMånederMedHistoriskeFradragMenIngenNye(grunnlag, månedsutkast));
 
         beregn(
             {
@@ -119,6 +148,7 @@ const HistoriskInfotrygdBeregning = (props: Props) => {
     }
 
     const grunnlag = grunnlagStatus.value;
+    const historiskeMåneder = grunnlag.måneder;
     const beregning = beregningEtterLagring ?? grunnlag.beregning;
     const kanRedigeres = ['OPPRETTET', 'BEREGNET', 'UNDERKJENT'].includes(props.behandling.status);
 
@@ -161,13 +191,13 @@ const HistoriskInfotrygdBeregning = (props: Props) => {
                     <Heading id="månedsgrunnlag-tittel" level="2" size="medium">
                         Månedsgrunnlag
                     </Heading>
-                    {måneder.map((måned, månedIndex) => {
-                        const historisk = grunnlag.måneder[månedIndex];
+                    {månedsutkast.map((månedsutkast, månedIndex) => {
+                        const historiskMåned = historiskeMåneder[månedIndex];
                         return (
                             <HistoriskInfotrygdMåned
-                                key={måned.måned}
-                                måned={måned}
-                                historisk={historisk}
+                                key={månedsutkast.måned}
+                                måned={månedsutkast}
+                                historisk={historiskMåned}
                                 kanRedigeres={kanRedigeres}
                                 resultatForPerioden={resultatForPerioden}
                                 opphørsgrunnForPerioden={opphørsgrunnForPerioden}
@@ -178,6 +208,23 @@ const HistoriskInfotrygdBeregning = (props: Props) => {
                             />
                         );
                     })}
+                    {månederMedFradragsvarsel.length > 0 && (
+                        <Alert variant="warning">
+                            <VStack gap="2">
+                                <BodyShort weight="semibold">
+                                    Bruker har historisk fradrag, dette mangler i beregningen.
+                                </BodyShort>
+                                <BodyShort>Dette gjelder følgende måneder og år:</BodyShort>
+                                <ul>
+                                    {månederMedFradragsvarsel.map((måned) => (
+                                        <li key={måned}>
+                                            {formatMonthYear(parseNonNullableIsoDateOnly(`${måned}-01`))}
+                                        </li>
+                                    ))}
+                                </ul>
+                            </VStack>
+                        </Alert>
+                    )}
                     {kanRedigeres && (
                         <>
                             {RemoteData.isFailure(beregnStatus) && (
