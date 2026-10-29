@@ -27,13 +27,17 @@ interface Props {
 }
 
 const lagMånedsutkastForRevurdering = (grunnlag: HistoriskInfotrygdMånedsgrunnlag) => {
-    const lagredeBeregningsmåneder = new Map(grunnlag.beregning?.måneder.map((måned) => [måned.måned, måned]));
+    const lagredeBeregningsmåneder = new Map(
+        grunnlag.lagretBeregningINåværendeRevurdering?.måneder.map((måned) => [måned.måned, måned]),
+    );
 
-    return grunnlag.måneder.map<HistoriskInfotrygdMånedsutkast>((historiskMåned) => {
+    return grunnlag.vedtaksgrunnlagSomRevurderes.map<HistoriskInfotrygdMånedsutkast>((historiskMåned) => {
         const lagretBeregningsmåned = lagredeBeregningsmåneder.get(historiskMåned.måned);
         return {
             måned: historiskMåned.måned,
-            bosituasjon: lagretBeregningsmåned?.bosituasjon ?? historiskMåned.foreslåttBosituasjon,
+            bosituasjon:
+                lagretBeregningsmåned?.bosituasjon ??
+                (historiskMåned.resultat === 'YTELSE' ? historiskMåned.foreslåttBosituasjon : null),
             fradrag: lagretBeregningsmåned?.fradrag ?? [],
             manueltOpphør: lagretBeregningsmåned?.manueltOpphør ?? null,
         };
@@ -44,12 +48,11 @@ const finnMånederMedHistoriskeFradragMenIngenNye = (
     grunnlag: HistoriskInfotrygdMånedsgrunnlag,
     nyeMånedsutkast: HistoriskInfotrygdMånedsutkast[],
 ): string[] => {
-    const månederFørRevurdering = grunnlag.måneder;
+    const månederFørRevurdering = grunnlag.vedtaksgrunnlagSomRevurderes;
 
     return månederFørRevurdering
         .filter((månedFørRevurdering) => {
-            const haddeFradrag =
-                månedFørRevurdering.historiskFradrag !== null && månedFørRevurdering.historiskFradrag > 0;
+            const haddeFradrag = månedFørRevurdering.resultat === 'YTELSE' && månedFørRevurdering.samletFradrag > 0;
             if (!haddeFradrag) {
                 return false;
             }
@@ -77,7 +80,9 @@ const HistoriskInfotrygdBeregning = (props: Props) => {
     const lastMånedsgrunnlag = () =>
         hentGrunnlag(props.behandling.id, (grunnlag) => {
             setMånedsutkast(lagMånedsutkastForRevurdering(grunnlag));
-            const lagretOpphør = grunnlag.beregning?.måneder.find((måned) => måned.manueltOpphør)?.manueltOpphør;
+            const lagretOpphør = grunnlag.lagretBeregningINåværendeRevurdering?.måneder.find(
+                (måned) => måned.manueltOpphør,
+            )?.manueltOpphør;
             setResultatForPerioden(lagretOpphør ? 'OPPHØR' : 'YTELSE');
             setOpphørsgrunnForPerioden(lagretOpphør?.opphørsgrunn ?? null);
         });
@@ -152,8 +157,8 @@ const HistoriskInfotrygdBeregning = (props: Props) => {
     }
 
     const grunnlag = grunnlagStatus.value;
-    const historiskeMåneder = grunnlag.måneder;
-    const beregning = beregningEtterLagring ?? grunnlag.beregning;
+    const vedtaksgrunnlagSomRevurderes = grunnlag.vedtaksgrunnlagSomRevurderes;
+    const beregning = beregningEtterLagring ?? grunnlag.lagretBeregningINåværendeRevurdering;
     const kanRedigeres = ['OPPRETTET', 'BEREGNET', 'UNDERKJENT'].includes(props.behandling.status);
 
     return (
@@ -200,12 +205,12 @@ const HistoriskInfotrygdBeregning = (props: Props) => {
                         Månedsgrunnlag
                     </Heading>
                     {månedsutkast.map((månedsutkast, månedIndex) => {
-                        const historiskMåned = historiskeMåneder[månedIndex];
+                        const vedtaksgrunnlagForMåned = vedtaksgrunnlagSomRevurderes[månedIndex];
                         return (
                             <HistoriskInfotrygdMåned
                                 key={månedsutkast.måned}
                                 måned={månedsutkast}
-                                historisk={historiskMåned}
+                                vedtaksgrunnlag={vedtaksgrunnlagForMåned}
                                 kanRedigeres={kanRedigeres}
                                 resultatForPerioden={resultatForPerioden}
                                 opphørsgrunnForPerioden={opphørsgrunnForPerioden}
@@ -221,7 +226,8 @@ const HistoriskInfotrygdBeregning = (props: Props) => {
                         <Alert variant="warning">
                             <VStack gap="2">
                                 <BodyShort weight="semibold">
-                                    Bruker har historisk fradrag, dette mangler i beregningen.
+                                    Vedtaket som revurderes har fradrag, men du har ikke registrert fradrag i denne
+                                    revurderingen.
                                 </BodyShort>
                                 <BodyShort>Dette gjelder følgende måneder og år:</BodyShort>
                                 <ul>

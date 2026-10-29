@@ -29,7 +29,9 @@ const HistoriskInfotrygdBeregningsresultat = ({ grunnlag, beregning }: Props) =>
                 <BodyShort>Antall måneder: {beregning.måneder.length}</BodyShort>
             </div>
             {beregning.måneder.map((resultat) => {
-                const historisk = grunnlag.måneder.find((måned) => måned.måned === resultat.måned);
+                const vedtaksgrunnlag = grunnlag.vedtaksgrunnlagSomRevurderes.find(
+                    (måned) => måned.måned === resultat.måned,
+                );
 
                 return (
                     <ExpansionCard key={resultat.måned} aria-label={`Beregning for ${resultat.måned}`}>
@@ -56,48 +58,55 @@ const HistoriskInfotrygdBeregningsresultat = ({ grunnlag, beregning }: Props) =>
                                             </Label>
                                             <BodyShort as="dd">{formatCurrency(resultat.gammeltBeløp)}</BodyShort>
                                         </div>
-                                        <div>
-                                            <Label as="dt" size="small">
-                                                Historisk sats
-                                            </Label>
-                                            <BodyShort as="dd">
-                                                {historisk?.historiskSats === null ||
-                                                historisk?.historiskSats === undefined
-                                                    ? 'Ikke registrert'
-                                                    : formatCurrency(historisk.historiskSats)}
-                                            </BodyShort>
-                                        </div>
-                                        <div>
-                                            <Label as="dt" size="small">
-                                                Historisk fradrag
-                                            </Label>
-                                            <BodyShort as="dd">
-                                                {historisk?.historiskFradrag === null ||
-                                                historisk?.historiskFradrag === undefined
-                                                    ? 'Ikke registrert'
-                                                    : formatCurrency(historisk.historiskFradrag)}
-                                            </BodyShort>
-                                        </div>
-                                        <div>
-                                            <Label as="dt" size="small">
-                                                Historisk beløp
-                                            </Label>
-                                            <BodyShort as="dd">
-                                                {historisk?.historiskBeløp === null ||
-                                                historisk?.historiskBeløp === undefined
-                                                    ? 'Ikke registrert'
-                                                    : formatCurrency(historisk.historiskBeløp)}
-                                            </BodyShort>
-                                        </div>
-                                        {historisk && historisk.historiskFradragskoder.length > 0 && (
+                                        {vedtaksgrunnlag?.resultat === 'YTELSE' ? (
+                                            <>
+                                                <div>
+                                                    <Label as="dt" size="small">
+                                                        Historisk sats
+                                                    </Label>
+                                                    <BodyShort as="dd">
+                                                        {formatCurrency(vedtaksgrunnlag.sats)}
+                                                    </BodyShort>
+                                                </div>
+                                                <div>
+                                                    <Label as="dt" size="small">
+                                                        Historisk fradrag
+                                                    </Label>
+                                                    <BodyShort as="dd">
+                                                        {formatCurrency(vedtaksgrunnlag.samletFradrag)}
+                                                    </BodyShort>
+                                                </div>
+                                                <div>
+                                                    <Label as="dt" size="small">
+                                                        Historisk beløp
+                                                    </Label>
+                                                    <BodyShort as="dd">
+                                                        {formatCurrency(vedtaksgrunnlag.ytelsesbeløp)}
+                                                    </BodyShort>
+                                                </div>
+                                                {vedtaksgrunnlag.kilde.type === 'INFOTRYGD' &&
+                                                    vedtaksgrunnlag.kilde.fradragskoder.length > 0 && (
+                                                        <div>
+                                                            <Label as="dt" size="small">
+                                                                Historiske fradragskoder
+                                                            </Label>
+                                                            <BodyShort as="dd">
+                                                                {fradragskoderForVisning(
+                                                                    vedtaksgrunnlag.kilde.fradragskoder,
+                                                                ).join(', ')}
+                                                            </BodyShort>
+                                                        </div>
+                                                    )}
+                                            </>
+                                        ) : (
                                             <div>
                                                 <Label as="dt" size="small">
-                                                    Historiske fradragskoder
+                                                    Resultat før revurderingen
                                                 </Label>
                                                 <BodyShort as="dd">
-                                                    {fradragskoderForVisning(historisk.historiskFradragskoder).join(
-                                                        ', ',
-                                                    )}
+                                                    {vedtaksgrunnlag
+                                                        ? 'Ingen ytelse'
+                                                        : 'Vedtaksgrunnlaget for denne måneden mangler.'}
                                                 </BodyShort>
                                             </div>
                                         )}

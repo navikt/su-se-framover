@@ -18,7 +18,6 @@ export type HistoriskInfotrygdRevurderingsbosituasjon =
 export type HistoriskInfotrygdØkonomiskRetning = 'INGEN_ENDRING' | 'ETTERBETALING' | 'FEILUTBETALING';
 export type HistoriskInfotrygdMånedsresultat = 'YTELSE' | 'OPPHØR';
 export type HistoriskInfotrygdOpprinneligResultat = 'YTELSE' | 'INGEN_YTELSE';
-export type HistoriskInfotrygdMånedskilde = 'ORIGINAL_PROJEKSJON' | 'HISTORISK_REVURDERINGSVEDTAK';
 export type HistoriskInfotrygdVedtaksbrevvalg = 'IKKE_VALGT' | 'SEND' | 'IKKE_SEND';
 export type HistoriskInfotrygdForhåndsvarselstatus = 'IKKE_VALGT' | 'IKKE_SENDT' | 'SENDT';
 export type HistoriskInfotrygdFradragTilhører = 'BRUKER' | 'EPS';
@@ -122,29 +121,49 @@ export interface HistoriskInfotrygdLagretBeregning {
     måneder: HistoriskInfotrygdBeregningForMåned[];
 }
 
-export interface HistoriskInfotrygdMånedsgrunnlagForMåned {
+export type HistoriskInfotrygdYtelseskilde =
+    | {
+          type: 'INFOTRYGD';
+          projeksjonId: string;
+          fradragskoder: string[];
+      }
+    | {
+          type: 'HISTORISK_REVURDERINGSVEDTAK_I_SUAPP';
+          vedtakId: string;
+          fradrag: HistoriskInfotrygdFradragForMåned[];
+      };
+
+type HistoriskInfotrygdKildeUtenYtelse =
+    | { type: 'INFOTRYGD'; projeksjonId: string }
+    | { type: 'HISTORISK_REVURDERINGSVEDTAK_I_SUAPP'; vedtakId: string };
+
+export interface HistoriskInfotrygdVedtaksgrunnlagMedYtelse {
     måned: string;
-    resultat: HistoriskInfotrygdOpprinneligResultat;
+    resultat: 'YTELSE';
     stønadsstart: string | null;
-    opprinneligStønadId: number | null;
-    opprinneligVedtakId: number | null;
-    oppdragId: string | null;
-    kilde: HistoriskInfotrygdMånedskilde;
-    historiskSats: number | null;
-    historiskFradrag: number | null;
-    historiskFradragskoder: string[];
-    historiskBeløp: number | null;
+    kilde: HistoriskInfotrygdYtelseskilde;
+    sats: number;
+    samletFradrag: number;
+    ytelsesbeløp: number;
     foreslåttBosituasjon: HistoriskInfotrygdRevurderingsbosituasjon | null;
     foreslåttSatskategori: HistoriskInfotrygdSatskategori | null;
     kreverKontrollAvHistoriskForsørgingstillegg: boolean;
 }
 
+export type HistoriskInfotrygdMånedsgrunnlagForMåned =
+    | HistoriskInfotrygdVedtaksgrunnlagMedYtelse
+    | {
+          måned: string;
+          resultat: 'INGEN_YTELSE';
+          kilde: HistoriskInfotrygdKildeUtenYtelse;
+      };
+
 export interface HistoriskInfotrygdMånedsgrunnlag {
     revurderingId: string;
     // Grunnlag før denne revurderingen: fra Infotrygd eller et tidligere historisk revurderingsvedtak, angitt av kilde.
-    måneder: HistoriskInfotrygdMånedsgrunnlagForMåned[];
+    vedtaksgrunnlagSomRevurderes: HistoriskInfotrygdMånedsgrunnlagForMåned[];
     // Lagret beregning på denne revurderingen, ikke de gamle vedtakene eller ulagrede skjemaendringer.
-    beregning: HistoriskInfotrygdLagretBeregning | null;
+    lagretBeregningINåværendeRevurdering: HistoriskInfotrygdLagretBeregning | null;
 }
 
 export interface BeregnHistoriskInfotrygdRevurderingRequest {

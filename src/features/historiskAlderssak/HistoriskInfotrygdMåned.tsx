@@ -13,7 +13,7 @@ import HistoriskInfotrygdYtelse from './HistoriskInfotrygdYtelse';
 
 interface Props {
     måned: HistoriskInfotrygdMånedsutkast;
-    historisk: HistoriskInfotrygdMånedsgrunnlagForMåned;
+    vedtaksgrunnlag: HistoriskInfotrygdMånedsgrunnlagForMåned;
     kanRedigeres: boolean;
     resultatForPerioden: HistoriskInfotrygdMånedsresultat;
     opphørsgrunnForPerioden: HistoriskInfotrygdManuellOpphørsgrunn | null;
@@ -22,7 +22,7 @@ interface Props {
 
 const HistoriskInfotrygdMåned = ({
     måned,
-    historisk,
+    vedtaksgrunnlag,
     kanRedigeres,
     resultatForPerioden,
     opphørsgrunnForPerioden,
@@ -34,51 +34,55 @@ const HistoriskInfotrygdMåned = ({
                 {måned.måned}
             </Heading>
             <dl className={styles.detaljer}>
-                <div>
-                    <Label as="dt" size="small">
-                        Historisk sats
-                    </Label>
-                    <BodyShort as="dd">
-                        {historisk.historiskSats === null ? 'Ikke registrert' : formatCurrency(historisk.historiskSats)}
-                    </BodyShort>
-                </div>
-                <div>
-                    <Label as="dt" size="small">
-                        Historisk fradrag
-                    </Label>
-                    <dd className={styles.fradrag}>
-                        <BodyShort>
-                            {historisk.historiskFradrag === null
-                                ? 'Ikke registrert'
-                                : formatCurrency(historisk.historiskFradrag)}
-                        </BodyShort>
-                        {historisk.historiskFradragskoder.length > 0 && (
-                            <ul className={styles.kodeliste} aria-label="Fradrag som inngår">
-                                {fradragskoderForVisning(historisk.historiskFradragskoder).map((kode, kodeindeks) => (
-                                    <li key={`${kode}-${kodeindeks}`}>
-                                        <BodyShort size="small">{kode}</BodyShort>
-                                    </li>
-                                ))}
-                            </ul>
-                        )}
-                    </dd>
-                </div>
-                <div>
-                    <Label as="dt" size="small">
-                        Historisk beløp
-                    </Label>
-                    <BodyShort as="dd">
-                        {historisk.historiskBeløp === null
-                            ? 'Ikke registrert'
-                            : formatCurrency(historisk.historiskBeløp)}
-                    </BodyShort>
-                </div>
+                {vedtaksgrunnlag.resultat === 'YTELSE' ? (
+                    <>
+                        <div>
+                            <Label as="dt" size="small">
+                                Historisk sats
+                            </Label>
+                            <BodyShort as="dd">{formatCurrency(vedtaksgrunnlag.sats)}</BodyShort>
+                        </div>
+                        <div>
+                            <Label as="dt" size="small">
+                                Historisk fradrag
+                            </Label>
+                            <dd className={styles.fradrag}>
+                                <BodyShort>{formatCurrency(vedtaksgrunnlag.samletFradrag)}</BodyShort>
+                                {vedtaksgrunnlag.kilde.type === 'INFOTRYGD' &&
+                                    vedtaksgrunnlag.kilde.fradragskoder.length > 0 && (
+                                        <ul className={styles.kodeliste} aria-label="Fradrag som inngår">
+                                            {fradragskoderForVisning(vedtaksgrunnlag.kilde.fradragskoder).map(
+                                                (kode, kodeindeks) => (
+                                                    <li key={`${kode}-${kodeindeks}`}>
+                                                        <BodyShort size="small">{kode}</BodyShort>
+                                                    </li>
+                                                ),
+                                            )}
+                                        </ul>
+                                    )}
+                            </dd>
+                        </div>
+                        <div>
+                            <Label as="dt" size="small">
+                                Historisk beløp
+                            </Label>
+                            <BodyShort as="dd">{formatCurrency(vedtaksgrunnlag.ytelsesbeløp)}</BodyShort>
+                        </div>
+                    </>
+                ) : (
+                    <div>
+                        <Label as="dt" size="small">
+                            Resultat før revurderingen
+                        </Label>
+                        <BodyShort as="dd">Ingen ytelse</BodyShort>
+                    </div>
+                )}
                 <div>
                     <Label as="dt" size="small">
                         Kilde
                     </Label>
                     <BodyShort as="dd">
-                        {historisk.kilde === 'ORIGINAL_PROJEKSJON'
+                        {vedtaksgrunnlag.kilde.type === 'INFOTRYGD'
                             ? 'Opprinnelig Infotrygd-vedtak'
                             : 'Tidligere historisk revurdering'}
                     </BodyShort>
