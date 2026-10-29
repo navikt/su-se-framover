@@ -141,7 +141,9 @@ export interface HistoriskInfotrygdMånedsgrunnlagForMåned {
 
 export interface HistoriskInfotrygdMånedsgrunnlag {
     revurderingId: string;
+    // Grunnlag før denne revurderingen: fra Infotrygd eller et tidligere historisk revurderingsvedtak, angitt av kilde.
     måneder: HistoriskInfotrygdMånedsgrunnlagForMåned[];
+    // Lagret beregning på denne revurderingen, ikke de gamle vedtakene eller ulagrede skjemaendringer.
     beregning: HistoriskInfotrygdLagretBeregning | null;
 }
 
