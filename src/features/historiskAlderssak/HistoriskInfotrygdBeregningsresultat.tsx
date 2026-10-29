@@ -4,8 +4,8 @@ import {
     HistoriskInfotrygdMånedsgrunnlag,
 } from '~src/types/HistoriskInfotrygdRevurdering';
 import { formatCurrency } from '~src/utils/format/formatUtils';
-import { fradragskoderForVisning } from './HistoriskAlderssakUtils';
 import styles from './HistoriskAlderssakVisning.module.less';
+import HistoriskInfotrygdVedtaksgrunnlag from './HistoriskInfotrygdVedtaksgrunnlag';
 
 interface Props {
     grunnlag: HistoriskInfotrygdMånedsgrunnlag;
@@ -58,59 +58,12 @@ const HistoriskInfotrygdBeregningsresultat = ({ grunnlag, beregning }: Props) =>
                                             </Label>
                                             <BodyShort as="dd">{formatCurrency(resultat.gammeltBeløp)}</BodyShort>
                                         </div>
-                                        {vedtaksgrunnlag?.resultat === 'YTELSE' ? (
-                                            <>
-                                                <div>
-                                                    <Label as="dt" size="small">
-                                                        Historisk sats
-                                                    </Label>
-                                                    <BodyShort as="dd">
-                                                        {formatCurrency(vedtaksgrunnlag.sats)}
-                                                    </BodyShort>
-                                                </div>
-                                                <div>
-                                                    <Label as="dt" size="small">
-                                                        Historisk fradrag
-                                                    </Label>
-                                                    <BodyShort as="dd">
-                                                        {formatCurrency(vedtaksgrunnlag.samletFradrag)}
-                                                    </BodyShort>
-                                                </div>
-                                                <div>
-                                                    <Label as="dt" size="small">
-                                                        Historisk beløp
-                                                    </Label>
-                                                    <BodyShort as="dd">
-                                                        {formatCurrency(vedtaksgrunnlag.ytelsesbeløp)}
-                                                    </BodyShort>
-                                                </div>
-                                                {vedtaksgrunnlag.kilde.type === 'INFOTRYGD' &&
-                                                    vedtaksgrunnlag.kilde.fradragskoder.length > 0 && (
-                                                        <div>
-                                                            <Label as="dt" size="small">
-                                                                Historiske fradragskoder
-                                                            </Label>
-                                                            <BodyShort as="dd">
-                                                                {fradragskoderForVisning(
-                                                                    vedtaksgrunnlag.kilde.fradragskoder,
-                                                                ).join(', ')}
-                                                            </BodyShort>
-                                                        </div>
-                                                    )}
-                                            </>
-                                        ) : (
-                                            <div>
-                                                <Label as="dt" size="small">
-                                                    Resultat før revurderingen
-                                                </Label>
-                                                <BodyShort as="dd">
-                                                    {vedtaksgrunnlag
-                                                        ? 'Ingen ytelse'
-                                                        : 'Vedtaksgrunnlaget for denne måneden mangler.'}
-                                                </BodyShort>
-                                            </div>
-                                        )}
                                     </dl>
+                                    {vedtaksgrunnlag ? (
+                                        <HistoriskInfotrygdVedtaksgrunnlag vedtaksgrunnlag={vedtaksgrunnlag} />
+                                    ) : (
+                                        <BodyShort>Vedtaksgrunnlaget for denne måneden mangler.</BodyShort>
+                                    )}
                                 </section>
                                 <section aria-label="Ny beregning">
                                     <Heading level="4" size="xsmall" spacing>
