@@ -92,6 +92,10 @@ const HistoriskInfotrygdBeregning = (props: Props) => {
         oppdater: (måned: HistoriskInfotrygdMånedsutkast) => HistoriskInfotrygdMånedsutkast,
     ) => setMånedsutkast((gjeldende) => gjeldende.map((måned, i) => (i === index ? oppdater(måned) : måned)));
 
+    const nullstillFradragsvarsel = () => {
+        setMånederMedFradragsvarsel([]);
+    };
+
     const handleBeregn = () => {
         setMånederMedFradragsvarsel([]);
         const månederMedBosituasjon = månedsutkast.filter(
@@ -167,6 +171,7 @@ const HistoriskInfotrygdBeregning = (props: Props) => {
                         onChange={(event) => {
                             setResultatForPerioden(event.target.value as 'YTELSE' | 'OPPHØR');
                             setValideringsfeil(undefined);
+                            nullstillFradragsvarsel();
                         }}
                     >
                         <option value="YTELSE">Ytelse</option>
@@ -177,7 +182,10 @@ const HistoriskInfotrygdBeregning = (props: Props) => {
                             opphørsgrunnForPerioden={opphørsgrunnForPerioden}
                             kanRedigeres={kanRedigeres}
                             valideringsfeil={valideringsfeil}
-                            setOpphørsgrunnForPerioden={setOpphørsgrunnForPerioden}
+                            setOpphørsgrunnForPerioden={(opphørsgrunn) => {
+                                setOpphørsgrunnForPerioden(opphørsgrunn);
+                                nullstillFradragsvarsel();
+                            }}
                             setValideringsfeil={setValideringsfeil}
                         />
                     )}
@@ -204,6 +212,7 @@ const HistoriskInfotrygdBeregning = (props: Props) => {
                                 onOppdatert={(oppdater) => {
                                     oppdaterMåned(månedIndex, oppdater);
                                     setValideringsfeil(undefined);
+                                    nullstillFradragsvarsel();
                                 }}
                             />
                         );
