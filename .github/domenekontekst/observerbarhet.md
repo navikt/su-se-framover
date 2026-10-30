@@ -7,6 +7,13 @@
 - Frontendens API-klient sender `X-Correlation-ID`.
 - BFF-en bruker Pino og `pino-http`, gjenbruker innkommende korrelasjons-ID og
   setter loggnivå etter HTTP-status.
+- `express-http-proxy` viderefører automatisk `X-Su-Error-Logged` fra Bakovers
+  respons, ikke fra innkommende request. For 5xx gir verdien `true` loggnivå
+  `WARN`, fordi Bakover bekrefter at feilen allerede er logget som `ERROR`.
+  Andre verdier og manglende header gir `ERROR`. `proxyErrorHandler` fjerner
+  en eventuell kopiert markør ved proxyfeil før svaret sendes. Andre lokale
+  feil oppstår uten kopiert markør. Egne 5xx-feil, exceptions og nettverksfeil
+  beholder dermed `ERROR`.
 - HTTP-logger redigerer request-headere, response-headere og URL. Kjente
   fødselsnummerplasseringer i URL maskeres.
 - React-applikasjonen har en `ErrorBoundary` som viser en generell feiltekst og

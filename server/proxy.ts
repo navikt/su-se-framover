@@ -23,6 +23,9 @@ export default function setup() {
                 return options;
             },
             proxyErrorHandler: (err, res, next) => {
+                if (!res.headersSent) {
+                    res.removeHeader('X-Su-Error-Logged');
+                }
                 if (err && err.code === 'ECONNREFUSED') {
                     log.error('proxyErrorHandler: Got ECONNREFUSED from su-se-bakover');
                     return res.status(503).send({ message: 'Could not contact su-se-bakover' });
