@@ -1,5 +1,5 @@
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Heading } from '@navikt/ds-react';
+import { Alert, Heading } from '@navikt/ds-react';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 
@@ -12,6 +12,7 @@ import {
     vurderingsperiodeTilFormData,
 } from '~src/components/forms/vilkårOgGrunnlagForms/uførhet/UførhetFormUtils';
 import { uførhetSchema } from '~src/components/forms/vilkårOgGrunnlagForms/uførhet/validation';
+import sharedVilkårI18n from '~src/components/forms/vilkårOgGrunnlagForms/VilkårOgGrunnlagForms-nb';
 import OppsummeringAvUføre from '~src/components/oppsummering/oppsummeringAvSøknadinnhold/OppsummeringAvUføre';
 import OppsummeringAvUførevilkår from '~src/components/oppsummering/oppsummeringAvVilkårOgGrunnlag/OppsummeringAvUføre';
 import ToKolonner from '~src/components/toKolonner/ToKolonner';
@@ -24,12 +25,11 @@ import { SøknadInnholdUføre } from '~src/types/Søknadinnhold';
 import { EksisterendeVedtaksinformasjonTidligerePeriodeResponse } from '~src/types/Søknadsbehandling';
 import { Vilkårtype } from '~src/types/Vilkårsvurdering';
 import * as DateUtils from '~src/utils/date/dateUtils';
-
+import { harVurderingAvvikFraBrukersSvar, uføreResultatTilBoolean } from '~src/utils/vilkårUtils.ts';
 import EksisterendeVedtaksinformasjon from '../EksisterendeVedtaksinformasjon';
 import sharedMessages from '../sharedI18n-nb';
 import sharedStyles from '../sharedStyles.module.less';
 import { VilkårsvurderingBaseProps } from '../types';
-
 import messages from './uførhet-nb';
 
 const Uførhet = (
@@ -38,7 +38,7 @@ const Uførhet = (
         tidligerePeriodeData: ApiResult<EksisterendeVedtaksinformasjonTidligerePeriodeResponse>;
     },
 ) => {
-    const { formatMessage } = useI18n({ messages: { ...messages, ...sharedMessages } });
+    const { formatMessage } = useI18n({ messages: { ...messages, ...sharedVilkårI18n, ...sharedMessages } });
     const navigate = useNavigate();
     const [status, lagre] = useAsyncActionCreator(GrunnlagOgVilkårActions.lagreUføregrunnlag);
 
@@ -57,6 +57,11 @@ const Uførhet = (
         resolver: yupResolver(uførhetSchema(false)),
     });
     useDraftFormSubscribe(form.watch);
+
+    const harAvvikFraSøknad = harVurderingAvvikFraBrukersSvar(
+        props.søknadInnhold.uførevedtak.harUførevedtak,
+        (form.watch('grunnlag') ?? []).map((vurdering) => uføreResultatTilBoolean(vurdering.oppfylt)),
+    );
 
     const save = (values: UførhetFormData, onSuccess: () => void) => {
         return lagre(
@@ -124,7 +129,13 @@ const Uførhet = (
                         }}
                         form={form}
                         søknadsbehandlingEllerRevurdering={'Søknadsbehandling'}
-                    />
+                    >
+                        {harAvvikFraSøknad && (
+                            <Alert className={sharedStyles.avslagAdvarsel} variant="warning">
+                                {formatMessage('display.avvikFraSøknad.advarsel')}
+                            </Alert>
+                        )}
+                    </UførhetForm>
                 ),
                 right: (
                     <div className={sharedStyles.toKollonerRightContainer}>

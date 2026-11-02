@@ -489,3 +489,10 @@ export async function kjørFradragssjekk(args: { maaned: string; dryRun: boolean
         bodyTransformer: async () => undefined,
     });
 }
+
+export async function kjørUlfApiTest(): Promise<ApiClientResult<void>> {
+    return apiClient({
+        url: `/drift/ulf-klient/endringer`,
+        method: 'GET',
+    });
+}

@@ -9,6 +9,17 @@ export default {
     'input.label.begrunnelse': 'Begrunnelse',
     'input.begrunnelse.description': 'Unngå personsensitive opplysninger',
 
+    'display.fraSøknad.inntekt.intro': 'Systemet har identifisert at brukeren har oppgitt inntekt i søknaden.',
+    'display.fraSøknad.inntekt.søkerOpplysteForSegSelv': 'Inntekt som brukeren har opplyst for seg selv:',
+    'display.fraSøknad.inntekt.søkerOpplysteForEps': 'Inntekt som brukeren har opplyst for ektefelle/samboer:',
+    'display.fraSøknad.inntekt.oppfordring': 'Sjekk om oppgitt inntekt samsvarer med den faktiske inntekten.',
+
+    'display.fraSøknad.inntekt.forventetInntekt': 'Forventet arbeidsinntekt',
+    'display.fraSøknad.inntekt.andreYtelserINav': 'Andre ytelser fra NAV',
+    'display.fraSøknad.inntekt.søktAndreYtelserIkkeBehandletBegrunnelse': 'Søkt om andre trygdeytelser',
+    'display.fraSøknad.inntekt.trygdeytelserIUtlandet': 'Trygdeytelser i utlandet',
+    'display.fraSøknad.inntekt.pensjon': 'Tjenestepensjon og/eller pensjonssparing',
+
     'display.simulerer': 'Simulerer',
 
     'display.totaltBeløp': 'Totalt beløp',

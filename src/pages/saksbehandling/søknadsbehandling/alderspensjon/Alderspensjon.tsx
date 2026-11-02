@@ -1,5 +1,5 @@
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Heading } from '@navikt/ds-react';
+import { Alert, Heading } from '@navikt/ds-react';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 
@@ -10,6 +10,7 @@ import {
     alderspensjonSchema,
     eqAlderspensjonPeriodisertFormData,
 } from '~src/components/forms/vilkårOgGrunnlagForms/alderspensjon/AlderspensjonFormUtils';
+import sharedVilkårI18n from '~src/components/forms/vilkårOgGrunnlagForms/VilkårOgGrunnlagForms-nb';
 import OppsummeringAvAlderspensjon from '~src/components/oppsummering/oppsummeringAvSøknadinnhold/OppsummeringAvAlderspensjon';
 import ToKolonner from '~src/components/toKolonner/ToKolonner';
 import * as GrunnlagOgVilkårActions from '~src/features/grunnlagsdataOgVilkårsvurderinger/GrunnlagOgVilkårActions';
@@ -21,17 +22,20 @@ import { SøknadInnholdAlder } from '~src/types/Søknadinnhold';
 import { EksisterendeVedtaksinformasjonTidligerePeriodeResponse } from '~src/types/Søknadsbehandling';
 import { Vilkårtype } from '~src/types/Vilkårsvurdering.ts';
 import { lagDatePeriodeAvStringPeriode } from '~src/utils/periode/periodeUtils.ts';
+import { alderspensjonVurderingTilSvar, harVurderingAvvikFraBrukersSvar } from '~src/utils/vilkårUtils.ts';
 import sharedMessages from '../sharedI18n-nb';
+import sharedStyles from '../sharedStyles.module.less';
 import { VilkårsvurderingBaseProps } from '../types';
 import messages from './alderspensjon-nb';
 
 const Alderspensjon = (
     props: VilkårsvurderingBaseProps & {
+        søknadInnhold: SøknadInnholdAlder;
         tidligerePeriodeData: ApiResult<EksisterendeVedtaksinformasjonTidligerePeriodeResponse>;
     },
 ) => {
     const navigate = useNavigate();
-    const { formatMessage } = useI18n({ messages: { ...messages, ...sharedMessages } });
+    const { formatMessage } = useI18n({ messages: { ...messages, ...sharedVilkårI18n, ...sharedMessages } });
 
     const [lagreAlderspensjongrunnlagStatus, lagreAlderspensjongrunnlag] = useAsyncActionCreator(
         GrunnlagOgVilkårActions.lagreAlderspensjongrunnlag,
@@ -102,6 +106,11 @@ const Alderspensjon = (
         );
     };
 
+    const harAvvikFraSøknad = harVurderingAvvikFraBrukersSvar(
+        props.søknadInnhold.harSøktAlderspensjon.harSøktAlderspensjon,
+        (form.watch('alderspensjon') ?? []).map((vurdering) => alderspensjonVurderingTilSvar(vurdering.folketrygd)),
+    );
+
     return (
         <ToKolonner tittel={formatMessage('page.tittel')}>
             {{
@@ -125,7 +134,13 @@ const Alderspensjon = (
                         begrensTilEnPeriode
                         skalIkkeKunneVelgePeriode
                         {...props}
-                    />
+                    >
+                        {harAvvikFraSøknad && (
+                            <Alert className={sharedStyles.avslagAdvarsel} variant="warning">
+                                {formatMessage('display.avvikFraSøknad.advarsel')}
+                            </Alert>
+                        )}
+                    </AlderspensjonForm>
                 ),
                 right: (
                     <>

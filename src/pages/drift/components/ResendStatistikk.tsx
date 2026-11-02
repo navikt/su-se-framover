@@ -59,7 +59,9 @@ const ResendStatistikkModal = (props: { open: boolean; onClose: () => void }) =>
                     <Button onClick={() => resendSpesifikkVedtak({ vedtakIder: vedtakId })}>
                         Resend spesifikk vedtak statistikk
                     </Button>
-                    {RemoteData.isSuccess(spesifikkStatus) && <p>Nice 👍🤌</p>}
+                    {RemoteData.isSuccess(spesifikkStatus) && (
+                        <p>Arbeidet er akseptert og pågår. Følg med i logger. 👍🤌</p>
+                    )}
 
                     {RemoteData.isFailure(spesifikkStatus) && <ApiErrorAlert error={spesifikkStatus.error} />}
 
@@ -84,7 +86,9 @@ const ResendStatistikkModal = (props: { open: boolean; onClose: () => void }) =>
                         Søknadsbehandling vedtak
                     </Button>
 
-                    {RemoteData.isSuccess(søknadsbehandlingVedtakStatistikkStatus) && <p>Nice 👍🤌</p>}
+                    {RemoteData.isSuccess(søknadsbehandlingVedtakStatistikkStatus) && (
+                        <p>Arbeidet er akseptert og pågår. Følg med i logger. 👍🤌</p>
+                    )}
 
                     {RemoteData.isFailure(søknadsbehandlingVedtakStatistikkStatus) && (
                         <ApiErrorAlert error={søknadsbehandlingVedtakStatistikkStatus.error} />
@@ -119,7 +123,9 @@ const ResendStatistikkModal = (props: { open: boolean; onClose: () => void }) =>
                         Sak
                     </Button>
 
-                    {RemoteData.isSuccess(resendSakStatistikkStatus) && <p>Nice 👍🤌</p>}
+                    {RemoteData.isSuccess(resendSakStatistikkStatus) && (
+                        <p>Arbeidet er akseptert og pågår. Følg med i logger. 👍🤌</p>
+                    )}
 
                     {RemoteData.isFailure(resendSakStatistikkStatus) && (
                         <ApiErrorAlert error={resendSakStatistikkStatus.error} />

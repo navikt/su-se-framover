@@ -23,7 +23,6 @@ export default {
 
     'tabell.saksnummer': 'Saksnummer',
     'tabell.lenke': 'Lenke',
-    'tabell.fnr': 'Fødselsnummer',
     'tabell.ekstraInformasjon': 'Ekstra informasjon',
     'tabell.årsakTilManuellRegulering': 'Årsak til manuell G-regulering',
     'tabell.sisteVedtak': 'Siste vedtak',

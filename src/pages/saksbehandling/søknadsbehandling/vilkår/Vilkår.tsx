@@ -119,6 +119,7 @@ const Vilkår = () => {
                                 nesteUrl={vilkårUrl(Vilkårtype.LovligOpphold)}
                                 avsluttUrl={avsluttUrl}
                                 sakId={sakId}
+                                søknadInnhold={behandling.søknad.søknadInnhold}
                                 tidligerePeriodeData={hentGjeldendeVedtaksdataForTidligerePeriodeStatus}
                             />
                         )}

@@ -39,7 +39,6 @@ export enum Reguleringsstatus {
 
 export interface ReguleringOversiktsstatus {
     saksnummer: number;
-    fnr: string;
     fradragsKategori: Fradragskategori[];
     årsakTilManuellRegulering: ÅrsakTilManuellReguleringKategori[];
     status: Reguleringsstatus;
@@ -56,6 +55,8 @@ export enum Reguleringsvariant {
     GRUNNBELØP = 'GRUNNBELØP',
     ALDERSFRADRAG = 'ALDERSFRADRAG',
 }
+
+export const reguleringsvarianter = [Reguleringsvariant.GRUNNBELØP, Reguleringsvariant.ALDERSFRADRAG];
 
 export enum ÅrsakTilManuellReguleringKategori {
     OpprettetAvSaksbehandler = 'OpprettetAvSaksbehandler',
@@ -112,4 +113,6 @@ export interface SisteGrunnbeløpOgSatser {
 export interface OpprettReguleringRequest {
     sakId: string;
     begrunnelse: string;
+    reguleringsvariant: Reguleringsvariant;
+    fraOgMed: Nullable<string>;
 }

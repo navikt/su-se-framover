@@ -1,5 +1,5 @@
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Heading } from '@navikt/ds-react';
+import { Alert, Heading } from '@navikt/ds-react';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 
@@ -12,6 +12,7 @@ import {
     lovligOppholdFormSchema,
     lovligOppholdVilkårTilFormDataEllerNy,
 } from '~src/components/forms/vilkårOgGrunnlagForms/lovligOpphold/LovligOppholdFormUtils';
+import sharedVilkårI18n from '~src/components/forms/vilkårOgGrunnlagForms/VilkårOgGrunnlagForms-nb';
 import OppsummeringAvOpphold from '~src/components/oppsummering/oppsummeringAvSøknadinnhold/OppsummeringAvOpphold';
 import OppsummeringAvLovligOppholdvilkår from '~src/components/oppsummering/oppsummeringAvVilkårOgGrunnlag/OppsummeringAvLovligOpphold';
 import ToKolonner from '~src/components/toKolonner/ToKolonner';
@@ -27,6 +28,7 @@ import {
 import { Vilkårstatus } from '~src/types/Vilkår.ts';
 import { Vilkårtype } from '~src/types/Vilkårsvurdering';
 import { lagDatePeriodeAvStringPeriode } from '~src/utils/periode/periodeUtils';
+import { harVurderingAvvikFraBrukersSvar, vilkårstatusTilBoolean } from '~src/utils/vilkårUtils';
 
 import EksisterendeVedtaksinformasjon from '../EksisterendeVedtaksinformasjon';
 import sharedI18n from '../sharedI18n-nb';
@@ -41,7 +43,7 @@ const LovligOppholdINorge = (
     },
 ) => {
     const navigate = useNavigate();
-    const { formatMessage } = useI18n({ messages: { ...sharedI18n, ...messages } });
+    const { formatMessage } = useI18n({ messages: { ...sharedI18n, ...sharedVilkårI18n, ...messages } });
     const [status, lagreLovligopphold] = useAsyncActionCreator(GrunnlagOgVilkårActions.lagreLovligOppholdVilkår);
 
     const initialValues = lovligOppholdVilkårTilFormDataEllerNy(
@@ -112,6 +114,13 @@ const LovligOppholdINorge = (
 
     useDraftFormSubscribe(form.watch);
 
+    const harAvvikFraSøknad = harVurderingAvvikFraBrukersSvar(
+        props.behandling.søknad.søknadInnhold.oppholdstillatelse.erNorskStatsborger
+            ? true
+            : props.behandling.søknad.søknadInnhold.oppholdstillatelse.harOppholdstillatelse,
+        (form.watch('lovligOpphold') ?? []).map((vurdering) => vilkårstatusTilBoolean(vurdering.resultat)),
+    );
+
     return (
         <ToKolonner tittel={formatMessage('page.tittel')}>
             {{
@@ -135,7 +144,13 @@ const LovligOppholdINorge = (
                         begrensTilEnPeriode
                         skalIkkeKunneVelgePeriode
                         {...props}
-                    />
+                    >
+                        {harAvvikFraSøknad && (
+                            <Alert className={sharedStyles.avslagAdvarsel} variant="warning">
+                                {formatMessage('display.avvikFraSøknad.advarsel')}
+                            </Alert>
+                        )}
+                    </LovligOppholdForm>
                 ),
                 right: (
                     <div className={sharedStyles.toKollonerRightContainer}>

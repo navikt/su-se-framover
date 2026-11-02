@@ -29,9 +29,11 @@ const OppsummeringAvBoforhold = (props: { boforhold: Boforhold }) => {
                     />
                     <OppsummeringPar
                         label={formatMessage('boforhold.ektemakeEllerSamboerUførFlyktning')}
-                        verdi={formatMessage(
-                            `bool.${props.boforhold.ektefellePartnerSamboer!.erUførFlyktning ?? false}`,
-                        )}
+                        verdi={
+                            props.boforhold.ektefellePartnerSamboer!.erUførFlyktning === null
+                                ? formatMessage('uavklart')
+                                : formatMessage(`bool.${props.boforhold.ektefellePartnerSamboer!.erUførFlyktning}`)
+                        }
                     />
                 </>
             )}

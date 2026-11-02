@@ -37,6 +37,7 @@ import KontrollsamtaleOversikt from '~src/pages/drift/components/Kontrollsamtale
 import Omregning from '~src/pages/drift/components/regulering/Omregning.tsx';
 import SakStatistikk from '~src/pages/drift/components/SakStatistikk.tsx';
 import StønadStatistikk from '~src/pages/drift/components/StønadStatistikk.tsx';
+import { UlfApiDrift } from '~src/pages/drift/components/UlfApiDrift.tsx';
 import Nøkkeltall from '~src/pages/saksbehandling/behandlingsoversikt/nøkkeltall/Nøkkeltall';
 import { toIsoDateOnlyString } from '~src/utils/date/dateUtils';
 import DokumentDistribusjon from './components/dokument/DokumentDistribusjon';
@@ -220,6 +221,7 @@ const Drift = () => {
                                     <ResendStatistikk />
                                     <Stønadsmottakere />
                                     <ErstattSakStatistikk />
+                                    <UlfApiDrift />
                                 </div>
                             </section>
 

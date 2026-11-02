@@ -14,6 +14,7 @@ const delerBoligMedMessages: { [key in DelerBoligMed]: string } = {
 };
 
 export default {
+    uavklart: 'Uavklart',
     'uføre.vedtakOmUføretrygd': 'Har du fått vedtak om uføretrygd?',
     'flyktning.registrertSomFlyktning': 'Er du registrert som flyktning?',
 

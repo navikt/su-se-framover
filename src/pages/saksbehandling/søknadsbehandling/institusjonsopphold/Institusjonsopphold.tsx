@@ -12,6 +12,7 @@ import {
     institusjonsoppholdFormSchema,
     institusjonsoppholdVilkårTilFormDataEllerNy,
 } from '~src/components/forms/vilkårOgGrunnlagForms/institusjonsopphold/InstitusjonsoppholdFormUtils';
+import sharedVilkårI18n from '~src/components/forms/vilkårOgGrunnlagForms/VilkårOgGrunnlagForms-nb';
 import OppsummeringAvInnlagtPåInstitusjon from '~src/components/oppsummering/oppsummeringAvSøknadinnhold/OppsummeringAvInnlagtPåInstitusjon';
 import OppsummeringAvInstitusjonsoppholdvilkår from '~src/components/oppsummering/oppsummeringAvVilkårOgGrunnlag/OppsummeringAvInstitusjonsopphold';
 import ToKolonner from '~src/components/toKolonner/ToKolonner';
@@ -38,7 +39,7 @@ const Institusjonsopphold = (
     },
 ) => {
     const navigate = useNavigate();
-    const { formatMessage } = useI18n({ messages: { ...sharedI18n, ...messages } });
+    const { formatMessage } = useI18n({ messages: { ...sharedI18n, ...sharedVilkårI18n, ...messages } });
     const [status, lagre] = useAsyncActionCreator(lagreInstitusjonsoppholdVilkår);
 
     const initialValues = institusjonsoppholdVilkårTilFormDataEllerNy(

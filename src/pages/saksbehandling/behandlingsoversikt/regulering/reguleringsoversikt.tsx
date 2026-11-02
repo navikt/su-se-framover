@@ -2,8 +2,6 @@ import * as RemoteData from '@devexperts/remote-data-ts';
 import { CalculatorIcon } from '@navikt/aksel-icons';
 import { Alert, Box, Button, Checkbox, Heading, Label, Loader, Table, Tag } from '@navikt/ds-react';
 import * as arr from 'fp-ts/Array';
-import { contramap } from 'fp-ts/Ord';
-import * as S from 'fp-ts/string';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -118,11 +116,6 @@ const Reguleringsoversikt = () => {
                   return matchFradragsfilter && matchStatusfilter && matchÅrsakTilManuellReguleringFilter;
               });
 
-    const sortByFnr = pipe(
-        S.Ord,
-        contramap((r: ReguleringOversiktsstatus) => r.fnr),
-    );
-
     const Reguleringstabell = ({ data }: { data: ReguleringOversiktsstatus[] }) => {
         return (
             <div>
@@ -130,7 +123,6 @@ const Reguleringsoversikt = () => {
                     <Table.Header>
                         <Table.Row>
                             <Table.HeaderCell>{formatMessage('tabell.saksnummer')}</Table.HeaderCell>
-                            <Table.HeaderCell>{formatMessage('tabell.fnr')}</Table.HeaderCell>
                             <Table.HeaderCell>{formatMessage('tabell.lenke')}</Table.HeaderCell>
                             <Table.HeaderCell>{formatMessage('tabell.ekstraInformasjon')}</Table.HeaderCell>
                             <Table.HeaderCell>{formatMessage('tabell.årsakTilManuellRegulering')}</Table.HeaderCell>
@@ -141,13 +133,11 @@ const Reguleringsoversikt = () => {
                     <Table.Body>
                         {pipe(
                             data,
-                            arr.sortBy([sortByFnr]),
                             arr.mapWithIndex(
                                 (
                                     index,
                                     {
                                         saksnummer,
-                                        fnr,
                                         fradragsKategori,
                                         årsakTilManuellRegulering,
                                         status,
@@ -158,7 +148,6 @@ const Reguleringsoversikt = () => {
                                     return (
                                         <Table.Row key={index}>
                                             <Table.DataCell>{saksnummer}</Table.DataCell>
-                                            <Table.DataCell>{fnr}</Table.DataCell>
                                             <Table.DataCell
                                                 onContextMenu={(e) => {
                                                     e.preventDefault();

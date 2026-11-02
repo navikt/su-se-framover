@@ -143,4 +143,16 @@ export default {
     'radio.label.nei': 'Nei',
     'radio.label.uavklart': 'Uavklart',
     ...personligOppmøteÅrsakTekster,
+
+    'display.avvikFraSøknad.advarsel':
+        'Systemet har identifisert at opplysningene du har lagt til grunn, ikke samsvarer med det brukeren har opplyst i søknaden. Dette bør kommenteres i vedtaksbrevet eller eventuelt forelegges brukeren.',
+    'display.brukerLagtInnOppholdIUtlandet.info':
+        'Systemet har identifisert at brukeren har oppgitt planlagte eller gjennomførte dager. Det bør vurderes om dette påvirker retten til supplerende stønad.',
+
+    'display.avvikFraSøknad.formue.intro':
+        'Systemet har identifisert at opplysningene du har lagt til grunn, ikke samsvarer med det brukeren har opplyst i søknaden.',
+    'display.avvikFraSøknad.formue.søkerOpplysteForSegSelv': 'Avvik i det brukeren har opplyst for seg selv:',
+    'display.avvikFraSøknad.formue.søkerOpplysteForEps': 'Avvik i det brukeren har opplyst for ektefelle/samboer:',
+    'display.avvikFraSøknad.formue.oppfordring':
+        'Dette bør kommenteres i vedtaksbrevet eller eventuelt forelegges brukeren.',
 };

@@ -89,6 +89,10 @@ const KontrollsamtaleOppsummering = () => {
                         label={formatMessage('originalPass.label')}
                         verdi={booleanSvar(kontrollsamtale.originalPass, formatMessage)}
                     />
+                    <Oppsummeringsfelt
+                        label={formatMessage('gyldigPass.label')}
+                        verdi={booleanSvar(kontrollsamtale.gyldigPass, formatMessage)}
+                    />
                     <EndreSvar path={KontrollsamtaleSteg.OriginalPass} />
                 </AccordionContent>
             </AccordionItem>
