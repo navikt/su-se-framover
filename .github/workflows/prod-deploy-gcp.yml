@@ -4,7 +4,6 @@ on:
     push:
         branches:
           - master
-          - bau/bytte-til-setup-deploy
 
 permissions: { }
 
@@ -76,7 +75,6 @@ jobs:
             --wait
 
   deploy_to_prod:
-    if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/master' }}
     needs: [build-push-docker-image, deploy-to-dev-gcp]
     name: Deploy to prod
     runs-on: ubuntu-latest

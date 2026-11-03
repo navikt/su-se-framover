@@ -3,7 +3,6 @@ on:
     push:
         branches:
             - master
-            - bau/bytte-til-setup-deploy
         paths:
             - 'alerts.yml'
             - '.github/workflows/alerts-deploy.yml'
@@ -35,7 +34,6 @@ jobs:
                   nais apply "$RUNNER_TEMP/alerts-dev.yml" --environment dev-gcp --wait
 
             - name: deploy to prod
-              if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/master' }}
               env:
                   LOGS_URL_LOKI: https://grafana.nav.cloud.nais.io/goto/afvuvs1dzlk3ka?orgId=default
               run: |
