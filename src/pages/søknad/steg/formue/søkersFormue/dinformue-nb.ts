@@ -8,12 +8,13 @@ export default {
     'eierBolig.borIBolig': 'Bor du i boligen?',
     'eierBolig.formuePåBolig': 'Boligens formueverdi',
     'eierBolig.boligBrukesTil': 'Hva brukes boligen til?',
+    'eierBolig.borIBolig.info': 'Boligens formuesverdi skal ikke tas med når søker bor i boligen.',
 
     'depositum.label': 'Har du en depositumskonto som leietaker?',
     'depositum.beløp': 'Beløp på depositumskontoen',
 
     'eiendom.eierAndreEiendommer': 'Eier du andre eiendommer i Norge eller i andre land?',
-    'eiendom.samledeVerdi': 'Eiendommenes samlede verdi',
+    'eiendom.samledeVerdi': 'Eiendommenes samlede verdi, utenom boligen søker bor i',
     'eiendom.brukesTil': 'Hva brukes eiendommene til?',
 
     'kjøretøy.label': 'Eier du bil, campingvogn eller andre kjøretøy?',
