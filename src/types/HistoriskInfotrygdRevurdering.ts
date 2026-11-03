@@ -9,10 +9,15 @@ export type HistoriskInfotrygdRevurderingStatus =
     | 'AVSLUTTET';
 
 export type HistoriskInfotrygdSatskategori = 'EN' | 'EU' | 'EO' | 'EV';
+export type HistoriskInfotrygdRevurderingsbosituasjon =
+    | 'ENSLIG'
+    | 'EPS_UNDER_67'
+    | 'EPS_OVER_67'
+    | 'ENSLIG_MED_BOFELLESSKAP'
+    | 'EPS_UNDER_67_UFØR_FLYKTNING';
 export type HistoriskInfotrygdØkonomiskRetning = 'INGEN_ENDRING' | 'ETTERBETALING' | 'FEILUTBETALING';
 export type HistoriskInfotrygdMånedsresultat = 'YTELSE' | 'OPPHØR';
 export type HistoriskInfotrygdOpprinneligResultat = 'YTELSE' | 'INGEN_YTELSE';
-export type HistoriskInfotrygdMånedskilde = 'ORIGINAL_PROJEKSJON' | 'HISTORISK_REVURDERINGSVEDTAK';
 export type HistoriskInfotrygdVedtaksbrevvalg = 'IKKE_VALGT' | 'SEND' | 'IKKE_SEND';
 export type HistoriskInfotrygdForhåndsvarselstatus = 'IKKE_VALGT' | 'IKKE_SENDT' | 'SENDT';
 export type HistoriskInfotrygdFradragTilhører = 'BRUKER' | 'EPS';
@@ -89,12 +94,21 @@ export interface HistoriskInfotrygdManueltOpphør {
 
 export interface HistoriskInfotrygdBeregningsgrunnlagForMåned {
     måned: string;
-    satskategori: HistoriskInfotrygdSatskategori;
+    bosituasjon: HistoriskInfotrygdRevurderingsbosituasjon;
     fradrag: HistoriskInfotrygdFradragForMåned[];
     manueltOpphør: HistoriskInfotrygdManueltOpphør | null;
 }
 
+export type HistoriskInfotrygdMånedsutkast = Omit<HistoriskInfotrygdBeregningsgrunnlagForMåned, 'bosituasjon'> & {
+    bosituasjon: HistoriskInfotrygdRevurderingsbosituasjon | null;
+};
+
 export interface HistoriskInfotrygdBeregningForMåned extends HistoriskInfotrygdBeregningsgrunnlagForMåned {
+    satskategori: HistoriskInfotrygdSatskategori | null;
+    sats: number;
+    epsFribeløp: number;
+    epsFradrag: number;
+    sumFradrag: number;
     gammeltBeløp: number;
     nyttBeløp: number;
     differanse: number;
@@ -107,26 +121,49 @@ export interface HistoriskInfotrygdLagretBeregning {
     måneder: HistoriskInfotrygdBeregningForMåned[];
 }
 
-export interface HistoriskInfotrygdMånedsgrunnlagForMåned {
+export type HistoriskInfotrygdYtelseskilde =
+    | {
+          type: 'INFOTRYGD';
+          projeksjonId: string;
+          fradragskoder: string[];
+      }
+    | {
+          type: 'HISTORISK_REVURDERINGSVEDTAK_I_SUAPP';
+          vedtakId: string;
+          fradrag: HistoriskInfotrygdFradragForMåned[];
+      };
+
+type HistoriskInfotrygdKildeUtenYtelse =
+    | { type: 'INFOTRYGD'; projeksjonId: string }
+    | { type: 'HISTORISK_REVURDERINGSVEDTAK_I_SUAPP'; vedtakId: string };
+
+export interface HistoriskInfotrygdVedtaksgrunnlagMedYtelse {
     måned: string;
-    resultat: HistoriskInfotrygdOpprinneligResultat;
+    resultat: 'YTELSE';
     stønadsstart: string | null;
-    opprinneligStønadId: number | null;
-    opprinneligVedtakId: number | null;
-    oppdragId: string | null;
-    kilde: HistoriskInfotrygdMånedskilde;
-    historiskSats: number | null;
-    historiskFradrag: number | null;
-    historiskFradragskoder: string[];
-    historiskBeløp: number | null;
+    kilde: HistoriskInfotrygdYtelseskilde;
+    sats: number;
+    samletFradrag: number;
+    ytelsesbeløp: number;
+    foreslåttBosituasjon: HistoriskInfotrygdRevurderingsbosituasjon | null;
     foreslåttSatskategori: HistoriskInfotrygdSatskategori | null;
     kreverKontrollAvHistoriskForsørgingstillegg: boolean;
 }
 
+export type HistoriskInfotrygdMånedsgrunnlagForMåned =
+    | HistoriskInfotrygdVedtaksgrunnlagMedYtelse
+    | {
+          måned: string;
+          resultat: 'INGEN_YTELSE';
+          kilde: HistoriskInfotrygdKildeUtenYtelse;
+      };
+
 export interface HistoriskInfotrygdMånedsgrunnlag {
     revurderingId: string;
-    måneder: HistoriskInfotrygdMånedsgrunnlagForMåned[];
-    beregning: HistoriskInfotrygdLagretBeregning | null;
+    // Grunnlag før denne revurderingen: fra Infotrygd eller et tidligere historisk revurderingsvedtak, angitt av kilde.
+    vedtaksgrunnlagSomRevurderes: HistoriskInfotrygdMånedsgrunnlagForMåned[];
+    // Lagret beregning på denne revurderingen, ikke de gamle vedtakene eller ulagrede skjemaendringer.
+    lagretBeregningINåværendeRevurdering: HistoriskInfotrygdLagretBeregning | null;
 }
 
 export interface BeregnHistoriskInfotrygdRevurderingRequest {

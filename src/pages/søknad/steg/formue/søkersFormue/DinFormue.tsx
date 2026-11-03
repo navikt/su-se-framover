@@ -1,9 +1,8 @@
 import { yupResolver } from '@hookform/resolvers/yup';
-import { TextField } from '@navikt/ds-react';
+import { Alert, TextField } from '@navikt/ds-react';
 import { useRef } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
-
 import { BooleanRadioGroup } from '~src/components/formElements/FormElements';
 import Feiloppsummering from '~src/components/oppsummering/feiloppsummering/Feiloppsummering';
 import søknadSlice, { Kjøretøy } from '~src/features/søknad/søknad.slice';
@@ -72,15 +71,20 @@ const DinFormue = (props: { forrigeUrl: string; nesteUrl: string; avbrytUrl: str
                         control={form.control}
                         name={'borIBolig'}
                         render={({ field, fieldState }) => (
-                            <BooleanRadioGroup
-                                legend={formatMessage('eierBolig.borIBolig')}
-                                error={fieldState.error?.message}
-                                {...field}
-                                onChange={(val) => {
-                                    field.onChange(val);
-                                    setFieldsToNull(['verdiPåBolig', 'boligBrukesTil']);
-                                }}
-                            />
+                            <>
+                                <BooleanRadioGroup
+                                    legend={formatMessage('eierBolig.borIBolig')}
+                                    error={fieldState.error?.message}
+                                    {...field}
+                                    onChange={(val) => {
+                                        field.onChange(val);
+                                        setFieldsToNull(['verdiPåBolig', 'boligBrukesTil']);
+                                    }}
+                                />
+                                {form.watch('borIBolig') && (
+                                    <Alert variant="info">{formatMessage('eierBolig.borIBolig.info')}</Alert>
+                                )}
+                            </>
                         )}
                     />
                 )}

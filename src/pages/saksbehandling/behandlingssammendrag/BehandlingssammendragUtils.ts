@@ -1,4 +1,5 @@
 import * as arr from 'fp-ts/Array';
+import * as N from 'fp-ts/number';
 import * as Ord from 'fp-ts/Ord';
 import * as S from 'fp-ts/string';
 
@@ -26,15 +27,23 @@ export const sortTabell = (
         kolonne: BehandlingssammendragKolonne,
         sortVerdi: AriaSortVerdi,
     ): Ord.Ord<Behandlingssammendrag> {
-        return pipe(
-            sortVerdi === 'ascending' ? Ord.reverse(S.Ord) : S.Ord,
-            Ord.contramap((r: Behandlingssammendrag) =>
-                kolonne === BehandlingssammendragKolonne.periode
-                    ? r.periode
-                        ? formatPeriode(r.periode)
-                        : ''
-                    : r[kolonne] || '',
-            ),
-        );
+        const ord: Ord.Ord<Behandlingssammendrag> =
+            kolonne === BehandlingssammendragKolonne.saksnummer
+                ? pipe(
+                      N.Ord,
+                      Ord.contramap((r: Behandlingssammendrag) => Number(r.saksnummer)),
+                  )
+                : pipe(
+                      S.Ord,
+                      Ord.contramap((r: Behandlingssammendrag) =>
+                          kolonne === BehandlingssammendragKolonne.periode
+                              ? r.periode
+                                  ? formatPeriode(r.periode)
+                                  : ''
+                              : r[kolonne] || '',
+                      ),
+                  );
+
+        return sortVerdi === 'descending' ? Ord.reverse(ord) : ord;
     }
 };
