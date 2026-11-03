@@ -81,7 +81,7 @@ const DinFormue = (props: { forrigeUrl: string; nesteUrl: string; avbrytUrl: str
                                         setFieldsToNull(['verdiPåBolig', 'boligBrukesTil']);
                                     }}
                                 />
-                                {form.watch('borIBolig') === true && (
+                                {form.watch('borIBolig') && (
                                     <Alert variant="info">{formatMessage('eierBolig.borIBolig.info')}</Alert>
                                 )}
                             </>
