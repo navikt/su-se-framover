@@ -1,9 +1,15 @@
 import { Alert, BodyShort, Heading, VStack } from '@navikt/ds-react';
-import { HistoriskInfotrygdMånedsgrunnlag } from '~src/types/HistoriskInfotrygdRevurdering';
+import {
+    HistoriskInfotrygdMånedsgrunnlag,
+    HistoriskInfotrygdVedtaksgrunnlagMedYtelse,
+} from '~src/types/HistoriskInfotrygdRevurdering';
 import { formatCurrency } from '~src/utils/format/formatUtils';
 
 const HistoriskInfotrygdForsørgingstillegg = (props: { grunnlag: HistoriskInfotrygdMånedsgrunnlag }) => {
-    const berørteMåneder = props.grunnlag.måneder.filter((måned) => måned.kreverKontrollAvHistoriskForsørgingstillegg);
+    const berørteMåneder = props.grunnlag.vedtaksgrunnlagSomRevurderes.filter(
+        (måned): måned is HistoriskInfotrygdVedtaksgrunnlagMedYtelse =>
+            måned.resultat === 'YTELSE' && måned.kreverKontrollAvHistoriskForsørgingstillegg,
+    );
 
     // Varselet styres av månedsflaggene fra backend, ikke av et samlet flagg på grunnlaget.
     if (berørteMåneder.length === 0) {
@@ -26,8 +32,7 @@ const HistoriskInfotrygdForsørgingstillegg = (props: { grunnlag: HistoriskInfot
                 <ul>
                     {berørteMåneder.map((måned) => (
                         <li key={måned.måned}>
-                            {måned.måned}:{' '}
-                            {måned.historiskBeløp === null ? 'Beløp mangler' : formatCurrency(måned.historiskBeløp)}
+                            {måned.måned}: {formatCurrency(måned.ytelsesbeløp)}
                         </li>
                     ))}
                 </ul>

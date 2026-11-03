@@ -1,8 +1,8 @@
 FROM node:24.22.1-alpine
 
-ENV NODE_ENV production
-ENV PORT 8080
-ENV FRONTEND_DIR /app/frontend
+ENV NODE_ENV=production
+ENV PORT=8080
+ENV FRONTEND_DIR=/app/frontend
 
 COPY dist ${FRONTEND_DIR}
 COPY server/dist /app/server
