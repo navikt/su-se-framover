@@ -45,17 +45,17 @@ export async function fetchBrevutkastForRegulering(args: { reguleringId: string 
     });
 }
 
-export async function fetchBrevutkastForForhåndsvarsel(
-    sakId: string,
-    revurderingId: string,
-    fritekst: string,
-): Promise<ApiClientResult<Blob>> {
+export async function fetchBrevutkastForForhåndsvarsel(args: {
+    sakId: string;
+    revurderingId: string;
+    fritekst: string;
+}): Promise<ApiClientResult<Blob>> {
     return apiClient({
-        url: `/saker/${sakId}/revurderinger/${revurderingId}/brevutkastForForhandsvarsel`,
+        url: `/saker/${args.sakId}/revurderinger/${args.revurderingId}/brevutkastForForhandsvarsel`,
         method: 'POST',
         request: { headers: new Headers({ Accept: 'application/pdf' }) },
         body: {
-            fritekst,
+            fritekst: args.fritekst,
         },
         bodyTransformer: (res) => res.blob(),
     });
