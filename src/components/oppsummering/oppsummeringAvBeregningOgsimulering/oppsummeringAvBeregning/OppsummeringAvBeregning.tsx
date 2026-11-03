@@ -10,11 +10,16 @@ import fradragstypeMessages from '~src/components/forms/vilkårOgGrunnlagForms/V
 import { combineOptions, pipe } from '~src/lib/fp';
 import { useI18n } from '~src/lib/i18n';
 import { Nullable } from '~src/lib/types';
-import { Beregning, eqMånedsberegningBortsettFraPeriode, Månedsberegning } from '~src/types/Beregning';
+import { Beregning, Månedsberegning } from '~src/types/Beregning';
 import { EksternGrunnlagSkatt } from '~src/types/EksterneGrunnlag';
 import { Fradrag, IkkeVelgbareFradragskategorier } from '~src/types/Fradrag';
 import { Sats } from '~src/types/Sats';
-import { groupBy, groupByEq } from '~src/utils/array/arrayUtils';
+import { groupBy } from '~src/utils/array/arrayUtils';
+import {
+    erFradragValgtForMåned,
+    getBeregningsgrunnlagForMåned,
+    grupperMånedsberegningerMedGrunnlag,
+} from '~src/utils/BeregningUtils';
 import { formatMonthYear } from '~src/utils/date/dateUtils';
 import { formatCurrency } from '~src/utils/format/formatUtils';
 
@@ -145,8 +150,8 @@ const OppsummeringAvBeregning = (props: {
                 </span>
             </Label>
             {pipe(
-                props.beregning.månedsberegninger,
-                groupByEq(eqMånedsberegningBortsettFraPeriode),
+                props.beregning,
+                grupperMånedsberegningerMedGrunnlag,
                 arr.mapWithIndex((index, månedsberegninger) => (
                     <div key={månedsberegninger[0].fraOgMed}>
                         {pipe(
@@ -173,7 +178,44 @@ const OppsummeringAvBeregning = (props: {
                                 </Label>
                             ),
                         )}
-
+                        <Heading level="5" size="small" spacing>
+                            {formatMessage('display.grunnlag.tittel')}
+                        </Heading>
+                        <BodyShort spacing>{formatMessage('display.grunnlag.forklaring')}</BodyShort>
+                        {getBeregningsgrunnlagForMåned(props.beregning.fradrag, månedsberegninger[0]).length === 0 ? (
+                            <BodyShort spacing>{formatMessage('display.grunnlag.ingenInntekter')}</BodyShort>
+                        ) : (
+                            <ul className={styles.fradragliste}>
+                                {getBeregningsgrunnlagForMåned(props.beregning.fradrag, månedsberegninger[0]).map(
+                                    (fradrag, grunnlagIndex) => (
+                                        <li key={`${getFradragsnøkkel(fradrag)}-${grunnlagIndex}`}>
+                                            <div className={styles.linje}>
+                                                <span>
+                                                    {formatMessage('display.grunnlag.inntekt', {
+                                                        inntekt: formatMessage(fradrag.type),
+                                                        tilhører: formatMessage(fradrag.tilhører),
+                                                    })}
+                                                </span>
+                                                <span>
+                                                    {formatMessage('display.grunnlag.månedsbeløp', {
+                                                        beløp: formatCurrency(fradrag.beløp),
+                                                    })}
+                                                </span>
+                                            </div>
+                                            {fradrag.type === IkkeVelgbareFradragskategorier.ForventetInntekt &&
+                                                !erFradragValgtForMåned(fradrag, månedsberegninger[0]) && (
+                                                    <BodyShort size="small">
+                                                        {formatMessage('display.grunnlag.forventetInntektIkkeValgt')}
+                                                    </BodyShort>
+                                                )}
+                                        </li>
+                                    ),
+                                )}
+                            </ul>
+                        )}
+                        <Heading level="5" size="small" spacing>
+                            {formatMessage('display.benyttedeFradrag.tittel')}
+                        </Heading>
                         <ol className={styles.fradragliste}>
                             <li className={styles.linje}>
                                 <span>
