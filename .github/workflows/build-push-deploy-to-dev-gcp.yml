@@ -80,8 +80,13 @@ jobs:
         runs-on: ubuntu-latest
         steps:
             - uses: actions/checkout@v7
-            - uses: nais/deploy/actions/deploy@v2
-              env:
-                  CLUSTER: dev-gcp
-                  RESOURCE: .nais/dev-gcp.yaml
-                  VAR: image=${{ needs.build-push-docker-image.outputs.image }}
+            - uses: nais/setup@v1
+              with:
+                team: supstonad
+
+            - name: Deploy to dev-gcp
+              run: |
+                nais apply .nais/dev-gcp.yaml \
+                  --environment dev-gcp \
+                  --set spec.image="${{ needs.build-push-docker-image.outputs.image }}" \
+                  --wait

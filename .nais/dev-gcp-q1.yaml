@@ -9,7 +9,6 @@ metadata:
     team: supstonad
 spec:
   port: 8080
-  image: {{ image }}
   observability:
     autoInstrumentation:
       enabled: true

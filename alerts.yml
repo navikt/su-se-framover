@@ -24,7 +24,7 @@ spec:
                 for: 1s
                 annotations:
                     consequence: 'su-se-framover har fått error i loggen siste 15 min'
-                    action: 'Det er logget en melding med log level ERROR. Sjekk logger her: `{{LOGS_URL_LOKI}}`'
+                    action: 'Det er logget en melding med log level ERROR. Sjekk logger her: Loggnivå (level): `{{LOGS_URL_LOKI}}` og for andre rare feil {{LOGS_DETECTED_LEVEL_LINK}}'
                 labels:
                     namespace: supstonad
                     severity: critical
