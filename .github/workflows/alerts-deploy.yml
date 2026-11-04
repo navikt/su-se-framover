@@ -30,16 +30,19 @@ jobs:
                   sed \
                     -e "s|{{K8S_CLUSTER_NAME}}|${K8S_CLUSTER_NAME}|g" \
                     -e "s|{{LOGS_URL_LOKI}}|${LOGS_URL_LOKI}|g" \
+                    -e 's|{{LOGS_DETECTED_LEVEL_LINK}}||g' \
                     alerts.yml > "$RUNNER_TEMP/alerts-dev.yml"
                   nais apply "$RUNNER_TEMP/alerts-dev.yml" --environment dev-gcp --wait
 
             - name: deploy to prod
               env:
                   LOGS_URL_LOKI: https://grafana.nav.cloud.nais.io/goto/afvuvs1dzlk3ka?orgId=default
+                  LOGS_DETECTED_LEVEL_LINK: ' Oppdaget nivå (detected_level): https://grafana.nav.cloud.nais.io/goto/s97pp9?orgId=default'
               run: |
                   # Preserve the existing empty value for the unset prod template variable.
                   sed \
                     -e 's|{{K8S_CLUSTER_NAME}}||g' \
                     -e "s|{{LOGS_URL_LOKI}}|${LOGS_URL_LOKI}|g" \
+                    -e "s|{{LOGS_DETECTED_LEVEL_LINK}}|${LOGS_DETECTED_LEVEL_LINK}|g" \
                     alerts.yml > "$RUNNER_TEMP/alerts-prod.yml"
                   nais apply "$RUNNER_TEMP/alerts-prod.yml" --environment prod-gcp --wait
