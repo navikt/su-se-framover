@@ -64,11 +64,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
-      - uses: nais/deploy/actions/deploy@v2
-        env:
-          CLUSTER: dev-gcp
-          RESOURCE: .nais/dev-gcp.yaml
-          VAR: image=${{ needs.build-push-docker-image.outputs.image }}
+      - uses: nais/setup@v1
+        with:
+          team: supstonad
+      - name: Deploy to dev-gcp
+        run: |
+          nais apply .nais/dev-gcp.yaml \
+            --environment dev-gcp \
+            --set spec.image="${{ needs.build-push-docker-image.outputs.image }}" \
+            --wait
 
   deploy_to_prod:
     needs: [build-push-docker-image, deploy-to-dev-gcp]
@@ -79,10 +83,12 @@ jobs:
         id-token: write
     steps:
         - uses: actions/checkout@v7
-        - uses: nais/deploy/actions/deploy@v2
-          env:
-              #se https://console.cloud.google.com/artifacts/docker/nais-management-233d/europe-north1/supstonad?authuser=1&inv=1&invt=AbybBg&project=supstonad-prod-9599
-              # Tidligere: image=europe-north1-docker.pkg.dev/nais-management-233d/supstonad/su-se-framover-app:${{ github.sha }}
-              VAR: image=${{ needs.build-push-docker-image.outputs.image }}
-              CLUSTER: prod-gcp
-              RESOURCE: .nais/prod-gcp.yaml
+        - uses: nais/setup@v1
+          with:
+              team: supstonad
+        - name: Deploy to prod-gcp
+          run: |
+              nais apply .nais/prod-gcp.yaml \
+                --environment prod-gcp \
+                --set spec.image="${{ needs.build-push-docker-image.outputs.image }}" \
+                --wait
