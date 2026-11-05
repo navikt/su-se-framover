@@ -3,15 +3,15 @@ import { Alert, Button, Loader, Radio, RadioGroup } from '@navikt/ds-react';
 import { useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
-
+import { FritekstTyper, hentFritekst, redigerFritekst } from '~src/api/fritekstApi.ts';
 import { Brevtype, hentMottaker } from '~src/api/mottakerClient.ts';
 import * as PdfApi from '~src/api/pdfApi';
-import { BrevInput } from '~src/components/inputs/brevInput/BrevInput';
+import TextareaWithAutosaveRhf from '~src/components/inputs/textareaWithAutosave/TextareaWithAutosaveRhf.tsx';
 import { MottakerAlert, toMottakerAlert } from '~src/components/mottaker/mottakerUtils';
 import OppsummeringAvInformasjonsrevurdering from '~src/components/oppsummering/oppsummeringAvRevurdering/informasjonsrevurdering/OppsummeringAvInformasjonsrevurdering';
 import ToKolonner from '~src/components/toKolonner/ToKolonner';
 import * as RevurderingActions from '~src/features/revurdering/revurderingActions';
-import { useAsyncActionCreator } from '~src/lib/hooks';
+import { useApiCall, useAsyncActionCreator, useBrevForhåndsvisning } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
 import * as Routes from '~src/lib/routes';
 import { Nullable } from '~src/lib/types';
@@ -52,16 +52,39 @@ const ForhåndsvarselForm = (props: {
 }) => {
     const navigate = useNavigate();
     const { formatMessage } = useI18n({ messages });
+    const [lagreFritekstStatus, lagreFritekst] = useApiCall(redigerFritekst);
+    const [, hentLagretFritekst] = useApiCall(hentFritekst);
     const [skalLeggeTilMottaker, setSkalLeggeTilMottaker] = useState(false);
     const [mottakerFinnes, setMottakerFinnes] = useState<boolean | null>(null);
     const [mottakerFetchError, setMottakerFetchError] = useState<MottakerAlert | null>(null);
     const mottakerBrevtype: Brevtype = 'FORHANDSVARSEL';
+
+    const [seBrevStatus, seBrev] = useBrevForhåndsvisning(PdfApi.fetchBrevutkastForForhåndsvarsel);
 
     const form = useForm<ForhåndsvarselFormData>({
         defaultValues: { oppretterNyttForhåndsvarsel: false, fritekst: null },
         resolver: yupResolver(schema),
     });
     const watch = form.watch();
+
+    useEffect(() => {
+        if (!watch.oppretterNyttForhåndsvarsel) return;
+
+        const referanseId = props.revurdering.id;
+        if (!referanseId) return;
+
+        hentLagretFritekst(
+            {
+                referanseId,
+                sakId: props.sakId,
+                type: FritekstTyper.FORHÅNDSVARSEL_REVURDERING,
+            },
+            (data) => {
+                form.setValue('fritekst', data.fritekst ?? '');
+            },
+        );
+    }, [watch.oppretterNyttForhåndsvarsel, props.revurdering.id, props.sakId]);
+
     const oppretterNyttForhåndsvarsel = form.watch('oppretterNyttForhåndsvarsel');
 
     useEffect(() => {
@@ -178,24 +201,36 @@ const ForhåndsvarselForm = (props: {
                             />
 
                             {watch.oppretterNyttForhåndsvarsel && (
-                                <Controller
-                                    name={'fritekst'}
-                                    control={form.control}
-                                    render={({ field, fieldState }) => (
-                                        <BrevInput
-                                            tittel={formatMessage('forhåndsvarsel.fritekst.label')}
-                                            onVisBrevClick={() =>
-                                                PdfApi.fetchBrevutkastForForhåndsvarsel(
-                                                    props.sakId,
-                                                    props.revurdering.id,
-                                                    field.value ?? '',
-                                                )
+                                <TextareaWithAutosaveRhf
+                                    textarea={{
+                                        name: 'fritekst',
+                                        label: formatMessage('forhåndsvarsel.fritekst.label'),
+                                        control: form.control,
+                                        value: form.getValues('fritekst') ?? '',
+                                    }}
+                                    save={{
+                                        handleSave: () => {
+                                            if (form.getValues('oppretterNyttForhåndsvarsel')) {
+                                                lagreFritekst({
+                                                    referanseId: props.revurdering.id,
+                                                    sakId: props.sakId,
+                                                    type: FritekstTyper.FORHÅNDSVARSEL_REVURDERING,
+                                                    fritekst: form.getValues('fritekst') ?? '',
+                                                });
                                             }
-                                            tekst={field.value ?? ''}
-                                            {...field}
-                                            feil={fieldState.error}
-                                        />
-                                    )}
+                                        },
+                                        status: lagreFritekstStatus,
+                                    }}
+                                    brev={{
+                                        handleSeBrev: () => {
+                                            seBrev({
+                                                sakId: props.sakId,
+                                                revurderingId: props.revurdering.id,
+                                                fritekst: form.getValues('fritekst') ?? '',
+                                            });
+                                        },
+                                        status: seBrevStatus,
+                                    }}
                                 />
                             )}
                             {watch.oppretterNyttForhåndsvarsel && (
