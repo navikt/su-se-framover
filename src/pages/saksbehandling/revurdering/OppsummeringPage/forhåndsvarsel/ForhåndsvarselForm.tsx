@@ -53,6 +53,7 @@ const ForhåndsvarselForm = (props: {
     const navigate = useNavigate();
     const { formatMessage } = useI18n({ messages });
     const [lagreFritekstStatus, lagreFritekst] = useApiCall(redigerFritekst);
+    const [, hentLagretFritekst] = useApiCall(hentFritekst);
     const [skalLeggeTilMottaker, setSkalLeggeTilMottaker] = useState(false);
     const [mottakerFinnes, setMottakerFinnes] = useState<boolean | null>(null);
     const [mottakerFetchError, setMottakerFetchError] = useState<MottakerAlert | null>(null);
@@ -72,15 +73,16 @@ const ForhåndsvarselForm = (props: {
         const referanseId = props.revurdering.id;
         if (!referanseId) return;
 
-        hentFritekst({
-            referanseId,
-            sakId: props.sakId,
-            type: FritekstTyper.FORHÅNDSVARSEL_REVURDERING,
-        }).then((res) => {
-            if (res.status === 'ok' && res.data) {
-                form.setValue('fritekst', res.data.fritekst ?? '');
-            }
-        });
+        hentLagretFritekst(
+            {
+                referanseId,
+                sakId: props.sakId,
+                type: FritekstTyper.FORHÅNDSVARSEL_REVURDERING,
+            },
+            (data) => {
+                form.setValue('fritekst', data.fritekst ?? '');
+            },
+        );
     }, [watch.oppretterNyttForhåndsvarsel, props.revurdering.id, props.sakId]);
 
     const oppretterNyttForhåndsvarsel = form.watch('oppretterNyttForhåndsvarsel');
