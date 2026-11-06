@@ -52,14 +52,14 @@ export const fyller67ILøpetAvPeriode = (
     periode: { fraOgMed: Date; tilOgMed: Date },
     fødsel: Nullable<Fødsel>,
 ): Nullable<boolean> => {
-    const erFylt67VedFraOgMed = harFylt67VedDato(periode.fraOgMed, fødsel);
+    const erFylt67FørPerioden = harFylt67VedDato(DateFns.subDays(periode.fraOgMed, 1), fødsel);
     const erFylt67VedTilOgMed = harFylt67VedDato(periode.tilOgMed, fødsel);
 
-    if (erFylt67VedFraOgMed === null || erFylt67VedTilOgMed === null) {
+    if (erFylt67FørPerioden === null || erFylt67VedTilOgMed === null) {
         return null;
     }
 
-    return !erFylt67VedFraOgMed && erFylt67VedTilOgMed;
+    return !erFylt67FørPerioden && erFylt67VedTilOgMed;
 };
 
 // De tre neste tar fødselsår direkte (ikke fødsel/dato), for bruk når fødselsdatoen er ugyldig.
