@@ -21,7 +21,7 @@ import { useEffect, useState } from 'react';
 import { Control, Controller, useForm } from 'react-hook-form';
 import { Link, useNavigate } from 'react-router-dom';
 
-import { Brevtype, hentMottaker } from '~src/api/mottakerClient.ts';
+import { Brevtype, hentMottaker, LagreMottakerRequest } from '~src/api/mottakerClient.ts';
 import * as pdfApi from '~src/api/pdfApi';
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
 import LinkAsButton from '~src/components/linkAsButton/LinkAsButton';
@@ -33,8 +33,10 @@ import { useI18n } from '~src/lib/i18n';
 import * as Routes from '~src/lib/routes';
 import { eqNullable, Nullable } from '~src/lib/types';
 import yup from '~src/lib/validering';
+import DødsboPage from '~src/pages/saksbehandling/mottaker/Dødsbo.tsx';
 import { Mottaker } from '~src/pages/saksbehandling/mottaker/Mottaker.tsx';
 import { KabalVedtakHjemmel, Klage, KlageStatus, KlageSteg, KlageVurderingType } from '~src/types/Klage';
+import { KontaktInfoDødsbo, Kontaktinformasjon } from '~src/types/Person.ts';
 import { OmgjøringsGrunn } from '~src/types/Revurdering';
 import { fjernOverflødigLinjeskift } from '~src/utils/fritekst/fritekstUtil.ts';
 import { erKlageVurdert, erKlageVurdertBekreftet } from '~src/utils/klage/klageUtils';
@@ -127,6 +129,22 @@ const eqVurderingAvKlageFormData = struct<VurderingAvKlageFormData>({
     kabaldata: eqKabalData,
     fritekstTilBrev: eqNullable(S.Eq),
 });
+const mapDødsboKontaktTilMottaker = (
+    kontakt: Kontaktinformasjon,
+    adresse: KontaktInfoDødsbo,
+): Partial<LagreMottakerRequest> => ({
+    navn:
+        kontakt.organisasjonsnavn ?? [kontakt.fornavn, kontakt.mellomnavn, kontakt.etternavn].filter(Boolean).join(' '),
+    foedselsnummer: kontakt.identifikasjonsnummer ?? '',
+    orgnummer: kontakt.organisasjonsnummer ?? '',
+    adresse: {
+        adresselinje1: adresse.adresselinje1 ?? '',
+        adresselinje2: adresse.adresselinje2 ?? '',
+        adresselinje3: '',
+        postnummer: adresse.postnummer ?? '',
+        poststed: adresse.poststedsnavn ?? '',
+    },
+});
 
 const VurderingAvKlage = (props: { sakId: string; klage: Klage }) => {
     const navigate = useNavigate();
@@ -141,6 +159,10 @@ const VurderingAvKlage = (props: { sakId: string; klage: Klage }) => {
     const [mottakerFinnes, setMottakerFinnes] = useState<boolean | null>(null);
     const [mottakerFetchError, setMottakerFetchError] = useState<MottakerAlert | null>(null);
     const mottakerBrevtype: Brevtype = 'OVERSENDELSE_KA';
+    const [visDødsbo, setVisDødsbo] = useState(false);
+    const [harDødsbo, setHarDødsbo] = useState(false);
+    const [prefillMottaker, setPrefillMottaker] = useState<Partial<LagreMottakerRequest> | undefined>(undefined);
+    const referanseType = 'DØDSBO_KLAGE';
 
     const hjelpetekstLink =
         'https://navno.sharepoint.com/sites/fag-og-ytelser-pensjon-supplerende-stonad/SitePages/Midlertidig-rutine-for-klagebehandling---supplerende-st%C3%B8nad-til-uf%C3%B8re-flyktninger.aspx?OR=Teams-HL&CT=1645705340996&sourceId=&params=%7B%22AppName%22%3A%22Teams-Desktop%22%2C%22AppVersion%22%3A%2228%2F22010300411%22%7D';
@@ -271,6 +293,29 @@ const VurderingAvKlage = (props: { sakId: string; klage: Klage }) => {
                 },
             );
         });
+    };
+
+    useEffect(() => {
+        const sjekkMottaker = async () => {
+            const res = await hentMottaker(props.sakId, referanseType, props.klage.id, mottakerBrevtype);
+
+            if (res.status === 'ok') {
+                if (res.data) {
+                    setHarDødsbo(true);
+                }
+                return;
+            } else {
+                if (res.error.statusCode !== 404) {
+                    setMottakerFetchError(toMottakerAlert(res.error, 'Kan ikke hente mottaker'));
+                }
+            }
+        };
+        void sjekkMottaker();
+    }, [props.sakId, props.klage.id, mottakerBrevtype, referanseType]);
+
+    const handleBrukDødsboKontaktSomMottaker = (kontakt: Kontaktinformasjon, adresse: KontaktInfoDødsbo) => {
+        setPrefillMottaker(mapDødsboKontaktTilMottaker(kontakt, adresse));
+        setVisDødsbo(true);
     };
 
     const klageVurderingTypeWatch = watch('klageVurderingType');
@@ -408,6 +453,43 @@ const VurderingAvKlage = (props: { sakId: string; klage: Klage }) => {
                                             />
                                         )}
                                     />
+                                    <div>
+                                        <DødsboPage onVelgKontakt={handleBrukDødsboKontaktSomMottaker} />
+                                        {!visDødsbo && (
+                                            <Button
+                                                variant="secondary"
+                                                type="button"
+                                                onClick={() => {
+                                                    setPrefillMottaker(undefined);
+                                                    setVisDødsbo(true);
+                                                }}
+                                            >
+                                                {harDødsbo ? 'Vis dødsbo' : 'Legg til dødsbo'}
+                                            </Button>
+                                        )}
+                                        {visDødsbo && (
+                                            <>
+                                                <Mottaker
+                                                    sakId={props.sakId}
+                                                    referanseId={props.klage.id}
+                                                    referanseType={referanseType}
+                                                    brevtype={mottakerBrevtype}
+                                                    initialValues={prefillMottaker}
+                                                    onClose={() => {
+                                                        setPrefillMottaker(undefined);
+                                                        setVisDødsbo(false);
+                                                    }}
+                                                    onDelete={() => setHarDødsbo(false)}
+                                                />
+                                                {mottakerFetchError && (
+                                                    <Alert variant={mottakerFetchError.variant} size="small">
+                                                        {mottakerFetchError.text}
+                                                    </Alert>
+                                                )}
+                                            </>
+                                        )}
+                                    </div>
+
                                     <Button
                                         type="button"
                                         className={styles.seBrevButton}
@@ -448,7 +530,9 @@ const VurderingAvKlage = (props: { sakId: string; klage: Klage }) => {
                                             referanseId={props.klage.id}
                                             referanseType={'KLAGE'}
                                             brevtype={mottakerBrevtype}
-                                            onClose={() => setSkalLeggeTilMottaker(false)}
+                                            onClose={() => {
+                                                setSkalLeggeTilMottaker(false);
+                                            }}
                                         />
                                     )}
                                 </div>
