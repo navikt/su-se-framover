@@ -170,7 +170,6 @@ export enum ApiErrorCode {
     NYE_OVERLAPPENDE_VEDTAK = 'nye_overlappende_vedtak',
 
     //O
-    OPPDATERING_AV_STØNADSPERIODE = 'oppdatering_av_stønadsperiode',
     OPPDRAG_STENGT_ELLER_NEDE = 'simulering_feilet_oppdrag_stengt_eller_nede',
     OPPDRAGET_FINNES_IKKE = 'simulering_feilet_oppdraget_finnes_ikke',
     OPPHOLDSTILLATELSE_ER_IKKE_UTFYLT = 'oppholdstillatelse_er_ikke_utfylt',
@@ -265,6 +264,9 @@ export enum ApiErrorCode {
     UTDATERT_VERSJON = 'utdatert_versjon',
     UTBETALING_ALLEREDE_OPPHØRT = 'utbetaling_allerede_opphørt',
     UTBETALING_ALLEREDE_STANSET = 'utbetaling_allerede_stanset',
+    UTBETALING_AVVENTER_KVITTERING = 'utbetaling_avventer_kvittering',
+    UTBETALING_HAR_FEILKVITTERING = 'utbetaling_har_feilkvittering',
+    UTBETALING_HAR_FEILKVITTERING_OG_AVVENTER_KVITTERING = 'utbetaling_har_feilkvittering_og_avventer_kvittering',
     UTDATERT_SAKSVERSJON = 'utdatert_saksversjon',
     UTENLANDSK_INNTEKT_MANGLER_VALUTA = 'utenlandsk_inntekt_mangler_valuta',
     UTENLANDSK_INNTEKT_NEGATIV_KURS = 'utenlandsk_inntekt_negativ_kurs',

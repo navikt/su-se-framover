@@ -1,7 +1,7 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { RemoteSuccess } from '@devexperts/remote-data-ts';
 import { Accordion, BodyShort, Button, Checkbox, Label, Loader, TextField } from '@navikt/ds-react';
-import { ReactNode, useEffect, useMemo, useState } from 'react';
+import { ReactNode, useEffect, useState } from 'react';
 import { Control, Controller, UseFormTrigger, useWatch } from 'react-hook-form';
 
 import { RevurderingOgFeilmeldinger } from '~src/api/GrunnlagOgVilkårApi';
@@ -204,15 +204,13 @@ const FormuegrunnlagPanel = (props: {
 
     const watch = useWatch({ control: props.control, name: navn });
 
-    const utregnetFormue = useMemo(() => {
-        return regnUtFormuegrunnlagVerdier(watch);
-    }, [watch]);
+    const utregnetFormue = () => regnUtFormuegrunnlagVerdier(watch);
 
     const handleBekreftClick = () => {
         props.triggerValidation(navn).then((isPanelValid) => {
             if (isPanelValid) {
                 setÅpen(false);
-                props.setBekreftetFormue(utregnetFormue);
+                props.setBekreftetFormue(utregnetFormue());
             }
         });
     };
@@ -236,7 +234,7 @@ const FormuegrunnlagPanel = (props: {
                 <div className={styles.nyBeregningContainer}>
                     <BodyShort>{formatMessage('formue.grunnlag.panel.nyBeregning')}</BodyShort>
                     <Label>
-                        {utregnetFormue} {formatMessage('formue.grunnlag.panel.kroner')}
+                        {utregnetFormue()} {formatMessage('formue.grunnlag.panel.kroner')}
                     </Label>
                 </div>
 

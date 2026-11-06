@@ -2,27 +2,29 @@ import { Button, Label, Select, VStack } from '@navikt/ds-react';
 
 import { VelgbareFradragskategorier } from '~src/types/Fradrag';
 import {
-    HistoriskInfotrygdBeregningsgrunnlagForMåned,
     HistoriskInfotrygdFradragForMåned,
-    HistoriskInfotrygdSatskategori,
+    HistoriskInfotrygdMånedsutkast,
+    HistoriskInfotrygdRevurderingsbosituasjon,
 } from '~src/types/HistoriskInfotrygdRevurdering';
 
 import HistoriskInfotrygdFradrag from './HistoriskInfotrygdFradrag';
 
 interface Props {
-    måned: HistoriskInfotrygdBeregningsgrunnlagForMåned;
+    måned: HistoriskInfotrygdMånedsutkast;
     kanRedigeres: boolean;
-    onOppdatert: (
-        oppdater: (måned: HistoriskInfotrygdBeregningsgrunnlagForMåned) => HistoriskInfotrygdBeregningsgrunnlagForMåned,
-    ) => void;
+    onOppdatert: (oppdater: (måned: HistoriskInfotrygdMånedsutkast) => HistoriskInfotrygdMånedsutkast) => void;
 }
 
-const satskategorier: { value: HistoriskInfotrygdSatskategori; label: string }[] = [
-    { value: 'EN', label: 'Enslig' },
-    { value: 'EU', label: 'Ektefelle under 67 år' },
-    { value: 'EO', label: 'Ektefelle over 67 år' },
-    { value: 'EV', label: 'Enslig med bofellesskap' },
+const bosituasjoner: { value: HistoriskInfotrygdRevurderingsbosituasjon; label: string }[] = [
+    { value: 'ENSLIG', label: 'Enslig' },
+    { value: 'EPS_UNDER_67', label: 'EPS under 67 år' },
+    { value: 'EPS_OVER_67', label: 'EPS 67 år eller eldre' },
+    { value: 'ENSLIG_MED_BOFELLESSKAP', label: 'Enslig med bofellesskap' },
+    { value: 'EPS_UNDER_67_UFØR_FLYKTNING', label: 'EPS under 67 år, ufør flyktning' },
 ];
+
+const bosituasjonerForMåned = (måned: string) =>
+    bosituasjoner.filter((bosituasjon) => bosituasjon.value !== 'EPS_UNDER_67_UFØR_FLYKTNING' || måned >= '2021-01');
 
 const tomtFradrag = (): HistoriskInfotrygdFradragForMåned => ({
     type: VelgbareFradragskategorier.Alderspensjon,
@@ -35,23 +37,23 @@ const tomtFradrag = (): HistoriskInfotrygdFradragForMåned => ({
 const HistoriskInfotrygdYtelse = ({ måned, kanRedigeres, onOppdatert }: Props) => (
     <>
         <Select
-            label="Satskategori"
-            value={måned.satskategori}
+            label="Bosituasjon"
+            value={måned.bosituasjon ?? ''}
             readOnly={!kanRedigeres}
             onChange={(event) =>
                 onOppdatert((verdi) => ({
                     ...verdi,
-                    satskategori: event.target.value as HistoriskInfotrygdSatskategori,
+                    bosituasjon:
+                        bosituasjonerForMåned(måned.måned).find(
+                            (bosituasjon) => bosituasjon.value === event.target.value,
+                        )?.value ?? null,
                 }))
             }
         >
-            {satskategorier.map((kategori) => (
-                <option
-                    key={kategori.value}
-                    value={kategori.value}
-                    disabled={kategori.value === 'EV' && måned.måned < '2016-01'}
-                >
-                    {kategori.label}
+            <option value="">Velg bosituasjon</option>
+            {bosituasjonerForMåned(måned.måned).map((bosituasjon) => (
+                <option key={bosituasjon.value} value={bosituasjon.value}>
+                    {bosituasjon.label}
                 </option>
             ))}
         </Select>

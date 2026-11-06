@@ -37,7 +37,7 @@
   "author": "supstonad",
   "license": "MIT",
   "engines": {
-    "node": ">=24.1.0 <25.0.0",
+    "node": ">=24.22.1 <25.0.0",
     "npm": ">=11.18.0"
   },
   "bugs": {
@@ -46,7 +46,7 @@
   "homepage": "https://github.com/navikt/su-se-framover#readme",
   "dependencies": {
     "@devexperts/remote-data-ts": "2.1.1",
-    "@formatjs/intl-datetimeformat": "6.18.0",
+    "@formatjs/intl-datetimeformat": "6.18.2",
     "@formatjs/intl-numberformat": "8.15.6",
     "@hookform/resolvers": "5.2.2",
     "@navikt/aksel-icons": "7.33.5",
@@ -72,7 +72,7 @@
     "react-router-dom": "7.18.4",
     "redux": "5.0.1",
     "reset-css": "5.0.2",
-    "uuid": "14.0.1",
+    "uuid": "14.0.3",
     "yup": "0.29.3"
   },
   "devDependencies": {
@@ -89,11 +89,11 @@
     "less": "4.8.1",
     "lint-staged": "17.3.0",
     "nodemon": "3.1.14",
-    "ts-jest": "29.4.12",
+    "ts-jest": "29.4.14",
     "ts-node": "10.9.2",
     "tsx": "4.22.5",
     "typescript": "5.9.3",
-    "vite": "8.2.1"
+    "vite": "8.3.5"
   },
   "overrides": {
     "@istanbuljs/load-nyc-config": {

@@ -4,9 +4,11 @@ import classNames from 'classnames';
 import { ApiError, ErrorMessage } from '~src/api/apiClient';
 import { MessageFormatter, useI18n } from '~src/lib/i18n';
 
-import messages from './ApiErrorAlert-nb';
+import messages, { statusFeilmeldinger } from './ApiErrorAlert-nb';
 import { ApiErrorCode } from './apiErrorCode';
 import styles from './apierroralert.module.less';
+
+const apiErrorMessages = { ...messages, ...statusFeilmeldinger };
 
 type ApiErrorAlertErrorType = Omit<ApiError, 'body'> & { body: ErrorMessage | ErrorMessage[] };
 
@@ -19,33 +21,66 @@ interface Props {
 }
 
 export const useApiErrorMessages = () => {
-    const { formatMessage } = useI18n({ messages });
+    const { formatMessage } = useI18n({ messages: apiErrorMessages });
 
     return (error: ApiErrorAlertErrorType) => konstruerMeldingForAlert(formatMessage, error);
 };
 
-const konstruerMeldingForAlert = (formatMessage: MessageFormatter<typeof messages>, error: ApiErrorAlertErrorType) => {
+const konstruerMeldingForAlert = (
+    formatMessage: MessageFormatter<typeof apiErrorMessages>,
+    error: ApiErrorAlertErrorType,
+) => {
     try {
         if (error.statusCode === 503) {
             return formatMessage(ApiErrorCode.TJENESTEN_ER_IKKE_TILGJENGELIG);
         }
 
         if (Array.isArray(error.body)) {
-            return error.body.map((err) => formatMessage(err.code));
+            return error.body.map((err) => formatErrorCode(formatMessage, err.code, err.message));
         } else {
+            if (error.body.code === ApiErrorCode.KUNNE_IKKE_SLÅ_OPP_EPS) {
+                if (error.statusCode === 403) {
+                    return error.body.message || formatMessage('feilmelding.eps.ikkeTilgang');
+                }
+                if (error.statusCode === 404) {
+                    return error.body.message || formatMessage('feilmelding.eps.ikkeFunnet');
+                }
+                if (error.statusCode >= 500) {
+                    return formatMessage('feilmelding.eps.teknisk');
+                }
+            }
+
             const errors = Array.isArray(error.body.errors) ? error.body.errors : [];
             if (errors.length > 0) {
                 return errors.map(({ felt, begrunnelse }) => `${felt}: ${begrunnelse}`);
             }
-            return `${formatMessage(error.body.code)} \n melding: ${error.body.message}`;
+            const codeMessage = formatErrorCode(formatMessage, error.body.code, error.body.message);
+            return codeMessage === error.body.message
+                ? codeMessage
+                : `${codeMessage} \n melding: ${error.body.message}`;
         }
     } catch {
         return `Ukjent feil - Original feil: ${JSON.stringify(error)}`;
     }
 };
 
+const formatErrorCode = (
+    formatMessage: MessageFormatter<typeof apiErrorMessages>,
+    code: ApiErrorCode,
+    backendMessage: unknown,
+): string => {
+    const knownCode = Object.values(ApiErrorCode).find((value) => value === code);
+    if (knownCode) {
+        return formatMessage(knownCode);
+    }
+
+    return typeof backendMessage === 'string' && backendMessage.trim()
+        ? backendMessage
+        : formatMessage(ApiErrorCode.UKJENT_FEIL);
+};
+
 const ApiErrorAlert = ({ error, className, size, variant = 'error', children }: Props) => {
-    const { formatMessage } = useI18n({ messages });
+    const { formatMessage } = useI18n({ messages: apiErrorMessages });
 
     const melding = konstruerMeldingForAlert(formatMessage, error);
 

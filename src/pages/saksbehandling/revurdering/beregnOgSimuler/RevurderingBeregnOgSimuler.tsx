@@ -105,6 +105,10 @@ const RevurderingBeregnOgSimuler = (props: {
                                 {formatMessage('beregnOgSimuler.ny')}
                             </Button>
 
+                            {RemoteData.isFailure(beregnOgSimulerStatus) && (
+                                <ApiErrorAlert error={beregnOgSimulerStatus.error} />
+                            )}
+
                             <Navigasjonsknapper
                                 neste={{
                                     onClick: () =>

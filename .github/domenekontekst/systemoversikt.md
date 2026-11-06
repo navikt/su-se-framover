@@ -37,6 +37,52 @@ Runtime-konfigurasjonen til nettleseren er eksplisitt avgrenset til miljø,
 cachebuster og valgfri analysekonfigurasjon. Serverens authhemmeligheter ligger
 ikke i responsen.
 
+## Brotli-dekoding av innkommende forespørsler
+
+> Kildestatus: `verified` mot serveroppsettet og installert Express 5.2.1 /
+> body-parser 2.3.0 den 27. oktober 2026. Tilgjengelighet gjennom ingress og
+> Wonderwall i produksjon er ikke bekreftet.
+
+Brotli følger med Node.js. Applikasjonen trenger ikke å aktivere
+Brotli-komprimering av svar for å dekode Brotli-komprimerte forespørsler.
+`express.json()` og `express.urlencoded({ extended: true })` i
+`server/express.ts` pakker som standard ut innkommende forespørsler
+(`inflate: true`).
+
+En avsender kan aktivere `zlib.createBrotliDecompress()` når en forespørsel når
+disse parserne og har:
+
+- `Content-Encoding: br`. `Accept-Encoding: br` aktiverer ikke denne dekodingen.
+- `Content-Type: application/json` eller
+  `application/x-www-form-urlencoded`, med støttet tegnsett, for eksempel UTF-8.
+- En kropp med `Content-Length` eller `Transfer-Encoding` som ikke allerede er
+  lest av annen middleware.
+
+Parserne kjører før rutene og tokenvalideringen i `server/proxy.ts`. Det betyr
+ikke at en anonym avsender kommer gjennom Wonderwall eller ingress.
+
+Den lokale kontrollen brukte små, gyldige Brotli-komprimerte kropper med samme
+parseroppsett som applikasjonen. Begge innholdstypene aktiverte dekoderen og ga
+forventede data. Kontrollen bekreftet dekoderaktivering, ikke utnyttelse av en
+sårbarhet eller tilgjengelighet i produksjon.
+
+Standardgrensen er 102 400 utpakkede byte. Den hindrer ikke at dekoderen starter;
+grensen håndheves mens den utpakkede kroppen leses.
+
+Kildepunkter for mekanismen:
+
+- `server/express.ts`: parseroppsett og rekkefølge på middleware.
+- `server/package-lock.json`: versjonene av Express og body-parser.
+- body-parser 2.3.0, `lib/utils.js`: standardverdier for `inflate` og `limit`.
+- body-parser 2.3.0, `lib/read.js`: valg av dekoder fra `Content-Encoding`.
+- raw-body, `index.js`: størrelsesgrense under lesing.
+
+For [CVE-2026-111497](https://www.cve.org/CVERecord?id=CVE-2026-111497)
+oppdateres Docker-imaget og byggoppsettet fra Node 24.1.0 til 24.22.1, som har
+rettelsen ifølge [Nodes sikkerhetsmelding](https://nodejs.org/en/blog/vulnerability/october-2026-security-releases).
+Oppdateringen beskytter først kjørende applikasjoner når et nytt image er
+bygget og deployet.
+
 ## Kilder
 
 - `src/Root.tsx`
