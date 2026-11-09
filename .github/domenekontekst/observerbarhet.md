@@ -10,10 +10,25 @@
 - `express-http-proxy` viderefører automatisk `X-Su-Error-Logged` fra Bakovers
   respons, ikke fra innkommende request. For 5xx gir verdien `true` loggnivå
   `WARN`, fordi Bakover bekrefter at feilen allerede er logget som `ERROR`.
-  Andre verdier og manglende header gir `ERROR`. `proxyErrorHandler` fjerner
-  en eventuell kopiert markør ved proxyfeil før svaret sendes. Andre lokale
+  Andre verdier og manglende header gir `ERROR`. Den felles `errorHandler`
+  fjerner en eventuell kopiert markør ved lokale feil før svaret sendes. Andre lokale
   feil oppstår uten kopiert markør. Egne 5xx-feil, exceptions og nettverksfeil
   beholder dermed `ERROR`.
+- Express har en felles `errorHandler` etter rutene. Proxyfeil sendes dit med
+  `next(err)`, uten separat feillogging eller videresending til Express sin
+  tekstbaserte standardlogger. `pino-http` logger feilkode, kontrollert melding,
+  korrelasjons-ID og feilkilde når den er kjent. Rå feiltekster, stack traces og
+  ekstra felter fra feilobjekter tas ikke med.
+- Avvist backendforbindelse gir `503`, brutt forbindelse gir `502`, og timeout
+  gir `504`. Uventede proxyfeil gir `500`. Lokale feil med gyldig HTTP-feilstatus
+  beholder statusen; andre lokale feil gir `500`. Feil i klientforespørselen
+  med status `4xx` logges som `WARN`, mens lokale `5xx` logges som `ERROR`.
+- Ufullførte klientforbindelser logges som `WARN`. En etterfølgende proxyfeil
+  med `ECONNRESET` eller `EPIPE` etter at klientforbindelsen er avbrutt gir ikke
+  en ekstra feillogg. Andre sene feil logges som `ERROR`, selv om HTTP-loggeren
+  allerede har logget at forbindelsen ble lukket.
+- Ved feil etter at svaret er påbegynt avsluttes forbindelsen. Feilhåndtereren
+  forsøker ikke å sende en ny feilrespons.
 - HTTP-logger redigerer request-headere, response-headere og URL. Kjente
   fødselsnummerplasseringer i URL maskeres.
 - React-applikasjonen har en `ErrorBoundary` som viser en generell feiltekst og
@@ -51,4 +66,6 @@ observability-strategi.
 - `server/logger.ts`
 - `server/express.ts`
 - `server/proxy.ts`
+- `server/errorHandler.ts`
+- `server/__tests__/errorHandler.test.ts`
 - `server/package.json`
