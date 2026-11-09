@@ -1,5 +1,6 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { Alert, BodyLong, BodyShort, Button, Heading, Loader, Modal } from '@navikt/ds-react';
+import { isValid, startOfDay } from 'date-fns';
 import { pipe } from 'fp-ts/lib/function';
 import { ReactNode, useEffect, useState } from 'react';
 import { Controller, UseFormReturn } from 'react-hook-form';
@@ -20,6 +21,7 @@ import { FormWrapper } from '~src/pages/saksbehandling/søknadsbehandling/FormWr
 import { useAppDispatch } from '~src/redux/Store';
 import { Person } from '~src/types/Person';
 import { Sakstype } from '~src/types/Sak.ts';
+import { parseIsoDateOnly } from '~src/utils/date/dateUtils';
 import {
     finnÅrPersonFyller67,
     fyller67ILøpetAvPeriode,
@@ -127,6 +129,9 @@ const BosituasjonForm = (props: Props) => {
                                             watch.periode.tilOgMed && (
                                                 <EpsFyller67Varsel
                                                     eps={epsStatus.value}
+                                                    søknadsbehandlingEllerRevurdering={
+                                                        props.søknadsbehandlingEllerRevurdering
+                                                    }
                                                     periode={{
                                                         fraOgMed: watch.periode.fraOgMed,
                                                         tilOgMed: watch.periode.tilOgMed,
@@ -243,17 +248,35 @@ const ErEpsFylt67Felt = (props: {
     );
 };
 
-// Viser et varsel om at EPS fyller 67 år i perioden. Fallback-trinnene under dekker at
-// fødselsdatoen kan mangle eller være ugyldig, mens fødselsåret som regel er kjent.
-const EpsFyller67Varsel = (props: { eps: Person; periode: { fraOgMed: Date; tilOgMed: Date } }) => {
+export const EpsFyller67Varsel = (props: {
+    eps: Person;
+    periode: { fraOgMed: Date; tilOgMed: Date };
+    søknadsbehandlingEllerRevurdering: 'Søknadsbehandling' | 'Revurdering';
+}) => {
     const { formatMessage } = useI18n({ messages });
-
     const epsFødsel = props.eps.fødsel;
+    const fødselsdato = parseIsoDateOnly(epsFødsel?.dato ?? null);
 
-    if (epsFødsel) {
+    if (epsFødsel && fødselsdato && isValid(fødselsdato)) {
         const epsFyller67IPerioden = fyller67ILøpetAvPeriode(props.periode, epsFødsel);
 
         if (epsFyller67IPerioden === true) {
+            if (props.søknadsbehandlingEllerRevurdering === 'Søknadsbehandling') {
+                const harFylt67 = harFylt67VedDato(startOfDay(new Date()), epsFødsel);
+
+                return (
+                    <Alert variant="info" className={styles.epsFyller67Alert}>
+                        <BodyShort>
+                            {formatMessage(
+                                harFylt67
+                                    ? 'bosituasjon.epsHarFylt67IPerioden'
+                                    : 'bosituasjon.epsFyller67IPeriodenAutomatiskOppgave',
+                            )}
+                        </BodyShort>
+                    </Alert>
+                );
+            }
+
             return (
                 <Alert variant="info" className={styles.epsFyller67Alert}>
                     <BodyShort>{formatMessage('bosituasjon.epsFyller67IPerioden')}</BodyShort>
