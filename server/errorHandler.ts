@@ -3,7 +3,7 @@ import { type IncomingMessage, type ServerResponse, STATUS_CODES } from 'node:ht
 import type { ErrorRequestHandler, NextFunction, Response } from 'express';
 import type { Level } from 'pino';
 
-const proxyErrors = {
+const responseByNetworkErrorCode = {
     ECONNREFUSED: { status: 503, message: 'Could not contact su-se-bakover' },
     ECONNRESET: { status: 502, message: 'Connection to su-se-bakover was interrupted' },
     EPIPE: { status: 502, message: 'Connection to su-se-bakover was interrupted' },
@@ -12,8 +12,6 @@ const proxyErrors = {
     ENOTFOUND: { status: 502, message: 'Could not resolve su-se-bakover' },
     EAI_AGAIN: { status: 502, message: 'Could not resolve su-se-bakover' },
 };
-
-const httpLoggedResponses = new WeakSet<ServerResponse>();
 
 class RequestError extends Error {
     constructor(
@@ -27,11 +25,11 @@ class RequestError extends Error {
     }
 }
 
-function isNetworkErrorCode(code: unknown): code is keyof typeof proxyErrors {
-    return typeof code === 'string' && Object.hasOwn(proxyErrors, code);
+function isNetworkErrorCode(code: unknown): code is keyof typeof responseByNetworkErrorCode {
+    return typeof code === 'string' && Object.hasOwn(responseByNetworkErrorCode, code);
 }
 
-function networkErrorCode(error: unknown): keyof typeof proxyErrors | undefined {
+function networkErrorCode(error: unknown): keyof typeof responseByNetworkErrorCode | undefined {
     if (typeof error !== 'object' || error === null || !('code' in error)) {
         return undefined;
     }
@@ -79,12 +77,11 @@ export function serializeRequestError(error: unknown) {
 
 export function proxyErrorHandler(error: unknown, _res: Response, next: NextFunction): void {
     const code = networkErrorCode(error);
-    const details = code ? proxyErrors[code] : { status: 500, message: 'Unexpected proxy error' };
+    const details = code ? responseByNetworkErrorCode[code] : { status: 500, message: 'Unexpected proxy error' };
     next(new RequestError(details.status, code ?? 'PROXY_ERROR', details.message, 'proxy'));
 }
 
 export function httpLogLevel(req: IncomingMessage, res: ServerResponse, error?: Error): Level {
-    httpLoggedResponses.add(res);
     if (error) {
         return 'error';
     }
@@ -108,27 +105,26 @@ export const errorHandler: ErrorRequestHandler = (error: unknown, req, res, _nex
         safeError.source === 'proxy' &&
         (safeError.code === 'ECONNRESET' || safeError.code === 'EPIPE')
     ) {
-        // pino-http logs close before the proxy reports the cancellation.
+        // Klienten har koblet fra. HTTP-loggen dekker avbruddet; ikke logg proxyens følgefeil på nytt.
         if (!res.destroyed) {
             res.destroy();
         }
         return;
     }
 
+    // Intern overlevering av feilen til pino-http. Feltet sendes ikke til klienten.
     res.err = safeError;
-    if (httpLoggedResponses.has(res)) {
-        // An unexpected late error must remain visible after the HTTP completion log.
-        req.log.error({ err: safeError }, 'Request failed after response closed');
-        return;
-    }
     if (res.destroyed || res.writableFinished) {
+        // Responsen er allerede ødelagt eller ferdig skrevet. Ikke send noe mer til klienten.
         return;
     }
     if (res.headersSent) {
+        // Responsen er påbegynt, men uferdig. Avbryt i stedet for å sende JSON eller avslutte som normalt.
         res.destroy();
         return;
     }
 
+    // Ingenting er sendt ennå. Send feilrespons uten backendens markør for allerede logget feil.
     res.removeHeader('X-Su-Error-Logged');
     res.status(safeError.status).json({ message: safeError.message });
 };
