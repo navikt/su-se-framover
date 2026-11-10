@@ -89,7 +89,7 @@ export function httpLogLevel(req: IncomingMessage, res: ServerResponse, error?: 
         return 'error';
     }
     if (res.statusCode >= 500) {
-        return res.getHeader('X-Su-Error-Logged') === 'true' ? 'warn' : 'error';
+        return !res.err && res.getHeader('X-Su-Error-Logged') === 'true' ? 'warn' : 'error';
     }
     if (res.err) {
         return requestError(res.err).status >= 500 ? 'error' : 'warn';
