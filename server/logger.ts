@@ -4,6 +4,7 @@ import { type Logger, pino } from 'pino';
 import { pinoHttp } from 'pino-http';
 
 import * as Config from './config.js';
+import { httpLogLevel, serializeRequestError } from './errorHandler.js';
 
 const fnrReplacePattern = [/^(\/api\/(?:person|skatt|saker\/info)\/)(\d{11})()/, /^(.*fnr=)(\d{11})()/];
 
@@ -42,7 +43,9 @@ export const logger: Logger = pino({
 
 export const httpLogger = pinoHttp({
     logger: logger,
+    wrapSerializers: false,
     serializers: {
+        err: serializeRequestError,
         req(req) {
             return {
                 id: req.id,
@@ -56,18 +59,7 @@ export const httpLogger = pinoHttp({
             };
         },
     },
-    customLogLevel(_req, res, err) {
-        if (err) {
-            return 'error';
-        }
-        if (res.statusCode >= 500) {
-            return res.getHeader('X-Su-Error-Logged') === 'true' ? 'warn' : 'error';
-        }
-        if (res.statusCode >= 400) {
-            return 'warn';
-        }
-        return 'info';
-    },
+    customLogLevel: httpLogLevel,
     genReqId(req) {
         return req.headers['x-correlation-id'] || req.id || randomUUID();
     },
