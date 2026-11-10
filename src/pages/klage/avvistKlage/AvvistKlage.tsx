@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { Link, useNavigate } from 'react-router-dom';
 
-import { Brevtype, hentMottaker } from '~src/api/mottakerClient.ts';
+import { Brevtype, hentMottaker, LagreMottakerRequest } from '~src/api/mottakerClient.ts';
 import * as pdfApi from '~src/api/pdfApi';
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
 import LinkAsButton from '~src/components/linkAsButton/LinkAsButton';
@@ -16,10 +16,11 @@ import { useAsyncActionCreator, useBrevForhåndsvisning } from '~src/lib/hooks';
 import { useI18n } from '~src/lib/i18n';
 import * as Routes from '~src/lib/routes';
 import yup from '~src/lib/validering';
+import DødsboPage from '~src/pages/saksbehandling/mottaker/Dødsbo.tsx';
 import { Mottaker } from '~src/pages/saksbehandling/mottaker/Mottaker.tsx';
 import { Klage, KlageStatus, KlageSteg } from '~src/types/Klage';
+import { KontaktInfoDødsbo, Kontaktinformasjon } from '~src/types/Person.ts';
 import { erKlageAvvist } from '~src/utils/klage/klageUtils';
-
 import sharedStyles from '../klage.module.less';
 import styles from './avvistKlage.module.less';
 import messages from './avvistKlage-nb';
@@ -31,7 +32,22 @@ interface AvvistKlageFormData {
 const schema = yup.object<AvvistKlageFormData>({
     fritekstTilBrev: yup.string().required(),
 });
-
+const mapDødsboKontaktTilMottaker = (
+    kontakt: Kontaktinformasjon,
+    adresse: KontaktInfoDødsbo,
+): Partial<LagreMottakerRequest> => ({
+    navn:
+        kontakt.organisasjonsnavn ?? [kontakt.fornavn, kontakt.mellomnavn, kontakt.etternavn].filter(Boolean).join(' '),
+    foedselsnummer: kontakt.identifikasjonsnummer ?? '',
+    orgnummer: kontakt.organisasjonsnummer ?? '',
+    adresse: {
+        adresselinje1: adresse.adresselinje1 ?? '',
+        adresselinje2: adresse.adresselinje2 ?? '',
+        adresselinje3: '',
+        postnummer: adresse.postnummer ?? '',
+        poststed: adresse.poststedsnavn ?? '',
+    },
+});
 const AvvistKlage = (props: { sakId: string; klage: Klage }) => {
     const navigate = useNavigate();
     const { formatMessage } = useI18n({ messages });
@@ -43,6 +59,10 @@ const AvvistKlage = (props: { sakId: string; klage: Klage }) => {
     const [mottakerFinnes, setMottakerFinnes] = useState<boolean | null>(null);
     const [mottakerFetchError, setMottakerFetchError] = useState<MottakerAlert | null>(null);
     const mottakerBrevtype: Brevtype = 'VEDTAK';
+    const [visDødsbo, setVisDødsbo] = useState(false);
+    const [harDødsbo, setHarDødsbo] = useState(false);
+    const [prefillMottaker, setPrefillMottaker] = useState<Partial<LagreMottakerRequest> | undefined>(undefined);
+    const referanseType = 'DØDSBO_KLAGE';
 
     const { handleSubmit, control, getValues } = useForm<AvvistKlageFormData>({
         resolver: yupResolver(schema),
@@ -77,6 +97,11 @@ const AvvistKlage = (props: { sakId: string; klage: Klage }) => {
                 );
             });
         });
+    };
+
+    const handleBrukDødsboKontaktSomMottaker = (kontakt: Kontaktinformasjon, adresse: KontaktInfoDødsbo) => {
+        setPrefillMottaker(mapDødsboKontaktTilMottaker(kontakt, adresse));
+        setVisDødsbo(true);
     };
 
     useEffect(() => {
@@ -114,6 +139,24 @@ const AvvistKlage = (props: { sakId: string; klage: Klage }) => {
 
         void sjekkMottaker();
     }, [formatMessage, props.klage.id, props.sakId]);
+
+    useEffect(() => {
+        const sjekkMottaker = async () => {
+            const res = await hentMottaker(props.sakId, referanseType, props.klage.id, mottakerBrevtype);
+
+            if (res.status === 'ok') {
+                if (res.data) {
+                    setHarDødsbo(true);
+                }
+                return;
+            } else {
+                if (res.error.statusCode !== 404) {
+                    setMottakerFetchError(toMottakerAlert(res.error, 'Kan ikke hente mottaker'));
+                }
+            }
+        };
+        void sjekkMottaker();
+    }, [props.sakId, props.klage.id, mottakerBrevtype, referanseType]);
 
     const iGyldigStatusForÅAvvise = (k: Klage) =>
         k.status === KlageStatus.VILKÅRSVURDERT_BEKREFTET_AVVIST || erKlageAvvist(k);
@@ -165,6 +208,42 @@ const AvvistKlage = (props: { sakId: string; klage: Klage }) => {
                                     />
                                 )}
                             />
+                            <div>
+                                <DødsboPage onVelgKontakt={handleBrukDødsboKontaktSomMottaker} />
+                                {!visDødsbo && (
+                                    <Button
+                                        variant="secondary"
+                                        type="button"
+                                        onClick={() => {
+                                            setPrefillMottaker(undefined);
+                                            setVisDødsbo(true);
+                                        }}
+                                    >
+                                        {harDødsbo ? 'Vis dødsbo' : 'Legg til dødsbo'}
+                                    </Button>
+                                )}
+                                {visDødsbo && (
+                                    <>
+                                        <Mottaker
+                                            sakId={props.sakId}
+                                            referanseId={props.klage.id}
+                                            referanseType={referanseType}
+                                            brevtype={mottakerBrevtype}
+                                            initialValues={prefillMottaker}
+                                            onClose={() => {
+                                                setPrefillMottaker(undefined);
+                                                setVisDødsbo(false);
+                                            }}
+                                            onDelete={() => setHarDødsbo(false)}
+                                        />
+                                        {mottakerFetchError && (
+                                            <Alert variant={mottakerFetchError.variant} size="small">
+                                                {mottakerFetchError.text}
+                                            </Alert>
+                                        )}
+                                    </>
+                                )}
+                            </div>
                             <Button
                                 className={styles.seBrevKnapp}
                                 type="button"
