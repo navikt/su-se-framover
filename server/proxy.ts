@@ -1,10 +1,9 @@
 import express from 'express';
 import expressHttpProxy from 'express-http-proxy';
-import { Logger } from 'pino';
-
 import { AUTH_ERROR_CODE, authenticateUser, getToken, LOGIN_REQUIRED_HEADER } from './auth/index.js';
 import { requestOboToken } from './auth/obo.js';
 import * as Config from './config.js';
+import { proxyErrorHandler } from './errorHandler.js';
 
 // OBO-token veksles til su-se-bakover sin audience. På Azure har scope formatet api://<cluster>.<namespace>.<app>/.default.
 const suSeBakoverScope = `api://${Config.auth.suSeBakoverUri}/.default`;
@@ -12,7 +11,7 @@ const suSeBakoverScope = `api://${Config.auth.suSeBakoverUri}/.default`;
 export default function setup() {
     const router = express.Router();
 
-    const proxy = (log: Logger, accessToken: string) =>
+    const proxy = (accessToken: string) =>
         expressHttpProxy(Config.server.suSeBakoverUrl, {
             parseReqBody: false,
             proxyReqOptDecorator: async (options) => {
@@ -22,13 +21,7 @@ export default function setup() {
                 };
                 return options;
             },
-            proxyErrorHandler: (err, res, next) => {
-                if (err && err.code === 'ECONNREFUSED') {
-                    log.error('proxyErrorHandler: Got ECONNREFUSED from su-se-bakover');
-                    return res.status(503).send({ message: 'Could not contact su-se-bakover' });
-                }
-                next(err);
-            },
+            proxyErrorHandler,
         });
 
     router.use('/api', authenticateUser, async (req, res, next) => {
@@ -54,7 +47,7 @@ export default function setup() {
             return;
         }
 
-        return proxy(req.log, obo.accessToken)(req, res, next);
+        return proxy(obo.accessToken)(req, res, next);
     });
 
     return router;
