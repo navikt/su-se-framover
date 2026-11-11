@@ -56,6 +56,36 @@ alderssak og er autoritativ for `400`, `401` og `403`.
 Kontrakten er `cross-repo`-verifisert 2026-09-15 mot
 `su-se-bakover@21753fff73cf2d35f2b78ab1ad12417ef3fe5fd3`.
 
+## Inntektsvalg i månedsberegningen
+
+Kontrakten på backendgrenen `bau/viseinntekstvalgfradrag` utvider hver
+månedsberegning med `forventetInntektSammenligning`. Feltet er enten `null`
+eller et objekt med `forventetInntekt`, `arbeidsinntekterEtterLoven`,
+`inntekterISammenligningen` og `trukketFra`. Begge beløpene er per måned;
+`arbeidsinntekterEtterLoven` er en sum, mens `inntekterISammenligningen` er en
+liste med samme responsform som øvrige fradrag.
+
+Backend utleder sammenligningen fra den lagrede beregningen. Frontend bruker
+`trukketFra` (`FORVENTET_INNTEKT` eller `ARBEIDSINNTEKTER`) uten å beregne
+inntektsvalget selv. Ved like beløp velges forventet inntekt. Når feltet er
+`null`, skjules sammenligningen uten å angi en årsak.
+
+Den felles beregningsvisningen beholder benyttede fradrag og viser
+sammenligningen under disse for hver gruppert periode. Beløpene vises med to
+desimaler, og hele sammenligningsfeltet inngår i månedssammenligningen, bortsett
+fra fradragenes perioder. Feltet følger samme typede responsmønster som øvrige
+fradrag, uten ekstra runtime-validering eller fallback for manglende felt.
+Backendendringen må settes i produksjon før frontendendringen.
+
+Kontrakten er `cross-repo`-verifisert 2026-11-10 mot
+`su-se-bakover@3bc6728772f106ea40bf83acc5f85b298cc53abe`, ikke mot backendens
+standardgren eller produksjonsmiljø:
+
+https://github.com/navikt/su-se-bakover/blob/3bc6728772f106ea40bf83acc5f85b298cc53abe/web/src/main/kotlin/no/nav/su/se/bakover/web/routes/s%C3%B8knadsbehandling/beregning/M%C3%A5nedsberegningJson.kt
+
+Frontendkilder: `src/types/Beregning.ts` og
+`src/components/oppsummering/oppsummeringAvBeregningOgsimulering/oppsummeringAvBeregning/OppsummeringAvBeregning.tsx`.
+
 ## Sensitive oppslag
 
 `personApi.ts`, `skattApi.ts` og `adresseOppslagApi.ts` eksponerer

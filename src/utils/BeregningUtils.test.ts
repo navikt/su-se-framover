@@ -1,6 +1,89 @@
+import {
+    eqMånedsberegningBortsettFraPeriode,
+    ForventetInntektSammenligning,
+    Månedsberegning,
+} from '~src/types/Beregning';
+import { Fradrag, FradragTilhører, VelgbareFradragskategorier } from '~src/types/Fradrag';
+import { Sats } from '~src/types/Sats';
 import { InntektOgPensjon } from '~src/types/Søknadinnhold';
 
+import { groupByEq } from './array/arrayUtils';
 import { inntektFelter } from './BeregningUtils';
+
+const arbeidsinntekt: Fradrag = {
+    periode: { fraOgMed: '2026-06-01', tilOgMed: '2026-06-30' },
+    type: VelgbareFradragskategorier.Arbeidsinntekt,
+    beskrivelse: null,
+    beløp: 15_000,
+    utenlandskInntekt: null,
+    tilhører: FradragTilhører.Bruker,
+};
+
+const sammenligning: ForventetInntektSammenligning = {
+    forventetInntekt: 10 / 12,
+    arbeidsinntekterEtterLoven: 15_000,
+    inntekterISammenligningen: [arbeidsinntekt],
+    trukketFra: 'ARBEIDSINNTEKTER',
+};
+
+describe('inntektsvalg i grupperte månedsberegninger', () => {
+    const juni: Månedsberegning = {
+        sats: Sats.Høy,
+        beløp: 5_000,
+        grunnbeløp: 130_160,
+        fraOgMed: '2026-06-01',
+        tilOgMed: '2026-06-30',
+        fradrag: [arbeidsinntekt],
+        satsbeløp: 20_000,
+        epsFribeløp: 0,
+        epsInputFradrag: [],
+        forventetInntektSammenligning: sammenligning,
+    };
+    const juli: Månedsberegning = {
+        ...juni,
+        fraOgMed: '2026-07-01',
+        tilOgMed: '2026-07-31',
+    };
+    const grupper = groupByEq(eqMånedsberegningBortsettFraPeriode);
+
+    it('slår sammen like måneder selv om inntektenes perioder er forskjellige', () => {
+        const juliPeriode = { fraOgMed: juli.fraOgMed, tilOgMed: juli.tilOgMed };
+        const juliMedNyPeriode: Månedsberegning = {
+            ...juli,
+            fradrag: [{ ...arbeidsinntekt, periode: juliPeriode }],
+            forventetInntektSammenligning: {
+                ...sammenligning,
+                inntekterISammenligningen: [{ ...arbeidsinntekt, periode: juliPeriode }],
+            },
+        };
+
+        expect(grupper([juni, juliMedNyPeriode])).toEqual([[juni, juliMedNyPeriode]]);
+    });
+
+    it.each<Partial<ForventetInntektSammenligning>>([
+        { forventetInntekt: 11 / 12 },
+        { arbeidsinntekterEtterLoven: 15_000.83 },
+        { inntekterISammenligningen: [{ ...arbeidsinntekt, beløp: 14_000 }] },
+        { trukketFra: 'FORVENTET_INNTEKT' },
+    ])('holder måneder atskilt når inntektssammenligningen endres: %o', (endring) => {
+        const endretJuli: Månedsberegning = {
+            ...juli,
+            forventetInntektSammenligning: { ...sammenligning, ...endring },
+        };
+
+        expect(grupper([juni, endretJuli])).toEqual([[juni], [endretJuli]]);
+    });
+
+    it('skiller mellom null og en sammenligning, men grupperer måneder som begge har null', () => {
+        const juniUtenSammenligning: Månedsberegning = { ...juni, forventetInntektSammenligning: null };
+        const juliUtenSammenligning: Månedsberegning = { ...juli, forventetInntektSammenligning: null };
+
+        expect(grupper([juniUtenSammenligning, juli])).toEqual([[juniUtenSammenligning], [juli]]);
+        expect(grupper([juniUtenSammenligning, juliUtenSammenligning])).toEqual([
+            [juniUtenSammenligning, juliUtenSammenligning],
+        ]);
+    });
+});
 
 describe('inntektFelter', () => {
     const lagInntektOgPensjon = (overrides: Partial<InntektOgPensjon> = {}): InntektOgPensjon => ({

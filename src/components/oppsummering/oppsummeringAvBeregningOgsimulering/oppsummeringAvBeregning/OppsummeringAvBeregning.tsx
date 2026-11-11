@@ -10,7 +10,12 @@ import fradragstypeMessages from '~src/components/forms/vilkårOgGrunnlagForms/V
 import { combineOptions, pipe } from '~src/lib/fp';
 import { useI18n } from '~src/lib/i18n';
 import { Nullable } from '~src/lib/types';
-import { Beregning, eqMånedsberegningBortsettFraPeriode, Månedsberegning } from '~src/types/Beregning';
+import {
+    Beregning,
+    eqMånedsberegningBortsettFraPeriode,
+    ForventetInntektSammenligning,
+    Månedsberegning,
+} from '~src/types/Beregning';
 import { EksternGrunnlagSkatt } from '~src/types/EksterneGrunnlag';
 import { Fradrag, IkkeVelgbareFradragskategorier } from '~src/types/Fradrag';
 import { Sats } from '~src/types/Sats';
@@ -115,6 +120,34 @@ const VisBenyttetEpsFradrag = ({
                 },
             ]}
         />
+    );
+};
+
+const Inntektssammenligning = ({ sammenligning }: { sammenligning: ForventetInntektSammenligning }) => {
+    const { formatMessage } = useI18n({ messages });
+
+    return (
+        <div>
+            <BodyShort spacing>
+                <strong>{formatMessage('inntektsvalg.tittel')}</strong>
+            </BodyShort>
+            <BodyShort>
+                {formatMessage('inntektsvalg.forventetInntekt', {
+                    beløp: formatCurrency(sammenligning.forventetInntekt),
+                })}
+            </BodyShort>
+            {sammenligning.trukketFra === 'ARBEIDSINNTEKTER' && (
+                <BodyShort size="small" spacing>
+                    {formatMessage('inntektsvalg.forventetInntektBrukesIkke')}
+                </BodyShort>
+            )}
+            <BodyShort spacing>
+                {formatMessage('inntektsvalg.arbeidsinntekter', {
+                    beløp: formatCurrency(sammenligning.arbeidsinntekterEtterLoven),
+                })}
+            </BodyShort>
+            <BodyShort spacing>{formatMessage(`inntektsvalg.${sammenligning.trukketFra}`)}</BodyShort>
+        </div>
     );
 };
 
@@ -293,6 +326,9 @@ const OppsummeringAvBeregning = (props: {
                                 </li>
                             )}
                         </ol>
+                        {månedsberegninger[0].forventetInntektSammenligning !== null && (
+                            <Inntektssammenligning sammenligning={månedsberegninger[0].forventetInntektSammenligning} />
+                        )}
                     </div>
                 )),
             )}

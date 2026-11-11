@@ -3,7 +3,7 @@ import { Eq, struct } from 'fp-ts/lib/Eq';
 import * as N from 'fp-ts/lib/number';
 import * as S from 'fp-ts/lib/string';
 
-import { Nullable } from '~src/lib/types';
+import { eqNullable, Nullable } from '~src/lib/types';
 
 import { eqFradragBortsettFraPeriode, Fradrag } from './Fradrag';
 import { Sats } from './Sats';
@@ -28,7 +28,22 @@ export interface Månedsberegning {
     satsbeløp: number;
     epsFribeløp: number;
     epsInputFradrag: Fradrag[];
+    forventetInntektSammenligning: Nullable<ForventetInntektSammenligning>;
 }
+
+export interface ForventetInntektSammenligning {
+    forventetInntekt: number;
+    arbeidsinntekterEtterLoven: number;
+    inntekterISammenligningen: Fradrag[];
+    trukketFra: 'FORVENTET_INNTEKT' | 'ARBEIDSINNTEKTER';
+}
+
+const eqForventetInntektSammenligning = struct<ForventetInntektSammenligning>({
+    forventetInntekt: N.Eq,
+    arbeidsinntekterEtterLoven: N.Eq,
+    inntekterISammenligningen: FpArray.getEq(eqFradragBortsettFraPeriode),
+    trukketFra: S.Eq,
+});
 
 export const eqMånedsberegningBortsettFraPeriode: Eq<Månedsberegning> = struct<
     Omit<Månedsberegning, 'fraOgMed' | 'tilOgMed'>
@@ -40,4 +55,5 @@ export const eqMånedsberegningBortsettFraPeriode: Eq<Månedsberegning> = struct
     grunnbeløp: N.Eq,
     sats: S.Eq,
     satsbeløp: N.Eq,
+    forventetInntektSammenligning: eqNullable(eqForventetInntektSammenligning),
 });
