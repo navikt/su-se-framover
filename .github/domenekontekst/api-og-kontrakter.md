@@ -56,6 +56,42 @@ alderssak og er autoritativ for `400`, `401` og `403`.
 Kontrakten er `cross-repo`-verifisert 2026-09-15 mot
 `su-se-bakover@21753fff73cf2d35f2b78ab1ad12417ef3fe5fd3`.
 
+## Inntektsvalg i månedsberegningen
+
+Kontrakten på backendgrenen `bau/viseinntekstvalgfradrag` utvider hver
+månedsberegning med `forventetInntektSammenligning`. Feltet er enten `null`
+eller et objekt med `forventetInntekt`, `arbeidsinntekterEtterLoven`,
+`inntekterISammenligningen` og `trukketFra`. Frontend er klargjort for den
+avtalte navneendringen fra `trukketFra` til `benyttetFradrag`. Navneendringen
+var ikke publisert i backendgrenen ved kontroll 2026-11-11 og er derfor ikke
+`cross-repo`-verifisert. Begge beløpene er per måned;
+`arbeidsinntekterEtterLoven` er en sum, mens `inntekterISammenligningen` er en
+liste med samme responsform som øvrige fradrag.
+
+Backend utleder sammenligningen fra den lagrede beregningen. Frontend bruker
+`benyttetFradrag` (`FORVENTET_INNTEKT` eller `ARBEIDSINNTEKTER`) uten å beregne
+inntektsvalget selv. Ved like beløp velges forventet inntekt. Sammenligningen
+skjules når feltet er `null` eller `inntekterISammenligningen` er tom.
+Visningsregelen bruker listen, ikke summen i `arbeidsinntekterEtterLoven`.
+En registrert arbeidsinntekt på 0 kr i listen gir derfor fortsatt visning.
+
+Den felles beregningsvisningen beholder benyttede fradrag og viser
+sammenligningen under disse for hver gruppert periode. Beløpene vises med to
+desimaler, og hele sammenligningsfeltet inngår i månedssammenligningen, bortsett
+fra fradragenes perioder. Feltet følger samme typede responsmønster som øvrige
+fradrag, uten ekstra runtime-validering eller fallback for manglende felt.
+Backendendringen, inkludert feltnavnet `benyttetFradrag`, må settes i
+produksjon før frontendendringen.
+
+Kontrakten er `cross-repo`-verifisert 2026-11-10 mot
+`su-se-bakover@3bc6728772f106ea40bf83acc5f85b298cc53abe`, ikke mot backendens
+standardgren eller produksjonsmiljø:
+
+https://github.com/navikt/su-se-bakover/blob/3bc6728772f106ea40bf83acc5f85b298cc53abe/web/src/main/kotlin/no/nav/su/se/bakover/web/routes/s%C3%B8knadsbehandling/beregning/M%C3%A5nedsberegningJson.kt
+
+Frontendkilder: `src/types/Beregning.ts`, `src/utils/BeregningUtils.test.ts` og
+`src/components/oppsummering/oppsummeringAvBeregningOgsimulering/oppsummeringAvBeregning/OppsummeringAvBeregning.tsx`.
+
 ## Sensitive oppslag
 
 `personApi.ts`, `skattApi.ts` og `adresseOppslagApi.ts` eksponerer
