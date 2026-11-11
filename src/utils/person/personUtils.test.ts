@@ -47,6 +47,14 @@ describe('harFylt67VedDato', () => {
 describe('fyller67ILøpetAvPeriode', () => {
     const periode = { fraOgMed: new Date(2024, 0, 1), tilOgMed: new Date(2024, 11, 31) };
 
+    it('returnerer true når personen fyller 67 på periodens første dag', () => {
+        expect(fyller67ILøpetAvPeriode(periode, lagFødsel('1957-01-01'))).toBe(true);
+    });
+
+    it('returnerer false når personen fylte 67 dagen før periodens første dag', () => {
+        expect(fyller67ILøpetAvPeriode(periode, lagFødsel('1956-12-31'))).toBe(false);
+    });
+
     it('returnerer true når personen ikke er fylt 67 ved periodens start, men er det ved periodens slutt', () => {
         // Født 1957-06-15 -> fyller 67 år 2024-06-15, altså midt i perioden
         expect(fyller67ILøpetAvPeriode(periode, lagFødsel('1957-06-15'))).toBe(true);
