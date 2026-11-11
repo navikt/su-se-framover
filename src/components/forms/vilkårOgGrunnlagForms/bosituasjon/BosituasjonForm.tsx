@@ -179,7 +179,7 @@ const BosituasjonForm = (props: Props) => {
 
 export default BosituasjonForm;
 
-const ErEpsFylt67Felt = (props: {
+export const ErEpsFylt67Felt = (props: {
     form: UseFormReturn<BosituasjonGrunnlagFormData>;
     nameAndIdx: PartialName<BosituasjonGrunnlagFormData>;
     eps: Person;
@@ -189,15 +189,19 @@ const ErEpsFylt67Felt = (props: {
 
     // Feltet låses bare når EPS har en gyldig fødselsdato. Mangler den, kan vi bare anslå om EPS har fylt 67 år
     // basert på fødselsåret (vi vet ikke nøyaktig bursdag), og saksbehandler må bekrefte det selv.
-    const epsFødsel = props.eps.fødsel;
-    const fødselsår = epsFødsel?.år;
+    const epsFødselsdato = parseIsoDateOnly(props.eps.fødsel?.dato ?? null);
+    const fødselsår = props.eps.fødsel?.år;
+    const harGyldigFødselsdato = epsFødselsdato !== null && isValid(epsFødselsdato);
 
-    const beregnetHarFylt67 = props.periodeFraOgMed
-        ? (harFylt67VedDato(props.periodeFraOgMed, epsFødsel) ??
-          (fødselsår != null ? harFylt67VedÅr(props.periodeFraOgMed, fødselsår) : null))
-        : null;
+    let erEps67VedPeriodestart: Nullable<boolean> = null;
 
-    const erLåst = epsFødsel?.dato != null;
+    if (props.periodeFraOgMed) {
+        if (harGyldigFødselsdato) {
+            erEps67VedPeriodestart = harFylt67VedDato(props.periodeFraOgMed, epsFødselsdato);
+        } else if (fødselsår != null) {
+            erEps67VedPeriodestart = harFylt67VedÅr(props.periodeFraOgMed, fødselsår);
+        }
+    }
 
     useEffect(() => {
         const gjeldendeErEpsFylt67 = props.form.getValues(`${props.nameAndIdx}.erEpsFylt67`);
@@ -212,8 +216,8 @@ const ErEpsFylt67Felt = (props: {
             return;
         }
 
-        if (beregnetHarFylt67 !== null && beregnetHarFylt67 !== gjeldendeErEpsFylt67) {
-            props.form.setValue(`${props.nameAndIdx}.erEpsFylt67`, beregnetHarFylt67);
+        if (erEps67VedPeriodestart !== null && erEps67VedPeriodestart !== gjeldendeErEpsFylt67) {
+            props.form.setValue(`${props.nameAndIdx}.erEpsFylt67`, erEps67VedPeriodestart);
             // erEpsFylt67 endret seg - nullstill uførflyktning-svaret av samme grunn som over.
             props.form.setValue(`${props.nameAndIdx}.erEPSUførFlyktning`, null);
         }
@@ -227,16 +231,16 @@ const ErEpsFylt67Felt = (props: {
                 <BooleanRadioGroup
                     legend={formatMessage('bosituasjon.erEPSFylt67')}
                     description={
-                        beregnetHarFylt67 === null
+                        erEps67VedPeriodestart === null
                             ? undefined
                             : formatMessage(
-                                  erLåst
+                                  harGyldigFødselsdato
                                       ? 'bosituasjon.erEPSFylt67Forhåndsutfylt'
                                       : 'bosituasjon.erEPSFylt67ForhåndsutfyltUsikkert',
                               )
                     }
                     error={fieldState.error?.message}
-                    readOnly={erLåst}
+                    readOnly={harGyldigFødselsdato}
                     {...field}
                     onChange={(e) => {
                         field.onChange(e);
@@ -254,15 +258,14 @@ export const EpsFyller67Varsel = (props: {
     søknadsbehandlingEllerRevurdering: 'Søknadsbehandling' | 'Revurdering';
 }) => {
     const { formatMessage } = useI18n({ messages });
-    const epsFødsel = props.eps.fødsel;
-    const fødselsdato = parseIsoDateOnly(epsFødsel?.dato ?? null);
+    const epsFødselsdato = parseIsoDateOnly(props.eps.fødsel?.dato ?? null);
 
-    if (epsFødsel && fødselsdato && isValid(fødselsdato)) {
-        const epsFyller67IPerioden = fyller67ILøpetAvPeriode(props.periode, epsFødsel);
+    if (epsFødselsdato && isValid(epsFødselsdato)) {
+        const epsFyller67IPerioden = fyller67ILøpetAvPeriode(props.periode, epsFødselsdato);
 
-        if (epsFyller67IPerioden === true) {
+        if (epsFyller67IPerioden) {
             if (props.søknadsbehandlingEllerRevurdering === 'Søknadsbehandling') {
-                const harFylt67 = harFylt67VedDato(startOfDay(new Date()), epsFødsel);
+                const harFylt67 = harFylt67VedDato(startOfDay(new Date()), epsFødselsdato);
 
                 return (
                     <Alert variant="info" className={styles.epsFyller67Alert}>
@@ -284,12 +287,12 @@ export const EpsFyller67Varsel = (props: {
             );
         }
 
-        if (epsFyller67IPerioden === false) {
+        if (!epsFyller67IPerioden) {
             return null;
         }
     }
 
-    const fødselsår = epsFødsel?.år;
+    const fødselsår = props.eps.fødsel?.år;
 
     if (fødselsår == null) {
         return (

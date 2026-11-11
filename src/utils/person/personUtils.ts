@@ -1,7 +1,7 @@
 import * as DateFns from 'date-fns';
 
 import { Nullable } from '~src/lib/types';
-import { Fødsel, Navn } from '~src/types/Person';
+import { Navn } from '~src/types/Person';
 
 export const showName = (navn: Navn) => {
     const mellomnavn = navn.mellomnavn ? ` ${navn.mellomnavn} ` : ' ';
@@ -22,12 +22,8 @@ export const alderSomPersonFyllerPåDato = (datoSomSjekkes: Date, fødselsmåned
 };
 export const alderSomPersonFyllerIÅrDate = (årSomSjekkes: number, årFødt: number) => årSomSjekkes - årFødt;
 
-export const harFylt67VedDato = (dato: Date, fødsel: Nullable<Fødsel>): Nullable<boolean> => {
-    if (!fødsel || !fødsel.dato) {
-        return null;
-    }
-
-    const alderVedDato = alderSomPersonFyllerPåDato(dato, DateFns.parseISO(fødsel.dato));
+export const harFylt67VedDato = (dato: Date, fødselsdato: Date): boolean => {
+    const alderVedDato = alderSomPersonFyllerPåDato(dato, fødselsdato);
     return alderVedDato >= LOVFESTET_ALDERSGRENSE_SU;
 };
 
@@ -48,16 +44,9 @@ export const harFylt67VedÅr = (dato: Date, fødselsår: number): Nullable<boole
     return null;
 };
 
-export const fyller67ILøpetAvPeriode = (
-    periode: { fraOgMed: Date; tilOgMed: Date },
-    fødsel: Nullable<Fødsel>,
-): Nullable<boolean> => {
-    const erFylt67FørPerioden = harFylt67VedDato(DateFns.subDays(periode.fraOgMed, 1), fødsel);
-    const erFylt67VedTilOgMed = harFylt67VedDato(periode.tilOgMed, fødsel);
-
-    if (erFylt67FørPerioden === null || erFylt67VedTilOgMed === null) {
-        return null;
-    }
+export const fyller67ILøpetAvPeriode = (periode: { fraOgMed: Date; tilOgMed: Date }, fødselsdato: Date): boolean => {
+    const erFylt67FørPerioden = harFylt67VedDato(DateFns.subDays(periode.fraOgMed, 1), fødselsdato);
+    const erFylt67VedTilOgMed = harFylt67VedDato(periode.tilOgMed, fødselsdato);
 
     return !erFylt67FørPerioden && erFylt67VedTilOgMed;
 };
