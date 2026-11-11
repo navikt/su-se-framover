@@ -15,6 +15,7 @@ import {
     eqMånedsberegningBortsettFraPeriode,
     ForventetInntektSammenligning,
     Månedsberegning,
+    sammenligningMedNoeValgtBort,
 } from '~src/types/Beregning';
 import { EksternGrunnlagSkatt } from '~src/types/EksterneGrunnlag';
 import { Fradrag, IkkeVelgbareFradragskategorier } from '~src/types/Fradrag';
@@ -123,8 +124,11 @@ const VisBenyttetEpsFradrag = ({
     );
 };
 
-const Inntektssammenligning = ({ sammenligning }: { sammenligning: ForventetInntektSammenligning }) => {
+const Inntektssammenligning = ({ sammenligning }: { sammenligning: Nullable<ForventetInntektSammenligning> }) => {
     const { formatMessage } = useI18n({ messages });
+    const inntektsvalg = sammenligningMedNoeValgtBort(sammenligning);
+
+    if (inntektsvalg === null) return null;
 
     return (
         <div>
@@ -133,20 +137,20 @@ const Inntektssammenligning = ({ sammenligning }: { sammenligning: ForventetInnt
             </BodyShort>
             <BodyShort>
                 {formatMessage('inntektsvalg.forventetInntekt', {
-                    beløp: formatCurrency(sammenligning.forventetInntekt),
+                    beløp: formatCurrency(inntektsvalg.forventetInntekt),
                 })}
             </BodyShort>
-            {sammenligning.trukketFra === 'ARBEIDSINNTEKTER' && (
+            {inntektsvalg.trukketFra === 'ARBEIDSINNTEKTER' && (
                 <BodyShort size="small" spacing>
                     {formatMessage('inntektsvalg.forventetInntektBrukesIkke')}
                 </BodyShort>
             )}
             <BodyShort spacing>
                 {formatMessage('inntektsvalg.arbeidsinntekter', {
-                    beløp: formatCurrency(sammenligning.arbeidsinntekterEtterLoven),
+                    beløp: formatCurrency(inntektsvalg.arbeidsinntekterEtterLoven),
                 })}
             </BodyShort>
-            <BodyShort spacing>{formatMessage(`inntektsvalg.${sammenligning.trukketFra}`)}</BodyShort>
+            <BodyShort spacing>{formatMessage(`inntektsvalg.${inntektsvalg.trukketFra}`)}</BodyShort>
         </div>
     );
 };
@@ -326,9 +330,7 @@ const OppsummeringAvBeregning = (props: {
                                 </li>
                             )}
                         </ol>
-                        {månedsberegninger[0].forventetInntektSammenligning !== null && (
-                            <Inntektssammenligning sammenligning={månedsberegninger[0].forventetInntektSammenligning} />
-                        )}
+                        <Inntektssammenligning sammenligning={månedsberegninger[0].forventetInntektSammenligning} />
                     </div>
                 )),
             )}

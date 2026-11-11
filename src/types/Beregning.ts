@@ -38,6 +38,11 @@ export interface ForventetInntektSammenligning {
     trukketFra: 'FORVENTET_INNTEKT' | 'ARBEIDSINNTEKTER';
 }
 
+export const sammenligningMedNoeValgtBort = (
+    sammenligning: Nullable<ForventetInntektSammenligning>,
+): Nullable<ForventetInntektSammenligning> =>
+    sammenligning !== null && sammenligning.inntekterISammenligningen.length > 0 ? sammenligning : null;
+
 const eqForventetInntektSammenligning = struct<ForventetInntektSammenligning>({
     forventetInntekt: N.Eq,
     arbeidsinntekterEtterLoven: N.Eq,

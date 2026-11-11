@@ -67,8 +67,10 @@ liste med samme responsform som øvrige fradrag.
 
 Backend utleder sammenligningen fra den lagrede beregningen. Frontend bruker
 `trukketFra` (`FORVENTET_INNTEKT` eller `ARBEIDSINNTEKTER`) uten å beregne
-inntektsvalget selv. Ved like beløp velges forventet inntekt. Når feltet er
-`null`, skjules sammenligningen uten å angi en årsak.
+inntektsvalget selv. Ved like beløp velges forventet inntekt. Sammenligningen
+skjules når feltet er `null` eller `inntekterISammenligningen` er tom.
+Visningsregelen bruker listen, ikke summen i `arbeidsinntekterEtterLoven`.
+En registrert arbeidsinntekt på 0 kr i listen gir derfor fortsatt visning.
 
 Den felles beregningsvisningen beholder benyttede fradrag og viser
 sammenligningen under disse for hver gruppert periode. Beløpene vises med to
@@ -83,7 +85,7 @@ standardgren eller produksjonsmiljø:
 
 https://github.com/navikt/su-se-bakover/blob/3bc6728772f106ea40bf83acc5f85b298cc53abe/web/src/main/kotlin/no/nav/su/se/bakover/web/routes/s%C3%B8knadsbehandling/beregning/M%C3%A5nedsberegningJson.kt
 
-Frontendkilder: `src/types/Beregning.ts` og
+Frontendkilder: `src/types/Beregning.ts`, `src/utils/BeregningUtils.test.ts` og
 `src/components/oppsummering/oppsummeringAvBeregningOgsimulering/oppsummeringAvBeregning/OppsummeringAvBeregning.tsx`.
 
 ## Sensitive oppslag

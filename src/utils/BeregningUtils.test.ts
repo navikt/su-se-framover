@@ -2,6 +2,7 @@ import {
     eqMånedsberegningBortsettFraPeriode,
     ForventetInntektSammenligning,
     Månedsberegning,
+    sammenligningMedNoeValgtBort,
 } from '~src/types/Beregning';
 import { Fradrag, FradragTilhører, VelgbareFradragskategorier } from '~src/types/Fradrag';
 import { Sats } from '~src/types/Sats';
@@ -25,6 +26,34 @@ const sammenligning: ForventetInntektSammenligning = {
     inntekterISammenligningen: [arbeidsinntekt],
     trukketFra: 'ARBEIDSINNTEKTER',
 };
+
+describe('sammenligning med noe valgt bort', () => {
+    it('gir ingen visning når sammenligningen er null', () => {
+        expect(sammenligningMedNoeValgtBort(null)).toBeNull();
+    });
+
+    it('gir ingen visning når ingen arbeidsinntekter deltok', () => {
+        const utenArbeidsinntekter: ForventetInntektSammenligning = {
+            ...sammenligning,
+            arbeidsinntekterEtterLoven: 0,
+            inntekterISammenligningen: [],
+            trukketFra: 'FORVENTET_INNTEKT',
+        };
+
+        expect(sammenligningMedNoeValgtBort(utenArbeidsinntekter)).toBeNull();
+    });
+
+    it('gir visning når en registrert arbeidsinntekt på 0 kr deltok', () => {
+        const medArbeidsinntektPåNull: ForventetInntektSammenligning = {
+            ...sammenligning,
+            arbeidsinntekterEtterLoven: 0,
+            inntekterISammenligningen: [{ ...arbeidsinntekt, beløp: 0 }],
+            trukketFra: 'FORVENTET_INNTEKT',
+        };
+
+        expect(sammenligningMedNoeValgtBort(medArbeidsinntektPåNull)).toBe(medArbeidsinntektPåNull);
+    });
+});
 
 describe('inntektsvalg i grupperte månedsberegninger', () => {
     const juni: Månedsberegning = {
