@@ -1,9 +1,11 @@
 import { renderToStaticMarkup } from 'react-dom/server';
+import { useForm } from 'react-hook-form';
 
 import { Fødsel, Person } from '~src/types/Person';
 
 import messages from '../VilkårOgGrunnlagForms-nb';
-import { EpsFyller67Varsel } from './BosituasjonForm';
+import { EpsFyller67Varsel, ErEpsFylt67Felt } from './BosituasjonForm';
+import { BosituasjonGrunnlagFormData, nyBosituasjon } from './BosituasjonFormUtils';
 
 const periode = { fraOgMed: new Date(2026, 0, 1), tilOgMed: new Date(2026, 11, 31) };
 const fødsel = (dato: string | null): Fødsel => ({ dato, år: 1959, alder: 66 });
@@ -22,6 +24,60 @@ const eps: Person = {
     dødsdato: null,
     dødsbo: null,
 };
+
+const Aldersfelt = (props: { fødsel: Fødsel | null }) => {
+    const form = useForm<BosituasjonGrunnlagFormData>({
+        defaultValues: { bosituasjoner: [nyBosituasjon()] },
+    });
+
+    return (
+        <ErEpsFylt67Felt
+            form={form}
+            nameAndIdx="bosituasjoner.0"
+            eps={{ ...eps, fødsel: props.fødsel }}
+            periodeFraOgMed={periode.fraOgMed}
+        />
+    );
+};
+
+describe('ErEpsFylt67Felt', () => {
+    it.each(['1958-01-01', '1960-06-15'])('låser feltet ved gyldig fødselsdato (%s)', (dato) => {
+        const markup = renderToStaticMarkup(<Aldersfelt fødsel={fødsel(dato)} />);
+
+        expect(markup).toContain('navds-radio--readonly');
+        expect(markup).toContain(messages['bosituasjon.erEPSFylt67Forhåndsutfylt']);
+        expect(markup).not.toContain(messages['bosituasjon.erEPSFylt67ForhåndsutfyltUsikkert']);
+    });
+
+    it.each([
+        null,
+        '',
+        'ugyldig',
+        '1959-02-30',
+    ])('lar feltet være redigerbart og viser fødselsårsfallback ved manglende eller ugyldig dato (%s)', (dato) => {
+        const markup = renderToStaticMarkup(<Aldersfelt fødsel={{ ...fødsel(dato), år: 1958 }} />);
+
+        expect(markup).not.toContain('navds-radio--readonly');
+        expect(markup).toContain(messages['bosituasjon.erEPSFylt67ForhåndsutfyltUsikkert']);
+        expect(markup).not.toContain(messages['bosituasjon.erEPSFylt67Forhåndsutfylt']);
+    });
+
+    it('lar feltet være redigerbart uten forhåndsutfyllingstekst når fødselsåret ikke avgjør alderen', () => {
+        const markup = renderToStaticMarkup(<Aldersfelt fødsel={fødsel(null)} />);
+
+        expect(markup).not.toContain('navds-radio--readonly');
+        expect(markup).not.toContain(messages['bosituasjon.erEPSFylt67Forhåndsutfylt']);
+        expect(markup).not.toContain(messages['bosituasjon.erEPSFylt67ForhåndsutfyltUsikkert']);
+    });
+
+    it('lar feltet være redigerbart når fødselsopplysninger mangler helt', () => {
+        const markup = renderToStaticMarkup(<Aldersfelt fødsel={null} />);
+
+        expect(markup).not.toContain('navds-radio--readonly');
+        expect(markup).not.toContain(messages['bosituasjon.erEPSFylt67Forhåndsutfylt']);
+        expect(markup).not.toContain(messages['bosituasjon.erEPSFylt67ForhåndsutfyltUsikkert']);
+    });
+});
 
 describe('EpsFyller67Varsel', () => {
     beforeEach(() => {
