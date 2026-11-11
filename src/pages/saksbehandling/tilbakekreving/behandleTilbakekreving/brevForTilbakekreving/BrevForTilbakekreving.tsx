@@ -164,13 +164,13 @@ const BrevForTilbakekreving = (props: {
     const [mottakerFetchError, setMottakerFetchError] = useState<MottakerAlert | null>(null);
     const [visDødsbo, setVisDødsbo] = useState(false);
     const [prefillMottaker, setPrefillMottaker] = useState<Partial<LagreMottakerRequest> | undefined>(undefined);
-    const referanseType = 'DØDSBO_TILBAKEKREVING';
+    const referanseTypeDødsbo = 'DØDSBO_TILBAKEKREVING';
     const brevtype = 'VEDTAK';
     const referanseId = props.tilbakekreving.id;
 
     useEffect(() => {
         const sjekkMottaker = async () => {
-            const res = await hentMottaker(props.sakId, referanseType, referanseId, brevtype);
+            const res = await hentMottaker(props.sakId, referanseTypeDødsbo, referanseId, brevtype);
             if (res.status === 'ok') {
                 if (res.data) {
                     setHarDødsbo(true);
@@ -275,7 +275,7 @@ const BrevForTilbakekreving = (props: {
                                             <Mottaker
                                                 sakId={props.sakId}
                                                 referanseId={referanseId}
-                                                referanseType={referanseType}
+                                                referanseType={referanseTypeDødsbo}
                                                 brevtype={brevtype}
                                                 initialValues={prefillMottaker}
                                                 onClose={() => {

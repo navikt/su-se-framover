@@ -62,7 +62,7 @@ const AvvistKlage = (props: { sakId: string; klage: Klage }) => {
     const [visDødsbo, setVisDødsbo] = useState(false);
     const [harDødsbo, setHarDødsbo] = useState(false);
     const [prefillMottaker, setPrefillMottaker] = useState<Partial<LagreMottakerRequest> | undefined>(undefined);
-    const referanseType = 'DØDSBO_KLAGE';
+    const referanseTypeDødsbo = 'DØDSBO_KLAGE';
 
     const { handleSubmit, control, getValues } = useForm<AvvistKlageFormData>({
         resolver: yupResolver(schema),
@@ -142,7 +142,7 @@ const AvvistKlage = (props: { sakId: string; klage: Klage }) => {
 
     useEffect(() => {
         const sjekkMottaker = async () => {
-            const res = await hentMottaker(props.sakId, referanseType, props.klage.id, mottakerBrevtype);
+            const res = await hentMottaker(props.sakId, referanseTypeDødsbo, props.klage.id, mottakerBrevtype);
 
             if (res.status === 'ok') {
                 if (res.data) {
@@ -156,7 +156,7 @@ const AvvistKlage = (props: { sakId: string; klage: Klage }) => {
             }
         };
         void sjekkMottaker();
-    }, [props.sakId, props.klage.id, mottakerBrevtype, referanseType]);
+    }, [props.sakId, props.klage.id, mottakerBrevtype, referanseTypeDødsbo]);
 
     const iGyldigStatusForÅAvvise = (k: Klage) =>
         k.status === KlageStatus.VILKÅRSVURDERT_BEKREFTET_AVVIST || erKlageAvvist(k);
@@ -227,7 +227,7 @@ const AvvistKlage = (props: { sakId: string; klage: Klage }) => {
                                         <Mottaker
                                             sakId={props.sakId}
                                             referanseId={props.klage.id}
-                                            referanseType={referanseType}
+                                            referanseType={referanseTypeDødsbo}
                                             brevtype={mottakerBrevtype}
                                             initialValues={prefillMottaker}
                                             onClose={() => {

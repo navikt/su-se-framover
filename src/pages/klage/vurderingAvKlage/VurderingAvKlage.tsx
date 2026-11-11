@@ -162,7 +162,7 @@ const VurderingAvKlage = (props: { sakId: string; klage: Klage }) => {
     const [visDødsbo, setVisDødsbo] = useState(false);
     const [harDødsbo, setHarDødsbo] = useState(false);
     const [prefillMottaker, setPrefillMottaker] = useState<Partial<LagreMottakerRequest> | undefined>(undefined);
-    const referanseType = 'DØDSBO_KLAGE';
+    const referanseTypeDødsbo = 'DØDSBO_KLAGE';
 
     const hjelpetekstLink =
         'https://navno.sharepoint.com/sites/fag-og-ytelser-pensjon-supplerende-stonad/SitePages/Midlertidig-rutine-for-klagebehandling---supplerende-st%C3%B8nad-til-uf%C3%B8re-flyktninger.aspx?OR=Teams-HL&CT=1645705340996&sourceId=&params=%7B%22AppName%22%3A%22Teams-Desktop%22%2C%22AppVersion%22%3A%2228%2F22010300411%22%7D';
@@ -297,7 +297,7 @@ const VurderingAvKlage = (props: { sakId: string; klage: Klage }) => {
 
     useEffect(() => {
         const sjekkMottaker = async () => {
-            const res = await hentMottaker(props.sakId, referanseType, props.klage.id, mottakerBrevtype);
+            const res = await hentMottaker(props.sakId, referanseTypeDødsbo, props.klage.id, mottakerBrevtype);
 
             if (res.status === 'ok') {
                 if (res.data) {
@@ -311,7 +311,7 @@ const VurderingAvKlage = (props: { sakId: string; klage: Klage }) => {
             }
         };
         void sjekkMottaker();
-    }, [props.sakId, props.klage.id, mottakerBrevtype, referanseType]);
+    }, [props.sakId, props.klage.id, mottakerBrevtype, referanseTypeDødsbo]);
 
     const handleBrukDødsboKontaktSomMottaker = (kontakt: Kontaktinformasjon, adresse: KontaktInfoDødsbo) => {
         setPrefillMottaker(mapDødsboKontaktTilMottaker(kontakt, adresse));
@@ -472,7 +472,7 @@ const VurderingAvKlage = (props: { sakId: string; klage: Klage }) => {
                                                 <Mottaker
                                                     sakId={props.sakId}
                                                     referanseId={props.klage.id}
-                                                    referanseType={referanseType}
+                                                    referanseType={referanseTypeDødsbo}
                                                     brevtype={mottakerBrevtype}
                                                     initialValues={prefillMottaker}
                                                     onClose={() => {
