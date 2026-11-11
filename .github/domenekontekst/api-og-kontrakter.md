@@ -61,12 +61,15 @@ Kontrakten er `cross-repo`-verifisert 2026-09-15 mot
 Kontrakten på backendgrenen `bau/viseinntekstvalgfradrag` utvider hver
 månedsberegning med `forventetInntektSammenligning`. Feltet er enten `null`
 eller et objekt med `forventetInntekt`, `arbeidsinntekterEtterLoven`,
-`inntekterISammenligningen` og `trukketFra`. Begge beløpene er per måned;
+`inntekterISammenligningen` og `trukketFra`. Frontend er klargjort for den
+avtalte navneendringen fra `trukketFra` til `benyttetFradrag`. Navneendringen
+var ikke publisert i backendgrenen ved kontroll 2026-11-11 og er derfor ikke
+`cross-repo`-verifisert. Begge beløpene er per måned;
 `arbeidsinntekterEtterLoven` er en sum, mens `inntekterISammenligningen` er en
 liste med samme responsform som øvrige fradrag.
 
 Backend utleder sammenligningen fra den lagrede beregningen. Frontend bruker
-`trukketFra` (`FORVENTET_INNTEKT` eller `ARBEIDSINNTEKTER`) uten å beregne
+`benyttetFradrag` (`FORVENTET_INNTEKT` eller `ARBEIDSINNTEKTER`) uten å beregne
 inntektsvalget selv. Ved like beløp velges forventet inntekt. Sammenligningen
 skjules når feltet er `null` eller `inntekterISammenligningen` er tom.
 Visningsregelen bruker listen, ikke summen i `arbeidsinntekterEtterLoven`.
@@ -77,7 +80,8 @@ sammenligningen under disse for hver gruppert periode. Beløpene vises med to
 desimaler, og hele sammenligningsfeltet inngår i månedssammenligningen, bortsett
 fra fradragenes perioder. Feltet følger samme typede responsmønster som øvrige
 fradrag, uten ekstra runtime-validering eller fallback for manglende felt.
-Backendendringen må settes i produksjon før frontendendringen.
+Backendendringen, inkludert feltnavnet `benyttetFradrag`, må settes i
+produksjon før frontendendringen.
 
 Kontrakten er `cross-repo`-verifisert 2026-11-10 mot
 `su-se-bakover@3bc6728772f106ea40bf83acc5f85b298cc53abe`, ikke mot backendens

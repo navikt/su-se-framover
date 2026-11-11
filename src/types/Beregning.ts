@@ -35,7 +35,7 @@ export interface ForventetInntektSammenligning {
     forventetInntekt: number;
     arbeidsinntekterEtterLoven: number;
     inntekterISammenligningen: Fradrag[];
-    trukketFra: 'FORVENTET_INNTEKT' | 'ARBEIDSINNTEKTER';
+    benyttetFradrag: 'FORVENTET_INNTEKT' | 'ARBEIDSINNTEKTER';
 }
 
 export const sammenligningMedNoeValgtBort = (
@@ -47,7 +47,7 @@ const eqForventetInntektSammenligning = struct<ForventetInntektSammenligning>({
     forventetInntekt: N.Eq,
     arbeidsinntekterEtterLoven: N.Eq,
     inntekterISammenligningen: FpArray.getEq(eqFradragBortsettFraPeriode),
-    trukketFra: S.Eq,
+    benyttetFradrag: S.Eq,
 });
 
 export const eqMånedsberegningBortsettFraPeriode: Eq<Månedsberegning> = struct<

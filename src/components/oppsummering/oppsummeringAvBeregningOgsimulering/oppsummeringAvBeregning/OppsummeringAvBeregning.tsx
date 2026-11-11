@@ -140,17 +140,12 @@ const Inntektssammenligning = ({ sammenligning }: { sammenligning: Nullable<Forv
                     beløp: formatCurrency(inntektsvalg.forventetInntekt),
                 })}
             </BodyShort>
-            {inntektsvalg.trukketFra === 'ARBEIDSINNTEKTER' && (
-                <BodyShort size="small" spacing>
-                    {formatMessage('inntektsvalg.forventetInntektBrukesIkke')}
-                </BodyShort>
-            )}
             <BodyShort spacing>
                 {formatMessage('inntektsvalg.arbeidsinntekter', {
                     beløp: formatCurrency(inntektsvalg.arbeidsinntekterEtterLoven),
                 })}
             </BodyShort>
-            <BodyShort spacing>{formatMessage(`inntektsvalg.${inntektsvalg.trukketFra}`)}</BodyShort>
+            <BodyShort spacing>{formatMessage(`inntektsvalg.${inntektsvalg.benyttetFradrag}`)}</BodyShort>
         </div>
     );
 };

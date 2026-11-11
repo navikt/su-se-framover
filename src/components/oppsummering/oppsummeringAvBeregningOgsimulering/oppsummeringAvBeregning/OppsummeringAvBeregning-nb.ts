@@ -9,9 +9,8 @@ export default {
     'inntektsvalg.tittel': 'Inntektsvalg per måned',
     'inntektsvalg.forventetInntekt': 'Forventet inntekt etter uførhet: {beløp}',
     'inntektsvalg.arbeidsinntekter': 'Arbeidsinntekter etter loven: {beløp}',
-    'inntektsvalg.forventetInntektBrukesIkke':
-        'Brukes ikke som fradrag siden nytt fradrag er større enn forventet inntekt etter uførhet.',
-    'inntektsvalg.ARBEIDSINNTEKTER': 'Bare arbeidsinntektene trekkes fra.',
+    'inntektsvalg.ARBEIDSINNTEKTER':
+        'Benyttet fradrag: Arbeidsinntekter, fordi beløpet er høyere enn forventet inntekt etter uførhet.',
     'inntektsvalg.FORVENTET_INNTEKT':
-        'Forventet inntekt etter uførhet er lik eller høyere enn arbeidsinntektene. Bare forventet inntekt trekkes fra.',
+        'Benyttet fradrag: Forventet inntekt etter uførhet, fordi beløpet er lik eller høyere enn arbeidsinntektene.',
 };

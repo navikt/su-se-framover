@@ -24,7 +24,7 @@ const sammenligning: ForventetInntektSammenligning = {
     forventetInntekt: 10 / 12,
     arbeidsinntekterEtterLoven: 15_000,
     inntekterISammenligningen: [arbeidsinntekt],
-    trukketFra: 'ARBEIDSINNTEKTER',
+    benyttetFradrag: 'ARBEIDSINNTEKTER',
 };
 
 describe('sammenligning med noe valgt bort', () => {
@@ -37,7 +37,7 @@ describe('sammenligning med noe valgt bort', () => {
             ...sammenligning,
             arbeidsinntekterEtterLoven: 0,
             inntekterISammenligningen: [],
-            trukketFra: 'FORVENTET_INNTEKT',
+            benyttetFradrag: 'FORVENTET_INNTEKT',
         };
 
         expect(sammenligningMedNoeValgtBort(utenArbeidsinntekter)).toBeNull();
@@ -48,7 +48,7 @@ describe('sammenligning med noe valgt bort', () => {
             ...sammenligning,
             arbeidsinntekterEtterLoven: 0,
             inntekterISammenligningen: [{ ...arbeidsinntekt, beløp: 0 }],
-            trukketFra: 'FORVENTET_INNTEKT',
+            benyttetFradrag: 'FORVENTET_INNTEKT',
         };
 
         expect(sammenligningMedNoeValgtBort(medArbeidsinntektPåNull)).toBe(medArbeidsinntektPåNull);
@@ -93,7 +93,7 @@ describe('inntektsvalg i grupperte månedsberegninger', () => {
         { forventetInntekt: 11 / 12 },
         { arbeidsinntekterEtterLoven: 15_000.83 },
         { inntekterISammenligningen: [{ ...arbeidsinntekt, beløp: 14_000 }] },
-        { trukketFra: 'FORVENTET_INNTEKT' },
+        { benyttetFradrag: 'FORVENTET_INNTEKT' },
     ])('holder måneder atskilt når inntektssammenligningen endres: %o', (endring) => {
         const endretJuli: Månedsberegning = {
             ...juli,
