@@ -3,6 +3,7 @@ import cors from 'cors';
 import express from 'express';
 
 import * as Config from './config.js';
+import { errorHandler } from './errorHandler.js';
 import { httpLogger, logger } from './logger.js';
 import setupProxy from './proxy.js';
 import redirectMiddleware from './redirect.js';
@@ -52,6 +53,7 @@ export default async function expressStart() {
     app.use(setupProxy());
 
     app.use(await routes());
+    app.use(errorHandler);
 
     const port = Config.server.port;
     app.listen(port, () => {
