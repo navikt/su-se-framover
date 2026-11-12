@@ -131,20 +131,21 @@ export function MottakerForm({
         setFeedback(feedbackNeste);
     };
 
-    const fyllSkjema = (mottaker: MottakerResponse) => {
+    const fyllSkjema = (mottaker: MottakerResponse, initialValues?: Partial<LagreMottakerRequest>) => {
         setHarEksisterendeMottaker(true);
         setMottakerId(mottaker.id);
         skipClearOnChangeRef.current = true;
+        const verdier = initialValues ?? mottaker;
         reset({
-            navn: mottaker.navn ?? '',
-            foedselsnummer: mottaker.foedselsnummer ?? '',
-            orgnummer: mottaker.orgnummer ?? '',
+            navn: verdier.navn ?? '',
+            foedselsnummer: verdier.foedselsnummer ?? '',
+            orgnummer: verdier.orgnummer ?? '',
             adresse: {
-                adresselinje1: mottaker.adresse?.adresselinje1 ?? '',
-                adresselinje2: mottaker.adresse?.adresselinje2 ?? '',
-                adresselinje3: mottaker.adresse?.adresselinje3 ?? '',
-                postnummer: mottaker.adresse?.postnummer ?? '',
-                poststed: mottaker.adresse?.poststed ?? '',
+                adresselinje1: verdier.adresse?.adresselinje1 ?? '',
+                adresselinje2: verdier.adresse?.adresselinje2 ?? '',
+                adresselinje3: verdier.adresse?.adresselinje3 ?? '',
+                postnummer: verdier.adresse?.postnummer ?? '',
+                poststed: verdier.adresse?.poststed ?? '',
             },
             referanseType,
             referanseId,
@@ -179,7 +180,7 @@ export function MottakerForm({
 
             if (res.status === 'ok') {
                 if (res.data) {
-                    fyllSkjema(res.data);
+                    fyllSkjema(res.data, initialValues);
                     setFeedback({ text: 'Mottaker funnet – du kan oppdatere.', variant: 'info' });
                 } else {
                     resetTilTomtSkjema({ text: 'Ingen mottaker funnet – du kan opprette ny.', variant: 'info' });

@@ -5,7 +5,8 @@ export type ReferanseType =
     | 'REVURDERING'
     | 'HISTORISK_INFOTRYGD_REVURDERING'
     | 'KLAGE'
-    | 'DØDSBO_TILBAKEKREVING';
+    | 'DØDSBO_TILBAKEKREVING'
+    | 'DØDSBO_KLAGE';
 export type MottakerBrevtype = 'VEDTAK' | 'FORHANDSVARSEL' | 'OVERSENDELSE_KA';
 export type Brevtype = MottakerBrevtype;
 
