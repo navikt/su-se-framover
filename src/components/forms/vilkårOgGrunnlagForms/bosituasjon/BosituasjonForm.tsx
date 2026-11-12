@@ -1,6 +1,6 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { Alert, BodyLong, BodyShort, Button, Heading, Loader, Modal } from '@navikt/ds-react';
-import { isValid, startOfDay } from 'date-fns';
+import { startOfDay } from 'date-fns';
 import { pipe } from 'fp-ts/lib/function';
 import { ReactNode, useEffect, useState } from 'react';
 import { Controller, UseFormReturn } from 'react-hook-form';
@@ -21,7 +21,7 @@ import { FormWrapper } from '~src/pages/saksbehandling/søknadsbehandling/FormWr
 import { useAppDispatch } from '~src/redux/Store';
 import { Person } from '~src/types/Person';
 import { Sakstype } from '~src/types/Sak.ts';
-import { parseIsoDateOnly } from '~src/utils/date/dateUtils';
+import { parseValidIsoDateOnly } from '~src/utils/date/dateUtils';
 import {
     finnÅrPersonFyller67,
     fyller67ILøpetAvPeriode,
@@ -189,9 +189,9 @@ export const ErEpsFylt67Felt = (props: {
 
     // Feltet låses bare når EPS har en gyldig fødselsdato. Mangler den, kan vi bare anslå om EPS har fylt 67 år
     // basert på fødselsåret (vi vet ikke nøyaktig bursdag), og saksbehandler må bekrefte det selv.
-    const epsFødselsdato = parseIsoDateOnly(props.eps.fødsel?.dato ?? null);
+    const epsFødselsdato = parseValidIsoDateOnly(props.eps.fødsel?.dato ?? null);
     const fødselsår = props.eps.fødsel?.år;
-    const harGyldigFødselsdato = epsFødselsdato !== null && isValid(epsFødselsdato);
+    const harGyldigFødselsdato = epsFødselsdato !== null;
 
     let erEps67VedPeriodestart: Nullable<boolean> = null;
 
@@ -258,9 +258,9 @@ export const EpsFyller67Varsel = (props: {
     søknadsbehandlingEllerRevurdering: 'Søknadsbehandling' | 'Revurdering';
 }) => {
     const { formatMessage } = useI18n({ messages });
-    const epsFødselsdato = parseIsoDateOnly(props.eps.fødsel?.dato ?? null);
+    const epsFødselsdato = parseValidIsoDateOnly(props.eps.fødsel?.dato ?? null);
 
-    if (epsFødselsdato && isValid(epsFødselsdato)) {
+    if (epsFødselsdato) {
         const epsFyller67IPerioden = fyller67ILøpetAvPeriode(props.periode, epsFødselsdato);
 
         if (epsFyller67IPerioden) {
