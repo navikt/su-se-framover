@@ -122,7 +122,7 @@ describe('EpsFyller67Varsel', () => {
         '1959-01-01',
         '1959-06-14',
         '1959-06-15',
-    ])('viser satsvurdering uten automatikk når 67-årsdagen er i dag eller tidligere (%s)', (dato) => {
+    ])('viser automatisk oppgave og revurdering når 67-årsdagen er i dag eller tidligere (%s)', (dato) => {
         const markup = renderToStaticMarkup(
             <EpsFyller67Varsel
                 eps={{ ...eps, fødsel: fødsel(dato) }}
@@ -132,7 +132,7 @@ describe('EpsFyller67Varsel', () => {
         );
 
         expect(markup).toContain(messages['bosituasjon.epsHarFylt67IPerioden']);
-        expect(markup).not.toContain('automatisk');
+        expect(markup).toContain('automatisk');
     });
 
     it('viser automatikktekst når 67-årsdagen er i morgen', () => {
