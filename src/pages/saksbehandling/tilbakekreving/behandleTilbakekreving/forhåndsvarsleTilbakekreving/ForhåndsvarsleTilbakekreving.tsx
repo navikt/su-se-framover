@@ -97,7 +97,7 @@ const ForhåndsvarsleTilbakekreving = (props: {
                       poststed: dødsboData.adresse.poststed.trim(),
                   },
                   referanseId: '',
-                  referanseType,
+                  referanseType: referanseTypeDødsbo,
                   brevtype,
               }
             : null;
@@ -132,7 +132,7 @@ const ForhåndsvarsleTilbakekreving = (props: {
     };
 
     const [visDødsbo, setVisDødsbo] = useState(false);
-    const referanseType = 'DØDSBO_TILBAKEKREVING';
+    const referanseTypeDødsbo = 'DØDSBO_TILBAKEKREVING';
     const brevtype = 'FORHANDSVARSEL';
 
     // referanseId skal bli hendelseId, men den blir til først i backend
@@ -270,7 +270,7 @@ const ForhåndsvarsleTilbakekreving = (props: {
                                     <MottakerForm
                                         sakId={props.sakId}
                                         referanseId={''}
-                                        referanseType={referanseType}
+                                        referanseType={referanseTypeDødsbo}
                                         brevtype={brevtype}
                                         onClose={() => setVisDødsbo(false)}
                                         form={dødsboForm}
