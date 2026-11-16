@@ -64,6 +64,10 @@ export default {
         'Foreslått basert på fødselsår, da eksakt fødselsdato er ugyldig. Bekreft om opplysningen stemmer.',
     'bosituasjon.epsFyller67IPerioden':
         'Ektefelle/samboer fyller 67 år i løpet av stønadsperioden. Husk å opprette fremleggsoppgave i Gosys for revurdering av satsen.',
+    'bosituasjon.epsFyller67IPeriodenAutomatiskOppgave':
+        'Ektefelle/samboer fyller 67 år i stønadsperioden. Hvis 67-årsdagen fortsatt ligger frem i tid når stønaden iverksettes ved attestering, opprettes en GOSYS-oppgave automatisk for oppfølging av satsen.',
+    'bosituasjon.epsHarFylt67IPerioden':
+        'Ektefelle/samboer har fylt 67 år i stønadsperioden. Ta hensyn til dette ved vurderingen av satsen.',
     'bosituasjon.epsFødselsdatoUgyldig':
         'Fødselsdatoen er ugyldig. Sjekk om ektefelle/samboer fyller 67 år i løpet av stønadsperioden.',
     'bosituasjon.epsMuligFyller67IPerioden':

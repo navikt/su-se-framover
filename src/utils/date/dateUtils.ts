@@ -1,6 +1,5 @@
 import * as DateFns from 'date-fns';
 import { createIntl, createIntlCache, FormatDateOptions } from 'react-intl';
-
 import { Languages } from '~src/lib/i18n';
 import { Nullable } from '~src/lib/types';
 
@@ -84,5 +83,15 @@ export const sluttenAvMåneden = (d: Date) => DateFns.endOfMonth(d);
  */
 export const parseIsoDateOnly = (str: string | null) =>
     str ? DateFns.parse(str, DateFormats.IsoDateOnly, new Date()) : null;
+
+export const parseValidIsoDateOnly = (str: string | null): Date | null => {
+    const dato = parseIsoDateOnly(str);
+
+    if (dato === null || !DateFns.isValid(dato)) {
+        return null;
+    }
+
+    return dato;
+};
 
 export const parseNonNullableIsoDateOnly = (str: string) => DateFns.parse(str, DateFormats.IsoDateOnly, new Date());

@@ -10,7 +10,13 @@ import fradragstypeMessages from '~src/components/forms/vilkårOgGrunnlagForms/V
 import { combineOptions, pipe } from '~src/lib/fp';
 import { useI18n } from '~src/lib/i18n';
 import { Nullable } from '~src/lib/types';
-import { Beregning, eqMånedsberegningBortsettFraPeriode, Månedsberegning } from '~src/types/Beregning';
+import {
+    Beregning,
+    eqMånedsberegningBortsettFraPeriode,
+    ForventetInntektSammenligning,
+    Månedsberegning,
+    sammenligningMedNoeValgtBort,
+} from '~src/types/Beregning';
 import { EksternGrunnlagSkatt } from '~src/types/EksterneGrunnlag';
 import { Fradrag, IkkeVelgbareFradragskategorier } from '~src/types/Fradrag';
 import { Sats } from '~src/types/Sats';
@@ -115,6 +121,32 @@ const VisBenyttetEpsFradrag = ({
                 },
             ]}
         />
+    );
+};
+
+const Inntektssammenligning = ({ sammenligning }: { sammenligning: Nullable<ForventetInntektSammenligning> }) => {
+    const { formatMessage } = useI18n({ messages });
+    const inntektsvalg = sammenligningMedNoeValgtBort(sammenligning);
+
+    if (inntektsvalg === null) return null;
+
+    return (
+        <div>
+            <BodyShort spacing>
+                <strong>{formatMessage('inntektsvalg.tittel')}</strong>
+            </BodyShort>
+            <BodyShort>
+                {formatMessage('inntektsvalg.forventetInntekt', {
+                    beløp: formatCurrency(inntektsvalg.forventetInntekt),
+                })}
+            </BodyShort>
+            <BodyShort spacing>
+                {formatMessage('inntektsvalg.arbeidsinntekter', {
+                    beløp: formatCurrency(inntektsvalg.arbeidsinntekterEtterLoven),
+                })}
+            </BodyShort>
+            <BodyShort spacing>{formatMessage(`inntektsvalg.${inntektsvalg.benyttetFradrag}`)}</BodyShort>
+        </div>
     );
 };
 
@@ -293,6 +325,7 @@ const OppsummeringAvBeregning = (props: {
                                 </li>
                             )}
                         </ol>
+                        <Inntektssammenligning sammenligning={månedsberegninger[0].forventetInntektSammenligning} />
                     </div>
                 )),
             )}
