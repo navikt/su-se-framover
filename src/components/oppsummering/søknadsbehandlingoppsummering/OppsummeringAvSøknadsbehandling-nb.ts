@@ -4,6 +4,8 @@ import { søknadsbehandlingStatusTilAvslagInnvilgelseTextMapper } from '~src/typ
 
 export default {
     'oppsummering.søknadsbehandling': 'Oppsummering av søknadsbehandling',
+    'eps.fyller67IPerioden':
+        'Ektefelle/samboer fyller 67 år i løpet av stønadsperioden. Det opprettes en GOSYS-oppgave automatisk etter attestering.',
 
     'behandlet.av': 'Saksbehandler',
     'innsendt.av.overskrift': 'Innsendt av(ident)',
