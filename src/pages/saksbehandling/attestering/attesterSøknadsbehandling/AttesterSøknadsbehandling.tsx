@@ -1,7 +1,8 @@
 import { Alert } from '@navikt/ds-react';
+import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 
-import { AttesteringsForm } from '~src/components/forms/attesteringForm/AttesteringsForm';
+import { AttesteringsForm, Beslutning } from '~src/components/forms/attesteringForm/AttesteringsForm';
 import { OppsummeringPar } from '~src/components/oppsummering/oppsummeringpar/OppsummeringPar.tsx';
 import Oppsummeringspanel, {
     Oppsummeringsfarge,
@@ -24,6 +25,7 @@ import messages from './attesterSøknadsbehandling-nb';
 const AttesterSøknadsbehandling = (props: { sak: Sak; søknadsbehandling: Søknadsbehandling }) => {
     const navigate = useNavigate();
     const { formatMessage } = useI18n({ messages });
+    const [beslutning, setBeslutning] = useState<Beslutning | null>(null);
     const [iverksettStatus, attesteringIverksett] = useAsyncActionCreator(
         SøknadsbehandlingActions.attesteringIverksett,
     );
@@ -74,6 +76,7 @@ const AttesterSøknadsbehandling = (props: { sak: Sak; søknadsbehandling: Søkn
                 redigerbartBrev={props.søknadsbehandling.brevvalg.valg === Valg.SEND}
                 sakId={props.sak.id}
                 behandlingstype="SØKNAD"
+                onBeslutningChange={setBeslutning}
                 iverksett={{ fn: iverksettCallback, status: iverksettStatus }}
                 underkjenn={{
                     fn: underkjennCallback,
@@ -83,7 +86,10 @@ const AttesterSøknadsbehandling = (props: { sak: Sak; søknadsbehandling: Søkn
             />
             <div className={styles.panelerContainer}>
                 <div className={styles.oppsummeringContainer}>
-                    <OppsummeringAvSøknadsbehandling behandling={props.søknadsbehandling} />
+                    <OppsummeringAvSøknadsbehandling
+                        behandling={props.søknadsbehandling}
+                        skjulEpsVarsel={beslutning === Beslutning.UNDERKJENN}
+                    />
                 </div>
 
                 <Oppsummeringspanel

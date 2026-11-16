@@ -23,7 +23,7 @@ import SidestiltOppsummeringAvVilkårOgGrunnlag from '../sidestiltOppsummeringAv
 import styles from './OppsummeringAvSøknadsbehandling.module.less';
 import messages from './OppsummeringAvSøknadsbehandling-nb.ts';
 
-const OppsummeringAvSøknadsbehandling = (props: { behandling: Søknadsbehandling }) => {
+const OppsummeringAvSøknadsbehandling = (props: { behandling: Søknadsbehandling; skjulEpsVarsel?: boolean }) => {
     const { formatMessage } = useI18n({ messages });
 
     const [epsStatus, hentEps] = useApiCall(fetchPerson);
@@ -100,7 +100,8 @@ const OppsummeringAvSøknadsbehandling = (props: { behandling: Søknadsbehandlin
                     )}
                 </div>
 
-                {epsFnr &&
+                {!props.skjulEpsVarsel &&
+                    epsFnr &&
                     props.behandling.status === SøknadsbehandlingStatus.TIL_ATTESTERING_INNVILGET &&
                     props.behandling.stønadsperiode && (
                         <>
@@ -149,5 +150,5 @@ export const EpsFyller67Varsel = (props: { eps: Person; periode: Periode<Date> }
         return null;
     }
 
-    return <Alert variant="warning">{formatMessage('eps.fyller67IPerioden')}</Alert>;
+    return <Alert variant="info">{formatMessage('eps.fyller67IPerioden')}</Alert>;
 };
