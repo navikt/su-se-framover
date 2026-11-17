@@ -65,9 +65,9 @@ export default {
     'bosituasjon.epsFyller67IPerioden':
         'Ektefelle/samboer fyller 67 år i løpet av stønadsperioden. Husk å opprette fremleggsoppgave i Gosys for revurdering av satsen.',
     'bosituasjon.epsFyller67IPeriodenAutomatiskOppgave':
-        'Ektefelle/samboer fyller 67 år i stønadsperioden. Hvis 67-årsdagen fortsatt ligger frem i tid når stønaden iverksettes ved attestering, opprettes en GOSYS-oppgave automatisk for oppfølging av satsen.',
+        'Ektefelle/samboer fyller 67 år i stønadsperioden. Det opprettes en GOSYS-oppgave automatisk ved iverksettelse etter attestering for oppfølging av satsen.',
     'bosituasjon.epsHarFylt67IPerioden':
-        'Ektefelle/samboer har fylt 67 år i stønadsperioden. Ta hensyn til dette ved vurderingen av satsen.',
+        'Ektefelle/samboer har fylt 67 år i stønadsperioden. Det opprettes en GOSYS-oppgave automatisk ved iverksettelse etter attestering for oppfølging av satsen. Revurder satsen fra riktig tidspunkt etter attestering.',
     'bosituasjon.epsFødselsdatoUgyldig':
         'Fødselsdatoen er ugyldig. Sjekk om ektefelle/samboer fyller 67 år i løpet av stønadsperioden.',
     'bosituasjon.epsMuligFyller67IPerioden':

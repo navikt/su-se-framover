@@ -3,10 +3,10 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { Alert, Button, Loader, Radio, RadioGroup } from '@navikt/ds-react';
 import { useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
-import * as tilbakekrevingsApi from 'src/api/tilbakekrevingApi';
 import { FritekstTyper, hentFritekst, redigerFritekst } from '~src/api/fritekstApi.ts';
 import { Brevtype } from '~src/api/mottakerClient.ts';
 import * as PdfApi from '~src/api/pdfApi.ts';
+import * as tilbakekrevingsApi from '~src/api/tilbakekrevingApi';
 import ApiErrorAlert from '~src/components/apiErrorAlert/ApiErrorAlert';
 import TextareaWithAutosaveRhf from '~src/components/inputs/textareaWithAutosave/TextareaWithAutosaveRhf.tsx';
 import LinkAsButton from '~src/components/linkAsButton/LinkAsButton.tsx';
@@ -34,7 +34,7 @@ export interface AttesteringFormData {
     fritekst: string;
 }
 
-enum Beslutning {
+export enum Beslutning {
     IVERKSETT = 'iverksett',
     UNDERKJENN = 'underkjenn',
 }
@@ -83,6 +83,7 @@ interface Props {
         bekreftText?: string;
         underkjennText?: string;
     };
+    onBeslutningChange?: (beslutning: Nullable<Beslutning>) => void;
     ekstraMottakerBrevtype?: Brevtype;
 }
 
@@ -178,6 +179,10 @@ export const AttesteringsForm = (props: Props) => {
                         render={({ field, fieldState }) => (
                             <RadioGroup
                                 {...field}
+                                onChange={(beslutning: Beslutning) => {
+                                    field.onChange(beslutning);
+                                    props.onBeslutningChange?.(beslutning);
+                                }}
                                 legend={formatMessage('beslutning.label')}
                                 error={fieldState.error?.message}
                                 value={field.value ?? ''}
