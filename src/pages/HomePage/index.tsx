@@ -13,7 +13,9 @@ const HomePage = () => {
     const user = useUserContext();
     const harTilgangTilDrift = user.roller.includes(Rolle.Drift);
     const harTilgangTilVeileder = user.roller.includes(Rolle.Veileder);
-    const harTilgangTilSaksbehandler = user.roller.includes(Rolle.Saksbehandler);
+    const harTilgangTilSaksbehandler =
+        user.roller.includes(Rolle.Saksbehandler) || user.roller.includes(Rolle.Attestant);
+    const harTilgangTilStatistikk = user.roller.includes(Rolle.Statistikk);
 
     useEffect(() => {
         if (user.roller.length === 1 && user.roller[0] === Rolle.Veileder) {
@@ -22,6 +24,8 @@ const HomePage = () => {
             navigate(Routes.saksoversiktIndex.createURL(), { replace: true });
         } else if (user.roller.length === 1 && harTilgangTilDrift) {
             navigate(Routes.drift.createURL(), { replace: true });
+        } else if (user.roller.length === 1 && harTilgangTilStatistikk) {
+            navigate(Routes.statistikk.createURL(), { replace: true });
         }
     }, [user]);
 
@@ -46,6 +50,11 @@ const HomePage = () => {
                 {harTilgangTilDrift && (
                     <LinkAsButton variant="secondary" href={Routes.drift.createURL()} className={styles.link}>
                         Drift
+                    </LinkAsButton>
+                )}
+                {harTilgangTilStatistikk && (
+                    <LinkAsButton variant="secondary" href={Routes.statistikk.createURL()} className={styles.link}>
+                        Statistikk
                     </LinkAsButton>
                 )}
             </div>

@@ -31,6 +31,7 @@ const Søknadsvelger = lazy(() => import('./pages/søknad/Søknadsvelger'));
 const StartUtfylling = lazy(() => import('./pages/søknad/steg/start-utfylling/StartUtfylling'));
 const Startutfylling = lazy(() => import('./pages/kontrollsamtale/StartUtfylling'));
 const Drift = lazy(() => import('./pages/drift'));
+const StatistikkPage = lazy(() => import('./pages/statistikk/StatistikkPage'));
 const HistoriskAlderssakDrift = lazy(() => import('./pages/drift/historiskAlderssak/HistoriskAlderssakDrift'));
 const DevTools = lazy(() => import('./pages/dev/DevToolsPage'));
 const HomePage = lazy(() => import('./pages/HomePage'));
@@ -183,6 +184,10 @@ const AppRoutes = () => {
                     element={<WithDocTitle title="Historisk revurdering" Page={HistoriskInfotrygdRevurdering} />}
                 />
                 <Route path={routes.drift.path} element={<WithDocTitle title="Drift" Page={Drift} />} />
+                <Route
+                    path={routes.statistikk.path}
+                    element={<WithDocTitle title="Statistikk" Page={StatistikkPage} />}
+                />
                 <Route path="*" element={<>404</>} />
             </Routes>
         </>
