@@ -78,10 +78,15 @@ Kildepunkter for mekanismen:
 - raw-body, `index.js`: størrelsesgrense under lesing.
 
 For [CVE-2026-111497](https://www.cve.org/CVERecord?id=CVE-2026-111497)
-oppdateres Docker-imaget og byggoppsettet fra Node 24.1.0 til 24.22.1, som har
+ble Docker-imaget og byggoppsettet oppdatert fra Node 24.1.0 til 24.22.1, som har
 rettelsen ifølge [Nodes sikkerhetsmelding](https://nodejs.org/en/blog/vulnerability/october-2026-security-releases).
 Oppdateringen beskytter først kjørende applikasjoner når et nytt image er
 bygget og deployet.
+
+Byggoppsettet og minimumskravet bruker nå Node 24.22.3. Dockerfile låser
+`gcr.io/distroless/nodejs24-debian13:nonroot` til en digest med samme Node-versjon.
+24.22.3 beholder Brotli-rettelsen og oppdaterer Brotli til 1.2.1:
+https://nodejs.org/en/blog/release/v24.22.3
 
 ## Kilder
 
