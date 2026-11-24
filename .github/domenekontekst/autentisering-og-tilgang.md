@@ -33,6 +33,20 @@ med `502` og en avgrenset feilkode.
 Frontendens brukerdata inneholder roller, og enkelte handlinger eller
 navigasjonselementer vises etter rolle. Dette er UX-styring.
 
+Startsiden `/` bruker rollenavn fra `/api/me`, ikke gruppe-ID-er direkte.
+Rollen `Statistikk` gir en egen inngang til `/statistikk/`. Med bare denne
+rollen sendes brukeren direkte dit; sammen med andre innganger vises rollevalget.
+Siden gjenbruker fanene for sak- og stønadsstatistikk fra drift, uten
+driftsfunksjonene. Drift-siden beholder sin eksisterende statistikkvisning.
+
+Gruppen `4800-GA-SU_STATISTIKK` er lagt til under `azure.application.claims.groups`
+i Nais-konfigurasjonen: `07d31250-3fe5-435d-9382-0930852f35db` i dev og dev-q1,
+og `3ce0163f-aca2-4d1f-9f26-bb4f9bbf99f6` i prod. Express-BFF-en mapper ikke
+gruppene til roller. Frontend er klargjort for at backend returnerer
+`Statistikk` i `roller` fra `/me` og gir rollen tilgang til både
+`/statistikk/sak` og `/statistikk/stønad`. Disse backendendringene håndteres
+separat og er ikke kryss-repo-verifisert her.
+
 Rolle er ikke det samme som tilgang til en bestemt person, sak eller operasjon.
 Backend er autoritativ. Frontend skal vise `401`/`403` forståelig og ikke anta at
 skjult UI sikrer endepunktet.
@@ -57,8 +71,13 @@ skjult UI sikrer endepunktet.
 - `src/api/apiClient.ts`
 - `src/api/authUrl.ts`
 - `src/context/userContext.tsx`
+- `src/api/meApi.ts`
+- `src/types/LoggedInUser.ts`
+- `src/pages/HomePage/index.tsx`
+- `src/pages/statistikk/StatistikkPage.tsx`
 - `src/utils/router/ContentWrapper.tsx`
 - `.nais/dev-gcp.yaml`
+- `.nais/dev-gcp-q1.yaml`
 - `.nais/prod-gcp.yaml`
 - `docker-compose.yml`
 - `navikt/su-se-bakover#2970` ved head

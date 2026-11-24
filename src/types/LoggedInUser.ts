@@ -3,6 +3,7 @@ export enum Rolle {
     Saksbehandler = 'Saksbehandler',
     Veileder = 'Veileder',
     Drift = 'Drift',
+    Statistikk = 'Statistikk',
 }
 
 export interface LoggedInUser {
