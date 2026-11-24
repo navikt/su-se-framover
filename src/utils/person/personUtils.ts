@@ -17,8 +17,8 @@ export const LOVFESTET_ALDERSGRENSE_SU = 67;
 export const er67EllerEldre = (alder: Nullable<number>): boolean =>
     (alder ?? LOVFESTET_ALDERSGRENSE_SU) >= LOVFESTET_ALDERSGRENSE_SU;
 export const alderSomPersonFyllerIÅr = (år: number) => new Date().getFullYear() - år;
-export const alderSomPersonFyllerPåDato = (datoSomSjekkes: Date, fødselsmåned: Date) => {
-    return DateFns.differenceInYears(datoSomSjekkes, fødselsmåned);
+export const alderSomPersonFyllerPåDato = (datoSomSjekkes: Date, fødselsdato: Date) => {
+    return DateFns.differenceInYears(datoSomSjekkes, fødselsdato);
 };
 export const alderSomPersonFyllerIÅrDate = (årSomSjekkes: number, årFødt: number) => årSomSjekkes - årFødt;
 

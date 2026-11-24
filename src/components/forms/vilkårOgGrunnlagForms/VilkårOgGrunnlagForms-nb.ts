@@ -56,10 +56,10 @@ export default {
         'Har søker planlagt å oppholde seg i utlandet i mer enn 90 dager innenfor stønadsperioden?',
 
     'bosituasjon.delerBolig': 'Deler søker bolig med noen over 18 år?',
-    'bosituasjon.erEPSFylt67': 'Er ektefelle/samboer fylt 67?',
+    'bosituasjon.erEPSFylt67': 'Fylte ektefelle/samboer 67 år før stønadsperioden startet?',
     'bosituasjon.erEPSUførFlyktning': 'Er ektefelle/samboer ufør flyktning?',
     'bosituasjon.epsFnr': 'Ektefelle/samboers fødelsnummer',
-    'bosituasjon.erEPSFylt67Forhåndsutfylt': 'Forhåndsutfylt basert på fødselsdato ved starten av søknadsperioden.',
+    'bosituasjon.erEPSFylt67Forhåndsutfylt': 'Forhåndsutfylt basert på fødselsdato.',
     'bosituasjon.erEPSFylt67ForhåndsutfyltUsikkert':
         'Foreslått basert på fødselsår, da eksakt fødselsdato er ugyldig. Bekreft om opplysningen stemmer.',
     'bosituasjon.epsFyller67IPerioden':
