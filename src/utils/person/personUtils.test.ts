@@ -1,4 +1,5 @@
 import {
+    alderSomPersonFyllerPåDato,
     finnÅrPersonFyller67,
     fyller67ILøpetAvPeriode,
     harFylt67FørPerioden,
@@ -7,6 +8,23 @@ import {
     kunneFylle67IPerioden,
     skalFylle67EtterPerioden,
 } from './personUtils';
+
+describe('alderSomPersonFyllerPåDato', () => {
+    it('beregner riktig alder etter bursdagen', () => {
+        expect(alderSomPersonFyllerPåDato(new Date(2026, 5, 1), new Date(1814, 4, 17))).toBe(212);
+    });
+
+    it('beregner riktig alder på selve bursdagen', () => {
+        expect(alderSomPersonFyllerPåDato(new Date(2026, 4, 17), new Date(1814, 4, 17))).toBe(212);
+    });
+
+    it('beregner riktig alder dagen før bursdagen', () => {
+        expect(alderSomPersonFyllerPåDato(new Date(2026, 4, 16), new Date(1814, 4, 17))).toBe(211);
+    });
+    it('beregner riktig alder før bursdagen', () => {
+        expect(alderSomPersonFyllerPåDato(new Date(1817, 1, 29), new Date(1814, 4, 17))).toBe(2);
+    });
+});
 
 describe('harFylt67VedDato', () => {
     it('returnerer false når personen klart ikke har fylt 67 ved gitt dato', () => {

@@ -1,6 +1,6 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { Alert, BodyLong, BodyShort, Button, Heading, Loader, Modal } from '@navikt/ds-react';
-import { startOfDay } from 'date-fns';
+import { startOfDay, subDays } from 'date-fns';
 import { pipe } from 'fp-ts/lib/function';
 import { ReactNode, useEffect, useState } from 'react';
 import { Controller, UseFormReturn } from 'react-hook-form';
@@ -197,7 +197,7 @@ export const ErEpsFylt67Felt = (props: {
 
     if (props.periodeFraOgMed) {
         if (harGyldigFødselsdato) {
-            erEps67VedPeriodestart = harFylt67VedDato(props.periodeFraOgMed, epsFødselsdato);
+            erEps67VedPeriodestart = harFylt67VedDato(subDays(props.periodeFraOgMed, 1), epsFødselsdato);
         } else if (fødselsår != null) {
             erEps67VedPeriodestart = harFylt67VedÅr(props.periodeFraOgMed, fødselsår);
         }

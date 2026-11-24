@@ -291,9 +291,6 @@ export const AttesteringsForm = (props: Props) => {
                                             }}
                                         />
                                     )}
-                                    {RemoteData.isFailure(seBrevStatus) && (
-                                        <Alert variant="error">{formatMessage('feilmelding.brevhentingFeilet')}</Alert>
-                                    )}
                                 </div>
                             </div>
                         </div>
