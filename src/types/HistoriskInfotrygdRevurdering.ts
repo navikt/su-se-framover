@@ -82,7 +82,6 @@ export interface HistoriskInfotrygdSimulering {
     simuleringsperiode: Periode<string>;
     simulert: string;
     harEksisterendeSuOppdrag: boolean;
-    erUtprøving: boolean;
     resultat: {
         gjelderId: string;
         gjelderNavn: string;

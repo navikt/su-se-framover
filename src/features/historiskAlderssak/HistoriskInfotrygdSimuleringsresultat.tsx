@@ -24,12 +24,6 @@ const HistoriskInfotrygdSimuleringsresultat = ({ simulering, revurderingsperiode
                 {formatDate(simulering.simuleringsperiode.tilOgMed)}.
             </BodyShort>
         </div>
-        {simulering.erUtprøving && (
-            <Alert variant="info">
-                Dette er utprøving av historisk simulering. Ingen utbetaling er sendt. Resultatet kan inneholde andre
-                ytelser, og posteringene skal ikke summeres som etterbetaling av supplerende stønad.
-            </Alert>
-        )}
         {simulering.infomelding?.trim() && <Alert variant="info">{simulering.infomelding}</Alert>}
         <BodyShort>
             Samlet beløp i simuleringsresponsen for faggruppe {simulering.resultat.faggruppe}:{' '}
