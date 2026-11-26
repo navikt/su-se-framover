@@ -3,6 +3,7 @@ import { Periode } from '~src/types/Periode';
 export type HistoriskInfotrygdRevurderingStatus =
     | 'OPPRETTET'
     | 'BEREGNET'
+    | 'SIMULERT'
     | 'TIL_ATTESTERING'
     | 'ATTESTERT'
     | 'UNDERKJENT'
@@ -45,7 +46,8 @@ export type HistoriskInfotrygdSperregrunnForAttestering =
     | 'BEREGNING_DEKKER_IKKE_HELE_PERIODEN'
     | 'MANGLER_GYLDIG_FORHANDSVARSEL'
     | 'MANGLER_VEDTAKSBREVVALG'
-    | 'MANGLER_FRITEKST_TIL_VEDTAKSBREV';
+    | 'MANGLER_FRITEKST_TIL_VEDTAKSBREV'
+    | 'MANGLER_SIMULERING';
 
 export interface HistoriskInfotrygdForhåndsvarsel {
     status: HistoriskInfotrygdForhåndsvarselstatus;
@@ -70,8 +72,72 @@ export interface HistoriskInfotrygdRevurdering {
     kreverKontrollAvHistoriskForsørgingstillegg: boolean;
     forhåndsvarsel: HistoriskInfotrygdForhåndsvarsel;
     sperregrunnerForAttestering: HistoriskInfotrygdSperregrunnForAttestering[];
+    simuleringTilgjengelig: boolean;
+    simulering: HistoriskInfotrygdSimulering | null;
     opprettet: string;
     oppdatert: string;
+}
+
+export interface HistoriskInfotrygdSimulering {
+    simuleringsperiode: Periode<string>;
+    simulert: string;
+    harEksisterendeSuOppdrag: boolean;
+    erUtprøving: boolean;
+    resultat: {
+        gjelderId: string;
+        gjelderNavn: string;
+        datoBeregnet: string;
+        faggruppe: string;
+        beløp: number;
+        perioder: HistoriskSimuleringsperiode[];
+    };
+    infomelding: string | null;
+}
+
+export interface HistoriskSimuleringsperiode extends Periode<string> {
+    utbetalinger: HistoriskSimulertUtbetaling[];
+}
+
+export interface HistoriskSimulertUtbetaling {
+    fagområde: string;
+    stoppnivåId: string;
+    behandlendeEnhet: string;
+    oppdragsId: string;
+    fagsystemId: string;
+    kid: string | null;
+    utbetalesTilId: string;
+    utbetalesTilNavn: string;
+    bilagstype: string;
+    forfall: string;
+    feilkonto: boolean;
+    detaljer: HistoriskSimuleringsdetalj[];
+}
+
+export interface HistoriskSimuleringsdetalj {
+    faktiskFraOgMed: string;
+    faktiskTilOgMed: string;
+    konto: string;
+    behandlingskode: string;
+    beløp: number;
+    trekkVedtakId: string;
+    stønadId: string | null;
+    korrigering: string | null;
+    tilbakeføring: boolean;
+    linjeId: string;
+    sats: number;
+    typeSats: string;
+    antallSats: number;
+    saksbehandlerId: string;
+    uføregrad: number;
+    kravhaverId: string | null;
+    delytelseId: string | null;
+    bostedsenhet: string;
+    skyldnerId: string | null;
+    klassekode: string;
+    klassekodeBeskrivelse: string;
+    klasseType: string;
+    klasseTypeBeskrivelse: string;
+    refunderesOrgNr: string | null;
 }
 
 export interface HistoriskInfotrygdUtenlandskInntekt {

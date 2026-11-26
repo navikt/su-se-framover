@@ -1,12 +1,11 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { Alert, BodyShort, Button, Heading, Loader, Select, VStack } from '@navikt/ds-react';
 import { useEffect, useState } from 'react';
+import { hentHistoriskInfotrygdMånedsgrunnlag } from '~src/api/historiskAlderssakApi';
+import { ApiResult, useApiCall } from '~src/lib/hooks';
 import {
-    beregnHistoriskInfotrygdRevurdering,
-    hentHistoriskInfotrygdMånedsgrunnlag,
-} from '~src/api/historiskAlderssakApi';
-import { useApiCall } from '~src/lib/hooks';
-import {
+    BeregnHistoriskInfotrygdRevurderingRequest,
+    BeregnHistoriskInfotrygdRevurderingResponse,
     HistoriskInfotrygdBeregningsgrunnlagForMåned,
     HistoriskInfotrygdLagretBeregning,
     HistoriskInfotrygdManuellOpphørsgrunn,
@@ -24,6 +23,12 @@ import HistoriskInfotrygdOpphør from './HistoriskInfotrygdOpphør';
 interface Props {
     behandling: HistoriskInfotrygdRevurdering;
     onOppdatert: (behandling: HistoriskInfotrygdRevurdering) => void;
+    beregnStatus: ApiResult<BeregnHistoriskInfotrygdRevurderingResponse>;
+    onBeregn: (
+        request: BeregnHistoriskInfotrygdRevurderingRequest,
+        onSuccess: (resultat: BeregnHistoriskInfotrygdRevurderingResponse) => void,
+    ) => void;
+    disabled: boolean;
 }
 
 const lagMånedsutkastForRevurdering = (grunnlag: HistoriskInfotrygdMånedsgrunnlag) => {
@@ -66,7 +71,6 @@ const finnMånederMedHistoriskeFradragMenIngenNye = (
 
 const HistoriskInfotrygdBeregning = (props: Props) => {
     const [grunnlagStatus, hentGrunnlag] = useApiCall(hentHistoriskInfotrygdMånedsgrunnlag);
-    const [beregnStatus, beregn] = useApiCall(beregnHistoriskInfotrygdRevurdering);
     // Redigerbart utkast for denne revurderingen. Historiske fradrag kopieres ikke inn;
     // fradrag hentes fra en lagret beregning på revurderingen, ellers starter listen tom.
     const [månedsutkast, setMånedsutkast] = useState<HistoriskInfotrygdMånedsutkast[]>([]);
@@ -102,6 +106,7 @@ const HistoriskInfotrygdBeregning = (props: Props) => {
     };
 
     const handleBeregn = () => {
+        if (props.disabled || RemoteData.isPending(props.beregnStatus)) return;
         setMånederMedFradragsvarsel([]);
         const månederMedBosituasjon = månedsutkast.filter(
             (
@@ -134,7 +139,7 @@ const HistoriskInfotrygdBeregning = (props: Props) => {
 
         setMånederMedFradragsvarsel(finnMånederMedHistoriskeFradragMenIngenNye(grunnlag, månedsutkast));
 
-        beregn(
+        props.onBeregn(
             {
                 revurderingId: props.behandling.id,
                 måneder: beregningsmåneder,
@@ -159,7 +164,8 @@ const HistoriskInfotrygdBeregning = (props: Props) => {
     const grunnlag = grunnlagStatus.value;
     const vedtaksgrunnlagSomRevurderes = grunnlag.vedtaksgrunnlagSomRevurderes;
     const beregning = beregningEtterLagring ?? grunnlag.lagretBeregningINåværendeRevurdering;
-    const kanRedigeres = ['OPPRETTET', 'BEREGNET', 'UNDERKJENT'].includes(props.behandling.status);
+    const erRedigerbarStatus = ['OPPRETTET', 'BEREGNET', 'SIMULERT', 'UNDERKJENT'].includes(props.behandling.status);
+    const kanRedigeres = erRedigerbarStatus && !props.disabled && !RemoteData.isPending(props.beregnStatus);
 
     return (
         <VStack gap="6">
@@ -240,12 +246,17 @@ const HistoriskInfotrygdBeregning = (props: Props) => {
                             </VStack>
                         </Alert>
                     )}
-                    {kanRedigeres && (
+                    {erRedigerbarStatus && (
                         <>
-                            {RemoteData.isFailure(beregnStatus) && (
-                                <HistoriskAlderssakApiErrorAlert error={beregnStatus.error} />
+                            {RemoteData.isFailure(props.beregnStatus) && (
+                                <HistoriskAlderssakApiErrorAlert error={props.beregnStatus.error} />
                             )}
-                            <Button type="button" loading={RemoteData.isPending(beregnStatus)} onClick={handleBeregn}>
+                            <Button
+                                type="button"
+                                loading={RemoteData.isPending(props.beregnStatus)}
+                                disabled={props.disabled}
+                                onClick={handleBeregn}
+                            >
                                 Lagre og beregn
                             </Button>
                         </>
