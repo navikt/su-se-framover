@@ -2,7 +2,11 @@ import * as RemoteData from '@devexperts/remote-data-ts';
 import { BodyShort, Heading, Loader, VStack } from '@navikt/ds-react';
 import { useEffect, useRef, useState } from 'react';
 import { useLocation, useMatch, useNavigate } from 'react-router-dom';
-import { hentHistoriskInfotrygdRevurdering } from '~src/api/historiskAlderssakApi';
+import {
+    beregnHistoriskInfotrygdRevurdering,
+    hentHistoriskInfotrygdRevurdering,
+    simulerHistoriskInfotrygdRevurdering,
+} from '~src/api/historiskAlderssakApi';
 import LinkAsButton from '~src/components/linkAsButton/LinkAsButton';
 import AvsluttHistoriskInfotrygdRevurdering from '~src/features/historiskAlderssak/AvsluttHistoriskInfotrygdRevurdering';
 import HistoriskAlderssakApiErrorAlert from '~src/features/historiskAlderssak/HistoriskAlderssakApiErrorAlert';
@@ -32,6 +36,8 @@ const HistoriskInfotrygdRevurdering = () => {
     const hoppOverFørsteHenting = useRef(opprettetRevurdering !== null);
     const [revurdering, hentRevurdering] = useApiCall(hentHistoriskInfotrygdRevurdering);
     const [oppfriskStatus, oppfriskRevurdering] = useApiCall(hentHistoriskInfotrygdRevurdering);
+    const [beregnStatus, beregn, nullstillBeregning] = useApiCall(beregnHistoriskInfotrygdRevurdering);
+    const [simuleringsstatus, simuler, nullstillSimulering] = useApiCall(simulerHistoriskInfotrygdRevurdering);
     const [beregnetBehandling, setBeregnetBehandling] = useState<HistoriskInfotrygdRevurderingType | null>(null);
 
     useEffect(() => {
@@ -41,6 +47,8 @@ const HistoriskInfotrygdRevurdering = () => {
     }, []);
 
     useEffect(() => {
+        nullstillBeregning();
+        nullstillSimulering();
         if (hoppOverFørsteHenting.current) {
             hoppOverFørsteHenting.current = false;
             return;
@@ -50,11 +58,14 @@ const HistoriskInfotrygdRevurdering = () => {
         if (revurderingId) {
             hentRevurdering(revurderingId);
         }
-    }, [hentRevurdering, revurderingId]);
+    }, [hentRevurdering, revurderingId, nullstillBeregning, nullstillSimulering]);
 
     // Oppdaterer i bakgrunnen slik at innholdet ikke erstattes av en laster og monteres på nytt.
     const lastRevurderingPåNytt = (id: string) => {
-        oppfriskRevurdering(id, setBeregnetBehandling);
+        oppfriskRevurdering(id, (behandling) => {
+            setBeregnetBehandling(behandling);
+            nullstillSimulering();
+        });
     };
 
     return (
@@ -76,7 +87,10 @@ const HistoriskInfotrygdRevurdering = () => {
                         () => <Loader title="Henter historisk revurdering" size="large" />,
                         (error) => <HistoriskAlderssakApiErrorAlert error={error} />,
                         (resultat) => {
-                            const gjeldendeRevurdering = beregnetBehandling ?? resultat;
+                            const gjeldendeRevurdering =
+                                beregnetBehandling && beregnetBehandling.id === resultat.id
+                                    ? beregnetBehandling
+                                    : resultat;
 
                             return (
                                 <VStack gap="6">
@@ -88,20 +102,40 @@ const HistoriskInfotrygdRevurdering = () => {
                                         gjeldendeRevurdering.status !== 'ATTESTERT' && (
                                             <HistoriskInfotrygdBeregning
                                                 behandling={gjeldendeRevurdering}
-                                                onOppdatert={setBeregnetBehandling}
+                                                beregnStatus={beregnStatus}
+                                                onBeregn={beregn}
+                                                disabled={
+                                                    RemoteData.isPending(simuleringsstatus) ||
+                                                    RemoteData.isPending(oppfriskStatus)
+                                                }
+                                                onOppdatert={(behandling) => {
+                                                    setBeregnetBehandling(behandling);
+                                                    nullstillSimulering();
+                                                }}
                                             />
                                         )}
                                     <HistoriskInfotrygdEtterBeregning
                                         behandling={gjeldendeRevurdering}
                                         onOppdatert={() => lastRevurderingPåNytt(gjeldendeRevurdering.id)}
+                                        simuleringsstatus={simuleringsstatus}
+                                        onSimuler={(id) => simuler(id, setBeregnetBehandling)}
+                                        disabled={
+                                            RemoteData.isPending(beregnStatus) || RemoteData.isPending(oppfriskStatus)
+                                        }
                                     />
-                                    {gjeldendeRevurdering.status !== 'AVSLUTTET' &&
-                                        gjeldendeRevurdering.status !== 'TIL_ATTESTERING' && (
-                                            <AvsluttHistoriskInfotrygdRevurdering
-                                                revurderingId={gjeldendeRevurdering.id}
-                                                onAvsluttet={() => lastRevurderingPåNytt(gjeldendeRevurdering.id)}
-                                            />
-                                        )}
+                                    {['OPPRETTET', 'BEREGNET', 'SIMULERT', 'UNDERKJENT'].includes(
+                                        gjeldendeRevurdering.status,
+                                    ) && (
+                                        <AvsluttHistoriskInfotrygdRevurdering
+                                            revurderingId={gjeldendeRevurdering.id}
+                                            onAvsluttet={() => lastRevurderingPåNytt(gjeldendeRevurdering.id)}
+                                            disabled={
+                                                RemoteData.isPending(beregnStatus) ||
+                                                RemoteData.isPending(simuleringsstatus) ||
+                                                RemoteData.isPending(oppfriskStatus)
+                                            }
+                                        />
+                                    )}
                                     <section aria-labelledby="historisk-revurdering-dokumenter">
                                         <Heading id="historisk-revurdering-dokumenter" level="2" size="medium">
                                             Dokumenter for behandlingen

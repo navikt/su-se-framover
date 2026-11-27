@@ -17,6 +17,15 @@ import {
 
 import apiClient, { ApiClientResult } from './apiClient';
 
+export async function simulerHistoriskInfotrygdRevurdering(
+    revurderingId: string,
+): Promise<ApiClientResult<HistoriskInfotrygdRevurdering>> {
+    return apiClient({
+        url: `/historisk/alderssak/revurderinger/${revurderingId}/simuler`,
+        method: 'POST',
+    });
+}
+
 export async function sjekkOmHistoriskAlderssakFinnes(
     request: HistoriskAlderssakRequest,
 ): Promise<ApiClientResult<HarHistoriskAlderssakResponse>> {

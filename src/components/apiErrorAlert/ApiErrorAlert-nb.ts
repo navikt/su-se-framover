@@ -297,7 +297,7 @@ const messages: { [key in ApiErrorCode]: string } = {
     [ApiErrorCode.UGYLDIG_FØDSELSNUMMER]: 'Ugyldig fødselsnummer',
     [ApiErrorCode.UGYLDIG_GRUNN_FOR_UNDERKJENNING]: 'Ugyldig underkjennelses grunn',
     [ApiErrorCode.UGYLDIG_HISTORISK_INFOTRYGD_BEREGNINGSGRUNNLAG]:
-        'Beregningen kan ikke inneholde både ytelse og opphør.',
+        'Beregningen kunne ikke gjennomføres. Kontroller beregningsgrunnlaget.',
     [ApiErrorCode.UGYLDIG_HISTORISK_INFOTRYGD_GRUNNLAG]:
         'Det historiske Infotrygd-grunnlaget er ugyldig for valgt periode.',
     [ApiErrorCode.UGYLDIG_HISTORISK_INFOTRYGD_REVURDERING_ID]:

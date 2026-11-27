@@ -1,4 +1,4 @@
-import { BodyShort, ExpansionCard, Heading, Label, VStack } from '@navikt/ds-react';
+import { Alert, BodyShort, ExpansionCard, Heading, Label, VStack } from '@navikt/ds-react';
 import {
     HistoriskInfotrygdLagretBeregning,
     HistoriskInfotrygdMånedsgrunnlag,
@@ -19,151 +19,168 @@ const økonomiskRetningTekst = {
 } as const;
 
 const HistoriskInfotrygdBeregningsresultat = ({ grunnlag, beregning }: Props) => (
-    <section aria-labelledby="beregningsresultat-tittel">
-        <VStack gap="4">
-            <div>
-                <Heading id="beregningsresultat-tittel" level="2" size="medium" spacing>
-                    Beregning
-                </Heading>
-                <BodyShort>Økonomisk retning: {økonomiskRetningTekst[beregning.økonomiskRetning]}</BodyShort>
-                <BodyShort>Antall måneder: {beregning.måneder.length}</BodyShort>
-            </div>
-            {beregning.måneder.map((resultat) => {
-                const vedtaksgrunnlag = grunnlag.vedtaksgrunnlagSomRevurderes.find(
-                    (måned) => måned.måned === resultat.måned,
-                );
+    <ExpansionCard aria-label="Beregning" defaultOpen>
+        <ExpansionCard.Header>
+            <ExpansionCard.Title as="h2">Beregning</ExpansionCard.Title>
+            <ExpansionCard.Description>
+                Økonomisk retning: {økonomiskRetningTekst[beregning.økonomiskRetning]}. Antall måneder:{' '}
+                {beregning.måneder.length}.
+            </ExpansionCard.Description>
+        </ExpansionCard.Header>
+        <ExpansionCard.Content>
+            <VStack gap="4">
+                {beregning.måneder.some((måned) => måned.opphørsgrunn === 'FOR_HØY_INNTEKT') && (
+                    <Alert variant="warning">
+                        Fradragene gir et beregnet beløp på 0 kroner eller lavere i én eller flere måneder. Beregningen
+                        gir derfor automatisk opphør, selv om «Ytelse» er valgt.
+                    </Alert>
+                )}
+                {beregning.måneder.some((måned) => måned.opphørsgrunn === 'SU_UNDER_MINSTEGRENSE') && (
+                    <Alert variant="warning">
+                        Beløpet etter fradrag er under minstegrensen i én eller flere måneder. Beregningen gir derfor
+                        automatisk opphør, selv om «Ytelse» er valgt.
+                    </Alert>
+                )}
+                {beregning.måneder.map((resultat) => {
+                    const vedtaksgrunnlag = grunnlag.vedtaksgrunnlagSomRevurderes.find(
+                        (måned) => måned.måned === resultat.måned,
+                    );
 
-                return (
-                    <ExpansionCard key={resultat.måned} aria-label={`Beregning for ${resultat.måned}`}>
-                        <ExpansionCard.Header>
-                            <ExpansionCard.Title as="h3" size="small">
-                                {resultat.måned}
-                            </ExpansionCard.Title>
-                            <ExpansionCard.Description>
-                                {resultat.nyttResultat === 'YTELSE' ? 'Ytelse' : 'Opphør'}. Gammelt beløp:{' '}
-                                {formatCurrency(resultat.gammeltBeløp)}. Nytt beløp:{' '}
-                                {formatCurrency(resultat.nyttBeløp)}. Differanse: {formatCurrency(resultat.differanse)}.
-                            </ExpansionCard.Description>
-                        </ExpansionCard.Header>
-                        <ExpansionCard.Content>
-                            <div className={styles.beregningssammenligning}>
-                                <section aria-label="Grunnlag før revurderingen">
-                                    <Heading level="4" size="xsmall" spacing>
-                                        Grunnlag før revurderingen
-                                    </Heading>
-                                    <dl className={styles.detaljer}>
-                                        <div>
-                                            <Label as="dt" size="small">
-                                                Beløp brukt i beregningen
-                                            </Label>
-                                            <BodyShort as="dd">{formatCurrency(resultat.gammeltBeløp)}</BodyShort>
-                                        </div>
-                                    </dl>
-                                    {vedtaksgrunnlag ? (
-                                        <HistoriskInfotrygdVedtaksgrunnlag vedtaksgrunnlag={vedtaksgrunnlag} />
-                                    ) : (
-                                        <BodyShort>Vedtaksgrunnlaget for denne måneden mangler.</BodyShort>
-                                    )}
-                                </section>
-                                <section aria-label="Ny beregning">
-                                    <Heading level="4" size="xsmall" spacing>
-                                        Ny beregning
-                                    </Heading>
-                                    <dl className={styles.detaljer}>
-                                        <div>
-                                            <Label as="dt" size="small">
-                                                Bosituasjon
-                                            </Label>
-                                            <BodyShort as="dd">{resultat.bosituasjon}</BodyShort>
-                                        </div>
-                                        {resultat.satskategori !== null && (
+                    return (
+                        <ExpansionCard key={resultat.måned} aria-label={`Beregning for ${resultat.måned}`}>
+                            <ExpansionCard.Header>
+                                <ExpansionCard.Title as="h3" size="small">
+                                    {resultat.måned}
+                                </ExpansionCard.Title>
+                                <ExpansionCard.Description>
+                                    {resultat.nyttResultat === 'YTELSE' ? 'Ytelse' : 'Opphør'}. Gammelt beløp:{' '}
+                                    {formatCurrency(resultat.gammeltBeløp)}. Nytt beløp:{' '}
+                                    {formatCurrency(resultat.nyttBeløp)}. Differanse:{' '}
+                                    {formatCurrency(resultat.differanse)}.
+                                </ExpansionCard.Description>
+                            </ExpansionCard.Header>
+                            <ExpansionCard.Content>
+                                <div className={styles.beregningssammenligning}>
+                                    <section aria-label="Grunnlag før revurderingen">
+                                        <Heading level="4" size="xsmall" spacing>
+                                            Grunnlag før revurderingen
+                                        </Heading>
+                                        <dl className={styles.detaljer}>
                                             <div>
                                                 <Label as="dt" size="small">
-                                                    Historisk Infotrygd-satskategori
+                                                    Beløp brukt i beregningen
                                                 </Label>
-                                                <BodyShort as="dd">{resultat.satskategori}</BodyShort>
+                                                <BodyShort as="dd">{formatCurrency(resultat.gammeltBeløp)}</BodyShort>
                                             </div>
+                                        </dl>
+                                        {vedtaksgrunnlag ? (
+                                            <HistoriskInfotrygdVedtaksgrunnlag vedtaksgrunnlag={vedtaksgrunnlag} />
+                                        ) : (
+                                            <BodyShort>Vedtaksgrunnlaget for denne måneden mangler.</BodyShort>
                                         )}
-                                        <div>
-                                            <Label as="dt" size="small">
-                                                Sats
-                                            </Label>
-                                            <BodyShort as="dd">{formatCurrency(resultat.sats)}</BodyShort>
-                                        </div>
-                                        <div>
-                                            <Label as="dt" size="small">
-                                                EPS-fribeløp
-                                            </Label>
-                                            <BodyShort as="dd">{formatCurrency(resultat.epsFribeløp)}</BodyShort>
-                                        </div>
-                                        <div>
-                                            <Label as="dt" size="small">
-                                                EPS-fradrag
-                                            </Label>
-                                            <BodyShort as="dd">{formatCurrency(resultat.epsFradrag)}</BodyShort>
-                                        </div>
-                                        <div>
-                                            <Label as="dt" size="small">
-                                                Sum fradrag
-                                            </Label>
-                                            <BodyShort as="dd">{formatCurrency(resultat.sumFradrag)}</BodyShort>
-                                        </div>
-                                        <div>
-                                            <Label as="dt" size="small">
-                                                Nye fradrag
-                                            </Label>
-                                            {resultat.fradrag.length > 0 ? (
-                                                <ul className={styles.beregningsfradrag}>
-                                                    {resultat.fradrag.map((fradrag, index) => (
-                                                        <li key={`${fradrag.type}-${index}`}>
-                                                            {fradrag.type}
-                                                            {fradrag.beskrivelse ? ` (${fradrag.beskrivelse})` : ''}:{' '}
-                                                            {formatCurrency(fradrag.månedsbeløp)}{' '}
-                                                            {fradrag.tilhører === 'EPS' ? '(ektefellen)' : '(brukeren)'}
-                                                        </li>
-                                                    ))}
-                                                </ul>
-                                            ) : (
-                                                <BodyShort as="dd">Ingen fradrag</BodyShort>
+                                    </section>
+                                    <section aria-label="Ny beregning">
+                                        <Heading level="4" size="xsmall" spacing>
+                                            Ny beregning
+                                        </Heading>
+                                        <dl className={styles.detaljer}>
+                                            <div>
+                                                <Label as="dt" size="small">
+                                                    Bosituasjon
+                                                </Label>
+                                                <BodyShort as="dd">{resultat.bosituasjon}</BodyShort>
+                                            </div>
+                                            {resultat.satskategori !== null && (
+                                                <div>
+                                                    <Label as="dt" size="small">
+                                                        Historisk Infotrygd-satskategori
+                                                    </Label>
+                                                    <BodyShort as="dd">{resultat.satskategori}</BodyShort>
+                                                </div>
                                             )}
-                                        </div>
-                                        <div>
-                                            <Label as="dt" size="small">
-                                                Nytt beløp
-                                            </Label>
-                                            <BodyShort as="dd">{formatCurrency(resultat.nyttBeløp)}</BodyShort>
-                                        </div>
-                                        <div>
-                                            <Label as="dt" size="small">
-                                                Differanse
-                                            </Label>
-                                            <BodyShort as="dd">{formatCurrency(resultat.differanse)}</BodyShort>
-                                        </div>
-                                        <div>
-                                            <Label as="dt" size="small">
-                                                Nytt resultat
-                                            </Label>
-                                            <BodyShort as="dd">
-                                                {resultat.nyttResultat === 'YTELSE' ? 'Ytelse' : 'Opphør'}
-                                            </BodyShort>
-                                        </div>
-                                        {resultat.opphørsgrunn && (
                                             <div>
                                                 <Label as="dt" size="small">
-                                                    Opphørsgrunn
+                                                    Sats
                                                 </Label>
-                                                <BodyShort as="dd">{resultat.opphørsgrunn}</BodyShort>
+                                                <BodyShort as="dd">{formatCurrency(resultat.sats)}</BodyShort>
                                             </div>
-                                        )}
-                                    </dl>
-                                </section>
-                            </div>
-                        </ExpansionCard.Content>
-                    </ExpansionCard>
-                );
-            })}
-        </VStack>
-    </section>
+                                            <div>
+                                                <Label as="dt" size="small">
+                                                    EPS-fribeløp
+                                                </Label>
+                                                <BodyShort as="dd">{formatCurrency(resultat.epsFribeløp)}</BodyShort>
+                                            </div>
+                                            <div>
+                                                <Label as="dt" size="small">
+                                                    EPS-fradrag
+                                                </Label>
+                                                <BodyShort as="dd">{formatCurrency(resultat.epsFradrag)}</BodyShort>
+                                            </div>
+                                            <div>
+                                                <Label as="dt" size="small">
+                                                    Sum fradrag
+                                                </Label>
+                                                <BodyShort as="dd">{formatCurrency(resultat.sumFradrag)}</BodyShort>
+                                            </div>
+                                            <div>
+                                                <Label as="dt" size="small">
+                                                    Nye fradrag
+                                                </Label>
+                                                {resultat.fradrag.length > 0 ? (
+                                                    <ul className={styles.beregningsfradrag}>
+                                                        {resultat.fradrag.map((fradrag, index) => (
+                                                            <li key={`${fradrag.type}-${index}`}>
+                                                                {fradrag.type}
+                                                                {fradrag.beskrivelse ? ` (${fradrag.beskrivelse})` : ''}
+                                                                : {formatCurrency(fradrag.månedsbeløp)}{' '}
+                                                                {fradrag.tilhører === 'EPS'
+                                                                    ? '(ektefellen)'
+                                                                    : '(brukeren)'}
+                                                            </li>
+                                                        ))}
+                                                    </ul>
+                                                ) : (
+                                                    <BodyShort as="dd">Ingen fradrag</BodyShort>
+                                                )}
+                                            </div>
+                                            <div>
+                                                <Label as="dt" size="small">
+                                                    Nytt beløp
+                                                </Label>
+                                                <BodyShort as="dd">{formatCurrency(resultat.nyttBeløp)}</BodyShort>
+                                            </div>
+                                            <div>
+                                                <Label as="dt" size="small">
+                                                    Differanse
+                                                </Label>
+                                                <BodyShort as="dd">{formatCurrency(resultat.differanse)}</BodyShort>
+                                            </div>
+                                            <div>
+                                                <Label as="dt" size="small">
+                                                    Nytt resultat
+                                                </Label>
+                                                <BodyShort as="dd">
+                                                    {resultat.nyttResultat === 'YTELSE' ? 'Ytelse' : 'Opphør'}
+                                                </BodyShort>
+                                            </div>
+                                            {resultat.opphørsgrunn && (
+                                                <div>
+                                                    <Label as="dt" size="small">
+                                                        Opphørsgrunn
+                                                    </Label>
+                                                    <BodyShort as="dd">{resultat.opphørsgrunn}</BodyShort>
+                                                </div>
+                                            )}
+                                        </dl>
+                                    </section>
+                                </div>
+                            </ExpansionCard.Content>
+                        </ExpansionCard>
+                    );
+                })}
+            </VStack>
+        </ExpansionCard.Content>
+    </ExpansionCard>
 );
 
 export default HistoriskInfotrygdBeregningsresultat;

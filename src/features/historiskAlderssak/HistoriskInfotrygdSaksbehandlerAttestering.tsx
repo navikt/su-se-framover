@@ -19,6 +19,7 @@ const sperregrunnTekst: Record<HistoriskInfotrygdSperregrunnForAttestering, stri
     MANGLER_GYLDIG_FORHANDSVARSEL: 'Det må tas et gyldig valg om forhåndsvarsel.',
     MANGLER_VEDTAKSBREVVALG: 'Det må velges om vedtaksbrev skal sendes.',
     MANGLER_FRITEKST_TIL_VEDTAKSBREV: 'Fritekst til vedtaksbrevet må fylles ut.',
+    MANGLER_SIMULERING: 'Behandlingen må ha en gyldig simulering av den siste beregningen.',
 };
 
 const HistoriskInfotrygdSaksbehandlerAttestering = (props: Props) => {

@@ -6,6 +6,7 @@ import { formatDate, formatDateTime } from '~src/utils/date/dateUtils';
 const statusTekst: Record<HistoriskInfotrygdRevurderingType['status'], string> = {
     OPPRETTET: 'Opprettet',
     BEREGNET: 'Beregnet',
+    SIMULERT: 'Simulert',
     TIL_ATTESTERING: 'Til attestering',
     ATTESTERT: 'Attestert',
     UNDERKJENT: 'Underkjent',

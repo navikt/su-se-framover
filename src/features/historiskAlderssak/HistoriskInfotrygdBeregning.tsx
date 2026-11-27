@@ -1,12 +1,11 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import { Alert, BodyShort, Button, Heading, Loader, Select, VStack } from '@navikt/ds-react';
+import { Alert, BodyShort, Button, ExpansionCard, Fieldset, Heading, Loader, Select, VStack } from '@navikt/ds-react';
 import { useEffect, useState } from 'react';
+import { hentHistoriskInfotrygdMånedsgrunnlag } from '~src/api/historiskAlderssakApi';
+import { ApiResult, useApiCall } from '~src/lib/hooks';
 import {
-    beregnHistoriskInfotrygdRevurdering,
-    hentHistoriskInfotrygdMånedsgrunnlag,
-} from '~src/api/historiskAlderssakApi';
-import { useApiCall } from '~src/lib/hooks';
-import {
+    BeregnHistoriskInfotrygdRevurderingRequest,
+    BeregnHistoriskInfotrygdRevurderingResponse,
     HistoriskInfotrygdBeregningsgrunnlagForMåned,
     HistoriskInfotrygdLagretBeregning,
     HistoriskInfotrygdManuellOpphørsgrunn,
@@ -24,6 +23,12 @@ import HistoriskInfotrygdOpphør from './HistoriskInfotrygdOpphør';
 interface Props {
     behandling: HistoriskInfotrygdRevurdering;
     onOppdatert: (behandling: HistoriskInfotrygdRevurdering) => void;
+    beregnStatus: ApiResult<BeregnHistoriskInfotrygdRevurderingResponse>;
+    onBeregn: (
+        request: BeregnHistoriskInfotrygdRevurderingRequest,
+        onSuccess: (resultat: BeregnHistoriskInfotrygdRevurderingResponse) => void,
+    ) => void;
+    disabled: boolean;
 }
 
 const lagMånedsutkastForRevurdering = (grunnlag: HistoriskInfotrygdMånedsgrunnlag) => {
@@ -66,7 +71,6 @@ const finnMånederMedHistoriskeFradragMenIngenNye = (
 
 const HistoriskInfotrygdBeregning = (props: Props) => {
     const [grunnlagStatus, hentGrunnlag] = useApiCall(hentHistoriskInfotrygdMånedsgrunnlag);
-    const [beregnStatus, beregn] = useApiCall(beregnHistoriskInfotrygdRevurdering);
     // Redigerbart utkast for denne revurderingen. Historiske fradrag kopieres ikke inn;
     // fradrag hentes fra en lagret beregning på revurderingen, ellers starter listen tom.
     const [månedsutkast, setMånedsutkast] = useState<HistoriskInfotrygdMånedsutkast[]>([]);
@@ -102,6 +106,7 @@ const HistoriskInfotrygdBeregning = (props: Props) => {
     };
 
     const handleBeregn = () => {
+        if (props.disabled || RemoteData.isPending(props.beregnStatus)) return;
         setMånederMedFradragsvarsel([]);
         const månederMedBosituasjon = månedsutkast.filter(
             (
@@ -134,7 +139,7 @@ const HistoriskInfotrygdBeregning = (props: Props) => {
 
         setMånederMedFradragsvarsel(finnMånederMedHistoriskeFradragMenIngenNye(grunnlag, månedsutkast));
 
-        beregn(
+        props.onBeregn(
             {
                 revurderingId: props.behandling.id,
                 måneder: beregningsmåneder,
@@ -159,12 +164,13 @@ const HistoriskInfotrygdBeregning = (props: Props) => {
     const grunnlag = grunnlagStatus.value;
     const vedtaksgrunnlagSomRevurderes = grunnlag.vedtaksgrunnlagSomRevurderes;
     const beregning = beregningEtterLagring ?? grunnlag.lagretBeregningINåværendeRevurdering;
-    const kanRedigeres = ['OPPRETTET', 'BEREGNET', 'UNDERKJENT'].includes(props.behandling.status);
+    const kanRedigeres = ['OPPRETTET', 'BEREGNET', 'SIMULERT', 'UNDERKJENT'].includes(props.behandling.status);
+    const skjemaDeaktivert = props.disabled || RemoteData.isPending(props.beregnStatus);
 
     return (
         <VStack gap="6">
             <HistoriskInfotrygdForsørgingstillegg grunnlag={grunnlag} />
-            <section aria-labelledby="utfall-tittel">
+            <Fieldset legend="Utfall for hele perioden" hideLegend disabled={skjemaDeaktivert}>
                 <VStack gap="4">
                     <Heading id="utfall-tittel" level="2" size="medium">
                         Utfall for hele perioden
@@ -198,60 +204,74 @@ const HistoriskInfotrygdBeregning = (props: Props) => {
                         <Alert variant="error">{valideringsfeil}</Alert>
                     )}
                 </VStack>
-            </section>
-            <section aria-labelledby="månedsgrunnlag-tittel">
-                <VStack gap="4">
-                    <Heading id="månedsgrunnlag-tittel" level="2" size="medium">
-                        Månedsgrunnlag
-                    </Heading>
-                    {månedsutkast.map((månedsutkast, månedIndex) => {
-                        const vedtaksgrunnlagForMåned = vedtaksgrunnlagSomRevurderes[månedIndex];
-                        return (
-                            <HistoriskInfotrygdMåned
-                                key={månedsutkast.måned}
-                                måned={månedsutkast}
-                                vedtaksgrunnlag={vedtaksgrunnlagForMåned}
-                                kanRedigeres={kanRedigeres}
-                                resultatForPerioden={resultatForPerioden}
-                                opphørsgrunnForPerioden={opphørsgrunnForPerioden}
-                                onOppdatert={(oppdater) => {
-                                    oppdaterMåned(månedIndex, oppdater);
-                                    setValideringsfeil(undefined);
-                                    nullstillFradragsvarsel();
-                                }}
-                            />
-                        );
-                    })}
-                    {månederMedFradragsvarsel.length > 0 && (
-                        <Alert variant="warning">
-                            <VStack gap="2">
-                                <BodyShort weight="semibold">
-                                    Vedtaket som revurderes har fradrag, men du har ikke registrert fradrag i denne
-                                    revurderingen.
-                                </BodyShort>
-                                <BodyShort>Dette gjelder følgende måneder og år:</BodyShort>
-                                <ul>
-                                    {månederMedFradragsvarsel.map((måned) => (
-                                        <li key={måned}>
-                                            {formatMonthYear(parseNonNullableIsoDateOnly(`${måned}-01`))}
-                                        </li>
-                                    ))}
-                                </ul>
-                            </VStack>
-                        </Alert>
-                    )}
-                    {kanRedigeres && (
-                        <>
-                            {RemoteData.isFailure(beregnStatus) && (
-                                <HistoriskAlderssakApiErrorAlert error={beregnStatus.error} />
+            </Fieldset>
+            <ExpansionCard aria-label="Månedsgrunnlag" defaultOpen>
+                <ExpansionCard.Header>
+                    <ExpansionCard.Title as="h2">Månedsgrunnlag</ExpansionCard.Title>
+                    <ExpansionCard.Description>
+                        {RemoteData.isFailure(props.beregnStatus)
+                            ? 'Beregningen feilet'
+                            : `${månedsutkast.length} måneder`}
+                    </ExpansionCard.Description>
+                </ExpansionCard.Header>
+                <ExpansionCard.Content>
+                    <Fieldset legend="Månedsgrunnlag" hideLegend disabled={skjemaDeaktivert}>
+                        <VStack gap="4">
+                            {månedsutkast.map((månedsutkast, månedIndex) => {
+                                const vedtaksgrunnlagForMåned = vedtaksgrunnlagSomRevurderes[månedIndex];
+                                return (
+                                    <HistoriskInfotrygdMåned
+                                        key={månedsutkast.måned}
+                                        måned={månedsutkast}
+                                        vedtaksgrunnlag={vedtaksgrunnlagForMåned}
+                                        kanRedigeres={kanRedigeres}
+                                        resultatForPerioden={resultatForPerioden}
+                                        opphørsgrunnForPerioden={opphørsgrunnForPerioden}
+                                        onOppdatert={(oppdater) => {
+                                            oppdaterMåned(månedIndex, oppdater);
+                                            setValideringsfeil(undefined);
+                                            nullstillFradragsvarsel();
+                                        }}
+                                    />
+                                );
+                            })}
+                            {månederMedFradragsvarsel.length > 0 && (
+                                <Alert variant="warning">
+                                    <VStack gap="2">
+                                        <BodyShort weight="semibold">
+                                            Vedtaket som revurderes har fradrag, men du har ikke registrert fradrag i
+                                            denne revurderingen.
+                                        </BodyShort>
+                                        <BodyShort>Dette gjelder følgende måneder og år:</BodyShort>
+                                        <ul>
+                                            {månederMedFradragsvarsel.map((måned) => (
+                                                <li key={måned}>
+                                                    {formatMonthYear(parseNonNullableIsoDateOnly(`${måned}-01`))}
+                                                </li>
+                                            ))}
+                                        </ul>
+                                    </VStack>
+                                </Alert>
                             )}
-                            <Button type="button" loading={RemoteData.isPending(beregnStatus)} onClick={handleBeregn}>
-                                Lagre og beregn
-                            </Button>
-                        </>
-                    )}
-                </VStack>
-            </section>
+                            {kanRedigeres && (
+                                <>
+                                    {RemoteData.isFailure(props.beregnStatus) && (
+                                        <HistoriskAlderssakApiErrorAlert error={props.beregnStatus.error} />
+                                    )}
+                                    <Button
+                                        type="button"
+                                        loading={RemoteData.isPending(props.beregnStatus)}
+                                        disabled={props.disabled}
+                                        onClick={handleBeregn}
+                                    >
+                                        Lagre og beregn
+                                    </Button>
+                                </>
+                            )}
+                        </VStack>
+                    </Fieldset>
+                </ExpansionCard.Content>
+            </ExpansionCard>
             {beregning && <HistoriskInfotrygdBeregningsresultat grunnlag={grunnlag} beregning={beregning} />}
         </VStack>
     );

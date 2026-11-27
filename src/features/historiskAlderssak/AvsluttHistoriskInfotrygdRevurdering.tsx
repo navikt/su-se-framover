@@ -5,13 +5,18 @@ import { avsluttHistoriskInfotrygdRevurdering } from '~src/api/historiskAlderssa
 import HistoriskAlderssakApiErrorAlert from '~src/features/historiskAlderssak/HistoriskAlderssakApiErrorAlert';
 import { useApiCall } from '~src/lib/hooks';
 
-const AvsluttHistoriskInfotrygdRevurdering = (props: { revurderingId: string; onAvsluttet: () => void }) => {
+const AvsluttHistoriskInfotrygdRevurdering = (props: {
+    revurderingId: string;
+    onAvsluttet: () => void;
+    disabled: boolean;
+}) => {
     const [begrunnelse, setBegrunnelse] = useState('');
     const [begrunnelseFeil, setBegrunnelseFeil] = useState<string>();
     const [avsluttStatus, avslutt] = useApiCall(avsluttHistoriskInfotrygdRevurdering);
 
     const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
+        if (props.disabled || RemoteData.isPending(avsluttStatus)) return;
         const trimmetBegrunnelse = begrunnelse.trim();
 
         if (!trimmetBegrunnelse) {
@@ -42,11 +47,17 @@ const AvsluttHistoriskInfotrygdRevurdering = (props: { revurderingId: string; on
                         value={begrunnelse}
                         onChange={(event) => setBegrunnelse(event.target.value)}
                         error={begrunnelseFeil}
+                        readOnly={props.disabled || RemoteData.isPending(avsluttStatus)}
                     />
                     {RemoteData.isFailure(avsluttStatus) && (
                         <HistoriskAlderssakApiErrorAlert error={avsluttStatus.error} />
                     )}
-                    <Button type="submit" variant="danger" loading={RemoteData.isPending(avsluttStatus)}>
+                    <Button
+                        type="submit"
+                        variant="danger"
+                        loading={RemoteData.isPending(avsluttStatus)}
+                        disabled={props.disabled}
+                    >
                         Avslutt behandlingen
                     </Button>
                 </VStack>
