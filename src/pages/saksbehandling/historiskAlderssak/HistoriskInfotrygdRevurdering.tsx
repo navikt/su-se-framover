@@ -123,18 +123,19 @@ const HistoriskInfotrygdRevurdering = () => {
                                             RemoteData.isPending(beregnStatus) || RemoteData.isPending(oppfriskStatus)
                                         }
                                     />
-                                    {gjeldendeRevurdering.status !== 'AVSLUTTET' &&
-                                        gjeldendeRevurdering.status !== 'TIL_ATTESTERING' && (
-                                            <AvsluttHistoriskInfotrygdRevurdering
-                                                revurderingId={gjeldendeRevurdering.id}
-                                                onAvsluttet={() => lastRevurderingPåNytt(gjeldendeRevurdering.id)}
-                                                disabled={
-                                                    RemoteData.isPending(beregnStatus) ||
-                                                    RemoteData.isPending(simuleringsstatus) ||
-                                                    RemoteData.isPending(oppfriskStatus)
-                                                }
-                                            />
-                                        )}
+                                    {['OPPRETTET', 'BEREGNET', 'SIMULERT', 'UNDERKJENT'].includes(
+                                        gjeldendeRevurdering.status,
+                                    ) && (
+                                        <AvsluttHistoriskInfotrygdRevurdering
+                                            revurderingId={gjeldendeRevurdering.id}
+                                            onAvsluttet={() => lastRevurderingPåNytt(gjeldendeRevurdering.id)}
+                                            disabled={
+                                                RemoteData.isPending(beregnStatus) ||
+                                                RemoteData.isPending(simuleringsstatus) ||
+                                                RemoteData.isPending(oppfriskStatus)
+                                            }
+                                        />
+                                    )}
                                     <section aria-labelledby="historisk-revurdering-dokumenter">
                                         <Heading id="historisk-revurdering-dokumenter" level="2" size="medium">
                                             Dokumenter for behandlingen

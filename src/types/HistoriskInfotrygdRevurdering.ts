@@ -66,13 +66,13 @@ export interface HistoriskInfotrygdRevurdering {
     sakId: string;
     periode: Periode<string>;
     status: HistoriskInfotrygdRevurderingStatus;
+    saksbehandler: string;
     avslutningsbegrunnelse: string | null;
     vedtaksbrevvalg: HistoriskInfotrygdVedtaksbrevvalg;
     vedtaksbrevFritekst: string | null;
     kreverKontrollAvHistoriskForsørgingstillegg: boolean;
     forhåndsvarsel: HistoriskInfotrygdForhåndsvarsel;
     sperregrunnerForAttestering: HistoriskInfotrygdSperregrunnForAttestering[];
-    simuleringTilgjengelig: boolean;
     simulering: HistoriskInfotrygdSimulering | null;
     opprettet: string;
     oppdatert: string;
@@ -81,7 +81,6 @@ export interface HistoriskInfotrygdRevurdering {
 export interface HistoriskInfotrygdSimulering {
     simuleringsperiode: Periode<string>;
     simulert: string;
-    harEksisterendeSuOppdrag: boolean;
     resultat: {
         gjelderId: string;
         gjelderNavn: string;

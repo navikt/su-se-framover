@@ -22,31 +22,31 @@ const HistoriskInfotrygdEtterBeregning = (props: Props) => {
     }
     const harSimulering = (props.behandling.simulering?.resultat.perioder.length ?? 0) > 0;
     const harGyldigSimulering = harSimulering && props.behandling.status !== 'BEREGNET';
-    const visBrevvalg =
-        ['SIMULERT', 'UNDERKJENT', 'BEREGNET'].includes(props.behandling.status) &&
-        (!props.behandling.simuleringTilgjengelig || harGyldigSimulering);
+    const erRedigerbar = ['BEREGNET', 'SIMULERT', 'UNDERKJENT'].includes(props.behandling.status);
     const kallPågår = props.disabled || RemoteData.isPending(props.simuleringsstatus);
     const behandlingsProps = { behandling: props.behandling, onOppdatert: props.onOppdatert };
 
     return (
         <VStack gap="6">
-            {(props.behandling.simuleringTilgjengelig || harSimulering) && (
-                <HistoriskInfotrygdSimulering
-                    key={props.behandling.id}
-                    behandling={props.behandling}
-                    status={props.simuleringsstatus}
-                    onSimuler={props.onSimuler}
-                    onOppdatert={() => window.location.reload()}
-                    disabled={props.disabled}
-                />
+            {erRedigerbar && (
+                <Fieldset legend="Forhåndsvarsel" hideLegend disabled={kallPågår}>
+                    <HistoriskInfotrygdForhåndsvarsel {...behandlingsProps} />
+                </Fieldset>
             )}
+            <HistoriskInfotrygdSimulering
+                key={props.behandling.id}
+                behandling={props.behandling}
+                status={props.simuleringsstatus}
+                onSimuler={props.onSimuler}
+                onOppdatert={() => window.location.reload()}
+                disabled={props.disabled}
+            />
             {props.behandling.status === 'TIL_ATTESTERING' && (
                 <HistoriskInfotrygdAttestantHandlinger {...behandlingsProps} />
             )}
-            {visBrevvalg && (
-                <Fieldset legend="Brev og attestering" hideLegend disabled={kallPågår}>
+            {erRedigerbar && harGyldigSimulering && (
+                <Fieldset legend="Vedtaksbrev og attestering" hideLegend disabled={kallPågår}>
                     <VStack gap="6">
-                        <HistoriskInfotrygdForhåndsvarsel {...behandlingsProps} />
                         <HistoriskInfotrygdVedtaksbrev {...behandlingsProps} />
                         <HistoriskInfotrygdSaksbehandlerAttestering {...behandlingsProps} />
                     </VStack>
